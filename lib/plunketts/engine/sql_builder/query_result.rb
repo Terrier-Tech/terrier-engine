@@ -1,3 +1,5 @@
+require_relative './query_row'
+
 # wraps the result of a SQL query into a container of objects
 # a new QueryResult will contain an array of objects implementing a
 # custom class derived from QueryRow containing convenience methods to access values

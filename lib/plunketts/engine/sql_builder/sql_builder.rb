@@ -1,3 +1,5 @@
+require_relative './query_result'
+
 # provides a builder interface for creating SQL queries
 class SqlBuilder
 
