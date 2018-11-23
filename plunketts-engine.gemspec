@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Plunketts::Engine::VERSION
   s.authors     = ['Andy Selvig']
   s.email       = ['andy@Flame.local']
-  s.homepage    = 'plunketts.net'
+  s.homepage    = 'http://plunketts.net'
   s.summary     = "Common code for Plunkett's Pest Control Rails applications"
   s.description = ''
   s.license     = 'MIT'
