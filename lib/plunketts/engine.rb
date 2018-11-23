@@ -5,6 +5,8 @@ require 'plunketts/engine/strings'
 
 require 'plunketts/engine/sql_builder/sql_builder'
 
+require 'plunketts/engine/io/cvs_io'
+
 require 'plunketts/engine/logging/loggable'
 require 'plunketts/engine/logging/multi_logger'
 
