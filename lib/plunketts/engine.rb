@@ -1,3 +1,5 @@
+require 'terminal-table'
+
 require 'plunketts/engine/engine'
 require 'plunketts/engine/strings'
 
