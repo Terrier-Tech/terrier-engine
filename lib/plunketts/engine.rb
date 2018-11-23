@@ -1,4 +1,5 @@
-require "plunketts/engine/engine"
+require 'plunketts/engine/engine'
+require 'plunketts/engine/strings'
 
 module Plunketts
   module Engine
