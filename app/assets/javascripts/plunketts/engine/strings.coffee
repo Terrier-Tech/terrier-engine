@@ -42,7 +42,7 @@ window.titleize = (s) ->
 	s = s.toString()
 	if s == '_state'
 		return s
-	comps = s.split(/[\s_]/g)
+	comps = s.split(/[\s_-]/g)
 	capitalized = _.map comps, (c) -> window.capitalize(c)
 	capitalized.join ' '
 
