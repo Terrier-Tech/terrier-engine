@@ -1,6 +1,6 @@
 # Plunketts::Engine
 
-This Rails Engine contains common code user by all Rails applications at Plunkett's Pest Control.
+This Rails Engine contains common code used by all Rails applications at Plunkett's Pest Control.
 
 ## Usage
 
