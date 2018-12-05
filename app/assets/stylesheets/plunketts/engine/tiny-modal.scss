@@ -24,6 +24,7 @@ body.with-modal #content {
 	right: 0;
 	bottom: 0;
 	background-color: rgba(#000, 0.5);
+	z-index: 99;
 }
 
 
@@ -36,6 +37,7 @@ body.with-modal #content {
 	top: $modal-pad;
 	width: 85%;
 	left: 50%;
+	z-index: 100;
 	transform: translate(-50%, -120%);
 	transition: $animation-duration ease transform;
 	box-shadow: 0 2px $modal-pad rgba(#000, 0.25);
