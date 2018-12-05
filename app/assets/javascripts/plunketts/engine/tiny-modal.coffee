@@ -36,10 +36,16 @@ window.tinyModal.removeLoadingOverlay = ->
 	$('#modal-window').find('.loading-overlay').remove()
 
 
-# ensure the row is large enough to fit all columns and that the last one is showing
 _layoutRow = (row) ->
+	# ensure the row is large enough to fit all columns and that the last one is showing
 	numColumns = row.children('.modal-column').length
 	row.css {width: "#{numColumns*100}%", left: "-#{(numColumns-1)*100}%"}
+
+	# ensure the window isn't larger than the document
+	docHeight = $('#modal-overlay').height()
+	maxHeight = docHeight - 48 # take $modal-pad into account
+	row.parents('#modal-window').css 'max-height', "#{maxHeight}px"
+	row.parents('.modal-column').css 'max-height', "#{maxHeight}px"
 
 
 _template = tinyTemplate (options, content) ->
@@ -51,6 +57,42 @@ _template = tinyTemplate (options, content) ->
 			span '', options.title
 	div '.modal-content', content
 
+_emptyColumnTemplate = tinyTemplate ->
+	div '.modal-column', ->
+		div '.modal-header'
+		div '.modal-content'
+		div '.modal-actions'
+
+
+
+# shows a modal with direct content
+window.tinyModal.showDirect = (content, options={}) ->
+	# overlay
+	overlay = $ '#modal-overlay'
+	unless overlay.length
+		overlay = $('<div id="modal-overlay"></div>').appendTo 'body'
+
+	# window
+	win = $ '#modal-window'
+	unless win.length
+		win = $('<div id="modal-window"><div id="modal-row"></div></div>').appendTo 'body'
+	win.toggleClass 'tiny', (options.tiny || false)
+
+	# row
+	row = win.find '#modal-row'
+
+	# column
+	column = $("<div class='modal-column'>#{_template(options, content)}</div>").appendTo row
+
+	setTimeout(
+		->
+			win.addClass 'show'
+			if options.callback?
+				options.callback column
+		10
+	)
+
+# populate the modal from a URL
 window.tinyModal.show = (url, options) ->
 	$('body').addClass 'with-modal'
 
@@ -60,6 +102,7 @@ window.tinyModal.show = (url, options) ->
 	else
 		url += '?modal=true'
 
+	# overlay
 	overlay = $ '#modal-overlay'
 	unless overlay.length
 		overlay = $('<div id="modal-overlay"></div>').appendTo 'body'
@@ -68,20 +111,13 @@ window.tinyModal.show = (url, options) ->
 	win = $ '#modal-window'
 	unless win.length
 		win = $('<div id="modal-window"><div id="modal-row"></div></div>').appendTo 'body'
-
-	win.toggleClass 'tiny', options.tiny
+	win.toggleClass 'tiny', (options.tiny || false)
 
 	# row
 	row = win.find '#modal-row'
 
 	# create the column
-	column = $('<div class="modal-column"><div class="modal-header"></div><div class="modal-content"></div><div class="modal-actions"></div></div>').appendTo row
-
-	# ensure the window isn't larger than the document
-	docHeight = overlay.height()
-	maxHeight = docHeight - 48 # take $pad into account
-	win.css 'max-height', "#{maxHeight}px"
-	column.css 'max-height', "#{maxHeight}px"
+	column = $(_emptyColumnTemplate).appendTo row
 
 	_layoutRow row
 
@@ -90,10 +126,13 @@ window.tinyModal.show = (url, options) ->
 		(res, status, xhr) ->
 			if status == 'error'
 				column.html _template({title: 'Error', title_icon: tinyModal.closeIconClass}, "<pre class='error-body'>#{res}</pre>")
+			else if options.callback?
+				options.callback column
 	)
 
 	setTimeout(
-		-> win.addClass 'show'
+		->
+			win.addClass 'show'
 		10
 	)
 
@@ -102,8 +141,7 @@ $(document).on 'click', 'a.modal', ->
 	link = $ this
 	href = link.attr 'href'
 	options = {}
-	if link.hasClass 'tiny-modal'
-		options.tiny = true
+	options.tiny = link.hasClass('tiny-modal')
 	window.tinyModal.show href, options
 	false
 
