@@ -1,7 +1,7 @@
 window.tinyModal = {}
 
 # this can be overridden to customize the class of the close button icon
-window.tinyModal.closeIconClass = 'la.la-close.ion-android-close'
+window.tinyModal.closeIconClass = '.la.la-close.ion-android-close'
 
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.closeIconClass = 'alert'
@@ -45,7 +45,7 @@ _layoutRow = (row) ->
 	docHeight = $('#modal-overlay').height()
 	maxHeight = docHeight - 48 # take $modal-pad into account
 	row.parents('#modal-window').css 'max-height', "#{maxHeight}px"
-	row.parents('.modal-column').css 'max-height', "#{maxHeight}px"
+	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
 
 
 _template = tinyTemplate (options, content) ->
