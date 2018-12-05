@@ -50,3 +50,10 @@ if !Math.trunc
 	Math.trunc = (v) ->
 		v = +v
 		v - (v % 1) or (if !isFinite(v) or v == 0 then v else if v < 0 then -0 else 0)
+
+
+# _.uniq isn't present in lodash.core
+onlyUnique = (value, index, self) ->
+	self.indexOf(value) == index
+_.uniq = (array) ->
+	array.filter onlyUnique
