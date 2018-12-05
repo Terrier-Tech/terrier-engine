@@ -117,7 +117,7 @@ window.tinyModal.show = (url, options) ->
 	row = win.find '#modal-row'
 
 	# create the column
-	column = $(_emptyColumnTemplate).appendTo row
+	column = $(_emptyColumnTemplate()).appendTo row
 
 	_layoutRow row
 
