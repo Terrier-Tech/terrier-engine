@@ -4,7 +4,7 @@ window.tinyModal = {}
 window.tinyModal.closeIconClass = '.la.la-close.ion-android-close'
 
 # this can be overridden to customize the class of the icon used on error pages
-window.tinyModal.closeIconClass = 'alert'
+window.tinyModal.alertIcon = 'alert'
 
 # this shouldn't generally be called directly, use tinyModal.pop() instead
 window.tinyModal.close = ->
@@ -125,7 +125,7 @@ window.tinyModal.show = (url, options) ->
 		url
 		(res, status, xhr) ->
 			if status == 'error'
-				column.html _template({title: 'Error', title_icon: tinyModal.closeIconClass}, "<pre class='error-body'>#{res}</pre>")
+				column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{res}</pre>")
 			else if options.callback?
 				options.callback column
 	)
@@ -156,4 +156,4 @@ $(document).on 'click', 'a.close-modal', ->
 $(document).on 'ajax:error', '#modal-window form', (xhr, status, error) ->
 	win = $ '#modal-window'
 	column = win.find '.modal-column'
-	column.html _template({title: 'Error', title_icon: tinyModal.closeIconClass}, "<pre class='error-body'>#{status.responseText}</pre>")
+	column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{status.responseText}</pre>")
