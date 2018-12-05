@@ -1,0 +1,113 @@
+
+// The structure of the modal window is:
+// #modal-window
+//   #modal-row
+//     .modal-column (one or more)
+
+$modal-pad: 24px;
+$animation-duration: 0.3s;
+$modal-breakpoint: 720px;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Overlay
+////////////////////////////////////////////////////////////////////////////////
+
+body.with-modal #content {
+	filter: blur(12px);
+}
+
+#modal-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(#000, 0.5);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Window
+////////////////////////////////////////////////////////////////////////////////
+
+#modal-window {
+	position: fixed;
+	top: $modal-pad;
+	width: 85%;
+	left: 50%;
+	transform: translate(-50%, -120%);
+	transition: $animation-duration ease transform;
+	box-shadow: 0 2px $modal-pad rgba(#000, 0.25);
+	overflow-x: hidden;
+	&.show {
+		transform: translate(-50%,0);
+	}
+	&.tiny {
+		max-width: 500px;
+	}
+}
+
+@media only screen and (max-width: $modal-breakpoint) {
+	#modal-window {
+		width: 94%;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Row
+////////////////////////////////////////////////////////////////////////////////
+
+#modal-row {
+	position: relative;
+	width: 100%;
+	display: flex;
+	transition: left $animation-duration ease;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Container
+////////////////////////////////////////////////////////////////////////////////
+
+.modal-column {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	.modal-header {
+		padding: $modal-pad/2;
+		flex: 0 0 auto;
+		h2 {
+			margin: 0;
+			line-height: 0;
+		}
+		a.close-modal {
+			position: absolute;
+			right: 4px;
+			top: 0;
+			font-size: 32px;
+			&:hover {
+				transform: scale(1.08);
+			}
+			&:active {
+				transform: scale(0.92);
+			}
+		}
+	}
+	.modal-content {
+		min-height: 320px;
+		flex: 1 1 auto;
+		overflow-y: scroll;
+		&::-webkit-scrollbar { width: 0 !important }
+		-ms-overflow-style: none;
+	}
+	.modal-actions {
+		flex: 0 0 auto;
+		padding: $modal-pad/2;
+		text-align: right;
+		a {
+			display: inline-block;
+		}
+	}
+}
