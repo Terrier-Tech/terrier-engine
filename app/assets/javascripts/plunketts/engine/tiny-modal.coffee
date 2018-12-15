@@ -126,6 +126,7 @@ window.tinyModal.show = (url, options) ->
 		(res, status, xhr) ->
 			if status == 'error'
 				column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{res}</pre>")
+				tinyModal.removeLoadingOverlay()
 			else if options.callback?
 				options.callback column
 	)
@@ -157,3 +158,4 @@ $(document).on 'ajax:error', '#modal-window form', (xhr, status, error) ->
 	win = $ '#modal-window'
 	column = win.find '.modal-column'
 	column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{status.responseText}</pre>")
+	tinyModal.removeLoadingOverlay()
