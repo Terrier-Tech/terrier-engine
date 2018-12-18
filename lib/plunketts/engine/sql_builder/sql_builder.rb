@@ -5,11 +5,19 @@ class SqlBuilder
 
   ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs)
 
+  @@default_make_objects = true
+
+  def self.default_make_objects=(val)
+    @@default_make_objects = val
+  end
+
+  attr_reader :make_objects
+
   def initialize
     ATTRS.each do |attr|
       self.send "#{attr}=", []
     end
-    @make_objects = true
+    @make_objects = @@default_make_objects
     @the_limit = 10000
   end
 
@@ -148,6 +156,11 @@ class SqlBuilder
 
   def as_raw
     @make_objects = false
+    self
+  end
+
+  def as_objects
+    @make_objects = true
     self
   end
 
