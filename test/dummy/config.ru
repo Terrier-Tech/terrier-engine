@@ -1,4 +1,4 @@
-# This file is used by Rack-based servers to start the application.
+# This file is used by Rack-based servers to start the layout.
 
 require_relative 'config/environment'
 

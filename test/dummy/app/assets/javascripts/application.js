@@ -1,4 +1,4 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
+// This is a manifest file that'll be compiled into layout.js, which will include all the files
 // listed below.
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
@@ -10,6 +10,12 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require jquery3
 //= require rails-ujs
-//= require activestorage
+//= require turbolinks
+//= require lodash.core
+//= require plunketts/engine/strings
+//= require plunketts/engine/polyfills
+//= require plunketts/engine/tinytemplate
+//= require plunketts/engine/tiny-modal
 //= require_tree .

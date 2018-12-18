@@ -82,13 +82,16 @@ body.with-modal #content {
 		flex: 0 0 auto;
 		h2 {
 			margin: 0;
-			line-height: 0;
+			line-height: 1;
 		}
 		a.close-modal {
 			position: absolute;
-			right: 4px;
+			right: 0;
 			top: 0;
 			font-size: 32px;
+			display: block;
+			width: 32px;
+			text-align: center;
 			&:hover {
 				transform: scale(1.08);
 			}

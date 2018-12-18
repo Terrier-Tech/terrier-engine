@@ -95,7 +95,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	)
 
 # populate the modal from a URL
-window.tinyModal.show = (url, options) ->
+window.tinyModal.show = (url, options={}) ->
 	$('body').addClass 'with-modal'
 
 	# add the modal parameter to the link

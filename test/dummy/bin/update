@@ -2,7 +2,7 @@
 require 'fileutils'
 include FileUtils
 
-# path to your application root.
+# path to your layout root.
 APP_ROOT = File.expand_path('..', __dir__)
 
 def system!(*args)
@@ -26,6 +26,6 @@ chdir APP_ROOT do
   puts "\n== Removing old logs and tempfiles =="
   system! 'bin/rails log:clear tmp:clear'
 
-  puts "\n== Restarting application server =="
+  puts "\n== Restarting layout server =="
   system! 'bin/rails restart'
 end

@@ -13,3 +13,12 @@ gemspec
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]
+
+gem 'sassc-rails'
+gem 'slim-rails'
+gem 'jquery-rails'
+gem 'turbolinks', '~> 5'
+gem 'lodash-rails'
+gem 'coffee-rails', '~> 4.2'
+gem 'puma'
+gem 'sqlite3'

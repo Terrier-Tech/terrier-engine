@@ -9,7 +9,7 @@ class MultiLogger
   end
 
   def stream_response(response)
-    response.headers["Content-Type"] = "application/json"
+    response.headers["Content-Type"] = "layout/json"
     @stream = response.stream
     @stream.write '['
   end
