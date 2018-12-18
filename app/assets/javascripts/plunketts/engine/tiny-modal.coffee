@@ -67,6 +67,8 @@ _emptyColumnTemplate = tinyTemplate ->
 
 # shows a modal with direct content
 window.tinyModal.showDirect = (content, options={}) ->
+	$('body').addClass 'with-modal'
+
 	# overlay
 	overlay = $ '#modal-overlay'
 	unless overlay.length
