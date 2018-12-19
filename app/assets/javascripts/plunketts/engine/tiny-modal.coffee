@@ -14,6 +14,8 @@ window.tinyModal.close = ->
 	win = $('#modal-window')
 	if win.length
 		win.removeClass 'show'
+		if win.find('.modal-reload').length
+			Turbolinks.visit window.location
 		setTimeout(
 			-> win.remove()
 			500

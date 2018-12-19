@@ -18,6 +18,7 @@ $(document).on 'click', 'a.modal-with-actions', ->
 				title: 'Submit'
 				icon: 'ion-checkmark-round'
 				class: 'primary'
+				attrs: {href: '#'}
 			}
 			{
 				title: 'Delete'
@@ -26,4 +27,11 @@ $(document).on 'click', 'a.modal-with-actions', ->
 				end: true
 			}
 		]
+	)
+
+$(document).on 'click', 'a.modal-reload', ->
+	tinyModal.showDirect(
+		"<h1 class='text-center modal-reload'>The page will reload when you close this modal!</h1>"
+		title: 'Modal'
+		title_icon: 'gear-a'
 	)
