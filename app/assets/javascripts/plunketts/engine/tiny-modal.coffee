@@ -108,8 +108,16 @@ window.tinyModal.showDirect = (content, options={}) ->
 	# row
 	row = win.find '#modal-row'
 
+	# render content
+	unless options.layout?
+		options.layout = true
+	fullContent = if options.layout
+		_template(options, content)
+	else
+		content
+
 	# column
-	column = $("<div class='modal-column'>#{_template(options, content)}</div>").appendTo row
+	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
 
 	_layoutRow row
 

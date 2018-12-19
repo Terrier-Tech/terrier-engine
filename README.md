@@ -21,6 +21,7 @@ tinyModal.showDirect content, options
  * title: the title of the modal
  * icon: an un-prefixed icon name for the title
  * tiny: `true` to make it tiny
+ * layout: `false` to skip the modal layout
  * callback: a callback function that receives the modal jQuery instance once it's shown
  * actions: an array of actions to go at the bottom
  

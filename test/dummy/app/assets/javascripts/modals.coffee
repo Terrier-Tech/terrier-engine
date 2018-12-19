@@ -35,3 +35,17 @@ $(document).on 'click', 'a.modal-reload', ->
 		title: 'Modal'
 		title_icon: 'gear-a'
 	)
+
+
+_noLayoutTemplate = tinyTemplate ->
+	div '.no-layout', ->
+		p '', 'This modal renders its own layout'
+		a '.close-modal', 'Close'
+
+$(document).on 'click', '.no-layout-modal', ->
+	tinyModal.showDirect(
+		_noLayoutTemplate()
+		title: 'Modal'
+		title_icon: 'gear-a'
+		layout: false
+	)
