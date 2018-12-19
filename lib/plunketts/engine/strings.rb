@@ -13,6 +13,14 @@ PRETTY_DATE_FORMAT = '%B %e, %Y'
 PRETTY_TIME_FORMAT = '%Y-%m-%d %l:%M %p'
 SHORT_DATE_FORMAT = '%m/%d/%y'
 
+# needed to parse WKB geo points
+if defined? RGeo
+  RGEO_FACTORY = RGeo::Geographic.spherical_factory(
+      wkb_parser: {support_ewkb: true}, wkb_generator: {hex_format: true, emit_ewkb_srid: true})
+else
+  RGEO_FACTORY = nil
+end
+
 class String
 
   def uncapitalize
@@ -47,7 +55,16 @@ class String
     end
   end
 
+  def parse_geo_point
+    if self.index('POINT')
+      self.gsub('POINT (', '').gsub(')', '').strip.split(' ').map(&:to_f)
+    else
+      RGEO_FACTORY.parse_wkb self
+    end
+  end
+
 end
+
 
 class Float
 
@@ -56,6 +73,7 @@ class Float
   end
 
 end
+
 
 class Array
 
@@ -68,4 +86,17 @@ class Array
     self.sum / self.size.to_f
   end
 
+end
+
+
+class Hash
+
+  # creates a new hash with all keys as symbols
+  def symbolize
+    h = {}
+    self.each do |k, v|
+      h[k.to_sym] = v
+    end
+    h
+  end
 end
