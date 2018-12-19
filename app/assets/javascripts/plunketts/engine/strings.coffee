@@ -49,6 +49,18 @@ window.titleize = (s) ->
 String::titleize = ->
 	window.titleize this
 
+# convert to lower case and join with underscores
+window.underscore = (s) ->
+	unless s?
+		return ''
+	s = s.toString()
+	comps = s.split(/[\s_]/g)
+	lowecased = _.map comps, (c) -> c.toLowerCase()
+	lowecased.join('_')
+
+String::underscore = ->
+	window.underscore this
+
 window.formatCents = (cents, showCents=true) ->
 	dollars = ''
 	sign = if cents < 0 then '-' else ''
