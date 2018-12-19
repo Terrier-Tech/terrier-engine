@@ -16,13 +16,13 @@ $(document).on 'click', 'a.modal-with-actions', ->
 		actions: [
 			{
 				title: 'Submit'
-				icon: 'ion-checkmark-round'
+				icon: 'checkmark-round'
 				class: 'primary'
 				attrs: {data: {id: '123'}}
 			}
 			{
 				title: 'Delete'
-				icon: 'ion-close-round'
+				icon: 'close-round'
 				class: 'alert'
 				end: true
 			}

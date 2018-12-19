@@ -61,7 +61,7 @@ _actionPartial = (action) ->
 		sel += '.with-icon'
 	a "#{sel}#{_classToSel(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
-			icon _classToSel(action.icon)
+			icon ".ion-#{action.icon}.la.la-#{action.icon}"
 		span '.title', action.title
 
 _template = tinyTemplate (options, content) ->
