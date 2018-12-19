@@ -111,6 +111,8 @@ window.tinyModal.showDirect = (content, options={}) ->
 	# column
 	column = $("<div class='modal-column'>#{_template(options, content)}</div>").appendTo row
 
+	_layoutRow row
+
 	setTimeout(
 		->
 			win.addClass 'show'
