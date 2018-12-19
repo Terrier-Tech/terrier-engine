@@ -18,7 +18,7 @@ $(document).on 'click', 'a.modal-with-actions', ->
 				title: 'Submit'
 				icon: 'ion-checkmark-round'
 				class: 'primary'
-				attrs: {href: '#'}
+				attrs: {data: {id: '123'}}
 			}
 			{
 				title: 'Delete'

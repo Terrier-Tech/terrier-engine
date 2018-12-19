@@ -59,7 +59,7 @@ _actionPartial = (action) ->
 	sel = '.action'
 	if action.icon?.length
 		sel += '.with-icon'
-	a "#{sel}#{_classToSel(action.class)}", ->
+	a "#{sel}#{_classToSel(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
 			icon _classToSel(action.icon)
 		span '.title', action.title
