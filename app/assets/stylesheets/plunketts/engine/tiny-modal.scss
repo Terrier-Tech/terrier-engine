@@ -111,8 +111,16 @@ body.with-modal #content {
 		flex: 0 0 auto;
 		padding: $modal-pad/2;
 		text-align: right;
+		position: relative;
 		a {
 			display: inline-block;
+		}
+		.end {
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			padding: $modal-pad/2;
 		}
 	}
 }

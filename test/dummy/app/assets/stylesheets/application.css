@@ -20,6 +20,7 @@ body {
     background-color: #f0f0f0;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
+    color: #333;
 }
 a {
     color: #386177;
@@ -31,4 +32,14 @@ a {
 
 .text-center {
     text-align: center;
+}
+
+a.demo-link {
+    display: block;
+    font-size: 20px;
+    padding: 8px;
+}
+
+.with-icon i {
+    margin-right: 0.4em;
 }

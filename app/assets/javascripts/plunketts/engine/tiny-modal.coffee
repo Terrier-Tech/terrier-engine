@@ -48,6 +48,20 @@ _layoutRow = (row) ->
 	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
 
 
+_classToSel = (c) ->
+	unless c?
+		return ''
+	_.map(c.split(/\s+/), (s) -> ".#{s}").join('')
+
+_actionPartial = (action) ->
+	sel = '.action'
+	if action.icon?.length
+		sel += '.with-icon'
+	a "#{sel}#{_classToSel(action.class)}", ->
+		if action.icon?.length
+			icon _classToSel(action.icon)
+		span '.title', action.title
+
 _template = tinyTemplate (options, content) ->
 	div '.modal-header', ->
 		a '.close-modal', ->
@@ -56,6 +70,15 @@ _template = tinyTemplate (options, content) ->
 			icon ".la.la-#{options.title_icon}.ion-#{options.title_icon}"
 			span '', options.title
 	div '.modal-content', content
+	if options.actions?
+		div '.modal-actions', ->
+			for action in _.filter(options.actions, (a) -> !a.end)
+				_actionPartial(action)
+			div '.end', ->
+				for action in _.filter(options.actions, (a) -> a.end)
+					_actionPartial(action)
+
+
 
 _emptyColumnTemplate = tinyTemplate ->
 	div '.modal-column', ->
