@@ -121,6 +121,8 @@ class QueryResult
     @columns.delete_if {|c| c[:name] == name.to_s}
   end
 
+  TRUE_STRINGS = %w(1 true t)
+
   def define_column_method(row_class, name)
     name_s = name.to_s
     type = QueryResult.column_type name_s
@@ -144,6 +146,14 @@ class QueryResult
       end
       row_class.define_method "#{name}=" do |val|
         self.instance_variable_get('@raw')[name_s] = val
+      end
+    when :bool
+      row_class.define_method name do
+        raw = self.instance_variable_get('@raw')[name_s]
+        TRUE_STRINGS.include?(raw.to_s.downcase)
+      end
+      row_class.define_method "#{name}=" do |val|
+        self.instance_variable_get('@raw')[name_s] = TRUE_STRINGS.include?(val.to_s.downcase)
       end
     when :dollars
       row_class.define_method name do
