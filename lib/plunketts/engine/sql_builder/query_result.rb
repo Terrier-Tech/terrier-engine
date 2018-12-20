@@ -220,14 +220,15 @@ class QueryResult
   private
 
   ARRAY_SUFFIXES = %w(_array tags ies)
+  BOOL_PREFIXES = %w(is_)
   RAW_SUFFIXES = %w(_items lanes certs)
   DOLLARS_SUFFIXES = %w(price dollars total tax _value amount balance)
   TIME_SUFFIXES = %w(_at time)
   DATE_SUFFIXES = %w(_date)
   INTEGER_EXACT = %w(x y value)
-  INTEGER_SUFFIXES = %w(count duration)
+  INTEGER_SUFFIXES = %w(number count duration _i)
   INTEGER_PREFIXES = %w(days_since days_until)
-  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude)
+  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude _score)
   JSON_SUFFIXES = %w(weather)
   GEO_SUFFIXES = %w(geo)
 
@@ -244,6 +245,11 @@ class QueryResult
     ARRAY_SUFFIXES.each do |suffix|
       if key_s.ends_with?(suffix)
         return :array
+      end
+    end
+    BOOL_PREFIXES.each do |suffix|
+      if key_s.start_with?(suffix)
+        return :bool
       end
     end
     DOLLARS_SUFFIXES.each do |suffix|
