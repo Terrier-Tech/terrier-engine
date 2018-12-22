@@ -191,8 +191,8 @@ $(document).on 'click', 'a.close-modal', ->
 
 
 # handle modal form errors
-$(document).on 'ajax:error', '#modal-window form', (xhr, status, error) ->
-	win = $ '#modal-window'
-	column = win.find '.modal-column'
-	column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{status.responseText}</pre>")
-	tinyModal.removeLoadingOverlay()
+#$(document).on 'ajax:error', '#modal-window form', (xhr, status, error) ->
+#	win = $ '#modal-window'
+#	column = win.find '.modal-column'
+#	column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{status.responseText}</pre>")
+#	tinyModal.removeLoadingOverlay()
