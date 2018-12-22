@@ -57,3 +57,13 @@ onlyUnique = (value, index, self) ->
 	self.indexOf(value) == index
 _.uniq = (array) ->
 	array.filter onlyUnique
+
+
+
+_.groupBy = (xs, key) ->
+	xs.reduce(
+		(rv, x) ->
+			(rv[x[key]] = rv[x[key]] || []).push(x)
+			rv
+		{}
+	)

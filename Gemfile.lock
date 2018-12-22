@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunketts-engine (1.0.9)
+    plunketts-engine (1.0.10)
       rails (>= 4.2)
       terminal-table
 
