@@ -14,8 +14,8 @@
 //= require rails-ujs
 //= require turbolinks
 //= require lodash.core
-//= require plunketts/engine/strings
-//= require plunketts/engine/polyfills
-//= require plunketts/engine/tinytemplate
-//= require plunketts/engine/tiny-modal
+//= require plunketts/strings.coffee
+//= require plunketts/polyfills.coffee
+//= require plunketts/tinytemplate.coffee
+//= require plunketts/tiny-modal.coffee
 //= require_tree .
