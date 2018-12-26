@@ -122,7 +122,6 @@ module Plunketts::Fields
     # creates a field containing an integer cents value, as well as dollars accessors
     def cents_field(name, options={})
       options[:type] = Integer
-      field name, options
       define_method "#{name}_dollars" do
         c = self.send(name)
         if c
@@ -143,7 +142,6 @@ module Plunketts::Fields
     # creates a time field that can be edited by setting the date string value
     def date_field(name, options={})
       options[:type] = Time
-      field name, options
       define_method "#{name}_s" do
         d = self.send(name)
         if d

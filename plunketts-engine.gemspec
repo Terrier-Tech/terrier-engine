@@ -1,12 +1,12 @@
 $:.push File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
-require 'plunketts/engine/version'
+require 'plunketts/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = 'plunketts-engine'
-  s.version     = Plunketts::Engine::VERSION
+  s.version     = Plunketts::VERSION
   s.authors     = ['Andy Selvig']
   s.email       = ['andy@Flame.local']
   s.homepage    = 'http://plunketts.net'

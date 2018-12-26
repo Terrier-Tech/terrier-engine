@@ -14,7 +14,7 @@
 # | user_id          | uuid      | required, indexed |
 # +------------------+-----------+-------------------+
 class Script < ApplicationRecord
-  include Plunketts::Scriptable
+  include Plunketts::ScriptBase
 
 
 end

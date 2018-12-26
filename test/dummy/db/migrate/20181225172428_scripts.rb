@@ -27,6 +27,7 @@ class Scripts < ActiveRecord::Migration[5.2]
       t.text :title, null: false
       t.text :email_recipients, array: true
       t.json :script_fields
+      t.text :report_category
       t.references_uuid :user
     end
 

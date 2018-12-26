@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2018_12_25_172428) do
     t.text "title", null: false
     t.text "email_recipients", array: true
     t.json "script_fields"
+    t.text "report_category"
     t.uuid "user_id", null: false
     t.index ["_state"], name: "index_scripts_on__state"
     t.index ["created_by_id"], name: "index_scripts_on_created_by_id"

@@ -1,10 +1,12 @@
-require 'plunketts/engine/scripts/script_field'
+require 'plunketts/scripts/script_field'
+require 'plunketts/scripts/script_config'
 
-# include this module in the script model
-module Plunketts::Scriptable
+# include this module in the Script model
+module Plunketts::ScriptBase
   extend ActiveSupport::Concern
   include Plunketts::Fields
   include Plunketts::Embedder
+  include Plunketts::Schedulable
 
 
   included do
@@ -48,6 +50,15 @@ module Plunketts::Scriptable
       options
     end
 
+
+    ## Inputs
+
+    has_many :script_inputs
+
+
+    ## Reporting
+
+    enum_field :report_category, Plunketts::ScriptConfig.category_icons.keys.map(&:to_s).sort
 
 
     ## Searching

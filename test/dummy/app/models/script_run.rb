@@ -19,7 +19,20 @@
 # | updated_by_name  | text              |                            |
 # +------------------+-------------------+----------------------------+
 class ScriptRun < ApplicationRecord
+  include Plunketts::ScriptRunBase
 
+  has_attached_file :log
+  validates_attachment_content_type :log, content_type: %w(text/plain text/html)
 
+  def write_log(body)
 
+    if body.blank?
+      body = 'empty log'
+    end
+    body = body.strip.force_encoding(Encoding::UTF_8)
+
+    self.log = StringIO.new body
+    self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
+
+  end
 end

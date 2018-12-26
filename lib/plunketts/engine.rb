@@ -1,17 +1,18 @@
 require 'terminal-table'
 
-require 'plunketts/engine/engine'
-require 'plunketts/engine/strings'
+require 'plunketts/migrations'
 
-require 'plunketts/engine/sql_builder/sql_builder'
+require 'plunketts/engine'
+require 'plunketts/strings'
 
-require 'plunketts/engine/io/cvs_io'
+require 'plunketts/sql_builder/sql_builder'
 
-require 'plunketts/engine/logging/loggable'
-require 'plunketts/engine/logging/multi_logger'
+require 'plunketts/io/cvs_io'
+
+require 'plunketts/logging/loggable'
+require 'plunketts/logging/multi_logger'
 
 module Plunketts
-  module Engine
-    # Your code goes here...
+  class Engine < ::Rails::Engine
   end
 end
