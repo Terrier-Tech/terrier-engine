@@ -101,9 +101,17 @@ ActiveRecord::Schema.define(version: 2018_12_25_172428) do
     t.text "updated_by_name"
     t.text "body"
     t.text "title", null: false
+    t.text "description"
     t.text "email_recipients", array: true
     t.json "script_fields"
     t.text "report_category"
+    t.json "schedule_rules"
+    t.text "schedule_rule_summaries", array: true
+    t.text "schedule_time", default: "none", null: false
+    t.integer "num_per_year", default: 0, null: false
+    t.text "schedule_type", default: "every", null: false
+    t.text "order_grouping", default: "combine", null: false
+    t.text "visibility", default: "private", null: false
     t.uuid "user_id", null: false
     t.index ["_state"], name: "index_scripts_on__state"
     t.index ["created_by_id"], name: "index_scripts_on_created_by_id"

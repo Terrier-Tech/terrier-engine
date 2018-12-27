@@ -52,8 +52,10 @@ class ScheduleRule
   @quarter_february = %w(february may august november)
   @quarter_march = %w(march june september december)
 
+  @weeks = %w(1 2 3 4 5 all)
+
   class << self
-    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march
+    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks
   end
 
 

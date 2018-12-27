@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include Plunketts::RenderingBase
 
   def page_title
     @title || self.class.name.gsub('Controller', '').titleize

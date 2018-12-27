@@ -13,7 +13,8 @@
 //= require jquery3
 //= require rails-ujs
 //= require turbolinks
-//= require lodash.core
+//= require lodash
+//= require plunketts/forms.coffee
 //= require plunketts/strings.coffee
 //= require plunketts/polyfills.coffee
 //= require plunketts/tinytemplate.coffee

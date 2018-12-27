@@ -25,9 +25,17 @@ class Scripts < ActiveRecord::Migration[5.2]
     create_model :scripts do |t|
       t.text :body
       t.text :title, null: false
+      t.text :description
       t.text :email_recipients, array: true
       t.json :script_fields
       t.text :report_category
+      t.json :schedule_rules
+      t.text :schedule_rule_summaries, array: true
+      t.text :schedule_time, null: false, default: 'none'
+      t.integer :num_per_year, null: false, default: 0
+      t.text :schedule_type, null: false, default: 'every'
+      t.text :order_grouping, null: false, default: 'combine'
+      t.text :visibility, null: false, default: 'private'
       t.references_uuid :user
     end
 

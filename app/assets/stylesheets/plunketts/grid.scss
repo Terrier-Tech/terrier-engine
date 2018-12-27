@@ -1,0 +1,63 @@
+
+$breakpoint: 900px !default;
+
+////////////////////////////////////////////////////////////////////////////////
+// Horizontal Grid
+////////////////////////////////////////////////////////////////////////////////
+
+// space out children horizontally by either stretching (.stretch-column) or shrinking (.shrink-column) their contents
+// add .collapsible to collapse all columns under the breakpoint
+.horizontal-grid {
+	display: flex;
+	&.padded {
+		padding: 1em;
+	}
+	.stretch-column, .shrink-column {
+		padding: 0 8px;
+		&.no-padding {
+			padding: 0;
+		}
+		&.padded {
+			padding: 12px 16px;
+		}
+		&:first-child {
+			padding-left: 0;
+		}
+		&:last-child {
+			padding-right: 0;
+		}
+	}
+	.stretch-column {
+		flex: 1;
+	}
+	.shrink-column {
+		flex: 0 1 auto;
+	}
+}
+@media only screen and (max-width: $breakpoint) {
+	.horizontal-grid.collapsible {
+		display: block;
+		.stretch-column, .shrink-column {
+			padding: 0;
+		}
+	}
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Block Grid
+////////////////////////////////////////////////////////////////////////////////
+
+// similar to foundation's block grid, but you don't need to explicitly specify number of columns
+// items are 200px wide by default, set flex-basis to override
+.block-grid {
+	display: flex;
+	flex-wrap: wrap;
+	.grid-item {
+		flex: 1 1 200px;
+		img {
+			max-width: 100%;
+		}
+	}
+}

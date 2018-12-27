@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '>= 4.2'
   s.add_dependency 'terminal-table'
+  s.add_dependency 'parser'
 
   s.add_development_dependency 'pg'
 end

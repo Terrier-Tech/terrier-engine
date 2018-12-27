@@ -84,6 +84,15 @@ module Plunketts::ScriptBase
     after_destroy :remove_search_index
 
 
+    ## Scheduling
+
+    enum_field :schedule_time, %w(none evening morning)
+
+
+    ## Visibility
+
+    @visibility_levels = %w(public private)
+    enum_field :visibility, @visibility_levels
 
   end
 

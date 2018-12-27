@@ -3,9 +3,7 @@ Rails.application.routes.draw do
 
   get 'modals' => 'modals#index'
 
-  resources :scripts do
-
-  end
+  mount Plunketts::Engine, at: "/"
 
   root 'application#home'
 end

@@ -754,17 +754,187 @@ class ScriptSearcher
 
 
 ################################################################################
+# Schedule Rules Editor
+################################################################################
+
+_scheduleRulePartial = (script, constants) ->
+	rule = if script.schedule_rules?.length then script.schedule_rules[0] else {}
+	div '.schedule-rule-editor', ->
+		input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
+		div '.horizontal-grid', ->
+			div '.stretch-column.days-column', ->
+				for day in constants.days
+					label '', ->
+						checked = if rule.days?.indexOf(day)>-1 then 'checked' else null
+						input '.day', type: 'checkbox', value: day, checked: checked
+						span '', day[0..2].capitalize()
+			div '.stretch-column.weeks-column', ->
+				for week in constants.weeks
+					label '', ->
+						checked = if rule.weeks?.indexOf(week)>-1 then 'checked' else null
+						input '.week', type: 'checkbox',  value: week, checked: checked
+						title = if week == 'all' then 'All Weeks' else "Week #{week}"
+						span '', title
+			for monthGroup in constants.month_groups
+				div '.stretch-column.months-column', ->
+					for month in monthGroup
+						label '', ->
+							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null
+							input '.month', type: 'checkbox',  value: month, checked: checked
+							span '', month[0..2].capitalize()
+		a '.all-months.ion-android-done-all', 'All Months'
+
+# ensures that the schedule_rules_s field always contains the latest value from the controls inside of @ui
+class ScheduleRulesEditor
+	constructor: (@ui) ->
+		@output = @ui.find 'input[name=schedule_rules_s]'
+
+		@ui.on 'change', 'input.day, input.month', =>
+			this.onChange()
+
+		@ui.on 'click', 'a.all-months', =>
+			@ui.find('input.month').prop 'checked', true
+			this.onChange()
+
+		@ui.on 'change', 'input.week[value=all]', =>
+			@ui.find('input.week[value!=all]').prop 'checked', false
+			this.onChange()
+
+		@ui.on 'change', 'input.week[value!=all]', =>
+			@ui.find('input.week[value=all]').prop 'checked', false
+			this.onChange()
+
+	onChange: ->
+		days = @ui.find('input.day:checked').map((index, elem) ->
+			elem.value
+		).get()
+		weeks = @ui.find('input.week:checked').map((index, elem) ->
+			elem.value
+		).get()
+		months = @ui.find('input.month:checked').map((index, elem) ->
+			elem.value
+		).get()
+		rule = {days: days, weeks: weeks, months: months}
+		puts rule
+		@output.val JSON.stringify([rule])
+
+
+################################################################################
 # Editor
 ################################################################################
 
-_editorTemplate = tinyTemplate (script) ->
-	div '.script-editor', ->
+_editorTemplate = tinyTemplate (script, constants) ->
+	div '.script-editor.show-settings', ->
 		div '.toolbar'
 		div '.ace-container'
+		div '.settings-container', ->
+			div '.settings-panel.general', ->
+				h4 '.with-icon', ->
+					icon '.ion-information-circled'
+					span '', 'General'
+				input '', type: 'text', name: 'title', value: script.title, placeholder: 'Title'
+				div '.horizontal-grid', ->
+					div '.stretch-column', ->
+						label '', 'Category'
+						select '', name: 'report_category', ->
+							forms.optionsForSelect constants.category_options, script.report_category
+					div '.stretch-column', ->
+						label '', 'Visibility'
+						select '', name: 'visibility', ->
+							forms.optionsForSelect constants.visibility_options, script.visibility
+				textarea '', name: 'description', value: script.description, placeholder: 'Description', rows: 1
+
+			div '.settings-panel.fields', ->
+				h4 '.with-icon', ->
+					icon '.ion-toggle-filled'
+					span '', 'Fields'
+
+			div '.settings-panel.schedule', ->
+				select '.schedule-time', name: 'schedule_time', ->
+					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
+				h4 '.with-icon', ->
+					icon '.ion-calendar'
+					span '', 'Schedule'
+				_scheduleRulePartial script, constants
+
 
 class Editor
-	constructor: (@script, @tabContainer) ->
-		@ui = $(_editorTemplate(@script)).appendTo @tabContainer.getElement()
+	constructor: (@script, @tabContainer, @constants) ->
+		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
+
+		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
+		schedulePanel = @ui.find '.settings-panel.schedule'
+		scheduleTimeSelect = @ui.find('select.schedule-time')
+		scheduleTimeSelect.change =>
+			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
+		scheduleTimeSelect.change()
+
+		aceContainer = @ui.find '.ace-container'
+		@aceEditor = ace.edit aceContainer[0]
+		@aceEditor.setTheme 'ace/theme/textmate'
+		@aceEditor.setDisplayIndentGuides true
+		@aceEditor.setShowFoldWidgets false
+		@session = @aceEditor.getSession()
+		@session.setMode 'ace/mode/ruby'
+		@session.setTabSize 2
+		@errorMarkerId = null
+
+		@aceEditor.setOptions(
+			enableBasicAutocompletion: true
+			enableSnippets: true
+			enableLiveAutocompletion: false
+		)
+
+		@aceEditor.on 'change', _.debounce(
+			=> this.onChanged(),
+			500
+		)
+
+		@aceEditor.commands.addCommand(
+			name: 'save'
+			bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}
+			exec: (e) =>
+				this.save()
+		)
+
+	onChanged: ->
+		$.get(
+			'/scripts/check'
+			{body: @aceEditor.getValue()}
+			(res) =>
+				console.log res
+				this.clearDiagnostic()
+				if res.diagnostic
+					this.setDiagnostic res.diagnostic
+		)
+
+	clearDiagnostic: ->
+		if @errorMarkerId
+			@session.removeMarker @errorMarkerId
+			@errorMarkerId = null
+#		@syntaxErrorOutput.removeClass('error').text 'No Errors'
+#		@runButton.attr 'disabled', null
+
+	setDiagnostic: (diagnostic) ->
+		Range = ace.require("ace/range").Range
+		loc = diagnostic.location
+		src = loc.source_buffer
+		line = _.values(src.line_for_position)[0]
+		cols = _.values(src.column_for_position)
+		if cols.length==1
+			cols.push cols[0]+1
+		console.log "error on line #{line} from #{cols[0]} to #{cols[1]}"
+		range = new Range(line-1, cols[0]-1, line-1, cols[1]+1)
+		@errorMarkerId = @session.addMarker(range, 'syntax-error', 'error', true)
+		marker = @ui.find('.ace-container .syntax-error')
+		puts "marker count: #{marker.length}"
+		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
+#		@syntaxErrorOutput.addClass('error').text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
+#		@runButton.attr 'disabled', 'disabled'
+
+
+	save: ->
+
 
 
 
@@ -776,9 +946,20 @@ window.scripts.initWorkspace = (sel) ->
 	new Workspace $(sel)
 
 class Workspace
-	constructor: (container) ->
-		container.addClass 'script-workspace'
+	constructor: (@container) ->
+		@container.addClass 'script-workspace'
+		ace.require 'ace/ext/language_tools'
 
+		$.get(
+			'/scripts/constants.json'
+			(res) =>
+				if res.status == 'success'
+					this.init res.constants
+				else
+					alert res.message
+		)
+
+	init: (@constants) ->
 		config = {
 			content: [{
 				type: 'stack'
@@ -796,9 +977,9 @@ class Workspace
 				]
 			}]
 		}
-		@layout = new GoldenLayout config, container[0]
+		@layout = new GoldenLayout config, @container[0]
 
 		@layout.registerComponent 'editor', (container, state) =>
-			editor = new Editor({}, container)
+			editor = new Editor({}, container, @constants)
 
 		@layout.init()

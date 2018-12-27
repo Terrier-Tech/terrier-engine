@@ -10,6 +10,7 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
+ *= require plunketts/grid
  *= require plunketts/tiny-modal
  *= require plunketts/scripts
  *= require_tree .
@@ -76,4 +77,22 @@ a.demo-link {
     left: 0;
     right: 0;
     background-color: #aaa;
+}
+
+
+input[type=text], input[type=email], select, textarea {
+    padding: 6px;
+    margin-bottom: 1em;
+    width: 100%;
+    font-size: 16px;
+}
+label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    input[type=checkbox] {
+        margin-bottom: 0.5em;
+        margin-right: 0.5em;
+    }
 }

@@ -13,4 +13,10 @@ module Plunketts::ScriptConfig
     end
   end
 
+  def self.category_options
+    @values[:category_icons].map do |k, v|
+      [k.to_s.titleize, v, k]
+    end
+  end
+
 end
