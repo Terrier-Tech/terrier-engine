@@ -3,5 +3,9 @@ Rails.application.routes.draw do
 
   get 'modals' => 'modals#index'
 
+  resources :scripts do
+
+  end
+
   root 'application#home'
 end

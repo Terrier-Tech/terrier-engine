@@ -1,0 +1,129 @@
+
+$secondary-color: #40555e !default;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Tabs
+////////////////////////////////////////////////////////////////////////////////
+
+
+
+.lm_dragProxy .lm_content {
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+	box-sizing: border-box;
+}
+
+.lm_dropTargetIndicator {
+	box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.4);
+	outline: 1px dashed #cccccc;
+	margin: 1px;
+	transition: all 200ms ease;
+	.lm_inner {
+		background: #000000;
+		opacity: .1
+	}
+}
+
+
+.script-workspace {
+	.lm_goldenlayout {
+		background-color: darken($secondary-color, 12%);
+	}
+	.lm_content {
+		background-color: transparent;
+	}
+
+	.lm_splitter {
+		background: #999999;
+		opacity: .001;
+		transition: opacity 200ms ease;
+		&:hover, &.lm_dragging {
+			background: #bbbbbb;
+			opacity: 1
+		}
+	}
+
+
+	.lm_header {
+		height: 24px !important;
+		.lm_tab {
+			background-color: $secondary-color;
+			color: #fff;
+			box-shadow: none !important;
+			opacity: 0.5;
+			font-size: 13px;
+			padding-top: 3px;
+			padding-right: 10px;
+			//padding-bottom: 4px;
+			height: 24px;
+			.lm_close_tab {
+				display: none;
+			}
+			&:hover, &.lm_active {
+				opacity: 1;
+			}
+		}
+		.lm_controls {
+			> li {
+				background-image: none;;
+				font-size: 15px;
+				line-height: 1;
+				padding: 4px 2px;
+				color: #fff;
+				&::before {
+					font-family: Ionicons;
+				}
+			}
+			.lm_close::before {
+				content: "\f129";
+			}
+			.lm_maximise {
+				display: none;
+				::before {
+					content: "\f25e";
+				}
+			}
+			.lm_popout::before {
+				content: "\f13a";
+			}
+		}
+	}
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Workspace
+////////////////////////////////////////////////////////////////////////////////
+
+.script-workspace {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #aaa;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Editor
+////////////////////////////////////////////////////////////////////////////////
+
+$toolbar-height: 32px;
+
+.script-editor {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	.toolbar {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: $toolbar-height;
+		background-color: $secondary-color;
+	}
+}

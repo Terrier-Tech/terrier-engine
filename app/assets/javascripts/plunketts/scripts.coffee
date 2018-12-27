@@ -750,3 +750,55 @@ class ScriptSearcher
 			prevItem.click()
 		else
 			@resultsList.find('.script-result:last').click()
+
+
+
+################################################################################
+# Editor
+################################################################################
+
+_editorTemplate = tinyTemplate (script) ->
+	div '.script-editor', ->
+		div '.toolbar'
+		div '.ace-container'
+
+class Editor
+	constructor: (@script, @tabContainer) ->
+		@ui = $(_editorTemplate(@script)).appendTo @tabContainer.getElement()
+
+
+
+################################################################################
+# Script Workspace
+################################################################################
+
+window.scripts.initWorkspace = (sel) ->
+	new Workspace $(sel)
+
+class Workspace
+	constructor: (container) ->
+		container.addClass 'script-workspace'
+
+		config = {
+			content: [{
+				type: 'stack'
+				content: [
+					{
+						type: 'component'
+						title: 'Script 1 with a long name'
+						componentName: 'editor'
+					}
+					{
+						type: 'component'
+						title: 'Script 2 also with a long name'
+						componentName: 'editor'
+					}
+				]
+			}]
+		}
+		@layout = new GoldenLayout config, container[0]
+
+		@layout.registerComponent 'editor', (container, state) =>
+			editor = new Editor({}, container)
+
+		@layout.init()

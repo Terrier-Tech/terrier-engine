@@ -10,10 +10,15 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require plunketts/tiny-modal.scss
+ *= require plunketts/tiny-modal
+ *= require plunketts/scripts
  *= require_tree .
  *= require_self
  */
+
+
+$bar-height: 50px;
+$green: #275f37;
 
 
 body {
@@ -21,10 +26,12 @@ body {
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
     color: #333;
+    padding-top: $bar-height;
 }
 a {
     color: #386177;
     cursor: pointer;
+    text-decoration: none;
 }
 * {
     box-sizing: border-box;
@@ -42,4 +49,31 @@ a.demo-link {
 
 .with-icon i {
     margin-right: 0.4em;
+}
+
+
+#top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $bar-height;
+    background-color: $green;
+    a.title {
+        display: block;
+        text-align: center;
+        padding: 10px;
+        color: #fff;
+        font-size: 22px;
+    }
+}
+
+
+#script-workspace-container {
+    position: fixed;
+    top: $bar-height;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #aaa;
 }
