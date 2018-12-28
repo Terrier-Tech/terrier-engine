@@ -1,3 +1,4 @@
+require 'elasticsearch'
 
 class ScriptSearchResults
 
@@ -17,11 +18,11 @@ end
 
 class ScriptSearcher
 
-  INDEX_NAME = 'clypboard_scripts'
+  INDEX_NAME = "#{Rails.application.class.name.gsub('::', '_').downcase}_scripts"
   INDEX_TYPE = 'script'
 
   def initialize
-    @client = Elasticsearch::Client.new host: CLYP_CONFIG['elasticsearch']['host'], log: true
+    @client = Elasticsearch::Client.new host: 'localhost', log: true
   end
 
   def index(script)

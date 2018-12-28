@@ -17,4 +17,5 @@ class Script < ApplicationRecord
   include Plunketts::ScriptBase
 
 
+  validates :title, uniqueness: true
 end

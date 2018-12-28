@@ -26,11 +26,13 @@ module Plunketts::RenderingBase
       end
     end
 
-    def render_error(message)
+    def render_error(message, data={})
       @message = message
+      data[:status] = 'error'
+      data[:message] = message
       respond_to do |format|
         format.html {render template: 'application/error'}
-        format.json {render json: {status: 'error', message: message}}
+        format.json {render json: data}
         format.csv {render text: "error\n#{message}"}
       end
     end

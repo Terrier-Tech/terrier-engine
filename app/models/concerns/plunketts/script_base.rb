@@ -1,4 +1,5 @@
 require 'plunketts/scripts/script_field'
+require 'plunketts/scripts/script_searcher'
 require 'plunketts/scripts/script_config'
 
 # include this module in the Script model
@@ -49,11 +50,6 @@ module Plunketts::ScriptBase
       end
       options
     end
-
-
-    ## Inputs
-
-    has_many :script_inputs
 
 
     ## Reporting

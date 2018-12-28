@@ -20,6 +20,7 @@
 
 $bar-height: 50px;
 $green: #275f37;
+$alert-color: #aa0000;
 
 
 body {
@@ -69,6 +70,45 @@ a.demo-link {
     }
 }
 
+#main-actions {
+    position: fixed;
+    top: 0;
+    right: 0;
+    text-align: right;
+    a {
+        display: inline-block;
+        color: #fff;
+        text-align: center;
+        padding: 4px 8px;
+        cursor: pointer;
+        i {
+            display: block;
+            font-size: 24px;
+        }
+        .title {
+            font-size: 12px;
+        }
+    }
+}
+
+
+table.data {
+    width: 100%;
+    border-collapse: collapse;
+    th {
+        text-align: left;
+    }
+    td {
+        padding: 4px 6px;
+    }
+    thead tr {
+        border-bottom: 1px solid #ccc;
+    }
+    tbody tr:nth-child(odd) {
+        background-color: #f8f8f8;
+    }
+}
+
 
 #script-workspace-container {
     position: fixed;
@@ -85,6 +125,9 @@ input[type=text], input[type=email], select, textarea {
     margin-bottom: 1em;
     width: 100%;
     font-size: 16px;
+    &.error {
+        border: 2px solid $alert-color;
+    }
 }
 label {
     display: block;
@@ -94,5 +137,19 @@ label {
     input[type=checkbox] {
         margin-bottom: 0.5em;
         margin-right: 0.5em;
+    }
+}
+.error-explanation {
+    background-color: $alert-color;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px;
+    font-size: 14px;
+    ul {
+        margin: 0;
+        padding-left: 18px;
+        li {
+            line-height: 1.4;
+        }
     }
 }

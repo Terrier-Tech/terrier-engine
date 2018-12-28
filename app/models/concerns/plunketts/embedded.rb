@@ -149,7 +149,7 @@ module Plunketts::Embedded
       end
       define_method "#{name}_s=" do |d|
         if d
-          self.send("#{name}=", Chronic.parse(d))
+          self.send("#{name}=", Time.parse(d))
         else
           self.send("#{name}=", nil)
         end
@@ -192,7 +192,7 @@ module Plunketts::Embedded
           inst.send("#{name}=", (value || opts.default).to_i )
         elsif opts.type == Float
           inst.send("#{name}=", (value || opts.default).to_f )
-        elsif !opts.type.nil? && opts.type < Embedded
+        elsif !opts.type.nil? && opts.type < Plunketts::Embedded
           if value.class.name.index 'Hash'
             inst.send("#{name}=", value.values.map{|h| opts.type.from_attributes(h)})
           elsif value.instance_of? Array

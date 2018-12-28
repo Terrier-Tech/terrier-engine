@@ -804,6 +804,8 @@ class ScheduleRulesEditor
 			@ui.find('input.week[value=all]').prop 'checked', false
 			this.onChange()
 
+		this.onChange()
+
 	onChange: ->
 		days = @ui.find('input.day:checked').map((index, elem) ->
 			elem.value
@@ -824,10 +826,17 @@ class ScheduleRulesEditor
 ################################################################################
 
 _editorTemplate = tinyTemplate (script, constants) ->
-	div '.script-editor.show-settings', ->
-		div '.toolbar'
-		div '.ace-container'
+	form '.script-editor.show-settings', ->
+		div '.toolbar', ->
+			a '.save.with-icon', ->
+				icon '.ion-upload'
+				span '', 'Save'
+		div '.editor-container', ->
+			div '.ace-container', script.body
+			div '.syntax-error-output'
 		div '.settings-container', ->
+			div '.error-explanation'
+
 			div '.settings-panel.general', ->
 				h4 '.with-icon', ->
 					icon '.ion-information-circled'
@@ -869,6 +878,19 @@ class Editor
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
 		scheduleTimeSelect.change()
 
+		@hasChanges = false
+		@errorExplanation = @ui.find('.error-explanation')
+		@errorExplanation.hide()
+		@ui.on 'change', 'input, select, textarea', =>
+			@hasChanges = true
+			this.updateUi()
+
+		@buttons = {
+			save: @ui.find('a.save')
+		}
+		@buttons.save.click =>
+			this.save()
+
 		aceContainer = @ui.find '.ace-container'
 		@aceEditor = ace.edit aceContainer[0]
 		@aceEditor.setTheme 'ace/theme/textmate'
@@ -878,6 +900,8 @@ class Editor
 		@session.setMode 'ace/mode/ruby'
 		@session.setTabSize 2
 		@errorMarkerId = null
+		@syntaxErrorOutput = @ui.find '.syntax-error-output'
+		@syntaxErrorOutput.hide()
 
 		@aceEditor.setOptions(
 			enableBasicAutocompletion: true
@@ -897,7 +921,12 @@ class Editor
 				this.save()
 		)
 
+		this.updateUi()
+
 	onChanged: ->
+		unless @hasChanges
+			@hasChanges = true
+			this.updateUi()
 		$.get(
 			'/scripts/check'
 			{body: @aceEditor.getValue()}
@@ -912,7 +941,7 @@ class Editor
 		if @errorMarkerId
 			@session.removeMarker @errorMarkerId
 			@errorMarkerId = null
-#		@syntaxErrorOutput.removeClass('error').text 'No Errors'
+		@syntaxErrorOutput.hide()
 #		@runButton.attr 'disabled', null
 
 	setDiagnostic: (diagnostic) ->
@@ -929,13 +958,44 @@ class Editor
 		marker = @ui.find('.ace-container .syntax-error')
 		puts "marker count: #{marker.length}"
 		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
-#		@syntaxErrorOutput.addClass('error').text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
+		@syntaxErrorOutput.show().text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 #		@runButton.attr 'disabled', 'disabled'
 
+	updateUi: ->
+		@buttons.save.toggleClass 'disabled', !@hasChanges
+
+	serialize: ->
+		data = @ui.serializeObject()
+		data.body = @aceEditor.getValue()
+		data
 
 	save: ->
+		onDone = (res) =>
+			if res.status == 'success'
+				@script = res.script
+				@errorExplanation.text('').hide()
+				@ui.find('.error').removeClass 'error'
+				@hasChanges = false
+				this.updateUi()
+			else
+				puts res.script
+				puts res.errors
+				@ui.showErrors res.errors
+				alert res.message
 
-
+		data = this.serialize()
+		if @script.id?.length
+			$.put(
+				"/scripts/#{@script.id}.json"
+				{script: data}
+				onDone
+			)
+		else
+			$.post(
+				'/scripts.json'
+				{script: data}
+				onDone
+			)
 
 
 ################################################################################
@@ -966,12 +1026,7 @@ class Workspace
 				content: [
 					{
 						type: 'component'
-						title: 'Script 1 with a long name'
-						componentName: 'editor'
-					}
-					{
-						type: 'component'
-						title: 'Script 2 also with a long name'
+						title: 'New Script'
 						componentName: 'editor'
 					}
 				]
@@ -979,7 +1034,105 @@ class Workspace
 		}
 		@layout = new GoldenLayout config, @container[0]
 
+		@scriptMap = {}
+
 		@layout.registerComponent 'editor', (container, state) =>
-			editor = new Editor({}, container, @constants)
+			puts "tab container: ", container
+			if state?.id?.length
+				$.get(
+					"/scripts/#{state.id}.json"
+					(res) =>
+						if res.status == 'success'
+							@scriptMap[res.script.id] = res.script
+							editor = new Editor(res.script, container, @constants)
+						else
+							alert res.message
+				)
+			else # new script
+				editor = new Editor({title: 'New Script'}, container, @constants)
 
 		@layout.init()
+
+		@container.find('lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
+
+		$('a.open-script').click =>
+			new PicketModal (script) =>
+				child = {
+					type: 'component'
+					title: script.title
+					componentName: 'editor'
+					componentState: {id: script.id}
+				}
+				unless @layout.root.contentItems.length
+					@layout.root.addChild {
+						type: 'stack'
+					}
+				@layout.root.contentItems[0].addChild child
+			false
+
+
+################################################################################
+# Picker Modal
+################################################################################
+
+_pickerTemplate = tinyTemplate (scripts) ->
+	div '.script-picker', ->
+		table '.scripts.sticky-header.sortable.data.sortable', ->
+			thead '', ->
+				tr '', ->
+					th '', ->
+						a '', data: {column: 'created_at'}, 'Created On'
+						a '', data: {column: 'updated_at'}, 'Updated On'
+					th '', ->
+						a '', data: {column: 'title'}, 'Title'
+					th '', ->
+						a '', data: {column: 'created_by_name'}, 'Created By'
+					th '', ->
+						a '', data: {column: 'report_category'}, 'Category'
+						a '', data: {column: 'updated_at'}, 'Visibility'
+					th '', ->
+						a '', data: {column: 'num_runs'}, '# Runs'
+						a '', data: {column: 'last_run'}, 'Last Run'
+			tbody '', ->
+				for script in scripts
+					tr ".script##{script.id}", ->
+						td '', ->
+							div '.col-created_at', script.created_at.formatShortDate()
+							div '.col-updated_at', script.updated_at.formatShortDate()
+						td '', ->
+							div '.col-title', script.title
+							if script.schedule_time != 'none' and script.schedule_rule_summaries?.length
+								div '.schedule', script.schedule_rule_summaries
+						td '.col-created_by_name', script.created_by_name
+						td '', ->
+							div '.col-report_category', script.report_category.titleize()
+							div '.col-visibility', script.visibility.titleize()
+						td '', ->
+							div '.col-num_runs', script.num_runs.toString()
+							div '.col-last_run', if script.last_run?.length then script.last_run.formatShortDate() else ''
+
+
+
+class PicketModal
+	constructor: (@callback) ->
+		$.get(
+			"/scripts.json"
+			(res) =>
+				if res.status == 'success'
+					tinyModal.showDirect _pickerTemplate(res.scripts), {
+						title: "Select Script"
+						title_icon: 'ios-folder-outline'
+						callback: (modal) => this.init(res.scripts, modal)
+					}
+				else
+					alert res.message
+		)
+
+	init: (@scripts, @ui) ->
+		@scriptMap = {}
+		for script in @scripts
+			@scriptMap[script.id] = script
+		@ui.find('tr.script').click (evt) =>
+			script = @scriptMap[evt.currentTarget.id]
+			@callback script
+			tinyModal.close()

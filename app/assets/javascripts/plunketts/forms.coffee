@@ -48,6 +48,8 @@ jQuery.fn.serializeObject = ->
 			objectData[@name] = value
 	return objectData
 
+_errorExplanationTemplate =
+
 # populate errors returned from active record
 jQuery.fn.showErrors = (errors) ->
 	this.find('.error').removeClass 'error'
@@ -56,3 +58,9 @@ jQuery.fn.showErrors = (errors) ->
 	for key, messages of errors
 		el = this.find("[name=#{key}]")
 		el.addClass 'error'
+	errorExplanation = this.find('.error-explanation')
+	errorExplanation.show().html tinyTemplate( ->
+		ul '', ->
+			for key, message of errors
+				li '', "#{key} #{message}"
+	)()

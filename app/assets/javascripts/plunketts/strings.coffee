@@ -16,6 +16,13 @@ window.hashCode = (s) ->
 String::hashCode = ->
 	window.hashCode this
 
+window.leftPad = (s, width) ->
+	s += ''
+	if s.length >= width
+		s
+	else
+		new Array(width - s.length + 1).join('0') + s
+
 
 ########################################################################################
 # Formatting
@@ -159,6 +166,13 @@ window.formatEmails = (emails) ->
 
 String::formatEmails = ->
 	window.formatEmails this
+
+window.formatShortDate = (s) ->
+	d = new Date("#{s} UTC")
+	"#{leftPad(d.getMonth()+1, 2)}/#{d.getDate()}/#{d.getFullYear().toString().substring(2)}"
+
+String::formatShortDate = ->
+	window.formatShortDate this
 
 
 ########################################################################################

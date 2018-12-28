@@ -42,28 +42,6 @@ ActiveRecord::Schema.define(version: 2018_12_25_172428) do
     t.index ["updated_by_id"], name: "index_locations_on_updated_by_id"
   end
 
-  create_table "script_inputs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "_state", default: 0, null: false
-    t.uuid "created_by_id"
-    t.text "created_by_name", null: false
-    t.text "extern_id"
-    t.uuid "updated_by_id"
-    t.text "updated_by_name"
-    t.text "name", null: false
-    t.string "file_file_name"
-    t.string "file_content_type"
-    t.bigint "file_file_size"
-    t.datetime "file_updated_at"
-    t.uuid "script_id", null: false
-    t.index ["_state"], name: "index_script_inputs_on__state"
-    t.index ["created_by_id"], name: "index_script_inputs_on_created_by_id"
-    t.index ["extern_id"], name: "index_script_inputs_on_extern_id"
-    t.index ["script_id"], name: "index_script_inputs_on_script_id"
-    t.index ["updated_by_id"], name: "index_script_inputs_on_updated_by_id"
-  end
-
   create_table "script_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -112,12 +90,10 @@ ActiveRecord::Schema.define(version: 2018_12_25_172428) do
     t.text "schedule_type", default: "every", null: false
     t.text "order_grouping", default: "combine", null: false
     t.text "visibility", default: "private", null: false
-    t.uuid "user_id", null: false
     t.index ["_state"], name: "index_scripts_on__state"
     t.index ["created_by_id"], name: "index_scripts_on_created_by_id"
     t.index ["extern_id"], name: "index_scripts_on_extern_id"
     t.index ["updated_by_id"], name: "index_scripts_on_updated_by_id"
-    t.index ["user_id"], name: "index_scripts_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -157,13 +133,9 @@ ActiveRecord::Schema.define(version: 2018_12_25_172428) do
 
   add_foreign_key "locations", "users", column: "created_by_id"
   add_foreign_key "locations", "users", column: "updated_by_id"
-  add_foreign_key "script_inputs", "scripts"
-  add_foreign_key "script_inputs", "users", column: "created_by_id"
-  add_foreign_key "script_inputs", "users", column: "updated_by_id"
   add_foreign_key "script_runs", "scripts"
   add_foreign_key "script_runs", "users", column: "created_by_id"
   add_foreign_key "script_runs", "users", column: "updated_by_id"
-  add_foreign_key "scripts", "users"
   add_foreign_key "scripts", "users", column: "created_by_id"
   add_foreign_key "scripts", "users", column: "updated_by_id"
   add_foreign_key "users", "users", column: "created_by_id"

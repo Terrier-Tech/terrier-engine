@@ -36,7 +36,6 @@ class Scripts < ActiveRecord::Migration[5.2]
       t.text :schedule_type, null: false, default: 'every'
       t.text :order_grouping, null: false, default: 'combine'
       t.text :visibility, null: false, default: 'private'
-      t.references_uuid :user
     end
 
     create_model :script_runs do |t|
@@ -46,12 +45,6 @@ class Scripts < ActiveRecord::Migration[5.2]
       t.json :fields
       t.has_attached_file :log
       t.string :status, null: false, default: 'success'
-      t.references_uuid :script
-    end
-
-    create_model :script_inputs do |t|
-      t.text :name, null: false
-      t.has_attached_file :file
       t.references_uuid :script
     end
 
