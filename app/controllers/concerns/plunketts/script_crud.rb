@@ -13,6 +13,7 @@ module Plunketts::ScriptCrud
             category_options: Plunketts::ScriptConfig.category_options,
             visibility_options: Script.visibility_options,
             schedule_time_options: Script.schedule_time_options,
+            field_type_options: ScriptField.field_type_options,
             month_groups: ScheduleRule.month_groups,
             days: ScheduleRule.days,
             weeks: ScheduleRule.weeks

@@ -226,6 +226,16 @@ form.script-editor {
 			&:last-child {
 				margin-bottom: $panel-pad;
 			}
+			a.right {
+				float: right;
+				font-size: 18px;
+				position: relative;
+				display: block;
+				padding: 2px;
+				cursor: pointer;
+				line-height: 0;
+				top: -4px;
+			}
 			h4 {
 				font-size: 16px;
 				margin: 0 0 6px 0;

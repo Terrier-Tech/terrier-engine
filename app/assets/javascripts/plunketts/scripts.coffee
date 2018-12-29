@@ -135,8 +135,8 @@ class ScriptRunner
 			credentials: 'include'
 			body: data
 		)
-			.node('!.*', onChunk)
-			.done(onDone) # as far as I can tell, this never gets called
+		.node('!.*', onChunk)
+		.done(onDone) # as far as I can tell, this never gets called
 
 
 ################################################################################
@@ -822,6 +822,43 @@ class ScheduleRulesEditor
 
 
 ################################################################################
+# Fields Controls
+################################################################################
+
+_fieldPartial = (field, constants) ->
+	div '.script-field', ->
+		div '.horizontal-grid', ->
+			div '.shrink-columns', ->
+				div '.sort-handle.ion-android-more-vertical'
+			div '.stretch-column', ->
+				input '.field-name', type: 'text', value: field.name, placeholder: 'Name'
+			div '.stretch-column', ->
+				select '.field-field_type', ->
+					forms.optionsForSelect constants.field_type_options, field.field_type
+
+		div '.horizontal-grid', ->
+			div '.stretch-column', ->
+				input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
+			div '.shrink-columns', ->
+				a '.remove-field.ion-close-round.alert', title: 'Remove Field'
+
+		div '.values-container', ->
+			input '.field-values', type: 'text', placeholder: 'Values', value: field.values
+
+class FieldsControls
+	constructor: (container, @constants) ->
+		@list = container.find '.script-fields'
+		@output = container.find 'input[name=script_fields_s]'
+		container.find('a.add-field').click =>
+			this.addField()
+
+	addField: ->
+		@list.append tinyTemplate(=> _fieldPartial({}, @constants))
+
+
+
+
+################################################################################
 # Editor
 ################################################################################
 
@@ -851,12 +888,21 @@ _editorTemplate = tinyTemplate (script, constants) ->
 						label '', 'Visibility'
 						select '', name: 'visibility', ->
 							forms.optionsForSelect constants.visibility_options, script.visibility
+				label '', 'E-Mail Recipients'
+				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
 				textarea '', name: 'description', value: script.description, placeholder: 'Description', rows: 1
 
 			div '.settings-panel.fields', ->
+				a '.right.add-field', ->
+					icon '.ion-plus-round'
 				h4 '.with-icon', ->
 					icon '.ion-toggle-filled'
 					span '', 'Fields'
+				input '', type: 'hidden', name: 'script_fields_s'
+				div '.script-fields', ->
+					fields = script.script_fields || []
+					for field in fields
+						_fieldPartial field, constants
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
@@ -920,6 +966,8 @@ class Editor
 			exec: (e) =>
 				this.save()
 		)
+
+		new FieldsControls @ui.find('.fields'), @constants
 
 		this.updateUi()
 
@@ -1056,7 +1104,7 @@ class Workspace
 		@container.find('lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
 
 		$('a.open-script').click =>
-			new PicketModal (script) =>
+			new PickerModal (script) =>
 				child = {
 					type: 'component'
 					title: script.title
@@ -1102,7 +1150,14 @@ _pickerTemplate = tinyTemplate (scripts) ->
 						td '', ->
 							div '.col-title', script.title
 							if script.schedule_time != 'none' and script.schedule_rule_summaries?.length
-								div '.schedule', script.schedule_rule_summaries
+								emailRecipients = if script.email_recipients?.length
+									script.email_recipients.replace('{', '').replace('}', '')
+								else
+									null
+								div '.schedule.with-icon', ->
+									if emailRecipients?
+										icon '.ion-email', title: emailRecipients
+									span '', script.schedule_rule_summaries.replace('{', '').replace('}', '').replace(/"/g, '')
 						td '.col-created_by_name', script.created_by_name
 						td '', ->
 							div '.col-report_category', script.report_category.titleize()
@@ -1113,7 +1168,7 @@ _pickerTemplate = tinyTemplate (scripts) ->
 
 
 
-class PicketModal
+class PickerModal
 	constructor: (@callback) ->
 		$.get(
 			"/scripts.json"
