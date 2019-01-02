@@ -902,6 +902,8 @@ class FieldsControls
 _editorTemplate = tinyTemplate (script, constants) ->
 	form '.script-editor.show-settings', ->
 		div '.toolbar', ->
+			a '.toggle-settings', ->
+				icon '.ion-arrow-left-c'
 			a '.save.with-icon', ->
 				icon '.ion-upload'
 				span '', 'Save'
@@ -960,6 +962,9 @@ class Editor
 		scheduleTimeSelect.change =>
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
 		scheduleTimeSelect.change()
+
+		@ui.find('a.toggle-settings').click =>
+			@ui.toggleClass 'show-settings'
 
 		@hasChanges = false
 		@errorExplanation = @ui.find('.error-explanation')
@@ -1049,6 +1054,13 @@ class Editor
 
 	updateUi: ->
 		@buttons.save.toggleClass 'disabled', !@hasChanges
+		title = @ui.find('input[name=title]').val()
+		unless title?.length
+			title = 'Untitled'
+		if @hasChanges
+			title += '*'
+		@tabContainer.setTitle title
+
 
 	serialize: ->
 		unless @fieldsControls.validate()
@@ -1143,7 +1155,7 @@ class Workspace
 
 		@layout.init()
 
-		@container.find('lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
+		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>

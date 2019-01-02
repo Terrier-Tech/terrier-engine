@@ -1,5 +1,6 @@
 
 $secondary-color: #40555e !default;
+$secondary-color-darker: darken($secondary-color, 12%) !default;
 $alert-color: #aa0000 !default;
 $animation-duration: 0.2s !default;
 
@@ -19,14 +20,14 @@ $animation-duration: 0.2s !default;
 	transition: all 200ms ease;
 	.lm_inner {
 		background: #000000;
-		opacity: .1
+		opacity: .1;
 	}
 }
 
 
 .script-workspace {
 	.lm_goldenlayout {
-		background-color: darken($secondary-color, 12%);
+		background-color: $secondary-color-darker;
 		z-index: 0;
 	}
 	.lm_content {
@@ -34,18 +35,19 @@ $animation-duration: 0.2s !default;
 	}
 
 	.lm_splitter {
-		background: #999999;
-		opacity: .001;
+		background: $secondary-color-darker;
+		opacity: 0.8;
 		transition: opacity 200ms ease;
 		&:hover, &.lm_dragging {
-			background: #bbbbbb;
-			opacity: 1
+			opacity: 1;
+			background: $secondary-color-darker;
 		}
 	}
 
 
 	.lm_header {
 		height: 24px !important;
+		background-color: $secondary-color-darker;
 		.lm_tab {
 			background-color: $secondary-color;
 			color: #fff;
@@ -118,15 +120,24 @@ $animation-duration: 0.2s !default;
 	left: 0;
 	right: 0;
 	background-color: #aaa;
-	a.open-script {
-		position: absolute;
-		z-index: 2;
-		font-size: 24px;
-		display: block;
-		text-align: center;
-		top: 2em;
-		left: 0;
-		right: 0;
+	.lm_goldenlayout {
+		> .lm_item {
+			position: relative;
+			z-index: 1;
+			background-color: #aaa;
+		}
+		a.open-script {
+			position: absolute;
+			z-index: 0;
+			font-size: 32px;
+			display: block;
+			text-align: center;
+			top: 2em;
+			left: 0;
+			right: 0;
+			color: #fff;
+			text-shadow: 0 -1px rgba(#000, 0.5);
+		}
 	}
 }
 
@@ -165,6 +176,27 @@ form.script-editor {
 			&:hover {
 				background-color: rgba(#000, 0.2);
 			}
+			&.toggle-settings {
+				float: right;
+				position: relative;
+				i::before {
+					transition: transform $animation-duration ease;
+				}
+				&::before {
+					content: "";
+					position: absolute;
+					left: 3px; right: 3px; top: 3px; bottom: 3px;
+					border: 2px solid #fff;
+				}
+				&::after {
+					content: "";
+					position: absolute;
+					right: 3px; top: 3px; bottom: 3px;
+					width: 0;
+					transition: width $animation-duration ease;
+					background-color: rgba(#fff, 0.5);
+				}
+			}
 		}
 	}
 	.editor-container {
@@ -186,7 +218,6 @@ form.script-editor {
 		.syntax-error {
 			border-bottom: 2px solid $alert-color;
 			position: absolute;
-			pointer-events: initial !important;
 		}
 
 		.syntax-error-output {
@@ -320,6 +351,14 @@ form.script-editor {
 		}
 		.settings-container {
 			transform: translate(0,0);
+		}
+		.toolbar a.toggle-settings {
+			i::before {
+				transform: rotate(180deg);
+			}
+			&::after {
+				width: 30%;
+			}
 		}
 	}
 }
