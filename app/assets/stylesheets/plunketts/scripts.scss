@@ -267,6 +267,20 @@ form.script-editor {
 		.schedule {
 			flex: 0 0 auto;
 		}
+		.script-field {
+			border-top: 1px solid #ddd;
+			padding-top: $panel-pad;
+			margin-bottom: $panel-pad / 2;
+			a, .sort-handle {
+				font-size: 24px;
+				opacity: 0.5;
+				display: block;
+				padding: 4px;
+			}
+			.sort-handle {
+				cursor: move;
+			}
+		}
 	}
 	.schedule-rule-editor {
 		position: relative;

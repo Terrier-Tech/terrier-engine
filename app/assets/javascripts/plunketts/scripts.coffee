@@ -835,27 +835,62 @@ _fieldPartial = (field, constants) ->
 			div '.stretch-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
-
-		div '.horizontal-grid', ->
-			div '.stretch-column', ->
-				input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
 			div '.shrink-columns', ->
 				a '.remove-field.ion-close-round.alert', title: 'Remove Field'
 
-		div '.values-container', ->
-			input '.field-values', type: 'text', placeholder: 'Values', value: field.values
+		input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
+
+		textarea '.field-values', type: 'text', placeholder: 'Values', rows: '1', (field.values || '')
 
 class FieldsControls
-	constructor: (container, @constants) ->
+	constructor: (@editor, container, @constants) ->
 		@list = container.find '.script-fields'
-		@output = container.find 'input[name=script_fields_s]'
+		@output = container.find 'input[name=script_fields_json]'
 		container.find('a.add-field').click =>
 			this.addField()
+		this.updateOutput()
+
+		container.on 'change', 'input, select, textarea', =>
+			this.updateOutput()
+			@editor.onChanged()
+
+		container.on 'change', '.field-field_type', (evt) ->
+			typeInput = $ evt.currentTarget
+			valuesInput = typeInput.parents('.script-field').find '.field-values'
+			valuesInput.toggle(typeInput.val() == 'select')
+
+		container.on 'click', 'a.remove-field', (evt) =>
+			$(evt.currentTarget).parents('.script-field').remove()
+			this.updateOutput()
+			@editor.onChanged()
+
+		@list.find('.script-field').each (index, elem) ->
+			view = $ elem
+			valuesInput = view.find '.field-values'
+			valuesInput.toggle(view.find('.field-field_type').val() == 'select')
 
 	addField: ->
 		@list.append tinyTemplate(=> _fieldPartial({}, @constants))
+		@list.find('.field-field_type:last').hide()
+		this.updateOutput()
 
+	updateOutput: ->
+		fields = @list.find('.script-field').map((index, elem) ->
+			view = $ elem
+			data = {}
+			for k in ['name', 'field_type', 'default_value', 'values']
+				data[k] = view.find(".field-#{k}").val()
+			data
+		).get()
+		@output.val JSON.stringify(fields)
 
+	validate: ->
+		@list.find('.error').removeClass 'error'
+		@list.find('input.field-name').each (index, elem) ->
+			input = $ elem
+			unless input.val()?.length
+				input.addClass 'error'
+		!@list.find('.error').length
 
 
 ################################################################################
@@ -898,7 +933,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				h4 '.with-icon', ->
 					icon '.ion-toggle-filled'
 					span '', 'Fields'
-				input '', type: 'hidden', name: 'script_fields_s'
+				input '', type: 'hidden', name: 'script_fields_json'
 				div '.script-fields', ->
 					fields = script.script_fields || []
 					for field in fields
@@ -956,7 +991,7 @@ class Editor
 		)
 
 		@aceEditor.on 'change', _.debounce(
-			=> this.onChanged(),
+			=> this.onChanged(true),
 			500
 		)
 
@@ -967,23 +1002,24 @@ class Editor
 				this.save()
 		)
 
-		new FieldsControls @ui.find('.fields'), @constants
+		@fieldsControls = new FieldsControls this, @ui.find('.fields'), @constants
 
 		this.updateUi()
 
-	onChanged: ->
+	onChanged: (checkBody=false) ->
 		unless @hasChanges
 			@hasChanges = true
 			this.updateUi()
-		$.get(
-			'/scripts/check'
-			{body: @aceEditor.getValue()}
-			(res) =>
-				console.log res
-				this.clearDiagnostic()
-				if res.diagnostic
-					this.setDiagnostic res.diagnostic
-		)
+		if checkBody
+			$.get(
+				'/scripts/check'
+				{body: @aceEditor.getValue()}
+				(res) =>
+					console.log res
+					this.clearDiagnostic()
+					if res.diagnostic
+						this.setDiagnostic res.diagnostic
+			)
 
 	clearDiagnostic: ->
 		if @errorMarkerId
@@ -1013,6 +1049,8 @@ class Editor
 		@buttons.save.toggleClass 'disabled', !@hasChanges
 
 	serialize: ->
+		unless @fieldsControls.validate()
+			return null
 		data = @ui.serializeObject()
 		data.body = @aceEditor.getValue()
 		data
@@ -1032,6 +1070,8 @@ class Editor
 				alert res.message
 
 		data = this.serialize()
+		unless data?
+			return
 		if @script.id?.length
 			$.put(
 				"/scripts/#{@script.id}.json"
