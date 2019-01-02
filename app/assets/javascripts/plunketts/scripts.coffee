@@ -869,9 +869,11 @@ class FieldsControls
 			valuesInput = view.find '.field-values'
 			valuesInput.toggle(view.find('.field-field_type').val() == 'select')
 
+		new Sortable @list[0]
+
 	addField: ->
 		@list.append tinyTemplate(=> _fieldPartial({}, @constants))
-		@list.find('.field-field_type:last').hide()
+		@list.find('.field-values:last').hide()
 		this.updateOutput()
 
 	updateOutput: ->
