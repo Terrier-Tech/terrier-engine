@@ -456,24 +456,24 @@ _fieldControls.csv = (name, value, options) ->
 _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions) ->
 	div '.script-report-exec-modal.horizontal-grid', ->
 		div '.shrink-column.io-column', ->
-			if script.description?.length
-				p '.description', script.description
-			h4 '.with-icon', ->
-				icon '.ion-ios-upload-outline'
-				span '', 'Inputs'
-			div '.script-field-controls', ->
-				fields = JSON.parse script.script_fields_json
-				for field in fields
-					value = fieldValues[field.name]
-					options = fieldOptions[field.name]
-					div '.field-controls', ->
-						label '', field.name
-						div '', _fieldControls[field.field_type](field.name, value, options)
-			h4 '.with-icon', ->
-				icon '.ion-ios-copy-outline'
-				span '', 'Files'
-			div '.output-files'
-			div '.cancel-button-container'
+			div '.fixed-controls', ->
+				if script.description?.length
+					p '.description', script.description
+				h4 '.with-icon', ->
+					icon '.ion-ios-upload-outline'
+					span '', 'Inputs'
+				div '.script-field-controls', ->
+					fields = JSON.parse script.script_fields_json
+					for field in fields
+						value = fieldValues[field.name]
+						options = fieldOptions[field.name]
+						div '.field-controls', ->
+							label '', field.name
+							div '', _fieldControls[field.field_type](field.name, value, options)
+				h4 '.with-icon', ->
+					icon '.ion-ios-copy-outline'
+					span '', 'Files'
+				div '.output-files'
 		div '.stretch-column', ->
 			h4 '.with-icon', ->
 				icon '.ion-ios-download-outline'
