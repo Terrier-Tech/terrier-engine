@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     post 'scripts/compute_field_values'
     get 'scripts/constants'
     resources :scripts do
-
+      get 'runs'
     end
     post 'scripts_streaming/exec'
   end

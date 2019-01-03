@@ -57,6 +57,11 @@ module Plunketts::ScriptBase
     enum_field :report_category, Plunketts::ScriptConfig.category_icons.keys.map(&:to_s).sort
 
 
+    ## Runs
+
+    has_many :script_runs, dependent: :destroy
+
+
     ## Searching
 
     def update_search_index

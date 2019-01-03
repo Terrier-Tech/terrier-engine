@@ -70,14 +70,13 @@ class ScriptRunner
 		@cancelContainer = null
 		@fieldValues = null
 
+	cancel: ->
+		@shouldCancel = true
+
 	run: ->
 		@listener.beforeRun()
 
 		@shouldCancel = false
-#		cancelButton.click =>
-#			shouldCancel = true
-#			@listener.afterRun()
-#			cancelButton.remove()
 
 		url = '/scripts_streaming/exec.json'
 		if @script.id?.length
@@ -92,10 +91,11 @@ class ScriptRunner
 		onDone = ->
 			theListener.afterRun()
 
+		self = this
 		onChunk = (rawChunk) ->
-			if @shouldCancel
+			if self.shouldCancel
 				console.log "Cancelling!!"
-				@listener.afterRun()
+				self.listener.afterRun()
 				return this.abort()
 			chunk = JSON.parse JSON.stringify(rawChunk)
 			console.log chunk
@@ -119,6 +119,7 @@ class ScriptRunner
 ################################################################################
 # Controller
 ################################################################################
+
 class ScriptController
 	constructor: (id) ->
 		ace.require 'ace/ext/language_tools'
@@ -515,8 +516,7 @@ class ReportExecModal
 				if @script.id?.length
 					modalOptions.actions.push {
 						title: 'History'
-						attrs: href: "/scripts/#{@script.id}/runs"
-						class: 'modal'
+						class: 'show-history'
 						icon: 'clock'
 						end: true
 					}
@@ -537,11 +537,15 @@ class ReportExecModal
 		@buttons = {
 			run: @ui.find('a.run')
 			cancel: @ui.find('a.cancel')
+			history: @ui.find('a.show-history')
 		}
 		@buttons.run.click (evt) =>
 			this.run()
 			false
 		@buttons.cancel.attr 'disabled', true
+
+		@buttons.history.click =>
+			new RunsModal(@script.id)
 
 		@messagesList = new MessagesList(@ui.find('.script-messages'))
 		@ioColumn = @ui.find '.io-column'
@@ -573,10 +577,10 @@ class ReportExecModal
 			runner.fieldValues = fieldValues
 			runner.run()
 
-		@buttons.cancel.click ->
-			runner.shouldCancel = true
+		@buttons.cancel.unbind('click').click ->
+			runner.cancel()
 
-		if inputs.length == 0
+		unless inputs.length
 			actuallyRun()
 			return
 		inputs.each (index, elem) =>
@@ -1315,3 +1319,51 @@ class PickerModal
 			script = @scriptMap[evt.currentTarget.id]
 			@callback script
 			tinyModal.close()
+
+
+################################################################################
+# Runs Modal
+################################################################################
+
+_runsTemplate = tinyTemplate (runs) ->
+	div '.script-runs-modal', ->
+		table '.data.script-runs', ->
+			thead '', ->
+				tr '', ->
+					th '', 'Date'
+					th '', 'Duration'
+					th '', 'Status'
+					th '', 'Exception'
+					th ''
+			tbody '', ->
+				for run in runs
+					tr '.script-run', ->
+						td '', run.created_at.formatShortDateTime()
+						td '', "#{(run.duration || 0).toFixed(1)}s"
+						td ".status.#{run.status}", run.status.titleize()
+						td '.exception', run.exception || ''
+						td '.inline-actions', ->
+							a '.with-icon', href: run.log_url, target: '_blank', ->
+								icon '.ion-ios-list-outline'
+								span '', 'Log'
+
+
+class RunsModal
+	constructor: (@id) ->
+		$.get(
+			"/scripts/#{@id}/runs.json"
+			(res) =>
+				if res.status == 'success'
+					tinyModal.showDirect(
+						_runsTemplate(res.runs)
+						{
+							title: 'Script Runs'
+							title_icon: 'clock'
+						}
+						(modal) => this.init(modal, res.runs)
+					)
+				else
+					alert res.message
+		)
+
+	init: (@ui, @runs) ->

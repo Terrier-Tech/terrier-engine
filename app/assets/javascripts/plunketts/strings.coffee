@@ -168,11 +168,23 @@ String::formatEmails = ->
 	window.formatEmails this
 
 window.formatShortDate = (s) ->
-	d = new Date("#{s} UTC")
-	"#{leftPad(d.getMonth()+1, 2)}/#{d.getDate()}/#{d.getFullYear().toString().substring(2)}"
+	unless s.endsWith('Z')
+		s += ' UTC'
+	d = new Date(s)
+	"#{leftPad(d.getMonth()+1, 2)}/#{leftPad(d.getDate(), 2)}/#{d.getFullYear().toString().substring(2)}"
 
 String::formatShortDate = ->
 	window.formatShortDate this
+
+window.formatShortDateTime = (s) ->
+	unless s.endsWith('Z')
+		s += ' UTC'
+	d = new Date(s)
+	s = "#{leftPad(d.getMonth()+1, 2)}/#{leftPad(d.getDate(), 2)}/#{d.getFullYear().toString().substring(2)} "
+	s + d.toLocaleTimeString()
+
+String::formatShortDateTime = ->
+	window.formatShortDateTime this
 
 
 ########################################################################################

@@ -54,6 +54,17 @@ module Plunketts::ScriptCrud
     end
 
 
+    def runs
+      begin
+        script = Script.find params[:script_id]
+        runs = script.script_runs.where(_state: 0).order(created_at: :desc)
+        render_success "Got #{runs.count} runs", {runs: runs.as_json(methods: %i(log_url))}
+      rescue => ex
+        render_exception ex
+      end
+    end
+
+
     def save_script?(script)
       raise "Concrete classes must implement save_script?"
     end

@@ -35,4 +35,9 @@ class ScriptRun < ApplicationRecord
     self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
 
   end
+
+
+  def log_url
+    self.log.url
+  end
 end

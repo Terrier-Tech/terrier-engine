@@ -2,6 +2,7 @@
 $secondary-color: #40555e !default;
 $secondary-color-darker: darken($secondary-color, 12%) !default;
 $alert-color: #aa0000 !default;
+$success-color: #00aa00 !default;
 $animation-duration: 0.2s !default;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -478,5 +479,35 @@ table.scripts {
 		.col-visibility {
 			font-style: italic;
 		}
+	}
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Runs Table
+////////////////////////////////////////////////////////////////////////////////
+
+table.script-runs {
+	margin-bottom: 8px;
+	td {
+		font-size: 14px;
+		padding: 2px 6px;
+	}
+	td.status {
+		font-weight: bold;
+		background: transparent;
+		&.success {
+			color: $success-color;
+		}
+		&.error {
+			color: $alert-color;
+		}
+		&.cancelled {
+			color: #aaa;
+		}
+	}
+	td.exception {
+		color: $alert-color;
 	}
 }
