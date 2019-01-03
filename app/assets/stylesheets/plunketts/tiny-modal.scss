@@ -114,6 +114,10 @@ body.with-modal #content {
 		position: relative;
 		a {
 			display: inline-block;
+			margin-left: 1em;
+			&[disabled] {
+				opacity: 0.5;
+			}
 		}
 		.end {
 			position: absolute;
@@ -122,6 +126,7 @@ body.with-modal #content {
 			bottom: 0;
 			padding: $modal-pad/2;
 			a {
+				margin-left: 0;
 				margin-right: 1em;
 			}
 		}

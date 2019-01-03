@@ -71,16 +71,13 @@ class ScriptRunner
 		@fieldValues = null
 
 	run: ->
-		cancelButton = $('<a class="cancel-exec with-icon"><i class="ion-close-round"></i>Cancel</a>')
-		if @cancelContainer?
-			@cancelContainer.append cancelButton
 		@listener.beforeRun()
 
-		shouldCancel = false
-		cancelButton.click =>
-			shouldCancel = true
-			@listener.afterRun()
-			cancelButton.remove()
+		@shouldCancel = false
+#		cancelButton.click =>
+#			shouldCancel = true
+#			@listener.afterRun()
+#			cancelButton.remove()
 
 		url = '/scripts_streaming/exec.json'
 		if @script.id?.length
@@ -94,12 +91,11 @@ class ScriptRunner
 
 		onDone = ->
 			theListener.afterRun()
-			cancelButton.remove()
-			theListener.afterRun()
 
 		onChunk = (rawChunk) ->
-			if shouldCancel
+			if @shouldCancel
 				console.log "Cancelling!!"
+				@listener.afterRun()
 				return this.abort()
 			chunk = JSON.parse JSON.stringify(rawChunk)
 			console.log chunk
@@ -503,9 +499,14 @@ class ReportExecModal
 					title_icon: 'ion-code-download'
 					actions: [
 						{
+							title: 'Cancel'
+							icon: 'close-round'
+							class: 'alert cancel'
+						}
+						{
 							title: 'Run'
 							icon: 'play'
-							class: 'submit primary run'
+							class: 'primary run'
 						}
 					]
 					callback: (modal) =>
@@ -533,11 +534,14 @@ class ReportExecModal
 		)
 
 	init: (@ui) ->
-		runButton = @ui.find('a.run')
-		runButton.click (evt) =>
+		@buttons = {
+			run: @ui.find('a.run')
+			cancel: @ui.find('a.cancel')
+		}
+		@buttons.run.click (evt) =>
 			this.run()
-			evt.preventDefault()
 			false
+		@buttons.cancel.attr 'disabled', true
 
 		@messagesList = new MessagesList(@ui.find('.script-messages'))
 		@ioColumn = @ui.find '.io-column'
@@ -563,12 +567,14 @@ class ReportExecModal
 		inputs = @ui.find('.script-field-controls input, .script-field-controls select')
 
 		runner = new ScriptRunner(@script, this, {})
-		runner.cancelContainer = @ui.find '.cancel-button-container'
 		actuallyRun = _.after inputs.length, =>
 			if @ui.find('.error').length > 0
 				return
 			runner.fieldValues = fieldValues
 			runner.run()
+
+		@buttons.cancel.click ->
+			runner.shouldCancel = true
 
 		if inputs.length == 0
 			actuallyRun()
@@ -587,6 +593,8 @@ class ReportExecModal
 		@messagesList.clear()
 		this.clearOutputFiles()
 		@ioColumn.showLoadingOverlay()
+		@buttons.cancel.attr 'disabled', null
+		@buttons.run.attr 'disabled', true
 
 	onChunks: (chunks) ->
 		for chunk in chunks
@@ -599,6 +607,8 @@ class ReportExecModal
 
 	afterRun: ->
 		@ioColumn.removeLoadingOverlay()
+		@buttons.cancel.attr 'disabled', true
+		@buttons.run.attr 'disabled', null
 
 	clearOutputFiles: ->
 		@outputFilesView.html ''
@@ -914,10 +924,10 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				icon '.ion-arrow-left-c'
 			a '.save.with-icon', ->
 				icon '.ion-upload'
-				span '', 'Save'
+				span '', 'Save <span class="shortcut">&#8984S</span>'
 			a '.run.with-icon', ->
 				icon '.ion-play'
-				span '', 'Run'
+				span '', 'Run <span class="shortcut">&#8984&#9166</span>'
 		div '.editor-container', ->
 			div '.ace-container', script.body
 			div '.syntax-error-output'
@@ -1025,7 +1035,7 @@ class Editor
 
 		@aceEditor.commands.addCommand(
 			name: 'run'
-			bindKey: {win: 'Ctrl-R',  mac: 'Command-R'}
+			bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'}
 			exec: (e) =>
 				this.run()
 		)
@@ -1135,6 +1145,8 @@ class Editor
 # Script Workspace
 ################################################################################
 
+_workspaceStateKey = 'scripts_workspace_state'
+
 window.scripts.initWorkspace = (sel) ->
 	new Workspace $(sel)
 
@@ -1153,18 +1165,7 @@ class Workspace
 		)
 
 	init: (@constants) ->
-		config = {
-			content: [{
-				type: 'stack'
-				content: [
-					{
-						type: 'component'
-						title: 'New Script'
-						componentName: 'editor'
-					}
-				]
-			}]
-		}
+		config = this.getSavedStated()
 		@layout = new GoldenLayout config, @container[0]
 
 		@scriptMap = {}
@@ -1185,22 +1186,61 @@ class Workspace
 
 		@layout.init()
 
+		@layout.on 'stateChanged', =>
+			this.saveState()
+
 		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>
-				child = {
+				this.addChild {
 					type: 'component'
 					title: script.title
 					componentName: 'editor'
 					componentState: {id: script.id}
 				}
-				unless @layout.root.contentItems.length
-					@layout.root.addChild {
-						type: 'stack'
-					}
-				@layout.root.contentItems[0].addChild child
 			false
+
+		$('a.new-script').click =>
+			this.addChild {
+				type: 'component'
+				title: 'New Script'
+				componentName: 'editor'
+			}
+			false
+
+	addChild: (child) ->
+		unless @layout.root.contentItems.length
+			@layout.root.addChild {
+				type: 'stack'
+			}
+		@layout.root.contentItems[0].addChild child
+
+
+	saveState: ->
+		config = @layout.toConfig()
+		localStorage.setItem _workspaceStateKey, JSON.stringify(config)
+
+	getSavedStated: ->
+		config = localStorage.getItem _workspaceStateKey
+		if config?.length
+			try
+				return JSON.parse config
+			catch
+				puts "Error parsing workspace saved state, using default"
+		{
+			content: [{
+				type: 'stack'
+				content: [
+					{
+						type: 'component'
+						title: 'New Script'
+						componentName: 'editor'
+					}
+				]
+			}]
+		}
+
 
 
 ################################################################################

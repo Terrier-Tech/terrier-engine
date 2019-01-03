@@ -197,6 +197,11 @@ form.script-editor {
 					background-color: rgba(#fff, 0.5);
 				}
 			}
+			.shortcut {
+				font-weight: normal;
+				margin-left: 3px;
+				opacity: 0.5;
+			}
 		}
 	}
 	.editor-container {
@@ -390,14 +395,16 @@ form.script-editor {
 			margin-top: 0;
 		}
 	}
-	p.details {
+	p.description {
 		&:first-child {
 			margin-top: 0;
 		}
 	}
-	.shrink-column {
+	.io-column:first-child {
 		min-width: 200px;
 		max-width: 400px;
+		position: relative;
+		padding: $panel-pad;
 	}
 	.script-field-controls {
 		position: relative;
