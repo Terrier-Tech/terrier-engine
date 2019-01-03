@@ -121,6 +121,9 @@ body.with-modal #content {
 			top: 0;
 			bottom: 0;
 			padding: $modal-pad/2;
+			a {
+				margin-right: 1em;
+			}
 		}
 	}
 }

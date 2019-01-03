@@ -170,7 +170,7 @@ form.script-editor {
 			font-size: 16px;
 			font-weight: bold;
 			display: inline-block;
-			&.disabled {
+			&.disabled, &:disabled {
 				opacity: 0.5;
 			}
 			&:hover {
@@ -363,6 +363,91 @@ form.script-editor {
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Exec Modal
+////////////////////////////////////////////////////////////////////////////////
+
+.script-messages {
+	background-color: #fff;
+	overflow-y: scroll;
+	.message {
+		padding: 2px 8px;
+		font-size: 14px;
+	}
+	.message:nth-child(odd) {
+		background-color: #f8f8f8;
+	}
+	.message.error {
+		color: $alert-color;
+	}
+}
+
+.script-report-exec-modal {
+	h4 {
+		margin-bottom: 12px;
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	p.details {
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+	.shrink-column {
+		min-width: 200px;
+		max-width: 400px;
+	}
+	.script-field-controls {
+		position: relative;
+		overflow: hidden;
+		.loading-overlay {
+			img {
+				margin-top: 0;
+				width: 200px;
+				height: 100px;
+			}
+		}
+	}
+	a.cancel-exec {
+		padding: 8px;
+		position: absolute;
+		top: $panel-pad * 2;
+		left: $panel-pad;
+		right: $panel-pad;
+		background-color: $alert-color;
+		display: block;
+		font-weight: bold;
+		color: #fff;
+		text-align: center;
+	}
+	.script-messages {
+		min-height: 320px;
+		border: 1px solid #ccc;
+		.message {
+			padding: 3px 8px;
+			font-size: 16px;
+		}
+	}
+	.output-files {
+		a {
+			display: block;
+			padding: 12px;
+			text-align: center;
+		}
+		a::before {
+			font-size: 64px;
+			text-align: center;
+			display: block;
+			margin: 0 auto;
+			position: relative;
+			width: 0;
+			left: -32px;
+			line-height: 0.8;
+		}
+	}
+}
 
 
 

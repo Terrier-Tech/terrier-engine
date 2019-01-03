@@ -30,25 +30,6 @@ $(document).on 'keyup', 'input.script-filter', (evt) ->
 
 
 ################################################################################
-# Input Modal
-################################################################################
-
-$(document).on 'click', 'a.delete-script-input', ->
-	link = $(this)
-	id = link.attr('href').replace('#', '')
-	if confirm 'Are you sure you want to delete this input?'
-		window.setLinkLoading link
-		$.delete(
-			"/script_inputs/#{id}"
-			{}
-			(res) ->
-				window.unsetLinkLoading link
-				window.reloadPage()
-		)
-	false
-
-
-################################################################################
 # Messages List
 ################################################################################
 
@@ -90,7 +71,7 @@ class ScriptRunner
 		@fieldValues = null
 
 	run: ->
-		cancelButton = $('<a class="cancel-exec ion-close-round">Cancel</a>')
+		cancelButton = $('<a class="cancel-exec with-icon"><i class="ion-close-round"></i>Cancel</a>')
 		if @cancelContainer?
 			@cancelContainer.append cancelButton
 		@listener.beforeRun()
@@ -101,7 +82,7 @@ class ScriptRunner
 			@listener.afterRun()
 			cancelButton.remove()
 
-		url = '/scripts/exec.json'
+		url = '/scripts_streaming/exec.json'
 		if @script.id?.length
 			url += "?id=#{@script.id}"
 
@@ -476,16 +457,13 @@ _fieldControls.csv = (name, value, options) ->
 	"<input type='file' name='#{name}' accept='text/csv'/>"
 
 _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions) ->
-	div '.script-report-exec-modal.row.smart-collapse', ->
-		div '.inline-actions.right', ->
-			a '.ion-clock.modal', {href: "/scripts/#{script.id}/runs"}, 'History'
-			a '.ion-ios-gear-outline.modal', {href: "/scripts/#{script.id}/edit_settings"}, 'Settings'
-			if window.users.getCurrent().role == 'super'
-				a '.ion-ios-compose-outline', {href: "/scripts/#{script.id}/edit"}, 'Edit'
-		if script.description?.length
-			p '.description', script.description
-		div '.medium-3.columns', ->
-			h4 '.ion-ios-upload-outline', 'Inputs'
+	div '.script-report-exec-modal.horizontal-grid', ->
+		div '.shrink-column.io-column', ->
+			if script.description?.length
+				p '.description', script.description
+			h4 '.with-icon', ->
+				icon '.ion-ios-upload-outline'
+				span '', 'Inputs'
 			div '.script-field-controls', ->
 				fields = JSON.parse script.script_fields_json
 				for field in fields
@@ -494,13 +472,16 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 					div '.field-controls', ->
 						label '', field.name
 						div '', _fieldControls[field.field_type](field.name, value, options)
-			div '.cancel-button-container'
-		div '.medium-6.columns', ->
-			h4 '.ion-ios-download-outline', 'Output'
-			div '.script-messages'
-		div '.medium-3.columns', ->
-			h4 '.ion-ios-copy-outline', 'Files'
+			h4 '.with-icon', ->
+				icon '.ion-ios-copy-outline'
+				span '', 'Files'
 			div '.output-files'
+			div '.cancel-button-container'
+		div '.stretch-column', ->
+			h4 '.with-icon', ->
+				icon '.ion-ios-download-outline'
+				span '', 'Output'
+			div '.script-messages'
 
 
 class ReportExecModal
@@ -517,22 +498,49 @@ class ReportExecModal
 				fieldValues = res.field_values
 				fieldOptions = res.field_options
 				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions)
-				window.showModal(
+				modalOptions = {
+					title: @script.title
+					title_icon: 'ion-code-download'
+					actions: [
+						{
+							title: 'Run'
+							icon: 'play'
+							class: 'submit primary run'
+						}
+					]
+					callback: (modal) =>
+						this.init modal
+				}
+				if @script.id?.length
+					modalOptions.actions.push {
+						title: 'History'
+						attrs: href: "/scripts/#{@script.id}/runs"
+						class: 'modal'
+						icon: 'clock'
+						end: true
+					}
+					modalOptions.actions.push {
+						title: 'Settings'
+						attrs: href: "/scripts/#{@script.id}/edit"
+						class: 'modal'
+						icon: 'compose'
+						end: true
+					}
+				tinyModal.showDirect(
 					content
-					{title: @script.title, icon: 'code-download', submit_title: 'Run'}
-					(modal) => this.init(modal)
+					modalOptions
 				)
 		)
 
 	init: (@ui) ->
-		runButton = @ui.find('a.submit-link')
+		runButton = @ui.find('a.run')
 		runButton.click (evt) =>
 			this.run()
 			evt.preventDefault()
 			false
 
 		@messagesList = new MessagesList(@ui.find('.script-messages'))
-		@scriptFieldControls = @ui.find '.script-field-controls'
+		@ioColumn = @ui.find '.io-column'
 		@outputFilesView = @ui.find '.output-files'
 
 	readInput: (input, callback) ->
@@ -578,7 +586,7 @@ class ReportExecModal
 	beforeRun: ->
 		@messagesList.clear()
 		this.clearOutputFiles()
-		window.showLoadingOverlay @scriptFieldControls
+		@ioColumn.showLoadingOverlay()
 
 	onChunks: (chunks) ->
 		for chunk in chunks
@@ -590,7 +598,7 @@ class ReportExecModal
 		@messagesList.scrollToBottom()
 
 	afterRun: ->
-		window.removeLoadingOverlay @scriptFieldControls
+		@ioColumn.removeLoadingOverlay()
 
 	clearOutputFiles: ->
 		@outputFilesView.html ''
@@ -907,6 +915,9 @@ _editorTemplate = tinyTemplate (script, constants) ->
 			a '.save.with-icon', ->
 				icon '.ion-upload'
 				span '', 'Save'
+			a '.run.with-icon', ->
+				icon '.ion-play'
+				span '', 'Run'
 		div '.editor-container', ->
 			div '.ace-container', script.body
 			div '.syntax-error-output'
@@ -929,7 +940,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 							forms.optionsForSelect constants.visibility_options, script.visibility
 				label '', 'E-Mail Recipients'
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
-				textarea '', name: 'description', value: script.description, placeholder: 'Description', rows: 1
+				textarea '', name: 'description', placeholder: 'Description', rows: 1, script.description
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
@@ -975,9 +986,12 @@ class Editor
 
 		@buttons = {
 			save: @ui.find('a.save')
+			run: @ui.find('a.run')
 		}
 		@buttons.save.click =>
 			this.save()
+		@buttons.run.click =>
+			this.run()
 
 		aceContainer = @ui.find '.ace-container'
 		@aceEditor = ace.edit aceContainer[0]
@@ -1009,6 +1023,13 @@ class Editor
 				this.save()
 		)
 
+		@aceEditor.commands.addCommand(
+			name: 'run'
+			bindKey: {win: 'Ctrl-R',  mac: 'Command-R'}
+			exec: (e) =>
+				this.run()
+		)
+
 		@fieldsControls = new FieldsControls this, @ui.find('.fields'), @constants
 
 		this.updateUi()
@@ -1033,7 +1054,7 @@ class Editor
 			@session.removeMarker @errorMarkerId
 			@errorMarkerId = null
 		@syntaxErrorOutput.hide()
-#		@runButton.attr 'disabled', null
+		@buttons.run.attr 'disabled', null
 
 	setDiagnostic: (diagnostic) ->
 		Range = ace.require("ace/range").Range
@@ -1050,7 +1071,7 @@ class Editor
 		puts "marker count: #{marker.length}"
 		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 		@syntaxErrorOutput.show().text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
-#		@runButton.attr 'disabled', 'disabled'
+		@buttons.run.attr 'disabled', 'disabled'
 
 	updateUi: ->
 		@buttons.save.toggleClass 'disabled', !@hasChanges
@@ -1064,6 +1085,8 @@ class Editor
 
 	serialize: ->
 		unless @fieldsControls.validate()
+			return null
+		if @syntaxErrorOutput.is(':visible')
 			return null
 		data = @ui.serializeObject()
 		data.body = @aceEditor.getValue()
@@ -1085,7 +1108,7 @@ class Editor
 
 		data = this.serialize()
 		unless data?
-			return
+			return "Fix errors before saving"
 		if @script.id?.length
 			$.put(
 				"/scripts/#{@script.id}.json"
@@ -1098,6 +1121,14 @@ class Editor
 				{script: data}
 				onDone
 			)
+
+	run: ->
+		data = this.serialize()
+		unless data?
+			return alert "Fix errors before running"
+		data.id = @script.id
+		new ReportExecModal(data)
+
 
 
 ################################################################################
@@ -1139,7 +1170,6 @@ class Workspace
 		@scriptMap = {}
 
 		@layout.registerComponent 'editor', (container, state) =>
-			puts "tab container: ", container
 			if state?.id?.length
 				$.get(
 					"/scripts/#{state.id}.json"

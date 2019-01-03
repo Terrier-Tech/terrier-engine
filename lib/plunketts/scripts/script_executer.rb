@@ -7,12 +7,11 @@ class ScriptExecutor
     true
   end
 
-  def initialize(script, user)
+  def initialize(script, cache=nil)
     @script = script
-    @cache = ModelCache.new
+    @cache = cache
     @each_count = 0
     @each_total = 0
-    @me = user
     @field_values = {}
     @log_lines = []
   end
@@ -53,7 +52,6 @@ class ScriptExecutor
     script_run.duration = Time.now - t
     if @script.persisted? # we can't save the run if it's a temporary script
       script_run.write_log @log_lines.join("\n")
-      script_run.save_by_user? @me
     end
     script_run
   end
