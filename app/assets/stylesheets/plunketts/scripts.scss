@@ -405,12 +405,10 @@ form.script-editor {
 		min-width: 200px;
 		max-width: 400px;
 		position: relative;
-		padding: $panel-pad;
 		.fixed-controls {
-			position: absolute;
+			position: sticky;
 			top: 0;
-			left: 0;
-			right: 0;
+			padding: $panel-pad;
 		}
 	}
 	.script-field-controls {

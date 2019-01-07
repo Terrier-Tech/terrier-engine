@@ -36,9 +36,11 @@ $(document).on 'keyup', 'input.script-filter', (evt) ->
 class MessagesList
 	constructor: (@ui) ->
 		@buffer = []
-		theUi = @ui
+		scrollParent = @ui.parents('.modal-content')
+		unless scrollParent.length
+			scrollParent = @ui
 		this.scrollToBottom = _.debounce(
-			-> theUi.scrollTop(theUi[0].scrollHeight)
+			-> scrollParent.scrollTop(scrollParent[0].scrollHeight)
 			200
 			{maxWait: 250}
 		)
@@ -548,7 +550,7 @@ class ReportExecModal
 			new RunsModal(@script.id)
 
 		@messagesList = new MessagesList(@ui.find('.script-messages'))
-		@ioColumn = @ui.find '.io-column'
+		@ioControls = @ui.find '.io-column .fixed-controls'
 		@outputFilesView = @ui.find '.output-files'
 
 	readInput: (input, callback) ->
@@ -596,7 +598,7 @@ class ReportExecModal
 	beforeRun: ->
 		@messagesList.clear()
 		this.clearOutputFiles()
-		@ioColumn.showLoadingOverlay()
+		@ioControls.showLoadingOverlay()
 		@buttons.cancel.attr 'disabled', null
 		@buttons.run.attr 'disabled', true
 
@@ -610,7 +612,7 @@ class ReportExecModal
 		@messagesList.scrollToBottom()
 
 	afterRun: ->
-		@ioColumn.removeLoadingOverlay()
+		@ioControls.removeLoadingOverlay()
 		@buttons.cancel.attr 'disabled', true
 		@buttons.run.attr 'disabled', null
 
