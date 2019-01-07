@@ -437,11 +437,11 @@ $(document).on 'click', 'a.report-setup-modal', ->
 _fieldControls = {}
 
 _fieldControls.date = (name, value, options) ->
-	date = if value
-		moment(value).format('YYYY-MM-DD')
+	date = if value?.length
+		value.formatSortableDate()
 	else
 		''
-	"<input type='text' name='#{name}' value='#{date}' class='datepicker'/>"
+	"<input type='date' name='#{name}' value='#{date}'/>"
 
 _fieldControls.string = (name, value, options) ->
 	"<input type='text' name='#{name}' value='#{value}'/>"
@@ -449,7 +449,8 @@ _fieldControls.string = (name, value, options) ->
 _fieldControls.select = (name, value, options) ->
 	s = "<select name='#{name}'>"
 	for opt in options
-		s += "<option value='#{opt}'>#{opt}</option>"
+		selected = if opt == value then 'selected="selected"' else ''
+		s += "<option value='#{opt}' #{selected}>#{opt}</option>"
 	s + '</select>'
 
 _fieldControls.csv = (name, value, options) ->
@@ -471,6 +472,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 						options = fieldOptions[field.name]
 						div '.field-controls', ->
 							label '', field.name
+							puts "value for #{field.name} is #{value}"
 							div '', _fieldControls[field.field_type](field.name, value, options)
 				h4 '.with-icon', ->
 					icon '.ion-ios-copy-outline'
@@ -621,8 +623,7 @@ class ReportExecModal
 
 	addOutputFile: (file) ->
 		fileName = _.last file.body.split('/')
-		icon = window.iconClasses.fileType fileName
-		@outputFilesView.append "<a class='file #{icon}' href='#{file.body}' target='_blank'>#{fileName}</a>"
+		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
 
 
 window.scripts.showReportExecModal = (scriptId) ->
@@ -855,7 +856,7 @@ _fieldPartial = (field, constants) ->
 			div '.shrink-columns', ->
 				div '.sort-handle.ion-android-more-vertical'
 			div '.stretch-column', ->
-				input '.field-name', type: 'text', value: field.name, placeholder: 'Name'
+				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
 			div '.stretch-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
@@ -890,8 +891,9 @@ class FieldsControls
 
 		@list.find('.script-field').each (index, elem) ->
 			view = $ elem
-			valuesInput = view.find '.field-values'
-			valuesInput.toggle(view.find('.field-field_type').val() == 'select')
+			fieldType = view.find('.field-field_type').val()
+			view.find('.field-default_value').toggle(fieldType != 'csv')
+			view.find('.field-values').toggle(fieldType == 'select')
 
 		new Sortable @list[0]
 
@@ -956,7 +958,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 							forms.optionsForSelect constants.visibility_options, script.visibility
 				label '', 'E-Mail Recipients'
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
-				textarea '', name: 'description', placeholder: 'Description', rows: 1, script.description
+				textarea '', name: 'description', placeholder: 'Description', rows: 2, script.description
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->

@@ -313,6 +313,7 @@ form.script-editor {
 				opacity: 0.5;
 				display: block;
 				padding: 4px;
+				line-height: 1;
 			}
 			.sort-handle {
 				cursor: move;
@@ -408,7 +409,7 @@ form.script-editor {
 		.fixed-controls {
 			position: sticky;
 			top: 0;
-			padding: $panel-pad;
+			padding: 0 $panel-pad;
 		}
 	}
 	.script-field-controls {
@@ -445,18 +446,10 @@ form.script-editor {
 	.output-files {
 		a {
 			display: block;
-			padding: 12px;
-			text-align: center;
-		}
-		a::before {
-			font-size: 64px;
-			text-align: center;
-			display: block;
-			margin: 0 auto;
-			position: relative;
-			width: 0;
-			left: -32px;
-			line-height: 0.8;
+			padding: 12px 0;
+			&:hover {
+				text-decoration: underline;
+			}
 		}
 	}
 }

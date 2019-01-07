@@ -168,7 +168,7 @@ String::formatEmails = ->
 	window.formatEmails this
 
 window.formatShortDate = (s) ->
-	unless s.endsWith('Z')
+	unless s.endsWith('Z') or s.match(/-\d{2}:\d{2}$/)
 		s += ' UTC'
 	d = new Date(s)
 	"#{leftPad(d.getMonth()+1, 2)}/#{leftPad(d.getDate(), 2)}/#{d.getFullYear().toString().substring(2)}"
@@ -176,8 +176,17 @@ window.formatShortDate = (s) ->
 String::formatShortDate = ->
 	window.formatShortDate this
 
+window.formatSortableDate = (s) ->
+	unless s.endsWith('Z') or s.match(/-\d{2}:\d{2}$/)
+		s += ' UTC'
+	d = new Date(s)
+	"#{d.getFullYear().toString()}-#{leftPad(d.getMonth()+1, 2)}-#{leftPad(d.getDate(), 2)}"
+
+String::formatSortableDate = ->
+	window.formatSortableDate this
+
 window.formatShortDateTime = (s) ->
-	unless s.endsWith('Z')
+	unless s.endsWith('Z') or s.match(/-\d{2}:\d{2}$/)
 		s += ' UTC'
 	d = new Date(s)
 	s = "#{leftPad(d.getMonth()+1, 2)}/#{leftPad(d.getDate(), 2)}/#{d.getFullYear().toString().substring(2)} "

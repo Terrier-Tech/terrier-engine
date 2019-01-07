@@ -1,3 +1,4 @@
+require 'plunketts/io/cvs_io'
 
 class ScriptExecutor
 
@@ -74,14 +75,14 @@ class ScriptExecutor
   end
 
   def dump_xls(data, rel_path, options={})
-    abs_path = ClypIO.dump_xls data, rel_path, options
-    write_raw 'file', ClypIO.abs_to_rel_path(abs_path)
+    abs_path = CsvIo.save_xls data, rel_path, options
+    write_raw 'file', CsvIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
   def puts_file(path)
     if path.index(Rails.root.to_s)
-      path = ClypIO.abs_to_rel_path path
+      path = CsvIo.abs_to_rel_path path
     end
     write_raw 'file', path
     file_name = File.basename path

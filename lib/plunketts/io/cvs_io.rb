@@ -1,4 +1,5 @@
 require 'csv'
+require 'spreadsheet'
 
 module CsvIo
 
@@ -88,6 +89,61 @@ module CsvIo
     end
     abs_path
   end
+
+
+  # columns should be an array of symbols
+  # data should be an array of hashes
+  # options can contain: columns, sheet_name, titleize_columns
+  # returns the absolute path of the written file
+  def self.save_xls(data, rel_path, options={})
+    abs_path = CsvIo.rel_to_abs_path rel_path
+    dir = File.dirname abs_path
+    unless File.exists? dir
+      Dir.mkdir dir
+    end
+
+    options = {
+        sheet_name: 'Data',
+        titleize_columns: false,
+        columns: data.length > 0 ? data.first.keys : []
+    }.merge options
+    columns = options[:columns]
+
+    book = Spreadsheet::Workbook.new
+    sheet = book.create_worksheet name: options[:sheet_name]
+
+    columns_s = columns.map{|c| c.to_s}
+    if options[:titleize_columns]
+      columns_s = columns_s.map do |c|
+        s = c.titleize
+        if s =~ /Number$/
+          s.gsub('Number', '#')
+        else
+          s
+        end
+      end
+    end
+    sheet.row(0).concat columns_s
+    r = 0
+    data.each do |row|
+      r += 1
+      flat_row = columns.map do |col|
+        val = row.is_a?(QueryRow) ? row.send(col) : row[col]
+        if val.nil?
+          ''
+        elsif val.is_a? Array
+          val.map(&:to_s).join(',')
+        else
+          val
+        end
+      end
+      sheet.row(r).concat flat_row
+    end
+
+    book.write abs_path
+    abs_path
+  end
+
 
 
 end

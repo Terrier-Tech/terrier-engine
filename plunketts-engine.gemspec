@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
   s.add_dependency 'elasticsearch'
+  s.add_dependency 'spreadsheet'
 
   s.add_development_dependency 'pg'
 end

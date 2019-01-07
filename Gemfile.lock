@@ -5,6 +5,7 @@ PATH
       elasticsearch
       parser
       rails (>= 4.2)
+      spreadsheet
       terminal-table
 
 GEM
@@ -145,6 +146,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (12.3.2)
+    ruby-ole (1.2.12.1)
     sassc (2.0.0)
       ffi (~> 1.9.6)
       rake
@@ -161,6 +163,8 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 5.0)
+    spreadsheet (1.1.8)
+      ruby-ole (>= 1.0)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
