@@ -10,26 +10,6 @@ _scheduleDaysDisplay = (days) ->
 
 
 ################################################################################
-# Script List
-################################################################################
-
-$(document).on 'keyup', 'input.script-filter', (evt) ->
-	input = $(this)
-	s = (input.val() || '').toLowerCase()
-	console.log "filter '#{s}'"
-	unless s.length
-		$('table.scripts tr.script').show()
-		return
-	$('table.scripts tr.script').each (index, elem) ->
-		row = $(elem)
-		title = row.data('title')
-		if title.indexOf(s) > -1
-			row.show()
-		else
-			row.hide()
-
-
-################################################################################
 # Messages List
 ################################################################################
 
@@ -1275,7 +1255,7 @@ _pickerTemplate = tinyTemplate (scripts) ->
 						a '', data: {column: 'last_run'}, 'Last Run'
 			tbody '', ->
 				for script in scripts
-					tr ".script##{script.id}", ->
+					tr ".script##{script.id}", data: {title: script.title.toLowerCase()}, ->
 						td '', ->
 							div '.col-created_at', script.created_at.formatShortDate()
 							div '.col-updated_at', script.updated_at.formatShortDate()
@@ -1323,6 +1303,21 @@ class PickerModal
 			script = @scriptMap[evt.currentTarget.id]
 			@callback script
 			tinyModal.close()
+
+		# add the filter input to the header
+		filterInput = $('<input type="text" class="script-picker-filter" placeholder="Filter"/>').appendTo @ui.find('.modal-header h2')
+		filterInput.focus()
+		filterInput.keyup =>
+			s = (filterInput.val() || '').toLowerCase()
+			console.log "filter '#{s}'"
+			unless s.length
+				@ui.find('tr.script').show()
+				return
+			@ui.find('tr.script').each (index, elem) ->
+				row = $(elem)
+				title = row.data('title')
+				row.toggle(title.indexOf(s) > -1)
+
 
 
 ################################################################################

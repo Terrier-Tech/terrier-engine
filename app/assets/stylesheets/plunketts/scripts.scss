@@ -463,6 +463,16 @@ form.script-editor {
 .script-picker {
 
 }
+input[type=text].script-picker-filter {
+	display: inline-block;
+	width: 300px;
+	position: relative;
+	top: -2px;
+	margin-left: 1em;
+	&:focus {
+		outline: none;
+	}
+}
 table.scripts {
 	th a {
 		display: block;
