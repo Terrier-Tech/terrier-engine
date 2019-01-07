@@ -99,228 +99,6 @@ class ScriptRunner
 
 
 ################################################################################
-# Controller
-################################################################################
-
-class ScriptController
-	constructor: (id) ->
-		ace.require 'ace/ext/language_tools'
-		@editor = ace.edit(id)
-		@editor.setTheme 'ace/theme/textmate'
-		@editor.setDisplayIndentGuides true
-		@editor.setShowFoldWidgets false
-		@session = @editor.getSession()
-		@session.setMode 'ace/mode/ruby'
-		@session.setTabSize 2
-
-		@ui = $('.script-editor')
-		@toolBar = $('.tool-bar')
-		@editorView = @ui.find "##{id}"
-		@syntaxErrorOutput = @ui.find '.syntax-error-output'
-
-		@scriptId = @toolBar.find('#script-id').val()
-
-		@moreScripts = @toolBar.find '#script-more'
-		@saveButton = @toolBar.find '#script-save'
-		@scriptTitle = @toolBar.find '#script-title'
-		@clearButton = @toolBar.find '#script-clear'
-
-		@saveButton.click =>
-			this.save()
-
-		@moreScripts.click =>
-			@moreScripts.addClass('pulsing')
-			new SelectScriptModal @moreScripts
-
-		if @scriptId?
-			window.initSetupEditor()
-
-		@reportSetupPane = null
-		reportSetupPaneView = $('.script-report-setup')
-		if reportSetupPaneView.length > 0
-			@reportSetupPane = new ReportSetupPane(reportSetupPaneView)
-
-		@runButton = @ui.find 'a.run-script'
-		@runButton.click =>
-			if @runButton.attr 'disabled'
-				alert "Fix errors in the script!"
-			else
-				this.run()
-
-		@clearButton.click =>
-			@editor.setValue('')
-			@scriptId = @toolBar.find '#script-id'
-			@scriptId.val('')
-			@visibility = @toolBar.find '#script-public'
-			@visibility.prop('checked',true)
-			@scriptTitle.val('')
-
-		@messagesList = new MessagesList(@ui.find('.messages'))
-
-		@inputFilesView = @ui.find '.files-pane.input .file-list'
-		@outputFilesView = @ui.find '.files-pane.output .file-list'
-
-		this.updateInputFiles()
-
-		@errorMarkerId = null
-
-		@editor.commands.addCommand(
-			name: 'save'
-			bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}
-			exec: (e) =>
-				this.save()
-		)
-
-		@editor.setOptions(
-			enableBasicAutocompletion: true
-			enableSnippets: true
-			enableLiveAutocompletion: false
-		)
-
-		changeHandler = _.debounce(
-			=> this.onChanged(),
-			500)
-		@editor.on 'change', changeHandler
-
-		$('a.use-for-report').click =>
-			if confirm("Use this script for a report? This will replace the console and file panes with the report settings.")
-				@forceReportCategory = window.constants.Script.reportCategories[0]
-				this.save()
-
-	getSelection: ->
-		@session.getTextRange(@editor.getSelectionRange())
-
-	onChanged: ->
-		$.get(
-			'/scripts/check'
-			{body: @editor.getValue()}
-			(res) =>
-				console.log res
-				this.clearDiagnostic()
-				if res.diagnostic
-					this.setDiagnostic res.diagnostic
-		)
-
-	clearDiagnostic: ->
-		if @errorMarkerId
-			@session.removeMarker @errorMarkerId
-			@errorMarkerId = null
-		@syntaxErrorOutput.removeClass('error').text 'No Errors'
-		@runButton.attr 'disabled', null
-
-	setDiagnostic: (diagnostic) ->
-		Range = ace.require("ace/range").Range
-		loc = diagnostic.location
-		src = loc.source_buffer
-		line = _.values(src.line_for_position)[0]
-		cols = _.values(src.column_for_position)
-		console.log "error on line #{line} from #{cols[0]} to #{cols[1]}"
-		range = new Range(line-1, cols[0]-1, line-1, cols[1]+1)
-		@errorMarkerId = @session.addMarker(range, 'syntax-error', 'error')
-		@syntaxErrorOutput.addClass('error').text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
-		@runButton.attr 'disabled', 'disabled'
-
-	beforeRun: ->
-		@messagesList.clear()
-		this.clearOutputFiles()
-		window.showLoadingOverlay @editorView
-
-	onChunks: (chunks) ->
-		for chunk in chunks
-			if chunk.type == 'file'
-				this.addOutputFile chunk
-			else
-				@messagesList.addBuffered chunk
-		@messagesList.flushBuffer()
-		@messagesList.scrollToBottom()
-
-	afterRun: ->
-		window.removeLoadingOverlay @editorView
-
-	clearOutputFiles: ->
-		@outputFilesView.html ''
-
-	addOutputFile: (file) ->
-		@outputFilesView.append "<a class='file' href='#{file.body}' target='_blank'>#{file.body}</a>"
-
-	updateInputFiles: ->
-		if @inputFilesView.length == 0
-			return
-		@inputFilesView.html ''
-		window.showItemWaitingOverlay @inputFilesView
-		$.get(
-			"/scripts/#{@scriptId}/inputs"
-			(res) =>
-				window.removeLoadingOverlay @inputFilesView
-				for input in res.inputs
-					@inputFilesView.append "<a class='file modal' href='/script_inputs/#{input.id}/edit'>#{input.name}</a>"
-		)
-
-	run: ->
-		script = this.serialize()
-		if @reportSetupPane?
-			new ReportExecModal(script)
-		else
-			runner = new ScriptRunner(script, this)
-			runner.cancelContainer = @ui.find('.edit-pane')
-			runner.run()
-
-# returns true if there are no errors
-	serialize: ->
-		visibility = if @toolBar.find('#script-public').prop('checked') then 'public' else 'private'
-		script = {
-			title: @scriptTitle.val()
-			body: @editor.getValue()
-			visibility: visibility
-		}
-		if @scriptId?.length
-			script.id = @scriptId
-			scheduleRulesInput = @ui.find('input.schedule_rules_s')
-			if scheduleRulesInput.length
-				window.serializeScheduleRules()
-				script.schedule_rules_s = scheduleRulesInput.val()
-				script.schedule_time = @ui.find('#schedule_time').val()
-		if @reportSetupPane?
-			@reportSetupPane.serialize script
-		script
-
-	save: ->
-		if @scriptTitle.val().length < 1
-			alert "Please add a title"
-			return
-		script = this.serialize()
-		if @ui.find('.syntax-error').length > 0
-			alert "Fix syntax errors before saving, please"
-			return
-		if @forceReportCategory?
-			script.report_category = @forceReportCategory
-		else if !script.report_category?
-			script.report_category = 'none'
-		window.showLoadingOverlay(@ui)
-		$.post(
-			'/scripts/upsert'
-			{script: script}
-			(res) ->
-				newScript = res.script
-				console.log 'successfully saved script'
-				window.removeLoadingOverlays()
-				if res.status == 'success'
-					Turbolinks.visit "/scripts/#{newScript.id}/edit"
-				else
-					alert res.message
-		)
-
-
-_controller = null
-
-window.scripts.initEditor = ->
-	_controller = new ScriptController 'script-editor'
-
-window.scripts.updateInputFiles = ->
-	_controller.updateInputFiles()
-
-
-################################################################################
 # Help
 ################################################################################
 
@@ -333,81 +111,6 @@ window.scripts.initHelp = ->
 	session = editor.getSession()
 	session.setMode 'ace/mode/ruby'
 	session.setTabSize 2
-
-
-################################################################################
-# Report Setup Pane
-################################################################################
-
-_fieldTemplate = window.tinyTemplate (field) ->
-	div '.script-field.row.fields-row', ->
-		div '.small-3.columns', ->
-			input '.field-name', {type: 'text', value: field.name}
-		div '.small-3.columns', ->
-			select '.field-field_type', ->
-				for type in window.constants.ScriptField.fieldTypes
-					selected = if field.field_type == type then 'selected' else null
-					option '', {value: type, selected: selected}, window.titleize(type)
-		div '.small-5.columns', ->
-			input '.field-default_value', {type: 'text', value: field.default_value}
-		div '.small-1.columns', ->
-			a '.remove-field.ion-close-round.alert', {title: 'Remove Field'}
-		div '.values-container', ->
-			input '.field-values', {type: 'text', placeholder: 'Values', value: field.values}
-		div '.sort-handle.ion-android-more-vertical'
-
-class ReportSetupPane
-	constructor: (@ui) ->
-		@fieldsContainer = @ui.find '.fields-container'
-
-		@fieldsInput = $('input#script-fields')
-		fields = JSON.parse @fieldsInput.val()
-
-		# poulate the fields
-		for field in fields
-			row = $(_fieldTemplate(field)).appendTo @fieldsContainer
-			if field.field_type == 'select'
-				row.find('.values-container').show()
-
-		# show the values input when type is 'select'
-		@fieldsContainer.on 'change', '.field-field_type', (evt) =>
-			typeField = $(evt.currentTarget)
-			row = typeField.parents('.fields-row')
-			valuesContainer = row.find '.values-container'
-			if typeField.val() == 'select'
-				valuesContainer.show()
-			else
-				valuesContainer.hide()
-
-		new Sortable @fieldsContainer[0]
-
-		@ui.find('a.new-field').click => this.addField()
-
-		@ui.on 'click', 'a.remove-field', (evt) =>
-			fieldView = $(evt.currentTarget).parents('.script-field')
-			fieldView.remove()
-			false
-
-	addField: ->
-		view = _fieldTemplate {field_type: window.constants.ScriptField.fieldTypes.first}
-		@fieldsContainer.append view
-
-	serialize: (script) ->
-		@ui.find('.error').removeClass 'error'
-		@ui.serialize script, 'script-'
-		fields = @fieldsContainer.find('.script-field').map((index, elem) ->
-			fieldData = {}
-			$(elem).serialize fieldData, 'field-'
-			unless fieldData.name?.length
-				$(elem).find('.field-name').addClass 'error'
-			fieldData
-		).get()
-		script.script_fields_json = JSON.stringify(fields)
-		@ui.find('.error').length == 0
-
-
-$(document).on 'click', 'a.report-setup-modal', ->
-	new ReportSetupModal $(this).data('id')
 
 
 ################################################################################
@@ -626,7 +329,11 @@ $(document).on 'keydown', (evt) ->
 	if evt.key == 'f' and (evt.metaKey or evt.ctrlKey) and evt.shiftKey
 		evt.stopPropagation()
 		evt.preventDefault()
-		showModal '/scripts/search'
+		new ScriptSearcher()
+
+$(document).on 'click', 'a.search-scripts', ->
+	new ScriptSearcher()
+
 
 ################################################################################
 # Script Searcher
@@ -635,6 +342,17 @@ $(document).on 'keydown', (evt) ->
 window.scripts.initSearcher = ->
 	new ScriptSearcher()
 
+_searcherTemplate = tinyTemplate ->
+	div '.script-searcher', ->
+		div '.results-list'
+		div '.body-pane#script-search-editor'
+		a '.open-script.ion-android-open', title: 'Open Script'
+
+_searchInputTemplate = tinyTemplate ->
+	div '.script-search-input', ->
+		input '.script-search', type: 'text', placeholder: 'Search the source code of all scripts'
+		div '.results-summary'
+
 _searchResultsTemplate = tinyTemplate (scripts) ->
 	for script in scripts
 		div ".script-result#result-#{script.id}", {data: {id: script.id}}, ->
@@ -642,13 +360,22 @@ _searchResultsTemplate = tinyTemplate (scripts) ->
 
 class ScriptSearcher
 	constructor: ->
-		@input = $ 'input.script-search'
-		@resultsList = $ '.script-searcher .results-list'
-		@bodyPane = $ '.script-searcher .body-pane'
-		@resultsSummary = $ '.script-search-input .results-summary'
+		tinyModal.showDirect _searcherTemplate(), {
+			title: 'Script Search'
+			title_icon: 'ios-search-strong'
+			callback: (modal) => this.init(modal)
+		}
+
+	init: (@ui) ->
+		@ui.find('.modal-header h2').append _searchInputTemplate()
+
+		@input = @ui.find 'input.script-search'
+		@resultsList = @ui.find '.results-list'
+		@bodyPane = @ui.find '.body-pane'
+		@resultsSummary = @ui.find '.script-search-input .results-summary'
 		@key = 0
 		@scriptMap = {}
-		@openScriptLink = $ '.script-searcher a.open-script'
+		@openScriptLink = @ui.find 'a.open-script'
 
 		ace.require 'ace/ext/language_tools'
 		@editor = ace.edit 'script-search-editor'
@@ -680,6 +407,12 @@ class ScriptSearcher
 		@resultsList.on 'click', '.script-result', (evt) =>
 			id = $(evt.currentTarget).data 'id'
 			this.loadBody id
+
+		@openScriptLink.click =>
+			id = @openScriptLink.data 'id'
+			title = @openScriptLink.attr 'title'
+			scripts.open {id: id, title: title}
+
 
 	onInputChanged: ->
 		query = @input.val()
@@ -727,13 +460,14 @@ class ScriptSearcher
 		@bodyPane.show()
 		@resultsList.find('.current').removeClass 'current'
 		@resultsList.find("#result-#{id}").addClass 'current'
-		@openScriptLink.attr 'href', "/scripts/#{id}/edit"
+		@openScriptLink.data 'id', id
 		@openScriptLink.show()
 		unless id == @currentId
 			@currentId = id
 			script = @scriptMap[id]
 			@session.setValue script.body
-		query = @input.val().trim()
+			@openScriptLink.attr 'title', script.title
+			query = @input.val().trim()
 		@editor.find query, {wholeWord: false, wrap: true}
 
 	loadNext: ->
@@ -1135,6 +869,8 @@ class Editor
 
 _workspaceStateKey = 'scripts_workspace_state'
 
+_workspace = null
+
 window.scripts.initWorkspace = (sel) ->
 	new Workspace $(sel)
 
@@ -1142,6 +878,7 @@ class Workspace
 	constructor: (@container) ->
 		@container.addClass 'script-workspace'
 		ace.require 'ace/ext/language_tools'
+		_workspace = this
 
 		$.get(
 			'/scripts/constants.json'
@@ -1157,6 +894,7 @@ class Workspace
 		@layout = new GoldenLayout config, @container[0]
 
 		@scriptMap = {}
+		@itemMap = {}
 
 		@layout.registerComponent 'editor', (container, state) =>
 			if state?.id?.length
@@ -1165,12 +903,19 @@ class Workspace
 					(res) =>
 						if res.status == 'success'
 							@scriptMap[res.script.id] = res.script
+							@itemMap[res.script.id] = container
 							editor = new Editor(res.script, container, @constants)
 						else
 							alert res.message
 				)
 			else # new script
 				editor = new Editor({title: 'New Script'}, container, @constants)
+
+		@layout.on 'itemDestroyed', (evt) =>
+			id = evt.config?.componentState?.id
+			if id?.length
+				puts "Script #{id} was closed"
+				delete @itemMap[id]
 
 		@layout.init()
 
@@ -1181,12 +926,7 @@ class Workspace
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>
-				this.addChild {
-					type: 'component'
-					title: script.title
-					componentName: 'editor'
-					componentState: {id: script.id}
-				}
+				this.openScript script
 			false
 
 		$('a.new-script').click =>
@@ -1196,6 +936,21 @@ class Workspace
 				componentName: 'editor'
 			}
 			false
+
+	# script only needs id and title attributes
+	openScript: (script) ->
+		if @itemMap[script.id] # the script is already open
+			puts "script already open"
+			item = @itemMap[script.id]
+			# doesn't work
+			item.parent.header?.parent?.setActiveContentItem item
+		else
+			this.addChild {
+				type: 'component'
+				title: script.title
+				componentName: 'editor'
+				componentState: {id: script.id}
+			}
 
 	addChild: (child) ->
 		unless @layout.root.contentItems.length
@@ -1228,6 +983,13 @@ class Workspace
 				]
 			}]
 		}
+
+window.scripts.open = (script) ->
+	if window.location.pathname.indexOf('/scripts')==0 and _workspace?
+		_workspace.openScript script
+		tinyModal.close()
+	else
+		Turbolinks.visit "/scripts##{script.id}"
 
 
 
@@ -1365,4 +1127,4 @@ class RunsModal
 					alert res.message
 		)
 
-	init: (@ui, @runs) ->
+	init: (@ui, @runs) -> {}
