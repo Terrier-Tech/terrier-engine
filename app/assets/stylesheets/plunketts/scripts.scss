@@ -483,11 +483,11 @@ form.script-editor {
 
 }
 input[type=text].script-picker-filter {
-	display: inline-block;
-	width: 300px;
+	flex: 1 0 300px;
 	position: relative;
-	top: -2px;
+	top: 4px;
 	margin-left: 1em;
+	margin-bottom: 0;
 	&:focus {
 		outline: none;
 	}
@@ -546,14 +546,14 @@ table.script-runs {
 $results-list-width: 400px;
 
 .script-search-input {
-	position: absolute;
-	left: 220px;
-	right: 50px;
+	flex: 1 0 400px;
 	top: 4px;
+	margin-left: 1em;
+	position: relative;
+	min-width: 320px;
 	input[type=text].script-search {
 		padding: 6px 20px;
 		height: 40px;
-		border-radius: 20px;
 		font-size: 18px;
 		margin-bottom: 0;
 		&:focus {

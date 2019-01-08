@@ -367,7 +367,7 @@ class ScriptSearcher
 		}
 
 	init: (@ui) ->
-		@ui.find('.modal-header h2').append _searchInputTemplate()
+		@ui.find('.modal-header').append _searchInputTemplate()
 
 		@input = @ui.find 'input.script-search'
 		@resultsList = @ui.find '.results-list'
@@ -1069,7 +1069,7 @@ class PickerModal
 			tinyModal.close()
 
 		# add the filter input to the header
-		filterInput = $('<input type="text" class="script-picker-filter" placeholder="Filter"/>').appendTo @ui.find('.modal-header h2')
+		filterInput = $('<input type="text" class="script-picker-filter" placeholder="Filter"/>').appendTo @ui.find('.modal-header')
 		filterInput.focus()
 		filterInput.keyup =>
 			s = (filterInput.val() || '').toLowerCase()

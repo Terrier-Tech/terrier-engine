@@ -78,10 +78,13 @@ body.with-modal #content {
 	flex-direction: column;
 	width: 100%;
 	.modal-header {
-		padding: $modal-pad/2;
 		flex: 0 0 auto;
+		display: flex;
+		padding-right: 50px;
 		h2 {
+			flex: 1 0 auto;
 			margin: 0;
+			padding: $modal-pad/3 $modal-pad/2;
 			line-height: 1;
 		}
 		a.close-modal {
