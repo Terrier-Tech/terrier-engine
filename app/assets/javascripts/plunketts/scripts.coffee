@@ -184,7 +184,7 @@ class ReportExecModal
 				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions)
 				modalOptions = {
 					title: @script.title
-					title_icon: 'ion-code-download'
+					title_icon: 'play'
 					actions: [
 						{
 							title: 'Cancel'
@@ -203,14 +203,14 @@ class ReportExecModal
 				if @script.id?.length
 					modalOptions.actions.push {
 						title: 'History'
-						class: 'show-history'
+						class: 'show-history secondary'
 						icon: 'clock'
 						end: true
 					}
 					modalOptions.actions.push {
 						title: 'Settings'
 						attrs: href: "/scripts/#{@script.id}/edit"
-						class: 'modal'
+						class: 'modal secondary'
 						icon: 'compose'
 						end: true
 					}
