@@ -832,6 +832,7 @@ class Editor
 				@ui.find('.error').removeClass 'error'
 				@hasChanges = false
 				this.updateUi()
+				_workspace.saveState()
 			else
 				puts res.script
 				puts res.errors
@@ -962,6 +963,7 @@ class Workspace
 
 	saveState: ->
 		config = @layout.toConfig()
+		puts "Saving script worksapce state: ", config
 		localStorage.setItem _workspaceStateKey, JSON.stringify(config)
 
 	getSavedStated: ->
