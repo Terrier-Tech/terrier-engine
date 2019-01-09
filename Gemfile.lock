@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunketts-engine (1.1.2)
+    plunketts-engine (1.1.3)
       elasticsearch
       parser
       rails (>= 4.2)

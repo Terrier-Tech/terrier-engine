@@ -1,4 +1,3 @@
-require 'plunketts/scripts/script_executer'
 
 # include in the streaming scripts controller
 module Plunketts::ScriptsStreaming
@@ -13,6 +12,10 @@ module Plunketts::ScriptsStreaming
       raise "Concrete classes must implement save_run?"
     end
 
+    def get_executer
+      raise "Subclasses must implement get_executer"
+    end
+
     def exec
       response.headers['Content-Type'] = 'text/event-stream'
       @script = if params[:id]
@@ -23,7 +26,7 @@ module Plunketts::ScriptsStreaming
       request_body = JSON.parse(request.body.read)
       @script.body = request_body['body']
 
-      executor = ScriptExecutor.new @script
+      executor = get_executer
 
       if request_body['field_values']
         executor.set_field_values request_body['field_values']
@@ -32,6 +35,7 @@ module Plunketts::ScriptsStreaming
       run = executor.run response.stream
       save_run? run
     end
+
 
   end
 end
