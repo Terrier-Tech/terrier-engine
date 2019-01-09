@@ -2,7 +2,8 @@ require 'plunketts/io/cvs_io'
 
 class ScriptExecutor
 
-  attr_reader :cache, :each_count, :each_total, :me
+  attr_reader :cache, :each_count, :each_total
+  attr_accessor :me
 
   def should_soft_destroy
     true
