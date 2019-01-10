@@ -745,8 +745,7 @@ class Editor
 			enableLiveAutocompletion: false
 		)
 
-		@session.setValue @script.body
-#		@aceEditor.selection.clear()
+		@session.setValue(@script.body || '')
 
 		@aceEditor.on 'change', _.debounce(
 			=> this.onChanged(true),
