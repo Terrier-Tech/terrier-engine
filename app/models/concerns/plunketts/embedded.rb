@@ -29,7 +29,7 @@ module Plunketts::Embedded
       self.class.field_defs.each do |name, opts|
         if opts.type == Integer
           hash[name] = self.send(name).to_i
-        elsif opts.type && opts.type < Embedded
+        elsif opts.type && opts.type < Plunketts::Embedded
           hash[name] = self.send(name).map{|o| o.attributes}
         else
           hash[name] = self.send(name)
