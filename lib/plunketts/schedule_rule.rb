@@ -1,4 +1,3 @@
-require_relative '../../app/models/concerns/plunketts/embedded'
 
 class Array
   def index_runs
