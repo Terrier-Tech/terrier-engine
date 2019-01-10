@@ -131,7 +131,7 @@ class ScheduleRule
     month_indexes = self.months.map{|d| ScheduleRule.months.index(d)}.sort
     month_runs = month_indexes.index_runs.compact
     month_summary = month_runs.map do |run|
-      run.map{|i| ScheduleRule.short_months[i]}.join('-')
+      run.compact.map{|i| ScheduleRule.short_months[i]}.join('-')
     end.join(', ')
 
     "#{day_summary}; #{week_summary}; #{month_summary}"
