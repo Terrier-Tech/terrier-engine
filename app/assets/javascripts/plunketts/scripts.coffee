@@ -1001,12 +1001,12 @@ window.scripts.open = (script) ->
 
 _pickerTemplate = tinyTemplate (scripts) ->
 	div '.script-picker', ->
-		table '.scripts.sticky-header.sortable.data.sortable', ->
+		table '.scripts.sticky-header.sortable.data.sortable.plain-header', ->
 			thead '', ->
 				tr '', ->
 					th '', ->
-						a '', data: {column: 'created_at'}, 'Created On'
-						a '', data: {column: 'updated_at'}, 'Updated On'
+						a '', data: {column: 'created_at'}, 'Created'
+						a '', data: {column: 'updated_at'}, 'Updated'
 					th '', ->
 						a '', data: {column: 'title'}, 'Title'
 					th '', ->

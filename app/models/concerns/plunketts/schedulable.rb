@@ -1,4 +1,4 @@
-require 'plunketts/scripts/schedule_rule'
+require 'plunketts/schedule_rule'
 
 module Plunketts::Schedulable
   extend ActiveSupport::Concern
