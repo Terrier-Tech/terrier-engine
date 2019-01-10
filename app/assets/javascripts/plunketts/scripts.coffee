@@ -653,7 +653,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				icon '.ion-play'
 				span '', 'Run <span class="shortcut">&#8984&#9166</span>'
 		div '.editor-container', ->
-			div '.ace-container', script.body
+			div '.ace-container' #, script.body
 			div '.syntax-error-output'
 		div '.settings-container', ->
 			div '.error-explanation'
@@ -744,6 +744,9 @@ class Editor
 			enableSnippets: true
 			enableLiveAutocompletion: false
 		)
+
+		@session.setValue @script.body
+#		@aceEditor.selection.clear()
 
 		@aceEditor.on 'change', _.debounce(
 			=> this.onChanged(true),
