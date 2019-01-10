@@ -121,7 +121,7 @@ _fieldControls = {}
 
 _fieldControls.date = (name, value, options) ->
 	date = if typeof value == 'number'
-		new Date(value).toLocaleString().formatShortDate()
+		new Date(value).toLocaleString().formatSortableDate()
 	else if value?.length
 		value.formatSortableDate()
 	else
