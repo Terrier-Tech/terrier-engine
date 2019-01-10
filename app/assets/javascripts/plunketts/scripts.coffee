@@ -120,7 +120,9 @@ window.scripts.initHelp = ->
 _fieldControls = {}
 
 _fieldControls.date = (name, value, options) ->
-	date = if value?.length
+	date = if typeof value == 'number'
+		new Date(value).toLocaleString().formatShortDate()
+	else if value?.length
 		value.formatSortableDate()
 	else
 		''
