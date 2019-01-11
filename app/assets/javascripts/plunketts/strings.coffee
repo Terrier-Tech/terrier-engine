@@ -180,7 +180,10 @@ window.formatSortableDate = (s) ->
 	unless s.endsWith('Z') or s.match(/-\d{2}:\d{2}$/)
 		s += ' UTC'
 	d = new Date(s)
-	"#{d.getFullYear().toString()}-#{leftPad(d.getMonth()+1, 2)}-#{leftPad(d.getDate(), 2)}"
+	d.formatSortableDate()
+
+Date::formatSortableDate = ->
+	"#{this.getFullYear().toString()}-#{leftPad(this.getMonth()+1, 2)}-#{leftPad(this.getDate(), 2)}"
 
 String::formatSortableDate = ->
 	window.formatSortableDate this
