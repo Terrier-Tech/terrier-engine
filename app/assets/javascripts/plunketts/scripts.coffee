@@ -1025,8 +1025,8 @@ _pickerTemplate = tinyTemplate (scripts) ->
 				for script in scripts
 					tr ".script##{script.id}", data: {title: script.title.toLowerCase()}, ->
 						td '', ->
-							div '.col-created_at', script.created_at.formatShortDate()
-							div '.col-updated_at', script.updated_at.formatShortDate()
+							div '.col-created_at', data: {column_value: script.created_at}, script.created_at.formatShortDate()
+							div '.col-updated_at', data: {column_value: script.updated_at}, script.updated_at.formatShortDate()
 						td '', ->
 							div '.col-title', script.title
 							if script.schedule_time != 'none' and script.schedule_rule_summaries?.length

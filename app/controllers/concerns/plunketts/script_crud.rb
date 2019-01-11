@@ -152,7 +152,7 @@ left outer JOIN
     GROUP BY s.id
   ) b
   on a.id = b.id
-order by a.report_category, a.title
+order by a.updated_at DESC
 SQL
     end
 
