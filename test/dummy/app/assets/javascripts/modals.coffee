@@ -57,7 +57,6 @@ _stackTemplate = tinyTemplate (depth) ->
 		h1 '', "Stack #{depth}"
 		a '.stacked-modal', data: {depth: depth+1}, 'Push Stack'
 
-
 $(document).on 'click', 'a.stacked-modal', ->
 	depth = parseInt ($(this).data('depth') || '1')
 	tinyModal.showDirect(
@@ -78,4 +77,22 @@ $(document).on 'click', 'a.stacked-modal', ->
 				end: true
 			}
 		]
+	)
+
+
+## Replace Content
+
+_replaceContentTemplate = tinyTemplate ->
+	div '.replace-content', ->
+		h1 '.text-center', ->
+			a '.replace-content', 'Replace Content'
+
+$(document).on 'click', 'a.replace-content-modal', ->
+	tinyModal.showDirect(
+		_replaceContentTemplate()
+		title: 'Replaceable'
+		title_icon: 'arrow-swap'
+		callback: (modal) ->
+			modal.find('a.replace-content').click ->
+				tinyModal.replaceContent '<h2 class="text-center">Replaced!</h2>'
 	)

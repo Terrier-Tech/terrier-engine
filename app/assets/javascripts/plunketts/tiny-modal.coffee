@@ -89,6 +89,10 @@ _emptyColumnTemplate = tinyTemplate ->
 		div '.modal-actions'
 
 
+# replaces the content of the top modal on the stack
+window.tinyModal.replaceContent = (content)	->
+	$('#modal-window .modal-content:last').html content
+
 
 # shows a modal with direct content
 window.tinyModal.showDirect = (content, options={}) ->
@@ -191,6 +195,7 @@ $(document).on 'click', 'a.close-modal', ->
 
 
 # handle modal form errors
+# this currently breaks some clypboard forms
 #$(document).on 'ajax:error', '#modal-window form', (xhr, status, error) ->
 #	win = $ '#modal-window'
 #	column = win.find '.modal-column'
