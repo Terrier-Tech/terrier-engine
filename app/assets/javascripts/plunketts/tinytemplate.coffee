@@ -4,7 +4,7 @@ _idRegex = /#[\w-]+/g
 
 _context = {content: ''}
 
-_tags = ['a', 'br', 'datalist', 'canvas', 'div', 'dl', 'dd', 'dt', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'hr', 'icon', 'iframe', 'img', 'input', 'label', 'li', 'ol', 'option', 'optgroup', 'p', 'pre', 'select', 'span', 'strong', 'table', 'tbody', 'td', 'textarea', 'th', 'thead', 'tr', 'ul']
+_tags = ['a', 'br', 'datalist', 'canvas', 'div', 'dl', 'dd', 'dt', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'hr', 'icon', 'iframe', 'img', 'input', 'label', 'li', 'ol', 'option', 'optgroup', 'p', 'pre', 'section', 'select', 'span', 'strong', 'table', 'tbody', 'td', 'textarea', 'th', 'thead', 'tr', 'ul']
 
 _ropeCase = (s) ->
 	if s == 'icon'
