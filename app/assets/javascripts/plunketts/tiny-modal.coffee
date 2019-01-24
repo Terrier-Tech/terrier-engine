@@ -80,6 +80,7 @@ _template = tinyTemplate (options, content) ->
 				for action in _.filter(options.actions, (a) -> a.end)
 					_actionPartial(action)
 
+window.tinyModal.template = _template
 
 
 _emptyColumnTemplate = tinyTemplate ->
