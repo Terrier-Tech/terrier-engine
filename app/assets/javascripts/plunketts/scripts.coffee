@@ -701,8 +701,6 @@ class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
 
-		puts 'tab container: ', @tabContainer
-
 		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
 		schedulePanel = @ui.find '.settings-panel.schedule'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
@@ -802,11 +800,10 @@ class Editor
 		cols = _.values(src.column_for_position)
 		if cols.length==1
 			cols.push cols[0]+1
-		console.log "error on line #{line} from #{cols[0]} to #{cols[1]}"
+		puts "error on line #{line} from #{cols[0]} to #{cols[1]}"
 		range = new Range(line-1, cols[0]-1, line-1, cols[1]+1)
 		@errorMarkerId = @session.addMarker(range, 'syntax-error', 'error', true)
 		marker = @ui.find('.ace-container .syntax-error')
-		puts "marker count: #{marker.length}"
 		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 		@syntaxErrorOutput.show().text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 		@buttons.run.attr 'disabled', 'disabled'
@@ -1101,6 +1098,8 @@ _runsTemplate = tinyTemplate (runs) ->
 			thead '', ->
 				tr '', ->
 					th '', 'Date'
+					th '', 'Time'
+					th '', 'User'
 					th '', 'Duration'
 					th '', 'Status'
 					th '', 'Exception'
@@ -1108,7 +1107,9 @@ _runsTemplate = tinyTemplate (runs) ->
 			tbody '', ->
 				for run in runs
 					tr '.script-run', ->
-						td '', run.created_at.formatShortDateTime()
+						td '', run.created_at.formatShortDate()
+						td '', run.created_at.formatShortTime()
+						td '', run.created_by_name
 						td '', "#{(run.duration || 0).toFixed(1)}s"
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
