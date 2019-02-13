@@ -701,6 +701,8 @@ class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
 
+		puts 'tab container: ', @tabContainer
+
 		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
 		schedulePanel = @ui.find '.settings-panel.schedule'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
@@ -836,6 +838,7 @@ class Editor
 				@ui.find('.error').removeClass 'error'
 				@hasChanges = false
 				this.updateUi()
+				@tabContainer.setState {id: @script.id}
 				_workspace.saveState()
 			else
 				puts res.script
