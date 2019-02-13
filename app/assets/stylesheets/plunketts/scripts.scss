@@ -339,38 +339,6 @@ form.script-editor {
 			}
 		}
 	}
-	.schedule-rule-editor {
-		position: relative;
-		.horizontal-grid {
-			align-items: start;
-			clear: both;
-		}
-		.stretch-column {
-			border-right: 1px solid #ccc;
-			&:last-child {
-				border-right: none;
-			}
-		}
-		.days-column {
-			min-width: 64px;
-		}
-		.weeks-column {
-			min-width: 96px;
-		}
-		label {
-			font-size: 13px;
-			input[type=checkbox] {
-				margin-bottom: 0.5em;
-				margin-right: 0.5em;
-			}
-		}
-		a.all-months {
-			position: absolute;
-			right: 4px;
-			bottom: 2px;
-			font-size: 13px;
-		}
-	}
 	&.show-settings {
 		.editor-container {
 			right: $settings-width;
@@ -386,6 +354,45 @@ form.script-editor {
 				width: 30%;
 			}
 		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Schedule Rule Editor
+////////////////////////////////////////////////////////////////////////////////
+
+.schedule-rule-editor {
+	position: relative;
+	min-width: 278px;
+	.horizontal-grid {
+		align-items: start;
+		clear: both;
+	}
+	.stretch-column {
+		border-right: 1px solid #ccc;
+		&:last-child {
+			border-right: none;
+		}
+	}
+	.days-column {
+		min-width: 64px;
+	}
+	.weeks-column {
+		min-width: 96px;
+	}
+	label {
+		font-size: 13px;
+		input[type=checkbox] {
+			margin-bottom: 0.5em;
+			margin-right: 0.5em;
+		}
+	}
+	a.all-months {
+		position: absolute;
+		right: 4px;
+		bottom: 2px;
+		font-size: 13px;
 	}
 }
 
@@ -510,7 +517,6 @@ table.scripts {
 }
 
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Runs Table
 ////////////////////////////////////////////////////////////////////////////////
@@ -536,6 +542,23 @@ table.script-runs {
 	}
 	td.exception {
 		color: $alert-color;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Settings Modal
+////////////////////////////////////////////////////////////////////////////////
+
+form.script-settings {
+	.error-explanation {
+		margin-bottom: 1em;
+	}
+	.schedule-column {
+		margin-left: 2em;
+		h3 {
+			margin-top: 0;
+		}
 	}
 }
 
