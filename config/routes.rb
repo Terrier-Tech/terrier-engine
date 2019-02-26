@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get 'runs'
     end
     post 'scripts_streaming/exec'
+    post 'sql/exec'
   end
 
 end

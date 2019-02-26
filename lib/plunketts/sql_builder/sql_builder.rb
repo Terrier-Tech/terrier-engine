@@ -164,6 +164,16 @@ class SqlBuilder
     self
   end
 
+  def self.from_raw(raw)
+    builder = SqlBuilder.new
+    ATTRS.each do |attr|
+      if raw[attr]
+        builder.send "#{attr}=", raw[attr]
+      end
+    end
+    builder
+  end
+
   protected
 
   attr_accessor *ATTRS
