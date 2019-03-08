@@ -17,6 +17,25 @@ window.forms.replaceSelectOptions = (select, options, current=null) ->
 
 
 ################################################################################
+# Grouped Options For Select
+################################################################################
+
+# meant to be used inside a tinyTemplate, behaves the same as Rails grouped_options_for_select
+window.forms.groupedOtionsForSelect = (options, current=null) ->
+	for group in options
+		optgroup '', label: group[0], ->
+			for opt in group[1]
+				value = _.last opt # to match options_for_select behavior
+				selected = if value==current then 'selected' else null
+				option '', {value: value, selected: selected}, opt[0]
+
+# replaces the options on an existing select element
+window.forms.replaceGroupedSelectOptions = (select, options, current=null) ->
+	select.html (tinyTemplate -> forms.groupedOtionsForSelect(options, current))()
+
+
+
+################################################################################
 # jQuery Extensions
 ################################################################################
 

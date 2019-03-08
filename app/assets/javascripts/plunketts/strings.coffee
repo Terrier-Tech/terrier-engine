@@ -198,6 +198,15 @@ window.formatShortDateTime = (s) ->
 String::formatShortDateTime = ->
 	window.formatShortDateTime this
 
+window.formatShortTime = (s) ->
+	unless s.endsWith('Z') or s.match(/-\d{2}:\d{2}$/)
+		s += ' UTC'
+	d = new Date(s)
+	d.toLocaleTimeString()
+
+String::formatShortTime = ->
+	window.formatShortTime this
+
 
 ########################################################################################
 # Singular/Plural

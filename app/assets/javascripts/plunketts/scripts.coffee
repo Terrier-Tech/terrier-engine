@@ -171,7 +171,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 
 
 class ReportExecModal
-	constructor: (@script) ->
+	constructor: (@script, @constants) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
 		$.post(
@@ -211,8 +211,7 @@ class ReportExecModal
 					}
 					modalOptions.actions.push {
 						title: 'Settings'
-						attrs: href: "/scripts/#{@script.id}/edit"
-						class: 'modal secondary'
+						class: 'show-settings secondary'
 						icon: 'compose'
 						end: true
 					}
@@ -227,6 +226,7 @@ class ReportExecModal
 			run: @ui.find('a.run')
 			cancel: @ui.find('a.cancel')
 			history: @ui.find('a.show-history')
+			settings: @ui.find('a.show-settings')
 		}
 		@buttons.run.click (evt) =>
 			this.run()
@@ -235,6 +235,9 @@ class ReportExecModal
 
 		@buttons.history.click =>
 			new RunsModal(@script.id)
+
+		@buttons.settings.click =>
+			new SettingsModal(@script, @constants)
 
 		@messagesList = new MessagesList(@ui.find('.script-messages'))
 		@ioControls = @ui.find '.io-column .fixed-controls'
@@ -499,7 +502,12 @@ class ScriptSearcher
 ################################################################################
 
 _scheduleRulePartial = (script, constants) ->
-	rule = if script.schedule_rules?.length then script.schedule_rules[0] else {}
+	rule = if script.schedule_rules?.length
+		script.schedule_rules[0]
+	else if script.schedule_rules_s?.length
+		JSON.parse(script.schedule_rules_s)[0]
+	else
+		{}
 	div '.schedule-rule-editor', ->
 		input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 		div '.horizontal-grid', ->
@@ -800,11 +808,10 @@ class Editor
 		cols = _.values(src.column_for_position)
 		if cols.length==1
 			cols.push cols[0]+1
-		console.log "error on line #{line} from #{cols[0]} to #{cols[1]}"
+		puts "error on line #{line} from #{cols[0]} to #{cols[1]}"
 		range = new Range(line-1, cols[0]-1, line-1, cols[1]+1)
 		@errorMarkerId = @session.addMarker(range, 'syntax-error', 'error', true)
 		marker = @ui.find('.ace-container .syntax-error')
-		puts "marker count: #{marker.length}"
 		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 		@syntaxErrorOutput.show().text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
 		@buttons.run.attr 'disabled', 'disabled'
@@ -836,6 +843,7 @@ class Editor
 				@ui.find('.error').removeClass 'error'
 				@hasChanges = false
 				this.updateUi()
+				@tabContainer.setState {id: @script.id}
 				_workspace.saveState()
 			else
 				puts res.script
@@ -864,7 +872,7 @@ class Editor
 		unless data?
 			return alert "Fix errors before running"
 		data.id = @script.id
-		new ReportExecModal(data)
+		new ReportExecModal(data, @constants)
 
 
 
@@ -1098,6 +1106,8 @@ _runsTemplate = tinyTemplate (runs) ->
 			thead '', ->
 				tr '', ->
 					th '', 'Date'
+					th '', 'Time'
+					th '', 'User'
 					th '', 'Duration'
 					th '', 'Status'
 					th '', 'Exception'
@@ -1105,7 +1115,9 @@ _runsTemplate = tinyTemplate (runs) ->
 			tbody '', ->
 				for run in runs
 					tr '.script-run', ->
-						td '', run.created_at.formatShortDateTime()
+						td '', run.created_at.formatShortDate()
+						td '', run.created_at.formatShortTime()
+						td '', run.created_by_name
 						td '', "#{(run.duration || 0).toFixed(1)}s"
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
@@ -1127,10 +1139,83 @@ class RunsModal
 							title: 'Script Runs'
 							title_icon: 'clock'
 						}
-						(modal) => this.init(modal, res.runs)
 					)
 				else
 					alert res.message
 		)
 
-	init: (@ui, @runs) -> {}
+
+################################################################################
+# Settings Modal
+################################################################################
+
+_settingsFormTemplate = tinyTemplate (script, constants) ->
+	form '.script-settings', ->
+		div '.error-explanation'
+		div '.horizontal-grid', ->
+			div '.stretch-column', ->
+				input '', type: 'text', name: 'title', placeholder: 'Title', value: script.title
+				div '.horizontal-grid', ->
+					div '.stretch-column', ->
+						label '', 'Category'
+						select '', name: 'report_category', ->
+							forms.optionsForSelect constants.category_options, script.report_category
+					div '.stretch-column', ->
+						label '', 'E-Mail Recipients'
+						input '', type: 'text', name: 'email_recipients_s', value: script.email_recipients_s
+				label '', 'Description'
+				textarea '', name: 'description', rows: '4', script.description
+			div '.shrink-column.schedule-column', ->
+				h3 '.with-icon', ->
+					icon '.ion-ios-calendar-outline'
+					span '', 'Schedule'
+				select '.schedule-time', name: 'schedule_time', ->
+					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
+				_scheduleRulePartial script, constants
+
+
+class SettingsModal
+	constructor: (@script, @constants) ->
+		puts "editing script: ", @script
+		tinyModal.showDirect(
+			_settingsFormTemplate(@script, @constants)
+			{
+				title: 'Script Settings'
+				title_icon: 'ios-gear-outline'
+				actions: [
+					{
+						title: 'Save'
+						icon: 'checkmark-round'
+						class: 'save-script'
+					}
+				]
+				callback: (modal) => this.init modal
+			}
+
+		)
+
+	init: (@ui) ->
+		new ScheduleRulesEditor @ui.find('.schedule-column')
+
+		@form = @ui.find 'form'
+		@errorExplanation = @ui.find '.error-explanation'
+		@errorExplanation.hide()
+		@ui.find('a.save-script').click =>
+			this.save()
+
+	save: ->
+		@errorExplanation.hide()
+		data = @form.serializeObject()
+		@ui.showLoadingOverlay()
+		$.put(
+			"/scripts/#{@script.id}.json"
+			{script: data}
+			(res) =>
+				if res.status == 'success'
+					Turbolinks.visit window.location
+				else
+					@ui.removeLoadingOverlay()
+					puts res.script
+					puts res.errors
+					@form.showErrors res.errors
+		)

@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   get 'modals' => 'modals#index'
 
+  get 'sql' => 'sql#index'
+
   mount Plunketts::Engine, at: "/"
 
   root 'application#home'
