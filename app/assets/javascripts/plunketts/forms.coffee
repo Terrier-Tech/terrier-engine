@@ -6,6 +6,10 @@ window.forms ||= {}
 
 # meant to be used inside a tinyTemplate, behaves the same as Rails options_for_select
 window.forms.optionsForSelect = (options, current=null) ->
+	# convert a simple array of strings to the proper format
+	if options?.length and typeof options[0] == 'string'
+		options = for opt in options
+			[opt.titleize(), opt]
 	for opt in options
 		value = _.last opt # to match options_for_select behavior
 		selected = if value==current then 'selected' else null
@@ -21,7 +25,7 @@ window.forms.replaceSelectOptions = (select, options, current=null) ->
 ################################################################################
 
 # meant to be used inside a tinyTemplate, behaves the same as Rails grouped_options_for_select
-window.forms.groupedOtionsForSelect = (options, current=null) ->
+window.forms.groupedOptionsForSelect = (options, current=null) ->
 	for group in options
 		optgroup '', label: group[0], ->
 			for opt in group[1]
@@ -31,7 +35,7 @@ window.forms.groupedOtionsForSelect = (options, current=null) ->
 
 # replaces the options on an existing select element
 window.forms.replaceGroupedSelectOptions = (select, options, current=null) ->
-	select.html (tinyTemplate -> forms.groupedOtionsForSelect(options, current))()
+	select.html (tinyTemplate -> forms.groupedOptionsForSelect(options, current))()
 
 
 
