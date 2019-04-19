@@ -314,18 +314,6 @@ class ReportExecModal
 		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
 
 
-window.scripts.showReportExecModal = (scriptId) ->
-	tinysync.db.find(
-		'script'
-		scriptId
-		{}
-		(script) ->
-			script.script_fields = _.toArray script.script_fields
-			new ReportExecModal(script)
-	)
-
-
-
 ################################################################################
 # Script Search Global Shortcut
 ################################################################################

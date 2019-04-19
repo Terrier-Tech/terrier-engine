@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunketts-engine (1.2.0)
+    plunketts-engine (1.2.1)
       elasticsearch
       parser
       rails (>= 4.2)
@@ -163,7 +163,7 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 5.0)
-    spreadsheet (1.1.9)
+    spreadsheet (1.2.2)
       ruby-ole (>= 1.0)
     sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
