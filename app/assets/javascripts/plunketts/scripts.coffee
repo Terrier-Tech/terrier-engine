@@ -314,6 +314,10 @@ class ReportExecModal
 		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
 
 
+window.scripts.newReportExecModal = (script, constants) ->
+	new ReportExecModal script, constants
+
+
 ################################################################################
 # Script Search Global Shortcut
 ################################################################################
