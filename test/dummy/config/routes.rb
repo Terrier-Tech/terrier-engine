@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   get 'sql' => 'sql#index'
 
+  get 'urls' => 'urls#index'
+
   mount Plunketts::Engine, at: "/"
 
   root 'application#home'
