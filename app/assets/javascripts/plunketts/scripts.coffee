@@ -1169,6 +1169,8 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 class SettingsModal
 	constructor: (@script, @constants) ->
 		puts "editing script: ", @script
+		unless @script.email_recipients_s?.length
+			@script.email_recipients_s = (@script.email_recipients || []).join(', ')
 		tinyModal.showDirect(
 			_settingsFormTemplate(@script, @constants)
 			{
