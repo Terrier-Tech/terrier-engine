@@ -190,7 +190,14 @@ class QueryResult
       end
     when :integer
       row_class.define_method name do
-        self.instance_variable_get('@raw')[name_s].to_i
+        raw = self.instance_variable_get('@raw')[name_s]
+        if raw.blank?
+          nil
+        elsif raw =~ /^\d+$/
+          raw.to_i
+        else
+          raw
+        end
       end
       row_class.define_method "#{name}=" do |val|
         self.instance_variable_get('@raw')[name_s] = val.to_i
