@@ -180,12 +180,13 @@ window.tinyModal.show = (url, options={}) ->
 	)
 
 
-$(document).on 'click', 'a.modal', ->
-	link = $ this
+$(document).on 'click', 'a.modal', (evt) ->
+	link = $ evt.currentTarget
 	href = link.attr 'href'
 	options = {}
 	options.tiny = link.hasClass('tiny-modal')
 	window.tinyModal.show href, options
+	evt.stopPropagation()
 	false
 
 $(document).on 'click', 'a.close-modal', ->
