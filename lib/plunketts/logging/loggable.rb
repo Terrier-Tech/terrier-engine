@@ -25,9 +25,10 @@ module Loggable
 
   def bench(name)
     t = Time.now
-    yield
+    res = yield
     dt = Time.now - t
     info "Executed '#{name}' in #{dt.to_ms}ms"
+    res
   end
 
 end

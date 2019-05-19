@@ -3,9 +3,7 @@ class LoggableTest
 
   def test_bench
     bench 'test' do
-      10000.times do
-        i = Math.sqrt 1000
-      end
+      0.upto(10000).sum
     end
   end
 end
