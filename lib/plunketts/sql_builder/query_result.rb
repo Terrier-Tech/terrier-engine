@@ -245,7 +245,7 @@ class QueryResult
   INTEGER_EXACT = %w(x y value)
   INTEGER_SUFFIXES = %w(number count duration _i)
   INTEGER_PREFIXES = %w(days_since days_until)
-  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude _score)
+  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude _score _f)
   JSON_SUFFIXES = %w(weather)
   GEO_SUFFIXES = %w(geo)
 
