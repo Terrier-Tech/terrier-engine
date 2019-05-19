@@ -23,4 +23,11 @@ module Loggable
     get_logger.error ex
   end
 
+  def bench(name)
+    t = Time.now
+    yield
+    dt = Time.now - t
+    info "Executed '#{name}' in #{dt.to_ms}ms"
+  end
+
 end
