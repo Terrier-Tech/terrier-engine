@@ -7,4 +7,9 @@ class ApplicationRecord < ActiveRecord::Base
     self.created_by_name = 'system'
     self.save
   end
+
+  def save_by_system!
+    self.created_by_name = 'system'
+    self.save!
+  end
 end

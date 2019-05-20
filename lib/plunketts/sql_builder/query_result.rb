@@ -167,7 +167,9 @@ class QueryResult
         raw_time = self.instance_variable_get('@raw')[name_s]
         case raw_time
         when String
-          Time.parse(raw_time)
+          time = Time.parse(raw_time)
+          self.instance_variable_get('@raw')[name_s] = time
+          time
         else
           raw_time
         end
@@ -180,7 +182,9 @@ class QueryResult
         raw_date = self.instance_variable_get('@raw')[name_s]
         case raw_date
         when String
-          Date.parse(raw_date)
+          date = Date.parse(raw_date)
+          self.instance_variable_get('@raw')[name_s] = date
+          date
         else
           raw_date
         end
