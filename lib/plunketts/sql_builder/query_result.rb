@@ -197,8 +197,12 @@ class QueryResult
         raw = self.instance_variable_get('@raw')[name_s]
         if raw.blank?
           nil
-        elsif raw =~ /^\d+$/
-          raw.to_i
+        elsif raw.is_a? Integer
+          raw
+        elsif raw =~ /^-*\d+$/
+          i = raw.to_i
+          self.instance_variable_get('@raw')[name_s] = i
+          i
         else
           raw
         end
