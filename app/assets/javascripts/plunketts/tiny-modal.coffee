@@ -43,11 +43,14 @@ _layoutRow = (row) ->
 	numColumns = row.children('.modal-column').length
 	row.css {width: "#{numColumns*100}%", left: "-#{(numColumns-1)*100}%"}
 
-	# ensure the window isn't larger than the document
+	# ensure the window isn't taller than the document
 	docHeight = $('#modal-overlay').height()
 	maxHeight = docHeight - 48 # take $modal-pad into account
 	row.parents('#modal-window').css 'max-height', "#{maxHeight}px"
 	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
+
+	# ensure that each column isn't wider than the window
+	row.children('.modal-column').css 'max-width', $('#modal-window').width()
 
 
 _classToSel = (c) ->
