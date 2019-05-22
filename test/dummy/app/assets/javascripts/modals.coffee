@@ -120,6 +120,11 @@ $(document).on 'click', 'a.wide-content-modal', ->
 				title: 'Load Narrow'
 				class: '.load-narrow'
 			}
+			{
+				title: 'Expand'
+				class: '.expand'
+				end: true
+			}
 		]
 		callback: (modal) ->
 			modal.find('.load-narrow').click ->
@@ -128,5 +133,7 @@ $(document).on 'click', 'a.wide-content-modal', ->
 					title: 'Narrow Content'
 					title_icon: 'arrow-shrink'
 				)
+			modal.find('.expand').click ->
+				tinyModal.expand()
 	)
 

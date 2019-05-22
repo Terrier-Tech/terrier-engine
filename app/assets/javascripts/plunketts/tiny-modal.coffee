@@ -97,6 +97,12 @@ _emptyColumnTemplate = tinyTemplate ->
 window.tinyModal.replaceContent = (content)	->
 	$('#modal-window .modal-content:last').html content
 
+# expands the modal window to take up the whole width
+window.tinyModal.expand = ->
+	win = $('#modal-window')
+	win.css width: '96%'
+	_layoutRow win.children('#modal-row')
+
 
 # shows a modal with direct content
 window.tinyModal.showDirect = (content, options={}) ->
