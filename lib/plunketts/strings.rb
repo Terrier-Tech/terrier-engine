@@ -63,6 +63,11 @@ class String
     end
   end
 
+  # returns the string with anything between parentheses
+  def without_parens
+    self.gsub(/\([\w\s]+\)/, '').strip
+  end
+
 end
 
 
@@ -70,6 +75,10 @@ class Float
 
   def to_ms
     (self*1000).round(1)
+  end
+
+  def is_float?
+    true
   end
 
 end

@@ -68,6 +68,14 @@ window.underscore = (s) ->
 String::underscore = ->
 	window.underscore this
 
+window.withoutParens = (s) ->
+	unless s?
+		return ''
+	s.replace(/\([\w\s]+\)/g, '').trim()
+
+String::withoutParams = ->
+	window.withoutParens this
+
 window.formatCents = (cents, showCents=true) ->
 	dollars = ''
 	sign = if cents < 0 then '-' else ''
