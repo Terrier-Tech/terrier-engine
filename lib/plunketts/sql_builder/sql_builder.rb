@@ -5,13 +5,15 @@ class SqlBuilder
 
   ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs)
 
+  attr_accessor *ATTRS
+
+  attr_accessor :the_limit, :make_objects
+
   @@default_make_objects = true
 
   def self.default_make_objects=(val)
     @@default_make_objects = val
   end
-
-  attr_reader :make_objects
 
   def initialize
     ATTRS.each do |attr|
@@ -173,12 +175,6 @@ class SqlBuilder
     end
     builder
   end
-
-  protected
-
-  attr_accessor *ATTRS
-
-  attr_accessor :the_limit, :make_objects
 
 
 end
