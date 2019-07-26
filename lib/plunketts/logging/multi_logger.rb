@@ -1,11 +1,14 @@
 class MultiLogger
 
-  attr_accessor :use_stdout, :use_rails, :stream
+  attr_accessor :use_stdout, :use_rails, :stream, :level
+
+  LEVELS = %w(info separator warn error)
 
   def initialize(prefix, opts={})
     @prefix = prefix
     @use_stdout = opts[:use_stdout] || true
     @use_rails = opts[:use_rails] || true
+    @level = 'info'
   end
 
   def stream_response(response)
@@ -18,6 +21,10 @@ class MultiLogger
     return unless @stream
     @stream.write '{}]'
     @stream.close
+  end
+
+  def debug(message)
+    log 'debug', message
   end
 
   def info(message)
@@ -41,6 +48,7 @@ class MultiLogger
   end
 
   def log(level, message)
+    return if LEVELS.index(@level) > LEVELS.index(level)
     time = Time.now.strftime(PRETTY_TIME_FORMAT)
     if level == 'separator'
       s = "#{@prefix} :: ==== #{message} ===="
@@ -52,7 +60,6 @@ class MultiLogger
     end
     if @use_stdout
       puts s
-      $stdout.flush
     end
     if @stream
       chunk = {
