@@ -2,7 +2,7 @@ class MultiLogger
 
   attr_accessor :use_stdout, :use_rails, :stream, :level
 
-  LEVELS = %w(info separator warn error)
+  LEVELS = %w(debug info separator warn error)
 
   def initialize(prefix, opts={})
     @prefix = prefix

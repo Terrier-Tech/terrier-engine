@@ -7,6 +7,10 @@ module Loggable
     @logger = MultiLogger.new "[#{self.class.name}]"
   end
 
+  def debug(m)
+    get_logger.debug m
+  end
+
   def info(m)
     get_logger.info m
   end
