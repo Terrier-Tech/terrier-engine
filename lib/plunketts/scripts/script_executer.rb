@@ -37,6 +37,11 @@ class ScriptExecutor
         @stream.write '{}]'
       end
       script_run.status = 'success'
+
+      script_run.duration = Time.now - t
+      if @script.persisted? # we can't save the run if it's a temporary script
+        script_run.write_log @log_lines.join("\n")
+      end
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
       write_raw 'error', "Error on line #{line}: #{ex.message}"
@@ -47,14 +52,12 @@ class ScriptExecutor
       ex.backtrace[0..10].each do |line|
         @log_lines << line
         Rails.logger.warn line
+        write_raw 'error', line
       end
     ensure
       @stream.close if @stream
     end
-    script_run.duration = Time.now - t
-    if @script.persisted? # we can't save the run if it's a temporary script
-      script_run.write_log @log_lines.join("\n")
-    end
+
     script_run
   end
 

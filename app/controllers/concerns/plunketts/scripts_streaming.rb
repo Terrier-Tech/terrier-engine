@@ -26,14 +26,23 @@ module Plunketts::ScriptsStreaming
       request_body = JSON.parse(request.body.read)
       @script.body = request_body['body']
 
-      executor = get_executer
+      begin
+        executor = get_executer
 
-      if request_body['field_values']
-        executor.set_field_values request_body['field_values']
+        if request_body['field_values']
+          executor.set_field_values request_body['field_values']
+        end
+
+        run = executor.run response.stream
+        save_run? run
+
+      rescue => ex
+        # if an error happens at this level, we can't send it in the response since it's already been written its stream
+        Rails.logger.warn "=== Error executing script #{@script.id}: #{ex.message}"
+        ex.backtrace[0..20].each do |line|
+          Rails.logger.warn line
+        end
       end
-
-      run = executor.run response.stream
-      save_run? run
     end
 
 

@@ -714,7 +714,8 @@ class Editor
 		@hasChanges = false
 		@errorExplanation = @ui.find('.error-explanation')
 		@errorExplanation.hide()
-		@ui.on 'change', 'input, select, textarea', =>
+		@ui.find('.settings-container').on 'change', 'input, select, textarea', (evt) =>
+			puts "changed", evt
 			@hasChanges = true
 			this.updateUi()
 
