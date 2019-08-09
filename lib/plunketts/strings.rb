@@ -81,6 +81,25 @@ class Float
     true
   end
 
+  def dollars(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self, precision: precision
+  end
+
+end
+
+class Integer
+
+  def cents(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self/100.0, precision: precision
+  end
+
+  def dollars(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self, precision: precision
+  end
+
 end
 
 
