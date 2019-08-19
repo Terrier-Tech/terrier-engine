@@ -1,5 +1,6 @@
 
-window.puts = console.log
+window.puts = (args...) ->
+	window.console.log args...
 
 ########################################################################################
 # Maths
