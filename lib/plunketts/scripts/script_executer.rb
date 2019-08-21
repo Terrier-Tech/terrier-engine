@@ -1,6 +1,7 @@
 require 'plunketts/io/cvs_io'
 
 class ScriptExecutor
+  include Loggable
 
   attr_reader :cache, :each_count, :each_total
   attr_accessor :me
@@ -47,11 +48,12 @@ class ScriptExecutor
       write_raw 'error', "Error on line #{line}: #{ex.message}"
       script_run.status = 'error'
       script_run.exception = ex.message
-      script_run.backtrace = ex.backtrace[0..20].join("\n")
+      script_run.backtrace = ex.backtrace.join("\n")
+      script_run.duration = Time.now - t
       @log_lines << ex.message
+      error ex
       ex.backtrace[0..10].each do |line|
         @log_lines << line
-        Rails.logger.warn line
         write_raw 'error', line
       end
     ensure
@@ -70,7 +72,7 @@ class ScriptExecutor
 
   def puts(message)
     write_raw 'print', message.to_s
-    Rails.logger.debug message
+    debug message
     @log_lines << message.to_s
   end
 

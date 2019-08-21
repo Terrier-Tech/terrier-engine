@@ -41,7 +41,7 @@ class MultiLogger
 
   def error(ex)
     message = ex.message
-    ex.backtrace[0..10].each do |line|
+    ex.backtrace.each do |line|
       message += "\n#{line}"
     end
     log 'error', message

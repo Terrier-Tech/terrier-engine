@@ -39,7 +39,7 @@ module Plunketts::ScriptsStreaming
       rescue => ex
         # if an error happens at this level, we can't send it in the response since it's already been written its stream
         Rails.logger.warn "=== Error executing script #{@script.id}: #{ex.message}"
-        ex.backtrace[0..20].each do |line|
+        ex.backtrace.each do |line|
           Rails.logger.warn line
         end
       end
