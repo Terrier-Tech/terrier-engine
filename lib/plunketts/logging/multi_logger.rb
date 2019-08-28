@@ -1,6 +1,6 @@
 class MultiLogger
 
-  attr_accessor :use_stdout, :use_rails, :stream, :level
+  attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix
 
   LEVELS = %w(debug info separator warn error)
 
@@ -69,7 +69,6 @@ class MultiLogger
           prefix: @prefix
       }
       @stream.write "#{Oj.dump(chunk)},"
-      # @stream.write "\n\n"
     end
   end
 end
