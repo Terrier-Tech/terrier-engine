@@ -1,6 +1,6 @@
 class MultiLogger
 
-  attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix
+  attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix, :messages
 
   LEVELS = %w(debug info separator warn error)
 
@@ -9,6 +9,7 @@ class MultiLogger
     @use_stdout = opts[:use_stdout] || true
     @use_rails = opts[:use_rails] || true
     @level = 'info'
+    @messages = []
   end
 
   def stream_response(response)
@@ -61,6 +62,7 @@ class MultiLogger
     if @use_stdout
       puts s
     end
+    @messages << {prefix: @prefix, time: time, level: level, message: message}
     if @stream
       chunk = {
           level: level,
