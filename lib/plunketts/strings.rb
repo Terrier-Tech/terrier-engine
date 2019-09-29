@@ -86,6 +86,10 @@ class Float
     ActionController::Base.helpers.number_to_currency self, precision: precision
   end
 
+  def percent
+    '%g%%' % (self*100.0)
+  end
+
 end
 
 class Integer
