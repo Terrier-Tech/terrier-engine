@@ -314,16 +314,8 @@ class ReportExecModal
 		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
 
 
-window.scripts.showReportExecModal = (scriptId) ->
-	tinysync.db.find(
-		'script'
-		scriptId
-		{}
-		(script) ->
-			script.script_fields = _.toArray script.script_fields
-			new ReportExecModal(script)
-	)
-
+window.scripts.newReportExecModal = (script, constants) ->
+	new ReportExecModal script, constants
 
 
 ################################################################################
@@ -722,7 +714,8 @@ class Editor
 		@hasChanges = false
 		@errorExplanation = @ui.find('.error-explanation')
 		@errorExplanation.hide()
-		@ui.on 'change', 'input, select, textarea', =>
+		@ui.find('.settings-container').on 'change', 'input, select, textarea', (evt) =>
+			puts "changed", evt
 			@hasChanges = true
 			this.updateUi()
 
@@ -1177,6 +1170,8 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 class SettingsModal
 	constructor: (@script, @constants) ->
 		puts "editing script: ", @script
+		unless @script.email_recipients_s?.length
+			@script.email_recipients_s = (@script.email_recipients || []).join(', ')
 		tinyModal.showDirect(
 			_settingsFormTemplate(@script, @constants)
 			{

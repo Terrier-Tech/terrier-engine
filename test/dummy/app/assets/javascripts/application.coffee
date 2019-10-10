@@ -21,6 +21,7 @@
 #= require plunketts/tiny-modal.coffee
 #= require plunketts/tiny-sql.coffee
 #= require plunketts/scripts.coffee
+#= require plunketts/urls.coffee
 #= require_tree .
 
 

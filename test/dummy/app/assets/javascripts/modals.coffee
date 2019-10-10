@@ -96,3 +96,44 @@ $(document).on 'click', 'a.replace-content-modal', ->
 			modal.find('a.replace-content').click ->
 				tinyModal.replaceContent '<h2 class="text-center">Replaced!</h2>'
 	)
+
+## Wide Modal Content
+
+_wideContentTemplate = tinyTemplate ->
+	div '.wide-content', ->
+		table '', ->
+			tr '', ->
+				for i in [0..100]
+					td '', i.toString()
+
+_narrowContentTemplate = tinyTemplate ->
+	div '.narrow-content', ->
+		h1 '.text-center', 'This is some narrow content'
+
+$(document).on 'click', 'a.wide-content-modal', ->
+	tinyModal.showDirect(
+		_wideContentTemplate()
+		title: 'Wide Content'
+		title_icon: 'arrow-expand'
+		actions: [
+			{
+				title: 'Load Narrow'
+				class: '.load-narrow'
+			}
+			{
+				title: 'Expand'
+				class: '.expand'
+				end: true
+			}
+		]
+		callback: (modal) ->
+			modal.find('.load-narrow').click ->
+				tinyModal.showDirect(
+					_narrowContentTemplate()
+					title: 'Narrow Content'
+					title_icon: 'arrow-shrink'
+				)
+			modal.find('.expand').click ->
+				tinyModal.expand()
+	)
+

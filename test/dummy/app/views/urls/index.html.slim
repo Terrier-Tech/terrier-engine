@@ -1,0 +1,14 @@
+form#change-url
+	.horizontal-grid
+		.stretch-column
+			input.name type='text' name='name' placeholder='Param Name'
+		.stretch-column
+			input.value type='text' name='value' placeholder='Param Value'
+		.shrink-column
+			input type='submit' value='Change'
+			
+coffee:
+	$('form#change-url').submit ->
+		data = $(this).serializeObject()
+		urls.changParam data.name, data.value
+		false

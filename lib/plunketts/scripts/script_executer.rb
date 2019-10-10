@@ -1,6 +1,7 @@
 require 'plunketts/io/cvs_io'
 
 class ScriptExecutor
+  include Loggable
 
   attr_reader :cache, :each_count, :each_total
   attr_accessor :me
@@ -25,7 +26,7 @@ class ScriptExecutor
   # returns a ScriptRun object describing the run
   def run(stream)
     @stream = stream
-    script_run = ScriptRun.new script_id: @script.id, created_at: Time.now
+    script_run = ScriptRun.new script_id: @script.id, created_at: Time.now, duration: 0
     t = Time.now
     begin
       escaped_body = @script.body.gsub('\"', '"')
@@ -37,24 +38,28 @@ class ScriptExecutor
         @stream.write '{}]'
       end
       script_run.status = 'success'
+
+      script_run.duration = Time.now - t
+      if @script.persisted? # we can't save the run if it's a temporary script
+        script_run.write_log @log_lines.join("\n")
+      end
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
       write_raw 'error', "Error on line #{line}: #{ex.message}"
       script_run.status = 'error'
       script_run.exception = ex.message
-      script_run.backtrace = ex.backtrace[0..20].join("\n")
+      script_run.backtrace = ex.backtrace.join("\n")
+      script_run.duration = Time.now - t
       @log_lines << ex.message
+      error ex
       ex.backtrace[0..10].each do |line|
         @log_lines << line
-        Rails.logger.warn line
+        write_raw 'error', line
       end
     ensure
       @stream.close if @stream
     end
-    script_run.duration = Time.now - t
-    if @script.persisted? # we can't save the run if it's a temporary script
-      script_run.write_log @log_lines.join("\n")
-    end
+
     script_run
   end
 
@@ -67,7 +72,7 @@ class ScriptExecutor
 
   def puts(message)
     write_raw 'print', message.to_s
-    Rails.logger.debug message
+    debug message
     @log_lines << message.to_s
   end
 

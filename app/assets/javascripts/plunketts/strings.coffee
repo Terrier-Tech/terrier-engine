@@ -1,5 +1,6 @@
 
-window.puts = console.log
+window.puts = (args...) ->
+	window.console.log args...
 
 ########################################################################################
 # Maths
@@ -67,6 +68,14 @@ window.underscore = (s) ->
 
 String::underscore = ->
 	window.underscore this
+
+window.withoutParens = (s) ->
+	unless s?
+		return ''
+	s.replace(/\([\w\s]+\)/g, '').trim()
+
+String::withoutParams = ->
+	window.withoutParens this
 
 window.formatCents = (cents, showCents=true) ->
 	dollars = ''
@@ -227,7 +236,7 @@ window.pluralize = (num, word) ->
 	else
 		return word + 's'
 
-String::pluralize = (num) ->
+String::pluralize = (num=2) ->
 	window.pluralize num, this
 
 # only singularizes the word if num is 1
@@ -240,6 +249,8 @@ window.singularize = (num, word) ->
 		word.replace('lies', 'ly')
 	else if word.endsWith('les')
 		word.replace('les', 'le')
+	else if word.endsWith('kes')
+		word.replace('kes', 'ke') # snakes
 	else if word.endsWith('es')
 		word.replace('es', '')
 	else if word.endsWith('s')
@@ -247,7 +258,7 @@ window.singularize = (num, word) ->
 	else
 		word
 
-String::singularize = (num) ->
+String::singularize = (num=1) ->
 	window.singularize num, this
 
 

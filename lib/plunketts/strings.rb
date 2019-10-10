@@ -63,6 +63,11 @@ class String
     end
   end
 
+  # returns the string with anything between parentheses
+  def without_parens
+    self.gsub(/\([\w\s]+\)/, '').strip
+  end
+
 end
 
 
@@ -70,6 +75,33 @@ class Float
 
   def to_ms
     (self*1000).round(1)
+  end
+
+  def is_float?
+    true
+  end
+
+  def dollars(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self, precision: precision
+  end
+
+  def percent
+    '%g%%' % (self*100.0)
+  end
+
+end
+
+class Integer
+
+  def cents(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self/100.0, precision: precision
+  end
+
+  def dollars(include_cents=true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self, precision: precision
   end
 
 end

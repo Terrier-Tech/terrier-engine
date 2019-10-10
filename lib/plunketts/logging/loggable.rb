@@ -7,6 +7,10 @@ module Loggable
     @logger = MultiLogger.new "[#{self.class.name}]"
   end
 
+  def debug(m)
+    get_logger.debug m
+  end
+
   def info(m)
     get_logger.info m
   end
@@ -21,6 +25,14 @@ module Loggable
 
   def error(ex)
     get_logger.error ex
+  end
+
+  def bench(name)
+    t = Time.now
+    res = yield
+    dt = Time.now - t
+    info "Executed '#{name}' in #{dt.to_ms}ms"
+    res
   end
 
 end

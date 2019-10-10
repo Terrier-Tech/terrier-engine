@@ -167,7 +167,9 @@ class QueryResult
         raw_time = self.instance_variable_get('@raw')[name_s]
         case raw_time
         when String
-          Time.parse(raw_time)
+          time = Time.parse(raw_time)
+          self.instance_variable_get('@raw')[name_s] = time
+          time
         else
           raw_time
         end
@@ -180,7 +182,9 @@ class QueryResult
         raw_date = self.instance_variable_get('@raw')[name_s]
         case raw_date
         when String
-          Date.parse(raw_date)
+          date = Date.parse(raw_date)
+          self.instance_variable_get('@raw')[name_s] = date
+          date
         else
           raw_date
         end
@@ -190,7 +194,18 @@ class QueryResult
       end
     when :integer
       row_class.define_method name do
-        self.instance_variable_get('@raw')[name_s].to_i
+        raw = self.instance_variable_get('@raw')[name_s]
+        if raw.blank?
+          nil
+        elsif raw.is_a? Integer
+          raw
+        elsif raw =~ /^-*\d+$/
+          i = raw.to_i
+          self.instance_variable_get('@raw')[name_s] = i
+          i
+        else
+          raw
+        end
       end
       row_class.define_method "#{name}=" do |val|
         self.instance_variable_get('@raw')[name_s] = val.to_i
@@ -238,7 +253,7 @@ class QueryResult
   INTEGER_EXACT = %w(x y value)
   INTEGER_SUFFIXES = %w(number count duration _i)
   INTEGER_PREFIXES = %w(days_since days_until)
-  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude _score)
+  FLOAT_SUFFIXES = %w(_m _miles distance latitude longitude _score _f)
   JSON_SUFFIXES = %w(weather)
   GEO_SUFFIXES = %w(geo)
 

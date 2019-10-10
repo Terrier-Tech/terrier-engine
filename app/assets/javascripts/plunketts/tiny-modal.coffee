@@ -43,11 +43,14 @@ _layoutRow = (row) ->
 	numColumns = row.children('.modal-column').length
 	row.css {width: "#{numColumns*100}%", left: "-#{(numColumns-1)*100}%"}
 
-	# ensure the window isn't larger than the document
+	# ensure the window isn't taller than the document
 	docHeight = $('#modal-overlay').height()
 	maxHeight = docHeight - 48 # take $modal-pad into account
 	row.parents('#modal-window').css 'max-height', "#{maxHeight}px"
 	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
+
+	# ensure that each column isn't wider than the window
+	row.children('.modal-column').css 'max-width', $('#modal-window').width()
 
 
 _classToSel = (c) ->
@@ -93,6 +96,12 @@ _emptyColumnTemplate = tinyTemplate ->
 # replaces the content of the top modal on the stack
 window.tinyModal.replaceContent = (content)	->
 	$('#modal-window .modal-content:last').html content
+
+# expands the modal window to take up the whole width
+window.tinyModal.expand = ->
+	win = $('#modal-window')
+	win.css width: '96%'
+	_layoutRow win.children('#modal-row')
 
 
 # shows a modal with direct content
@@ -180,12 +189,13 @@ window.tinyModal.show = (url, options={}) ->
 	)
 
 
-$(document).on 'click', 'a.modal', ->
-	link = $ this
+$(document).on 'click', 'a.modal', (evt) ->
+	link = $ evt.currentTarget
 	href = link.attr 'href'
 	options = {}
 	options.tiny = link.hasClass('tiny-modal')
 	window.tinyModal.show href, options
+	evt.stopPropagation()
 	false
 
 $(document).on 'click', 'a.close-modal', ->
