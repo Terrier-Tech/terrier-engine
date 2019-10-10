@@ -91,25 +91,9 @@ module CsvIo
   end
 
 
-  # columns should be an array of symbols
-  # data should be an array of hashes
-  # options can contain: columns, sheet_name, titleize_columns
-  # returns the absolute path of the written file
-  def self.save_xls(data, rel_path, options={})
-    abs_path = CsvIo.rel_to_abs_path rel_path
-    dir = File.dirname abs_path
-    unless File.exists? dir
-      Dir.mkdir dir
-    end
-
-    options = {
-        sheet_name: 'Data',
-        titleize_columns: false,
-        columns: data.length > 0 ? data.first.keys : []
-    }.merge options
+  def self.create_sheet(book, data, options)
     columns = options[:columns]
 
-    book = Spreadsheet::Workbook.new
     sheet = book.create_worksheet name: options[:sheet_name]
 
     columns_s = columns.map{|c| c.to_s}
@@ -138,6 +122,42 @@ module CsvIo
         end
       end
       sheet.row(r).concat flat_row
+    end
+  end
+
+  # columns should be an array of symbols
+  # data should be an array of hashes
+  # options can contain: columns, sheet_name, titleize_columns
+  # returns the absolute path of the written file
+  def self.save_xls(data, rel_path, options={})
+    abs_path = CsvIo.rel_to_abs_path rel_path
+    dir = File.dirname abs_path
+    unless File.exists? dir
+      Dir.mkdir dir
+    end
+    if data.is_a?(Array) and data.length > 0
+      cols = data.first.keys
+    else
+      cols = []
+    end
+    options = {
+        sheet_name: 'Data',
+        titleize_columns: false,
+        columns: cols
+    }.merge options
+
+    book = Spreadsheet::Workbook.new
+
+    if data.is_a?(Hash)
+      data.each do |sheet_name, _data|
+        options[:sheet_name] = sheet_name.to_s
+        options[:columns] = _data.length > 0 ? _data.first.keys : []
+        CsvIo.create_sheet book, _data, options
+      end
+    elsif data.is_a?(Array)
+      CsvIo.create_sheet book, data, options
+    else
+      raise 'Unknown Data Type'
     end
 
     book.write abs_path
