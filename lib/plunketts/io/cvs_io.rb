@@ -154,7 +154,7 @@ module CsvIo
         options[:columns] = _data.length > 0 ? _data.first.keys : []
         CsvIo.create_sheet book, _data, options
       end
-    elsif data.is_a?(Array)
+    elsif data.is_a?(Array) || data.is_a?(QueryResult)
       CsvIo.create_sheet book, data, options
     else
       raise 'Unknown Data Type'
