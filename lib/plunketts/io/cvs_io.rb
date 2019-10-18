@@ -92,11 +92,15 @@ module CsvIo
 
 
   def self.create_sheet(book, data, options)
-    columns = options[:columns]
+    if (data.is_a?(Array) || data.is_a?(QueryResult)) && data.length > 0
+      columns = data.first.keys
+    else
+      columns = []
+    end
 
     sheet = book.create_worksheet name: options[:sheet_name]
 
-    columns_s = columns.map{|c| c.to_s}
+    columns_s = columns.map(&:to_s)
     if options[:titleize_columns]
       columns_s = columns_s.map do |c|
         s = c.titleize
@@ -135,15 +139,9 @@ module CsvIo
     unless File.exists? dir
       Dir.mkdir dir
     end
-    if data.is_a?(Array) and data.length > 0
-      cols = data.first.keys
-    else
-      cols = []
-    end
     options = {
         sheet_name: 'Data',
-        titleize_columns: false,
-        columns: cols
+        titleize_columns: false
     }.merge options
 
     book = Spreadsheet::Workbook.new
@@ -151,7 +149,6 @@ module CsvIo
     if data.is_a?(Hash)
       data.each do |sheet_name, _data|
         options[:sheet_name] = sheet_name.to_s
-        options[:columns] = _data.length > 0 ? _data.first.keys : []
         CsvIo.create_sheet book, _data, options
       end
     elsif data.is_a?(Array) || data.is_a?(QueryResult)
