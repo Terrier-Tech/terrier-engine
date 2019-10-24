@@ -114,6 +114,12 @@ class Array
     '(' + self.map{|a| "'#{a}'"}.join(',') + ')'
   end
 
+  def to_postgres_array_literal
+    str = self.join('", "')
+    str = "{\"#{str}\"}"
+    str
+  end
+
   def mean
     self.sum / self.size.to_f
   end
