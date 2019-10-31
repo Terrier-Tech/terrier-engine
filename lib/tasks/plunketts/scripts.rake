@@ -1,4 +1,5 @@
 require 'plunketts/scripts/script_executer'
+require 'plunketts/scripts/script_searcher'
 
 namespace :scripts do
 
