@@ -4,7 +4,7 @@ require 'plunketts/scripts/script_searcher'
 namespace :scripts do
 
   def run_time(time)
-    scripts = Script.where(schedule_time: time, :schedule_rule_summaries.empty => false, _state: 0)
+    scripts = Script.where(schedule_time: time, _state: 0).where("array_length(schedule_rule_summaries,1)>0")
     puts "#{scripts.count} scripts for #{time}"
 
     day = Time.now
