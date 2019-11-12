@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'parser'
   s.add_dependency 'elasticsearch'
   s.add_dependency 'spreadsheet'
+  s.add_dependency 'nokogiri', '>= 1.10.4'
+  s.add_dependency 'loofah', '>= 2.3.1'
 
   s.add_development_dependency 'pg'
 end
