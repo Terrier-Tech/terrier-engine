@@ -21,6 +21,25 @@ class SqlBuilder
     end
     @make_objects = @@default_make_objects
     @the_limit = 10000
+    @dialect = :psql
+  end
+
+
+  ## Dialects
+
+  DIALECTS = %i(psql mssql)
+
+  def set_dialect(new_dialect)
+    new_dialect = new_dialect.to_sym
+    unless DIALECTS.index new_dialect
+      raise "Invalid dialect #{new_dialect}, must be one of: #{DIALECTS.join(', ')}"
+    end
+    @dialect = new_dialect
+    self
+  end
+
+  def get_dialect
+    @dialect
   end
 
   def from(table, as=nil)
@@ -117,7 +136,13 @@ class SqlBuilder
       "WITH #{w}"
     end.join(' ')
 
-    s = "#{withs_s} SELECT #{_distinct} #{@selects.join(', ')} FROM #{@froms.join(', ')} #{@joins.join(' ')}"
+    top_s = if @the_limit && @dialect == :mssql
+      "TOP #{@the_limit}"
+    else
+      ''
+    end
+
+    s = "#{withs_s} SELECT #{top_s} #{_distinct} #{@selects.join(', ')} FROM #{@froms.join(', ')} #{@joins.join(' ')}"
     if @clauses.length > 0
       clauses_s = @clauses.map{|c| "(#{c})"}.join(' AND ')
       s += "  WHERE #{clauses_s}"
@@ -131,7 +156,7 @@ class SqlBuilder
     if @order_bys.length > 0
       s += " ORDER BY #{@order_bys.join(', ')}"
     end
-    if @the_limit
+    if @the_limit && @dialect != :mssql
       s += " LIMIT #{@the_limit}"
     end
     s

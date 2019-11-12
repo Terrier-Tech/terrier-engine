@@ -36,4 +36,25 @@ class SqlBuilderTest < ActiveSupport::TestCase
 
   end
 
+  test 'mssql dialect' do
+    limit = 100
+
+    builder = SqlBuilder.new
+        .set_dialect(:mssql)
+        .select('*')
+        .from('locations')
+        .limit(limit)
+
+    assert_equal :mssql, builder.get_dialect
+
+    query = builder.to_sql
+    assert query.index("SELECT TOP #{limit}")
+    assert !query.index("LIMIT #{limit}")
+
+    query = builder.set_dialect(:psql).to_sql
+    assert !query.index("SELECT TOP #{limit}")
+    assert query.index("LIMIT #{limit}")
+
+  end
+
 end
