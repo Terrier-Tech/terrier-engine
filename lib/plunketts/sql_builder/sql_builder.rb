@@ -3,7 +3,7 @@ require_relative './query_result'
 # provides a builder interface for creating SQL queries
 class SqlBuilder
 
-  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs)
+  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs dialect)
 
   attr_accessor *ATTRS
 
@@ -29,17 +29,16 @@ class SqlBuilder
 
   DIALECTS = %i(psql mssql)
 
-  def set_dialect(new_dialect)
+  def dialect(new_dialect=nil)
+    if new_dialect.nil?
+      return @dialect # make this method act like a getter as well
+    end
     new_dialect = new_dialect.to_sym
     unless DIALECTS.index new_dialect
       raise "Invalid dialect #{new_dialect}, must be one of: #{DIALECTS.join(', ')}"
     end
     @dialect = new_dialect
     self
-  end
-
-  def get_dialect
-    @dialect
   end
 
   def from(table, as=nil)
