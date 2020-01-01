@@ -57,6 +57,17 @@ window.titleize = (s) ->
 String::titleize = ->
 	window.titleize this
 
+# converts the string to camel-case
+window.camelize = (s) ->
+	unless s?
+		return ''
+	s.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (match, chr) ->
+		chr.toUpperCase()
+	)
+
+String::camelize = ->
+	window.camelize this
+
 # convert to lower case and join with underscores
 window.underscore = (s) ->
 	unless s?
