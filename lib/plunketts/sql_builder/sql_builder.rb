@@ -174,15 +174,15 @@ class SqlBuilder
     if @the_limit && @dialect != :mssql
       s += " LIMIT #{@the_limit}"
     end
-    if @row_offset && @dialect != :mssql
-      s += " OFFSET #{@row_offset}"
-    else
+    if @row_offset && @dialect == :mssql
       s += " OFFSET #{@row_offset} ROWS"
+    elsif @row_offset
+      s += " OFFSET #{@row_offset}"
     end
-    if @fetch_next && @dialect != :mssql
-      s += " FETCH FIRST #{@fetch_next} ROWS ONLY"
-    else
+    if @fetch_next && @dialect == :mssql
       s += " FETCH NEXT #{@fetch_next} ROWS ONLY"
+    elsif @fetch_next
+      s += " FETCH FIRST #{@fetch_next} ROWS ONLY"
     end
     s
   end
