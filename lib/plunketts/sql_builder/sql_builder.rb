@@ -174,23 +174,15 @@ class SqlBuilder
     if @the_limit && @dialect != :mssql
       s += " LIMIT #{@the_limit}"
     end
-    if @row_offset
-      if @dialect == :psql
-        s += " OFFSET #{@row_offset}"
-      elsif @dialect == :mssql
-        s += " OFFSET #{@row_offset} ROWS"
-      else
-        raise "please set dialect"
-      end
+    if @row_offset && @dialect != :mssql
+      s += " OFFSET #{@row_offset}"
+    else
+      s += " OFFSET #{@row_offset} ROWS"
     end
-    if @fetch_next
-      if @dialect == :psql
-        s += " FETCH FIRST #{@fetch_next} ROWS ONLY"
-      elsif @dialect == :mssql
-        s += " FETCH NEXT #{@fetch_next} ROWS ONLY"
-      else
-        raise "please set dialect"
-      end
+    if @fetch_next && @dialect != :mssql
+      s += " FETCH FIRST #{@fetch_next} ROWS ONLY"
+    else
+      s += " FETCH NEXT #{@fetch_next} ROWS ONLY"
     end
     s
   end
@@ -233,10 +225,4 @@ class SqlBuilder
     end
     builder
   end
-
-  def query_offset
-    @row_offset
-  end
-
-
 end
