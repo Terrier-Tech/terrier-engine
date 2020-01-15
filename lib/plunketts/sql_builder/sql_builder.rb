@@ -7,7 +7,7 @@ class SqlBuilder
 
   attr_accessor *ATTRS
 
-  attr_accessor :the_limit, :make_objects, :offset, :fetch
+  attr_accessor :the_limit, :make_objects, :row_offset, :fetch_next
 
   @@default_make_objects = true
 
@@ -21,8 +21,8 @@ class SqlBuilder
     end
     @make_objects = @@default_make_objects
     @the_limit = 10000
-    @offset = nil
-    @fetch = nil
+    @row_offset = nil
+    @fetch_next = nil
     @dialect = :psql
   end
 
@@ -116,11 +116,11 @@ class SqlBuilder
   end
 
   def offset(offset)
-    @offset = offset
+    @row_offset = offset
   end
 
   def fetch(fetch)
-    @fetch = fetch
+    @fetch_next = fetch
   end
 
   def distinct(distinct, table=nil)
@@ -174,18 +174,22 @@ class SqlBuilder
     if @the_limit && @dialect != :mssql
       s += " LIMIT #{@the_limit}"
     end
-    if @offset
+    if @row_offset
       if @dialect == :psql
-        s += " OFFSET #{@offset}"
+        s += " OFFSET #{@row_offset}"
       elsif @dialect == :mssql
-        s += " OFFSET #{@offset} ROWS"
+        s += " OFFSET #{@row_offset} ROWS"
+      else
+        raise "please set dialect"
       end
     end
-    if @fetch
+    if @fetch_next
       if @dialect == :psql
-        s += " FETCH FIRST #{@fetch} ROWS ONLY"
+        s += " FETCH FIRST #{@fetch_next} ROWS ONLY"
       elsif @dialect == :mssql
-        s += " FETCH NEXT #{@fetch} ROWS ONLY"
+        s += " FETCH NEXT #{@fetch_next} ROWS ONLY"
+      else
+        raise "please set dialect"
       end
     end
     s
@@ -228,6 +232,10 @@ class SqlBuilder
       end
     end
     builder
+  end
+
+  def query_offset
+    @row_offset
   end
 
 
