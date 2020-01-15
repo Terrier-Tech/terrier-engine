@@ -3,11 +3,11 @@ require_relative './query_result'
 # provides a builder interface for creating SQL queries
 class SqlBuilder
 
-  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs dialect offset fetch)
+  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs dialect)
 
   attr_accessor *ATTRS
 
-  attr_accessor :the_limit, :make_objects
+  attr_accessor :the_limit, :make_objects, :offset, :fetch
 
   @@default_make_objects = true
 
@@ -21,6 +21,8 @@ class SqlBuilder
     end
     @make_objects = @@default_make_objects
     @the_limit = 10000
+    @offset = nil
+    @fetch = nil
     @dialect = :psql
   end
 
