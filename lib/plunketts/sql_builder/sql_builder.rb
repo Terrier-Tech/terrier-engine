@@ -3,7 +3,7 @@ require_relative './query_result'
 # provides a builder interface for creating SQL queries
 class SqlBuilder
 
-  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs dialect)
+  ATTRS = %w(selects clauses distincts froms joins order_bys group_bys havings withs dialect offset fetch)
 
   attr_accessor *ATTRS
 
@@ -113,6 +113,14 @@ class SqlBuilder
     self
   end
 
+  def offset(offset)
+    @offset = offset
+  end
+
+  def fetch(fetch)
+    @fetch = fetch
+  end
+
   def distinct(distinct, table=nil)
     distinct = [distinct] unless distinct.is_a? Array
     table_part = table ? "#{table}." : ''
@@ -126,9 +134,15 @@ class SqlBuilder
   def to_sql
     _distinct = ''
     if @distincts and @distincts.count > 0
-      _distinct += 'DISTINCT ON ('
-      _distinct += @distincts.join(', ')
-      _distinct += ')'
+      if @dialect == :mssql
+        _distinct += 'DISTINCT ('
+        _distinct += @distincts.join(', ')
+        _distinct += ')'
+      else
+        _distinct += 'DISTINCT ON ('
+        _distinct += @distincts.join(', ')
+        _distinct += ')'
+      end
     end
 
     withs_s = @withs.map do |w|
@@ -157,6 +171,20 @@ class SqlBuilder
     end
     if @the_limit && @dialect != :mssql
       s += " LIMIT #{@the_limit}"
+    end
+    if @offset
+      if @dialect == :psql
+        s += " OFFSET #{@offset}"
+      elsif @dialect == :mssql
+        s += " OFFSET #{@offset} ROWS"
+      end
+    end
+    if @fetch
+      if @dialect == :psql
+        s += " FETCH FIRST #{@fetch} ROWS ONLY"
+      elsif @dialect == :mssql
+        s += " FETCH NEXT #{@fetch} ROWS ONLY"
+      end
     end
     s
   end
