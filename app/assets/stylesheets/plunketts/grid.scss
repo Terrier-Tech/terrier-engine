@@ -37,7 +37,7 @@ $breakpoint: 900px !default;
 @media only screen and (max-width: $breakpoint) {
 	.horizontal-grid.collapsible {
 		display: block;
-		.stretch-column, .shrink-column {
+		> .stretch-column, > .shrink-column {
 			padding: 0;
 		}
 	}
