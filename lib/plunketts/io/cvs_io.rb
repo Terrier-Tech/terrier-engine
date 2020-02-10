@@ -10,9 +10,10 @@ module CsvIo
   # - any other path starting with / is assumed to be absolute
   # - everything else is relative to public/system/
   def self.rel_to_abs_path(rel_path)
+    rel_path = rel_path.to_s
     if rel_path.index('/system') == 0
       Rails.root.join('public' + rel_path)
-    elsif rel_path.index('/db') == 0 || rel_path.index('/test') == 0
+    elsif rel_path.index('/db') == 0 || rel_path.index('/test') == 0 || rel_path.index('/import') == 0
       Rails.root.join(rel_path[1..-1])
     elsif rel_path[0] == '/'
       rel_path
@@ -41,7 +42,7 @@ module CsvIo
         end
         data << record
       else
-        headers = row
+        headers = row.map(&:strip)
       end
     end
     data
