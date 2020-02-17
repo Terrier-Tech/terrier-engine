@@ -4,11 +4,18 @@ module Plunketts::RenderingBase
 
   included do
 
+    def init_request_time
+      @request_start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    end
+
+    before_action :init_request_time
+
     # renders a successful response, either in json to CSV
     # if CSV, you must pass exactly one key into data, which contains an array of hashes
     def render_success(message, data={})
       data[:status] = 'success'
       data[:message] = message
+      data[:exec_time] = Process.clock_gettime(Process::CLOCK_MONOTONIC) - @request_start_time
       respond_to do |format|
         format.json do
           render json: data

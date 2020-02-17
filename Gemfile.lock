@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    plunketts-engine (1.4.19)
+    plunketts-engine (1.4.21)
       elasticsearch
       loofah (>= 2.3.1)
       nokogiri (>= 1.10.4)
