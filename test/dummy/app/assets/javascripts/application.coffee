@@ -26,11 +26,11 @@
 
 
 
-jQuery.fn.showLoadingOverlay = ->
+$.fn.showLoadingOverlay = ->
 	if this.find('.loading-overlay').length
 		return
 	this.append "<div class='loading-overlay'></div>"
 
 
-jQuery.fn.removeLoadingOverlay = ->
+$.fn.removeLoadingOverlay = ->
 	this.find('.loading-overlay').remove()

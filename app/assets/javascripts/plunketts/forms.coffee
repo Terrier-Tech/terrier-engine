@@ -44,7 +44,7 @@ window.forms.replaceGroupedSelectOptions = (select, options, current=null) ->
 ################################################################################
 
 # serialize to an object instead of string or array
-jQuery.fn.serializeObject = ->
+$.fn.serializeObject = ->
 	arrayData = @serializeArray()
 	objectData = {}
 	$.each arrayData, ->
@@ -71,10 +71,8 @@ jQuery.fn.serializeObject = ->
 			objectData[@name] = value
 	return objectData
 
-_errorExplanationTemplate =
-
 # populate errors returned from active record
-jQuery.fn.showErrors = (errors) ->
+$.fn.showErrors = (errors) ->
 	this.find('.error').removeClass 'error'
 	unless errors?
 		return
