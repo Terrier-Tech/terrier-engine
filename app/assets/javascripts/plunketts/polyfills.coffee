@@ -1,5 +1,5 @@
 if jQuery?
-	for method in [ "put", "delete" ]
+	jQuery.each( [ "put", "delete" ], ( i, method ) ->
 		jQuery[method] = ( url, data, callback, type ) ->
 			if jQuery.isFunction( data )
 				type = type || callback
@@ -13,6 +13,7 @@ if jQuery?
 				data: data
 				success: callback
 			)
+	)
 
 # String.repeat
 if !String::repeat
