@@ -1,17 +1,18 @@
-for method in [ "put", "delete" ]
-	$[method] = ( url, data, callback, type ) ->
-		if $.isFunction( data )
-			type = type || callback
-			callback = data
-			data = undefined
-
-		return $.ajax(
-			url: url
-			type: method
-			dataType: type
-			data: data
-			success: callback
-		)
+if jQuery?
+	for method in [ "put", "delete" ]
+		jQuery[method] = ( url, data, callback, type ) ->
+			if jQuery.isFunction( data )
+				type = type || callback
+				callback = data
+				data = undefined
+	
+			return jQuery.ajax(
+				url: url
+				type: method
+				dataType: type
+				data: data
+				success: callback
+			)
 
 # String.repeat
 if !String::repeat
