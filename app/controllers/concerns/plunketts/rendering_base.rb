@@ -25,6 +25,7 @@ module Plunketts::RenderingBase
           Rails.logger.debug "--keys: #{keys}"
           keys.delete(:status)
           keys.delete(:message)
+          keys.delete(:exec_time)
           if keys.length != 1
             return error "There must be exactly one additional argument to render_success (besides status and message) - found [#{keys.join(', ')}]"
           end
