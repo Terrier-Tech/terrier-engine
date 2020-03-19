@@ -56,7 +56,7 @@ class MultiLogger
     else
       s = "#{@prefix} #{level.upcase} :: #{message}"
     end
-    if @use_rails
+    if Rails&.logger && @use_rails
       Rails.logger.debug s
     end
     if @use_stdout
