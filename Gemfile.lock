@@ -1,7 +1,13 @@
+GIT
+  remote: git@github.com:Terrier-Tech/sql_builder.git
+  revision: 7f9c75a55fcce79b5b9e2d9866315a6377175f2d
+  specs:
+    sql_builder (1.0.0)
+
 PATH
   remote: .
   specs:
-    plunketts-engine (1.4.25)
+    plunketts-engine (1.5.0)
       elasticsearch
       loofah (>= 2.3.1)
       nokogiri (>= 1.10.4)
@@ -67,17 +73,17 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     crass (1.0.5)
-    elasticsearch (7.4.0)
-      elasticsearch-api (= 7.4.0)
-      elasticsearch-transport (= 7.4.0)
-    elasticsearch-api (7.4.0)
+    elasticsearch (7.6.0)
+      elasticsearch-api (= 7.6.0)
+      elasticsearch-transport (= 7.6.0)
+    elasticsearch-api (7.6.0)
       multi_json
-    elasticsearch-transport (7.4.0)
-      faraday
+    elasticsearch-transport (7.6.0)
+      faraday (~> 1)
       multi_json
     erubi (1.7.1)
     execjs (2.7.0)
-    faraday (1.0.0)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
     globalid (0.4.2)
@@ -116,7 +122,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (2.7.0.2)
+    parser (2.7.1.0)
       ast (~> 2.4.0)
     pg (1.0.0)
     puma (3.12.0)
@@ -187,7 +193,7 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    unicode-display_width (1.6.1)
+    unicode-display_width (1.7.0)
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
@@ -206,6 +212,7 @@ DEPENDENCIES
   puma
   sassc-rails
   slim-rails
+  sql_builder!
   turbolinks (~> 5)
 
 BUNDLED WITH

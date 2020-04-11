@@ -23,3 +23,5 @@ gem 'coffee-rails', '~> 4.2'
 gem 'puma'
 gem 'pg'
 gem 'paperclip'
+
+gem 'sql_builder', git: 'git@github.com:Terrier-Tech/sql_builder.git'

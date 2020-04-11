@@ -1,3 +1,3 @@
 module Plunketts
-  VERSION = '1.4.26'
+  VERSION = '1.5.0'
 end

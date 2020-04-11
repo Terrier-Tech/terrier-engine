@@ -5,10 +5,6 @@ require 'plunketts/migrations'
 require 'plunketts/engine'
 require 'plunketts/strings'
 
-require 'plunketts/sql_builder/sql_builder'
-
-require 'plunketts/sql_builder/sql_builder'
-
 require 'plunketts/io/cvs_io'
 
 require 'plunketts/logging/loggable'
