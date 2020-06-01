@@ -6,7 +6,6 @@ require 'plunketts/scripts/script_config'
 module Plunketts::ScriptBase
   extend ActiveSupport::Concern
   include Plunketts::Fields
-  include Plunketts::Embedder
   include Plunketts::Schedulable
 
 
