@@ -1,2 +1,1 @@
-touch tmp/restart.txt ; tail -f log/development.log
-
+puma-dev -stop ; pkill puma-dev ; tail -f log/development.log

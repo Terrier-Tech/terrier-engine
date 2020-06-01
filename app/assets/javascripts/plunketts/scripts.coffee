@@ -503,7 +503,7 @@ _scheduleRulePartial = (script, constants) ->
 	div '.schedule-rule-editor', ->
 		input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 		div '.horizontal-grid', ->
-			div '.stretch-column.days-column', ->
+			div '.shrink-column.days-column', ->
 				for day in constants.days
 					label '', ->
 						checked = if rule.days?.indexOf(day)>-1 then 'checked' else null
@@ -514,10 +514,16 @@ _scheduleRulePartial = (script, constants) ->
 					label '', ->
 						checked = if rule.weeks?.indexOf(week)>-1 then 'checked' else null
 						input '.week', type: 'checkbox',  value: week, checked: checked
-						title = if week == 'all' then 'All Weeks' else "Week #{week}"
+						title = switch week
+							when 'all'
+								'All Weeks'
+							when 'every_2'
+								'Every 2'
+							else
+								"Week #{week}"
 						span '', title
 			for monthGroup in constants.month_groups
-				div '.stretch-column.months-column', ->
+				div '.shrink-column.months-column', ->
 					for month in monthGroup
 						label '', ->
 							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null

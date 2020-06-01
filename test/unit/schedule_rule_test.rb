@@ -7,6 +7,9 @@ class ScheduleRuleTest < ActiveSupport::TestCase
     assert_equal 28, rule1.num_per_year
     rule2 = ScheduleRule.new days: %w(tuesday), weeks: %w(2 4), months: ScheduleRule.months
     assert_equal 24, rule2.num_per_year
+    rule = ScheduleRule.new days: %w(tuesday), weeks: %w(every_2), months: ScheduleRule.months
+    assert_equal 26, rule.num_per_year
+    assert_equal 2, rule.num_per_month['february']
   end
 
   test 'fifth week' do

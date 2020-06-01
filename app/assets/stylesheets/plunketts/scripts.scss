@@ -166,7 +166,7 @@ $animation-duration: 0.2s !default;
 ////////////////////////////////////////////////////////////////////////////////
 
 $toolbar-height: 32px;
-$settings-width: 320px;
+$settings-width: 340px;
 $panel-pad: 12px;
 
 form.script-editor {
@@ -301,7 +301,10 @@ form.script-editor {
 				width: inherit;
 				margin-bottom: 0;
 				position: relative;
-				top: -4px;
+				top: -6px;
+				height: 28px;
+				font-size: 14px;
+				padding: 0 8px;
 			}
 			input[type=text], select {
 				margin-bottom: 8px;
@@ -369,7 +372,7 @@ form.script-editor {
 		align-items: start;
 		clear: both;
 	}
-	.stretch-column {
+	.stretch-column, .shrink-column {
 		border-right: 1px solid #ccc;
 		&:last-child {
 			border-right: none;

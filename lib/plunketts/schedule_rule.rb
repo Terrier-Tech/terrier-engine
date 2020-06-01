@@ -57,8 +57,14 @@ class ScheduleRule
   string_array_field :weeks
   string_array_field :months
 
-  def schedule_summary
-    self.days.map{|d| d.humanize}.join(', ') + '; Weeks ' + self.weeks.join(', ') + ' in ' + self.months.map{|m| m.humanize}.join(', ')
+  def weeks_display
+    if self.weeks.index 'all'
+      'All Weeks'
+    elsif self.weeks.index 'every_2'
+      'Every Other Week'
+    else
+      'Week ' + self.weeks.join(', ')
+    end
   end
 
   @days = %w(sunday monday tuesday wednesday thursday friday saturday)
@@ -73,7 +79,7 @@ class ScheduleRule
   @quarter_february = %w(february may august november)
   @quarter_march = %w(march june september december)
 
-  @weeks = %w(1 2 3 4 5 all)
+  @weeks = %w(1 2 3 4 5 every_2 all)
 
   class << self
     attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks
@@ -103,6 +109,10 @@ class ScheduleRule
               remainder = WEEKS_PER_MONTH[month.to_sym] % 1
               self.days.length * (self.weeks.length - 1 + remainder)
             end.sum
+          elsif self.weeks.index 'every_2'
+            self.months.map do |month|
+              self.days.length * WEEKS_PER_MONTH[month.to_sym]/2.0
+            end.sum
           else
             self.days.length * self.weeks.length * self.months.length
           end.floor
@@ -126,6 +136,8 @@ class ScheduleRule
                   elsif self.weeks.index '5'
                     remainder = WEEKS_PER_MONTH[month.to_sym] % 1
                     self.days.length * (self.weeks.length - 1 + remainder)
+                  elsif self.weeks.index 'every_2'
+                    WEEKS_PER_MONTH[month.to_sym]/2.0 * self.days.length
                   else
                     self.days.length * self.weeks.length
                   end
@@ -143,19 +155,13 @@ class ScheduleRule
       run.map{|i| ScheduleRule.short_days[i]}.join('-')
     end.join(', ')
 
-    week_summary = if self.weeks.index('all')
-                     'All Weeks'
-                   else
-                     'Week ' + self.weeks.join(', ')
-                   end
-
     month_indexes = self.months.map{|d| ScheduleRule.months.index(d)}.sort
     month_runs = month_indexes.index_runs.compact
     month_summary = month_runs.map do |run|
       run.compact.map{|i| ScheduleRule.short_months[i]}.join('-')
     end.join(', ')
 
-    "#{day_summary}; #{week_summary}; #{month_summary}"
+    "#{day_summary}; #{weeks_display}; #{month_summary}"
   end
 
 end
