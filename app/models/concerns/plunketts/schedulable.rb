@@ -1,9 +1,9 @@
 
 module Plunketts::Schedulable
   extend ActiveSupport::Concern
+  include Plunketts::Embedder
 
   included do
-    include Plunketts::Embedder
 
     embeds_many :schedule_rules
 
