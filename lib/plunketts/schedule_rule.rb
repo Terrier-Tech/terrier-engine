@@ -1,4 +1,6 @@
 
+require_relative '../../app/models/concerns/plunketts/embedded'
+
 class Array
   def index_runs
     runs = []
@@ -23,6 +25,25 @@ class Array
     runs
   end
 end
+
+
+WEEKS_PER_31_MONTH = 4.428
+WEEKS_PER_30_MONTH = 4.285
+
+WEEKS_PER_MONTH = {
+    january: WEEKS_PER_31_MONTH,
+    february: 4.0,
+    march: WEEKS_PER_31_MONTH,
+    april: WEEKS_PER_30_MONTH,
+    may: WEEKS_PER_31_MONTH,
+    june: WEEKS_PER_30_MONTH,
+    july: WEEKS_PER_31_MONTH,
+    august: WEEKS_PER_31_MONTH,
+    september: WEEKS_PER_30_MONTH,
+    october: WEEKS_PER_31_MONTH,
+    november: WEEKS_PER_30_MONTH,
+    december: WEEKS_PER_31_MONTH
+}
 
 
 class ScheduleRule

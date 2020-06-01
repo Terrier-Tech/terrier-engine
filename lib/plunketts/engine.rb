@@ -1,6 +1,7 @@
 require 'terminal-table'
 
 require 'plunketts/migrations'
+require 'plunketts/schedule_rule'
 
 require 'plunketts/engine'
 require 'plunketts/strings'

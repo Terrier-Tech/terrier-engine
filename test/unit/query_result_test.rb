@@ -32,10 +32,6 @@ class QueryResultTest < ActiveSupport::TestCase
     assert_equal 3, first_row.number
     assert_equal Time, first_row.time.class
     assert_equal Integer, first_row.negative_i.class
-
-    result.each do |row|
-      puts row.inspect
-    end
   end
 
 end
