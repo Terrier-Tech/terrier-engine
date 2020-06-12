@@ -1,4 +1,4 @@
-require 'plunketts/io/cvs_io'
+require 'plunketts/io/csv_io'
 
 class ScriptExecutor
   include Loggable
