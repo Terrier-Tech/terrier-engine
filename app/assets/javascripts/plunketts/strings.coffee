@@ -236,13 +236,14 @@ String::formatShortTime = ->
 window.pluralize = (num, word) ->
 	if num.toString() == "1" or !word?
 		return word
-	else if word.endsWith('ice') || word.charAt(word.length-1) == 's'
+	lastChar = word.charAt(word.length-1)
+	if word.endsWith('ice') or lastChar == 's'
 		return word
-	else if word.charAt(word.length-1) == 'h' && word.toString() != 'month'
+	else if lastChar == 'h' and word.toString() != 'month'
 		return word + 'es'
-	else if word.endsWith('ey')
+	else if word.endsWith('ey') or word.endsWith('ay')
 		return word + 's'
-	else if word.charAt(word.length-1) == 'y'
+	else if lastChar == 'y'
 		return word.substring(0, word.length-1) + 'ies'
 	else
 		return word + 's'
