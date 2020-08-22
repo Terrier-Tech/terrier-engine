@@ -13,8 +13,10 @@ $modal-breakpoint: 720px;
 // Overlay
 ////////////////////////////////////////////////////////////////////////////////
 
-body.with-modal #content {
-	filter: blur(12px);
+body.with-modal {
+	#content, #header, #footer {
+		filter: blur(12px);
+	}
 }
 
 #modal-overlay {
