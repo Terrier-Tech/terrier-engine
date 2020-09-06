@@ -1109,6 +1109,7 @@ _runsTemplate = tinyTemplate (runs) ->
 					th '', 'User'
 					th '', 'Duration'
 					th '', 'Status'
+					th '', 'Run Options'
 					th '', 'Exception'
 					th ''
 			tbody '', ->
@@ -1119,6 +1120,7 @@ _runsTemplate = tinyTemplate (runs) ->
 						td '', run.created_by_name
 						td '', "#{(run.duration || 0).toFixed(1)}s"
 						td ".status.#{run.status}", run.status.titleize()
+						td '', "#{JSON.stringify(run.fields) || ''}"
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
 							a '.with-icon', href: run.log_url, target: '_blank', ->
