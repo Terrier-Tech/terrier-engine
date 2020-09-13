@@ -179,9 +179,10 @@ window.tinyModal.show = (url, options={}) ->
 			if status == 'error'
 				column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{res}</pre>")
 				tinyModal.removeLoadingOverlay()
-			else if options.callback?
+			else
 				column.find('input:not([type=hidden]):first').focus()
-				options.callback column
+				if options.callback?
+					options.callback column
 	)
 
 	setTimeout(
