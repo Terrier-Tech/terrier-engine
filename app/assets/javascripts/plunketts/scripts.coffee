@@ -1099,25 +1099,41 @@ class PickerModal
 # Runs Modal
 ################################################################################
 
+_fieldValuesPartial = (fields) ->
+	if typeof fields == 'string'
+		fields = JSON.parse fields
+	for k, v of fields
+		div '.field', ->
+			span '.key', "#{k}: "
+			vString = if v.match(/\d{4}-\d{2}-\d{2}/)
+				v.formatShortDate()
+			else
+				v
+			span '.value', vString
+
 _runsTemplate = tinyTemplate (runs) ->
 	div '.script-runs-modal', ->
 		table '.data.script-runs', ->
 			thead '', ->
 				tr '', ->
-					th '', 'Date'
-					th '', 'Time'
-					th '', 'User'
-					th '', 'Duration'
+					th '', 'Date / Time'
+					th '', 'User / Duration'
+					th '', 'Inputs'
 					th '', 'Status'
 					th '', 'Exception'
 					th ''
 			tbody '', ->
 				for run in runs
 					tr '.script-run', ->
-						td '', run.created_at.formatShortDate()
-						td '', run.created_at.formatShortTime()
-						td '', run.created_by_name
-						td '', "#{(run.duration || 0).toFixed(1)}s"
+						td '', ->
+							div '.date', run.created_at.formatShortDate()
+							div '.time', run.created_at.formatShortTime()
+						td '', ->
+							div '.created-by', run.created_by_name
+							div '.duration', "#{(run.duration || 0).toFixed(1)}s"
+						td '', ->
+							if run.fields
+								_fieldValuesPartial(run.fields)
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->

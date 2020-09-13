@@ -27,6 +27,9 @@ class ScriptExecutor
   def run(stream)
     @stream = stream
     script_run = ScriptRun.new script_id: @script.id, created_at: Time.now, duration: 0
+    if script_run.respond_to?(:fields)
+      script_run.fields = @field_values
+    end
     t = Time.now
     begin
       escaped_body = @script.body.gsub('\"', '"')
