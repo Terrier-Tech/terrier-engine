@@ -33,6 +33,19 @@ $breakpoint: 900px !default;
 	.shrink-column {
 		flex: 0 1 auto;
 	}
+	&.reversed {
+		flex-direction: row-reverse;
+		.stretch-column, .shrink-column {
+			&:first-child {
+				padding-right: 0;
+				padding-left: 8px;
+			}
+			&:last-child {
+				padding-left: 0;
+				padding-right: 8px;
+			}
+		}
+	}
 }
 @media only screen and (max-width: $breakpoint) {
 	.horizontal-grid.collapsible {
