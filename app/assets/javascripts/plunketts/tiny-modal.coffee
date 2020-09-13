@@ -138,6 +138,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	setTimeout(
 		->
 			win.addClass 'show'
+			column.find('input:not([type=hidden]):first').focus()
 			if options.callback?
 				options.callback column
 		10
@@ -179,6 +180,7 @@ window.tinyModal.show = (url, options={}) ->
 				column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{res}</pre>")
 				tinyModal.removeLoadingOverlay()
 			else if options.callback?
+				column.find('input:not([type=hidden]):first').focus()
 				options.callback column
 	)
 

@@ -2,9 +2,14 @@
 
 ## Actions
 
+_withActionsTemplate = tinyTemplate ->
+	h1 '.text-center', 'Modal With Actions!'
+	input '.hidden', type: 'hidden'
+	input '.focus', type: 'text', placeholder: 'focus'
+
 $(document).on 'click', 'a.modal-with-actions', ->
 	tinyModal.showDirect(
-		"<h1 class='text-center'>Modal With Actions!</h1>"
+		_withActionsTemplate()
 		title: 'Modal'
 		title_icon: 'gear-a'
 		actions: [
