@@ -31,3 +31,13 @@ versions.compare = (v1, v2) ->
 		if vs[0][step] < vs[1][step]
 			return 'less'
 	'equal'
+
+
+versions.isGreaterThan(v1, v2) ->
+	versions.compare(v1, v2) == 'greater'
+
+versions.isLessThan(v1, v2) ->
+	versions.compare(v1, v2) == 'less'
+
+versions.areEqual(v1, v2) ->
+	versions.compare(v1, v2) == 'equal'
