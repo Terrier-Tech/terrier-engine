@@ -33,11 +33,11 @@ versions.compare = (v1, v2) ->
 	'equal'
 
 
-versions.isGreaterThan(v1, v2) ->
+versions.isGreaterThan = (v1, v2) ->
 	versions.compare(v1, v2) == 'greater'
 
-versions.isLessThan(v1, v2) ->
+versions.isLessThan = (v1, v2) ->
 	versions.compare(v1, v2) == 'less'
 
-versions.areEqual(v1, v2) ->
+versions.areEqual = (v1, v2) ->
 	versions.compare(v1, v2) == 'equal'
