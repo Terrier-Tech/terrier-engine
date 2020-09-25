@@ -107,9 +107,10 @@ table.data {
     border-collapse: collapse;
     th {
         text-align: left;
+        padding: 4px 8px;
     }
     td {
-        padding: 4px 6px;
+        padding: 4px 8px;
     }
     thead tr {
         border-bottom: 1px solid #ccc;

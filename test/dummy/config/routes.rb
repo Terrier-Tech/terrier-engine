@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'urls' => 'urls#index'
 
+  get 'versions' => 'versions#index'
+
   mount Plunketts::Engine, at: "/"
 
   root 'application#home'
