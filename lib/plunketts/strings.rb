@@ -28,7 +28,7 @@ class String
   end
 
   def slugify
-    self.strip.split(/\s+/).join('_').gsub(/[^\w\-\.]/, '').downcase
+    self.strip.split(/[\s[[:punct:]]]+/).join('_').gsub(/[^\w\-.]/, '').downcase
   end
 
   def parse_postgres_array
