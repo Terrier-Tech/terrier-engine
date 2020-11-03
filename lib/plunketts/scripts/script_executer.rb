@@ -89,6 +89,12 @@ class ScriptExecutor
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
+  def dump_csv(data, rel_path, options={})
+    abs_path = CsvIo.save data, rel_path
+    write_raw 'file', CsvIo.abs_to_rel_path(abs_path)
+    puts "Wrote #{data.count} records to #{rel_path}"
+  end
+
   def puts_file(path)
     if path.index(Rails.root.to_s)
       path = CsvIo.abs_to_rel_path path

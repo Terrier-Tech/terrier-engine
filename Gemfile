@@ -20,7 +20,7 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'lodash-rails'
 gem 'coffee-rails', '~> 4.2'
-gem 'puma'
+gem 'puma', '> 4.3.5'
 gem 'pg'
 gem 'paperclip'
 
