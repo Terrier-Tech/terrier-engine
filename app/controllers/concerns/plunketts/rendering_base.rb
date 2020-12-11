@@ -31,6 +31,12 @@ module Plunketts::RenderingBase
           end
           return render text: CsvIo.write(data[keys.first])
         end
+        format.html do
+          if params[:modal]&.is_true?
+            options[:layout] ||= 'modal'
+          end
+          render options
+        end
       end
     end
 
@@ -39,6 +45,9 @@ module Plunketts::RenderingBase
       respond_to do |format|
         format.html do
           options[:template] = 'application/error'
+          if params[:modal]&.is_true?
+            options[:layout] ||= 'modal'
+          end
           render options
         end
         format.json do
