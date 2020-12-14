@@ -109,8 +109,6 @@ body.with-modal {
 		min-height: 400px;
 		flex: 1 1 auto;
 		overflow-y: scroll;
-		&::-webkit-scrollbar { width: 0 !important }
-		-ms-overflow-style: none;
 	}
 	.modal-actions {
 		flex: 0 0 auto;
