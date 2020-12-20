@@ -29,6 +29,7 @@ $breakpoint: 900px !default;
 	}
 	.stretch-column {
 		flex: 1;
+		min-width: 0;
 	}
 	.shrink-column {
 		flex: 0 1 auto;
