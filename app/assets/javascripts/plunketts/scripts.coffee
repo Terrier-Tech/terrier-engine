@@ -674,6 +674,11 @@ _editorTemplate = tinyTemplate (script, constants) ->
 						label '', 'Category'
 						select '', name: 'report_category', ->
 							forms.optionsForSelect constants.category_options, script.report_category
+					if constants.report_type_options?.length
+						div '.stretch-column', ->
+							label '', 'Report Type'
+							select '', name: 'report_type', ->
+								forms.optionsForSelect constants.report_type_options, script.report_type
 					div '.stretch-column', ->
 						label '', 'Visibility'
 						select '', name: 'visibility', ->

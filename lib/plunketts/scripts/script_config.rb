@@ -1,7 +1,8 @@
 module Plunketts::ScriptConfig
 
   @values = {
-      category_icons: {}
+      category_icons: {},
+      report_type_icons: {}
   }
 
   @values.keys.each do |key|
@@ -15,6 +16,12 @@ module Plunketts::ScriptConfig
 
   def self.category_options
     @values[:category_icons].map do |k, v|
+      [k.to_s.titleize, v, k]
+    end
+  end
+
+  def self.report_type_options
+    @values[:report_type_icons].map do |k, v|
       [k.to_s.titleize, v, k]
     end
   end

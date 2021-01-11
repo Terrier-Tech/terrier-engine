@@ -11,6 +11,7 @@ module Plunketts::ScriptCrud
       render_success "Got Constants", {
           constants: {
             category_options: Plunketts::ScriptConfig.category_options,
+            report_type_options: Plunketts::ScriptConfig.report_type_options,
             visibility_options: Script.visibility_options,
             schedule_time_options: Script.schedule_time_options,
             field_type_options: ScriptField.field_type_options,
