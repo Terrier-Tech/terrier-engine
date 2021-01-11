@@ -1,3 +1,8 @@
+require 'awesome_print'
+
+AwesomePrint.defaults ||= {}
+AwesomePrint.defaults[:ruby19_syntax] = true
+
 class MultiLogger
 
   attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix, :messages
@@ -24,53 +29,80 @@ class MultiLogger
     @stream.close
   end
 
-  def debug(message)
-    log 'debug', message
+  def debug(message, *args)
+    log 'debug', message, *args
   end
 
-  def info(message)
-    log 'info', message
+  def info(message, *args)
+    log 'info', message, *args
   end
 
-  def warn(message)
-    log 'warn', message
+  def warn(message, *args)
+    log 'warn', message, *args
   end
 
-  def separator(message)
-    log 'separator', message
+  def separator(message, *args)
+    log 'separator', message, *args
   end
 
-  def error(ex)
+  def error(ex, *args)
     message = ex.message
     ex.backtrace[0..20].each do |line|
       message += "\n#{line}"
     end
-    log 'error', message
+    log 'error', message, *args
   end
 
-  def log(level, message)
+  def log(level, message, *args)
     return if LEVELS.index(@level) > LEVELS.index(level)
-    time = Time.now.strftime(PRETTY_TIME_FORMAT)
     if level == 'separator'
       s = "#{@prefix} :: ==== #{message} ===="
     else
       s = "#{@prefix} #{level.upcase} :: #{message}"
     end
+    write level, s
+
+    # awesome_print extra args
+    rails_level = level=='separator' ? 'info' : level
+    args.each do |arg|
+      if @use_stdout
+        ap arg
+      end
+      if Rails&.logger && @use_rails
+        Rails.logger.ap arg, rails_level
+      end
+      write_stream level, arg.inspect # TODO: figure out how to send ap output to the stream
+    end
+  end
+
+
+  private
+
+
+  # writes directly to the appropriate outputs
+  def write(level, s)
     if Rails&.logger && @use_rails
-      Rails.logger.debug s
+      rails_level = level=='separator' ? 'info' : level
+      Rails.logger.send rails_level, s
     end
     if @use_stdout
       puts s
     end
-    @messages << {prefix: @prefix, time: time, level: level, message: message}
+    write_stream level, s
+  end
+
+  def write_stream(level, s)
+    time = Time.now.strftime(PRETTY_TIME_FORMAT)
+    @messages << {prefix: @prefix, time: time, level: level, message: s}
     if @stream
       chunk = {
-          level: level,
-          message: CGI.escapeHTML(message),
-          time: time,
-          prefix: @prefix
+        level: level,
+        message: CGI.escapeHTML(message),
+        time: time,
+        prefix: @prefix
       }
       @stream.write "#{Oj.dump(chunk)},"
     end
   end
+
 end

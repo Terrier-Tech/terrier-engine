@@ -8,9 +8,9 @@ Gem::Specification.new do |s|
   s.name        = 'plunketts-engine'
   s.version     = Plunketts::VERSION
   s.authors     = ['Andy Selvig']
-  s.email       = ['andy@Flame.local']
-  s.homepage    = 'http://plunketts.net'
-  s.summary     = "Common code for Plunkett's Pest Control Rails applications"
+  s.email       = ['andy@terrier.tech']
+  s.homepage    = 'https://terrier.tech'
+  s.summary     = "Common code for Terrier Technologies Rails applications"
   s.description = ''
   s.license     = 'MIT'
 
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'spreadsheet'
   s.add_dependency 'nokogiri', '>= 1.10.4'
   s.add_dependency 'loofah', '>= 2.3.1'
+  s.add_dependency 'awesome_print'
 
   s.add_development_dependency 'pg'
 end

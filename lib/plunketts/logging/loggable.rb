@@ -7,24 +7,24 @@ module Loggable
     @logger = MultiLogger.new "[#{self.class.name}]"
   end
 
-  def debug(m)
-    get_logger.debug m
+  def debug(m, *args)
+    get_logger.debug m, *args
   end
 
-  def info(m)
-    get_logger.info m
+  def info(m, *args)
+    get_logger.info m, *args
   end
 
-  def warn(m)
-    get_logger.warn m
+  def warn(m, *args)
+    get_logger.warn m, *args
   end
 
-  def separator(m)
-    get_logger.separator m
+  def separator(m, *args)
+    get_logger.separator m, *args
   end
 
-  def error(ex)
-    get_logger.error ex
+  def error(ex, *args)
+    get_logger.error ex, *args
   end
 
   def bench(name)
