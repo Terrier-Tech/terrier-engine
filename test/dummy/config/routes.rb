@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   get 'modals' => 'modals#index'
 
+  get 'rendering/exception'
+
   get 'sql' => 'sql#index'
 
   get 'urls' => 'urls#index'

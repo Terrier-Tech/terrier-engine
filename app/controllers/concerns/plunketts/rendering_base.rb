@@ -70,12 +70,18 @@ module Plunketts::RenderingBase
     def render_exception(ex, options={})
       log_exception ex
       @message = ex.message
+      @backtrace = ex.backtrace
       respond_to do |format|
         format.json {render json: {status: 'error', message: @message, backtrace: ex.backtrace}}
         format.csv {render text: "error\n#{@message}"}
         format.html do
           options[:template] = 'application/error'
           render options
+        end
+        format.svg do
+          render plain: "<svg width='640px' height='640px' viewBox='0 0 640 640' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>" +
+            "<text fill='red' x='20' y='20'>#{@message}</text></svg>"
+
         end
       end
     end
