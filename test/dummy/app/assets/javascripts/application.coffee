@@ -18,7 +18,8 @@
 #= require plunketts/forms.coffee
 #= require plunketts/strings.coffee
 #= require plunketts/polyfills.coffee
-#= require plunketts/tinytemplate.coffee
+#= require plunketts/tiny-template.coffee
+#= require plunketts/tiny-render.coffee
 #= require plunketts/tiny-modal.coffee
 #= require plunketts/tiny-sql.coffee
 #= require plunketts/scripts.coffee

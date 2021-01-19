@@ -756,4 +756,4 @@ function morphdomFactory(morphAttrs) {
 
 var morphdom = morphdomFactory(morphAttrs);
 
-window.morphdom=morphdom;
+window.morphdom=morphdom; // AJS

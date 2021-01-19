@@ -18,11 +18,11 @@ window.tinyTemplateDemo.show = (container) ->
 	state = {
 		count: 0
 	}
-	tinyTemplate.render container, _template(state)
+	tinyRender container, _template(state)
 
 	step = ->
 		state.count += 1
-		tinyTemplate.render container, _template(state)
+		tinyRender container, _template(state)
 
 	$(container).on 'click', 'button.increment', step
 	setInterval step, 1000
