@@ -140,6 +140,14 @@ input[type=text], input[type=email], input[type=date], select, textarea {
         border: 2px solid $alert-color;
     }
 }
+.readonly-field {
+    padding: 6px;
+    margin-bottom: 1em;
+    width: 100%;
+    font-size: 16px;
+    background-color: rgba(#fff, 0.3);
+    border: 1px solid #ddd;
+}
 label {
     display: block;
     font-size: 13px;
@@ -149,6 +157,9 @@ label {
         margin-bottom: 0.5em;
         margin-right: 0.5em;
     }
+}
+button {
+    padding: 6px 12px;
 }
 .error-explanation {
     background-color: $alert-color;

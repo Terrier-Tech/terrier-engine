@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   get 'sql' => 'sql#index'
 
+  get 'tinytemplate' => 'tinytemplate#index'
+
   get 'urls' => 'urls#index'
 
   get 'versions' => 'versions#index'

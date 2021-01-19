@@ -14,6 +14,7 @@
 #= require rails-ujs
 #= require turbolinks
 #= require lodash
+#= require morphdom
 #= require plunketts/forms.coffee
 #= require plunketts/strings.coffee
 #= require plunketts/polyfills.coffee
