@@ -91,6 +91,8 @@ String::withoutParams = ->
 window.formatCents = (cents, showCents=true) ->
 	dollars = ''
 	sign = if cents < 0 then '-' else ''
+	if showCents == 'nonZero'
+		showCents = cents % 100
 	if showCents
 		dollars = "#{sign}$#{(Math.abs(cents) / 100.0).toFixed(2)}"
 	else
