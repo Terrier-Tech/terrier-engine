@@ -144,6 +144,11 @@ window.tinyModal.showDirect = (content, options={}) ->
 		10
 	)
 
+# allows applications to modify the URL before making the modal request
+window.tinyModal.modifyUrl = (url) ->
+	url
+
+
 # populate the modal from a URL
 window.tinyModal.show = (url, options={}) ->
 	$('body').addClass 'with-modal'
@@ -153,6 +158,9 @@ window.tinyModal.show = (url, options={}) ->
 		url += '&modal=true'
 	else
 		url += '?modal=true'
+
+	# custom modifications to the URL
+	url = window.tinyModal.modifyUrl url
 
 	# overlay
 	overlay = $ '#modal-overlay'
