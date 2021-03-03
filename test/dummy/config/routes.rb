@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
-  get 'modals' => 'modals#index'
+  get 'modals' => 'client_side#modals'
 
   get 'rendering/exception'
 
@@ -9,9 +9,11 @@ Rails.application.routes.draw do
 
   get 'tinytemplate' => 'tinytemplate#index'
 
-  get 'urls' => 'urls#index'
+  get 'urls' => 'client_side#urls'
 
-  get 'versions' => 'versions#index'
+  get 'versions' => 'client_side#versions'
+
+  get 'logging' => 'client_side#logging'
 
   mount Plunketts::Engine, at: "/"
 

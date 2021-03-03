@@ -33,6 +33,55 @@ Each action value can have the following attributes:
  * end: `true` to put it on the left
 
 
+### Tiny Logger
+
+Calling `tinyLogger.include` add debug/info/warn/error logging functions to the passed scope, such as a class.
+For example:
+
+```coffeescript
+class TestClass
+    constructor: ->
+        tinyLogger.init this
+        
+    test: ->
+        @info "this is info"
+        @warn "this is a warning"
+        @error "oh no, an error!"
+```
+
+This will print logging messages like:
+
+```
+[TestClass INFO 10:20:04.697 AM] this is info
+[TestClass WARN 10:20:04.697 AM] this is a warning
+[TestClass ERROR 10:20:04.697 AM] oh no, an error!
+```
+
+TinyLogger will automatically compute the log prefix by the class name of the object passed in, if it has a class. 
+Otherwise you can specify a custom prefix:
+
+```coffeescript
+tinyLogger.init this, prefix: 'MyPrefix'
+```
+
+Optionally, you can pass an output element (selector string, DOM element, or jQuery object) where tinyLogger will append log divs:
+
+```coffeescript
+tinyLogger.init this, output: '#log-output'
+@info "hello world"
+```
+
+will append a div to #log-output that looks something like:
+
+```html
+<div class="log info">
+    <span class="prefix">[TestClass]</span>
+    <span class="level">INFO</span>
+    <span class="timestamp">10:20:04.694 AM</span>
+    <span class="message">hello world</span>
+</div>
+```
+
 
 ## Installation
 Add this line to your application's Gemfile:
