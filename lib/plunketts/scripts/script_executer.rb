@@ -79,6 +79,13 @@ class ScriptExecutor
     @log_lines << message.to_s
   end
 
+  # make it work like a logger
+  %w(debug info warn).each do |m|
+    define_method m do |message|
+      puts "[#{m.upcase}] #{message}"
+    end
+  end
+
   def puts_count(message='')
     puts "[#{@each_count} of #{@each_total}] #{message}"
   end
