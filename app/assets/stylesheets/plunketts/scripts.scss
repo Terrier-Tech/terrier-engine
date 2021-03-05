@@ -2,6 +2,7 @@
 $secondary-color: #40555e !default;
 $secondary-color-darker: darken($secondary-color, 12%) !default;
 $alert-color: #aa0000 !default;
+$warn-color: #e67e22;
 $success-color: #00aa00 !default;
 $animation-duration: 0.2s !default;
 
@@ -410,12 +411,15 @@ form.script-editor {
 	.message {
 		padding: 2px 8px;
 		font-size: 14px;
-	}
-	.message:nth-child(odd) {
-		background-color: #f8f8f8;
-	}
-	.message.error {
-		color: $alert-color;
+		&:nth-child(odd) {
+			background-color: #f8f8f8;
+		}
+		&.error {
+			color: $alert-color;
+		}
+		&.warn {
+			color: $warn-color;
+		}
 	}
 }
 

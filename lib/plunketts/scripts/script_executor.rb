@@ -1,7 +1,6 @@
 require 'plunketts/io/csv_io'
 
 class ScriptExecutor
-  include Loggable
 
   attr_reader :cache, :each_count, :each_total
   attr_accessor :me
@@ -75,14 +74,34 @@ class ScriptExecutor
 
   def puts(message)
     write_raw 'print', message.to_s
-    debug message
+    Rails.logger.debug "(ScriptExecutor) #{message}"
     @log_lines << message.to_s
   end
 
+  def log(level, message)
+    write_raw level, message.to_s
+    s = "#{level.upcase}: #{message}"
+    Rails.logger.send level, "(ScriptExecutor) #{s}"
+    @log_lines << s
+  end
+
   # make it work like a logger
-  %w(debug info warn).each do |m|
-    define_method m do |message|
-      puts "[#{m.upcase}] #{message}"
+  %w(debug info warn).each do |level|
+    define_method level do |message|
+      log level, message
+    end
+  end
+
+  def error(ex)
+    if ex.is_a? Exception
+      log 'error', ex.message
+      if ex.backtrace
+        ex.backtrace[0..6].each do |line|
+          log 'error', line
+        end
+      end
+    else
+      log 'error', ex.to_s
     end
   end
 

@@ -12,8 +12,8 @@ module Plunketts::ScriptsStreaming
       raise "Concrete classes must implement save_run?"
     end
 
-    def get_executer
-      raise "Subclasses must implement get_executer"
+    def get_executor
+      raise "Subclasses must implement get_executor"
     end
 
     def exec
@@ -27,7 +27,7 @@ module Plunketts::ScriptsStreaming
       @script.body = request_body['body']
 
       begin
-        executor = get_executer
+        executor = get_executor
 
         if request_body['field_values']
           executor.set_field_values request_body['field_values']
