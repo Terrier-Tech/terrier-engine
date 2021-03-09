@@ -81,12 +81,13 @@ class ScriptExecutor
   def log(level, message)
     write_raw level, message.to_s
     s = "#{level.upcase}: #{message}"
+    level = 'info' if level == 'success'
     Rails.logger.send level, "(ScriptExecutor) #{s}"
     @log_lines << s
   end
 
   # make it work like a logger
-  %w(debug info warn).each do |level|
+  %w(debug info warn success).each do |level|
     define_method level do |message|
       log level, message
     end

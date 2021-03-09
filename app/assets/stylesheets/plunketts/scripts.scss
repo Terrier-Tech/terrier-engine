@@ -414,11 +414,17 @@ form.script-editor {
 		&:nth-child(odd) {
 			background-color: #f8f8f8;
 		}
+		&.debug {
+			color: #aaa;
+		}
 		&.error {
 			color: $alert-color;
 		}
 		&.warn {
 			color: $warn-color;
+		}
+		&.success {
+			color: $success-color;
 		}
 	}
 }

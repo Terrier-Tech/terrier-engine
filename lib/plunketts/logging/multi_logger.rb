@@ -7,7 +7,7 @@ class MultiLogger
 
   attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix, :messages
 
-  LEVELS = %w(debug info separator warn error)
+  LEVELS = %w(debug info success separator warn error)
 
   def initialize(prefix, opts={})
     @prefix = prefix
@@ -37,6 +37,10 @@ class MultiLogger
     log 'info', message, *args
   end
 
+  def success(message, *args)
+    log 'success', message, *args
+  end
+
   def warn(message, *args)
     log 'warn', message, *args
   end
@@ -63,7 +67,7 @@ class MultiLogger
     write level, s
 
     # awesome_print extra args
-    rails_level = level=='separator' ? 'info' : level
+    rails_level = %w(separator success).index(level) ? 'info' : level
     args.each do |arg|
       if @use_stdout
         ap arg
