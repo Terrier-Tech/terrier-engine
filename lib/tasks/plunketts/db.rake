@@ -8,7 +8,12 @@ namespace :db do
       puts "\n== #{model.name} =="
       lines = []
 
-      indexes = ActiveRecord::Base.connection.indexes(model.table_name)
+      if model.ancestors.include?ApplicationRecord
+        indexes = ActiveRecord::Base.connection.indexes(model.table_name)
+      else
+        puts "-- Skipping, table not defined"
+        next
+      end
 
       # columns
       rows = []
