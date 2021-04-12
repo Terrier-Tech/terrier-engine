@@ -1,12 +1,12 @@
 $:.push File.expand_path('lib', __dir__)
 
 # Maintain your gem's version:
-require 'plunketts/version'
+require 'terrier/version'
 
 # Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
-  s.name        = 'plunketts-engine'
-  s.version     = Plunketts::VERSION
+  s.name        = 'terrier-engine'
+  s.version     = Terrier::VERSION
   s.authors     = ['Andy Selvig']
   s.email       = ['andy@terrier.tech']
   s.homepage    = 'https://terrier.tech'
