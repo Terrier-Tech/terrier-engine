@@ -1,3 +1,3 @@
-module Plunketts
-  VERSION = '1.9.4'
+module Terrier
+  VERSION = '2.0.0'
 end
