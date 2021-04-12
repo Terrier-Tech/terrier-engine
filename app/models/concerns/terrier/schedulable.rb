@@ -1,7 +1,7 @@
 
-module Plunketts::Schedulable
+module Terrier::Schedulable
   extend ActiveSupport::Concern
-  include Plunketts::Embedder
+  include Terrier::Embedder
 
   included do
 

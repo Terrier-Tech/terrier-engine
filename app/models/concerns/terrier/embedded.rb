@@ -12,7 +12,7 @@ end
 
 
 # include this module in classes that are meant to be embedded in other models
-module Plunketts::Embedded
+module Terrier::Embedded
   extend ActiveSupport::Concern
   include ActiveModel::Validations
   include ActiveModel::Conversion
@@ -29,7 +29,7 @@ module Plunketts::Embedded
       self.class.field_defs.each do |name, opts|
         if opts.type == Integer
           hash[name] = self.send(name).to_i
-        elsif opts.type && opts.type < Plunketts::Embedded
+        elsif opts.type && opts.type < Terrier::Embedded
           hash[name] = self.send(name).map{|o| o.attributes}
         else
           hash[name] = self.send(name)
@@ -192,7 +192,7 @@ module Plunketts::Embedded
           inst.send("#{name}=", (value || opts.default).to_i )
         elsif opts.type == Float
           inst.send("#{name}=", (value || opts.default).to_f )
-        elsif !opts.type.nil? && opts.type < Plunketts::Embedded
+        elsif !opts.type.nil? && opts.type < Terrier::Embedded
           if value.class.name.index 'Hash'
             inst.send("#{name}=", value.values.map{|h| opts.type.from_attributes(h)})
           elsif value.instance_of? Array

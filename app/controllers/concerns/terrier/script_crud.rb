@@ -1,8 +1,8 @@
 require 'parser/current'
-require 'plunketts/scripts/script_config'
+require 'terrier/scripts/script_config'
 
 # include in the regular scripts controller
-module Plunketts::ScriptCrud
+module Terrier::ScriptCrud
   extend ActiveSupport::Concern
 
   included do
@@ -10,8 +10,8 @@ module Plunketts::ScriptCrud
     def constants
       render_success "Got Constants", {
           constants: {
-            category_options: Plunketts::ScriptConfig.category_options,
-            report_type_options: Plunketts::ScriptConfig.report_type_options,
+            category_options: Terrier::ScriptConfig.category_options,
+            report_type_options: Terrier::ScriptConfig.report_type_options,
             visibility_options: Script.visibility_options,
             schedule_time_options: Script.schedule_time_options,
             field_type_options: ScriptField.field_type_options,

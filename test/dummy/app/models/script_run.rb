@@ -19,7 +19,7 @@
 # | updated_by_name  | text              |                            |
 # +------------------+-------------------+----------------------------+
 class ScriptRun < ApplicationRecord
-  include Plunketts::ScriptRunBase
+  include Terrier::ScriptRunBase
 
   has_attached_file :log
   validates_attachment_content_type :log, content_type: %w(text/plain text/html)

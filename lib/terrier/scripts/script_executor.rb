@@ -1,4 +1,4 @@
-require 'plunketts/io/csv_io'
+require 'terrier/io/csv_io'
 
 class ScriptExecutor
 

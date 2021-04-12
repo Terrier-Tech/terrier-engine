@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  Plunketts::Engine.routes.draw do
+  Terrier::Engine.routes.draw do
     get 'scripts/check'
     post 'scripts/compute_field_values'
     get 'scripts/constants'

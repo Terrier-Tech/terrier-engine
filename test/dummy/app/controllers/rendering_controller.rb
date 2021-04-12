@@ -1,5 +1,5 @@
 class RenderingController < ApplicationController
-  include Plunketts::RenderingBase
+  include Terrier::RenderingBase
 
   def exception
     begin

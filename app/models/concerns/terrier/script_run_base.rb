@@ -1,5 +1,5 @@
 # include this module in the ScriptRun model
-module Plunketts::ScriptRunBase
+module Terrier::ScriptRunBase
   extend ActiveSupport::Concern
 
   included do

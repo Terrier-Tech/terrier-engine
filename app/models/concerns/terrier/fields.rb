@@ -1,4 +1,4 @@
-module Plunketts::Fields
+module Terrier::Fields
   extend ActiveSupport::Concern
 
   module ClassMethods

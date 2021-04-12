@@ -1,5 +1,5 @@
 # include in all controllers
-module Plunketts::RenderingBase
+module Terrier::RenderingBase
   extend ActiveSupport::Concern
 
   included do

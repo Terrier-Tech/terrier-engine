@@ -14,7 +14,7 @@
 # | user_id          | uuid      | required, indexed |
 # +------------------+-----------+-------------------+
 class Script < ApplicationRecord
-  include Plunketts::ScriptBase
+  include Terrier::ScriptBase
 
 
   validates :title, uniqueness: true

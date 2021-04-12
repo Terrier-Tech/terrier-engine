@@ -1,5 +1,5 @@
 class ScriptField
-  include Plunketts::Embedded
+  include Terrier::Embedded
 
   field :name, type: String, required: true
 

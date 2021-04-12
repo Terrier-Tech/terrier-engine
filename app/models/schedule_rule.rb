@@ -1,5 +1,5 @@
 
-# require_relative '../../app/models/concerns/plunketts/embedded'
+# require_relative '../../app/models/concerns/terrier/embedded'
 
 class Array
   def index_runs
@@ -47,7 +47,7 @@ WEEKS_PER_MONTH = {
 
 
 class ScheduleRule
-  include Plunketts::Embedded
+  include Terrier::Embedded
 
   def self.icon
     'ios-calendar-outline'

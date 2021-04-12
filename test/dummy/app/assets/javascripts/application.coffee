@@ -15,17 +15,17 @@
 #= require turbolinks
 #= require lodash
 #= require morphdom
-#= require plunketts/forms.coffee
-#= require plunketts/strings.coffee
-#= require plunketts/polyfills.coffee
-#= require plunketts/tiny-template.coffee
-#= require plunketts/tiny-render.coffee
-#= require plunketts/tiny-logger.coffee
-#= require plunketts/tiny-modal.coffee
-#= require plunketts/tiny-sql.coffee
-#= require plunketts/scripts.coffee
-#= require plunketts/urls.coffee
-#= require plunketts/versions.coffee
+#= require terrier/forms.coffee
+#= require terrier/strings.coffee
+#= require terrier/polyfills.coffee
+#= require terrier/tiny-template.coffee
+#= require terrier/tiny-render.coffee
+#= require terrier/tiny-logger.coffee
+#= require terrier/tiny-modal.coffee
+#= require terrier/tiny-sql.coffee
+#= require terrier/scripts.coffee
+#= require terrier/urls.coffee
+#= require terrier/versions.coffee
 #= require_tree .
 
 

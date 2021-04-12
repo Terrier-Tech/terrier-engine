@@ -1,4 +1,4 @@
-# Plunketts::Engine
+# Terrier::Engine
 
 This Rails Engine contains common code used by all Rails applications at Plunkett's Pest Control.
 
@@ -87,7 +87,7 @@ will append a div to #log-output that looks something like:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'plunketts-engine'
+gem 'terrier-engine'
 ```
 
 And then execute:

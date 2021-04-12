@@ -1,7 +1,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-  include Plunketts::Fields
+  include Terrier::Fields
 
   def save_by_system?
     self.created_by_name = 'system'

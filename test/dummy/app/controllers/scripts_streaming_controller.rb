@@ -1,7 +1,7 @@
-require 'plunketts/scripts/script_executor'
+require 'terrier/scripts/script_executor'
 
 class ScriptsStreamingController < ApplicationController
-  include Plunketts::ScriptsStreaming
+  include Terrier::ScriptsStreaming
 
 
   def get_executor

@@ -1,4 +1,4 @@
-module Plunketts::ScriptConfig
+module Terrier::ScriptConfig
 
   @values = {
       category_icons: {},

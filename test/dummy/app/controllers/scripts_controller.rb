@@ -1,5 +1,5 @@
 class ScriptsController < ApplicationController
-  include Plunketts::ScriptCrud
+  include Terrier::ScriptCrud
 
   def index
     @title = 'Scripts'

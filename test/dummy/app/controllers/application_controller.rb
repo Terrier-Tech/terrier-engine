@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  include Plunketts::RenderingBase
+  include Terrier::RenderingBase
 
   def page_title
     @title || self.class.name.gsub('Controller', '').titleize

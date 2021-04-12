@@ -2,7 +2,7 @@ doctype html
 html
 	head
 		title
-			| #{controller.page_title} :: Plunketts Engine
+			| #{controller.page_title} :: Terrier Engine
 		= csrf_meta_tags
 		= csp_meta_tag
 		meta name="turbolinks-cache-control" content="no-cache"
@@ -13,5 +13,5 @@ html
 		= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ext-language_tools.js', 'data-turbolinks-track': 'reload'
 	body.application
 		#top-bar
-			a.title href='/' Plunketts Engine
+			a.title href='/' Terrier Engine
 		== yield

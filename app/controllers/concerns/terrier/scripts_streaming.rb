@@ -1,6 +1,6 @@
 
 # include in the streaming scripts controller
-module Plunketts::ScriptsStreaming
+module Terrier::ScriptsStreaming
   extend ActiveSupport::Concern
 
   included do

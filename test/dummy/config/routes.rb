@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get 'logging' => 'client_side#logging'
 
-  mount Plunketts::Engine, at: "/"
+  mount Terrier::Engine, at: "/"
 
   root 'application#home'
 end

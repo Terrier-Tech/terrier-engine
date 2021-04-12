@@ -1,5 +1,5 @@
 
-module Plunketts::SqlBase
+module Terrier::SqlBase
   extend ActiveSupport::Concern
 
   included do

@@ -1,5 +1,5 @@
 # include this module in classes that embed other models
-module Plunketts::Embedder
+module Terrier::Embedder
   extend ActiveSupport::Concern
 
   included do

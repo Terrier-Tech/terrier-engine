@@ -1,5 +1,5 @@
 class SqlController < ApplicationController
-  include Plunketts::SqlBase
+  include Terrier::SqlBase
 
   def index
     @title = 'SQL Test'

@@ -1,5 +1,5 @@
-require 'plunketts/scripts/script_executor'
-require 'plunketts/scripts/script_searcher'
+require 'terrier/scripts/script_executor'
+require 'terrier/scripts/script_searcher'
 
 namespace :scripts do
 

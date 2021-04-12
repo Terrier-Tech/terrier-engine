@@ -1,12 +1,12 @@
-require 'plunketts/scripts/script_field'
-require 'plunketts/scripts/script_searcher'
-require 'plunketts/scripts/script_config'
+require 'terrier/scripts/script_field'
+require 'terrier/scripts/script_searcher'
+require 'terrier/scripts/script_config'
 
 # include this module in the Script model
-module Plunketts::ScriptBase
+module Terrier::ScriptBase
   extend ActiveSupport::Concern
-  include Plunketts::Fields
-  include Plunketts::Schedulable
+  include Terrier::Fields
+  include Terrier::Schedulable
 
 
   included do
@@ -53,7 +53,7 @@ module Plunketts::ScriptBase
 
     ## Reporting
 
-    enum_field :report_category, Plunketts::ScriptConfig.category_icons.keys.map(&:to_s).sort
+    enum_field :report_category, Terrier::ScriptConfig.category_icons.keys.map(&:to_s).sort
 
 
     ## Runs
