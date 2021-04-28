@@ -682,8 +682,19 @@ _editorTemplate = tinyTemplate (script, constants) ->
 					div '.stretch-column', ->
 						label '', 'Visibility'
 						select '', name: 'visibility', ->
-							forms.optionsForSelect constants.visibility_options, script.visibility
-				label '', 'E-Mail Recipients'
+              forms.optionsForSelect constants.visibility_options, script.visibility
+          if constants.added_fields.length
+            for field in constants.added_fields
+              options = field.options
+              key = field.key
+              div '.stretch-column', ->
+                label '', field.title
+                if field.text_field
+                  input '', type: 'text', name: key, value: script[key]
+                else
+                  select '', name: key, ->
+                    forms.optionsForSelect options, script[key]
+        label '', 'E-Mail Recipients'
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
 				textarea '', name: 'description', placeholder: 'Description', rows: 2, script.description
 

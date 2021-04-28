@@ -1,21 +1,23 @@
 require 'terrier/io/csv_io'
 
 class ScriptExecutor
+  include Loggable
 
   attr_reader :cache, :each_count, :each_total
-  attr_accessor :me
+  attr_accessor :me, :params
 
   def should_soft_destroy
     true
   end
 
-  def initialize(script, cache=nil)
+  def initialize(script, cache=nil, params=nil)
     @script = script
     @cache = cache
     @each_count = 0
     @each_total = 0
     @field_values = {}
     @log_lines = []
+    @params = params
   end
 
   def set_field_values(values)
@@ -26,6 +28,17 @@ class ScriptExecutor
   def run(stream)
     @stream = stream
     script_run = ScriptRun.new script_id: @script.id, created_at: Time.now, duration: 0
+
+    # set added field value to script run from params
+    # ex: ?org_id=123456 -> script_run.org_id=123456
+    unless params.nil? || params.blank?
+      Terrier::ScriptConfig.added_fields.each do |field|
+        if params.keys.include? field[:key].to_s
+          script_run.send("#{field[:key].to_s}=", params[field[:key].to_s])
+        end
+      end
+    end
+
     if script_run.respond_to?(:fields)
       script_run.fields = @field_values
     end
@@ -133,6 +146,10 @@ class ScriptExecutor
 
   def get_field(name)
     @field_values[name]
+  end
+
+  def get_params
+    @params
   end
 
   def each(collection)

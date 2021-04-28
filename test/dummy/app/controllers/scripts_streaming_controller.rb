@@ -5,7 +5,7 @@ class ScriptsStreamingController < ApplicationController
 
 
   def get_executor
-    executor = ScriptExecutor.new @script
+    executor = ScriptExecutor.new @script, params: params
     executor.me = 'Script Executor'
     executor
   end
