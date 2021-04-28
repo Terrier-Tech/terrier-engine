@@ -101,7 +101,7 @@ class MultiLogger
     if @stream
       chunk = {
         level: level,
-        message: CGI.escapeHTML(message),
+        message: CGI.escapeHTML(s),
         time: time,
         prefix: @prefix
       }
