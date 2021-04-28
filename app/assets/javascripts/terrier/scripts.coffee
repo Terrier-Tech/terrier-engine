@@ -683,7 +683,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 						label '', 'Visibility'
 						select '', name: 'visibility', ->
               forms.optionsForSelect constants.visibility_options, script.visibility
-        label '', 'E-Mail Recipients'
+    label '', 'E-Mail Recipients'
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
 				textarea '', name: 'description', placeholder: 'Description', rows: 2, script.description
 
