@@ -23,12 +23,3 @@ Terrier::ScriptConfig.add_field(
     text_field: false
   }
 )
-
-Terrier::ScriptConfig.add_field(
-  {
-    key: :foo_id,
-    title: 'Foobang',
-    options: [['None', ''], ['Terrier', '12345'], ['Plunketts', '54321']],
-    text_field: false
-  }
-)
