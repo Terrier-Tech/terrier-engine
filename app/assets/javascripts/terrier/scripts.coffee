@@ -1041,7 +1041,7 @@ _pickerTemplate = tinyTemplate (scripts) ->
 						a '', data: {column: 'created_by_name'}, 'Created By'
 					th '', ->
 						a '', data: {column: 'report_category'}, 'Category'
-						a '', data: {column: 'updated_at'}, 'Visibility'
+						a '', data: {column: 'visibility'}, 'Visibility'
 					th '', ->
 						a '', data: {column: 'num_runs'}, '# Runs'
 						a '', data: {column: 'last_run'}, 'Last Run'
