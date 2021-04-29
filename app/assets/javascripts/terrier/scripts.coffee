@@ -888,7 +888,7 @@ class Editor
 		unless data?
 			return alert "Fix errors before running"
 		data.id = @script.id
-		new ReportExecModal(data, @constants)
+		new ReportExecModal(data, @constants, @options)
 
 
 
