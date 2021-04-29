@@ -171,7 +171,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 
 
 class ReportExecModal
-	constructor: (@script, @constants) ->
+	constructor: (@script, @constants, @options={}) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
 		$.post(
@@ -202,7 +202,7 @@ class ReportExecModal
 					callback: (modal) =>
 						this.init modal
 				}
-				if @script.id?.length
+				if @script.id?.length and !@options.hide_settings
 					modalOptions.actions.push {
 						title: 'History'
 						class: 'show-history secondary'
@@ -314,8 +314,8 @@ class ReportExecModal
 		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
 
 
-window.scripts.newReportExecModal = (script, constants) ->
-	new ReportExecModal script, constants
+window.scripts.newReportExecModal = (script, constants, options={}) ->
+	new ReportExecModal script, constants, options
 
 
 ################################################################################
