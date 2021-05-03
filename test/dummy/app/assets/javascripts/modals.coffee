@@ -41,6 +41,10 @@ $(document).on 'click', 'a.custom-modal-alert', ->
 				classes: 'alert'
 				callback: -> alert("Here's a native alert")
 			}
+			{
+				title: 'Scripts'
+				href: '/scripts'
+			}
 		]
 	)
 

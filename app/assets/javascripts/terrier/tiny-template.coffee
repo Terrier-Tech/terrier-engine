@@ -96,7 +96,7 @@ window.tinyTemplate.classesToSelector = (classes) ->
 # passing an array simply returns the array
 window.tinyTemplate.parseClasses = (classes) ->
 	unless classes?.length
-		return
+		return []
 	if typeof classes == 'string'
 		classes.split /[\s\.]+/
 	else

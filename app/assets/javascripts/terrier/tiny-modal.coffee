@@ -244,7 +244,7 @@ _alertTemplate = tinyTemplate (options) ->
 				classes.push "action-#{i}"
 				if action.icon?.length
 					classes.push action.icon
-				a tinyTemplate.classesToSelector(classes), action.title||'No title'
+				a tinyTemplate.classesToSelector(classes), href: action.href, action.title||'No title'
 				i += 1
 
 
