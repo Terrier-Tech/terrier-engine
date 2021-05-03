@@ -12,7 +12,6 @@ _logTemplate = tinyTemplate (prefix, level, t, message) ->
 		span '.message', message
 
 window.tinyLogger.init = (object, options={}) ->
-	puts "[TinyLogger] Initializing logger", object, options
 	prefix = options.prefix || object.__proto__?.constructor?.name || 'TinyLogger'
 	output = null
 	if options.output?.length

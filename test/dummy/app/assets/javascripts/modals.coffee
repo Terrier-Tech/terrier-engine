@@ -29,6 +29,39 @@ $(document).on 'click', 'a.modal-with-actions', ->
 	)
 
 
+## Alerts
+
+$(document).on 'click', 'a.custom-modal-alert', ->
+	tinyModal.showAlert(
+		title: "This is an Alert!"
+		body: "Here's some more information about the alert. It can contain <strong>markup</strong>"
+		actions: [
+			{
+				title: 'Do Something'
+				classes: 'alert'
+				callback: -> alert("Here's a native alert")
+			}
+		]
+	)
+
+$(document).on 'click', 'a.confirm-modal-alert', ->
+	tinyModal.confirmAlert(
+		"Are you sure?"
+		"This is a confirm alert modal"
+		-> alert 'Confirmed'
+	)
+
+$(document).on 'click', 'a.notice-modal-alert', ->
+	tinyModal.noticeAlert(
+		"Something happened!"
+		"This is a notice alert modal"
+		{
+			title: 'Got It'
+			icon: 'ion-checkmark-round'
+		}
+	)
+
+
 ## Reload
 
 $(document).on 'click', 'a.modal-reload', ->

@@ -44,6 +44,7 @@ body.with-modal {
 	transition: $animation-duration ease transform;
 	box-shadow: 0 2px $modal-pad rgba(#000, 0.25);
 	overflow-x: hidden;
+	background-color: #fff;
 	&.show {
 		transform: translate(-50%,0);
 	}
@@ -131,6 +132,48 @@ body.with-modal {
 			a {
 				margin-left: 0;
 				margin-right: 1em;
+			}
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Alert
+////////////////////////////////////////////////////////////////////////////////
+
+#modal-alert {
+	position: fixed;
+	top: 50%;
+	width: 300px;
+	left: 50%;
+	z-index: 1000;
+	transform: translate(-50%, -50%) scale(0);
+	transition: $animation-duration ease transform;
+	box-shadow: 0 2px $modal-pad rgba(#000, 0.25);
+	overflow-x: hidden;
+	background-color: #fff;
+	&.show {
+		transform: translate(-50%, -50%) scale(1);
+	}
+	.title {
+		padding: 1em;
+		text-align: center;
+		font-weight: bold;
+	}
+	.body {
+		padding: 0.5em 1em;
+	}
+	.actions {
+		padding: 1em;
+		a.action {
+			display: block;
+			padding: 0.5em 1em;
+			font-weight: bold;
+			text-align: center;
+			margin-bottom: 1em;
+			&:last-child {
+				margin-bottom: 0;
 			}
 		}
 	}

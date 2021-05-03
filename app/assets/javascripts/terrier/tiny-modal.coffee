@@ -6,10 +6,21 @@ window.tinyModal.closeIconClass = '.la.la-close.ion-android-close'
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.alertIcon = 'alert'
 
-# this shouldn't generally be called directly, use tinyModal.pop() instead
-window.tinyModal.close = ->
+# shows the overlay and applies the with-modal class to the body
+showOverlay = ->
+	$('body').addClass 'with-modal'
+	overlay = $ '#modal-overlay'
+	unless overlay.length
+		$('<div id="modal-overlay"></div>').appendTo 'body'
+
+removeOverlay = ->
 	$('body').removeClass 'with-modal'
 	$('#modal-overlay').remove()
+
+
+# this shouldn't generally be called directly, use tinyModal.pop() instead
+window.tinyModal.close = ->
+	removeOverlay()
 
 	win = $('#modal-window')
 	if win.length
@@ -106,12 +117,7 @@ window.tinyModal.expand = ->
 
 # shows a modal with direct content
 window.tinyModal.showDirect = (content, options={}) ->
-	$('body').addClass 'with-modal'
-
-	# overlay
-	overlay = $ '#modal-overlay'
-	unless overlay.length
-		overlay = $('<div id="modal-overlay"></div>').appendTo 'body'
+	showOverlay()
 
 	# window
 	win = $ '#modal-window'
@@ -151,7 +157,7 @@ window.tinyModal.modifyUrl = (url) ->
 
 # populate the modal from a URL
 window.tinyModal.show = (url, options={}) ->
-	$('body').addClass 'with-modal'
+	showOverlay()
 
 	# add the modal parameter to the link
 	if url.indexOf('?')>-1
@@ -161,11 +167,6 @@ window.tinyModal.show = (url, options={}) ->
 
 	# custom modifications to the URL
 	url = window.tinyModal.modifyUrl url
-
-	# overlay
-	overlay = $ '#modal-overlay'
-	unless overlay.length
-		overlay = $('<div id="modal-overlay"></div>').appendTo 'body'
 
 	# window
 	win = $ '#modal-window'
@@ -223,3 +224,122 @@ $(document).on 'click', 'a.close-modal', ->
 #	column = win.find '.modal-column'
 #	column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{status.responseText}</pre>")
 #	tinyModal.removeLoadingOverlay()
+
+
+################################################################################
+# Alerts
+################################################################################
+
+_alertTemplate = tinyTemplate (options) ->
+	div '#modal-alert', ->
+		div '.title', options.title || 'No Title'
+		if options.body?.length
+			div '.body', options.body
+		div '.actions', ->
+			i = 0
+			for action in options.actions
+				classes = tinyTemplate.parseClasses action.classes
+				classes.push 'action'
+				classes.push 'button'
+				classes.push "action-#{i}"
+				if action.icon?.length
+					classes.push action.icon
+				a tinyTemplate.classesToSelector(classes), action.title||'No title'
+				i += 1
+
+
+# Shows a modal alert with optionol actions
+# options can container:
+# - title
+# - body
+# - actions (array)
+# Each action can contain:
+# - title
+# - href
+# - icon
+# - classes
+# - callback
+# Add an action with the close class to close the alert.
+# If none is provided, one will automatically be inserted.
+tinyModal.showAlert = (options) ->
+	showOverlay()
+
+	$('#modal-alert').remove()
+
+	options.actions ||= []
+	hasClose = false
+	for action in options.actions
+		classes = tinyTemplate.parseClasses action.classes
+		if classes.includes 'close'
+			hasClose = true
+			break
+	unless hasClose
+		options.actions.push {
+			title: 'Close'
+			classes: 'close'
+			icon: 'ion-close-round'
+		}
+
+	ui = $(_alertTemplate(options)).appendTo 'body'
+
+	ui.find('a.close').click -> tinyModal.closeAlert()
+
+	for i in [0..options.actions.length-1]
+		action = options.actions[i]
+		if action.callback?
+			ui.find(".action-#{i}").click action.callback
+
+	setTimeout(
+		->
+			ui.addClass 'show'
+		10
+	)
+
+tinyModal.closeAlert = ->
+	removeOverlay()
+	ui = $ '#modal-alert'
+	ui.removeClass 'show'
+	setTimeout(
+		-> ui.remove()
+		500
+	)
+
+# Shows an alert modal pre-populated with an Okay and Cancel action.
+# The Okay action calls the callback while the Cancel action just closes the alert.
+tinyModal.confirmAlert = (title, body, callback) ->
+	options = {
+		title: title
+		body: body
+	}
+	options.actions = [
+		{
+			title: 'Okay'
+			classes: 'primary'
+			callback: callback
+			icon: 'ion-checkmark-round'
+		}
+		{
+			title: 'Cancel'
+			classes: 'cancel close'
+			icon: 'ion-close-round'
+		}
+	]
+	tinyModal.showAlert options
+
+# Shows an alert modal pre-populated with an Okay action.
+# The Okay action just closes the alert.
+# Optionally, the action attributes can be overridden with the action argument.
+tinyModal.noticeAlert = (title, body, action={}) ->
+	options = {
+		title: title
+		body: body
+	}
+	okayAction = {title: 'No Title', icon: 'ion-checkmark-round'}
+	okayAction = Object.assign okayAction, action
+	okayAction.classes ||= 'close'
+	classes = tinyTemplate.parseClasses okayAction.classes
+	unless classes.includes('close')
+		classes.push 'close'
+		okayAction.classes = classes
+	options.actions = [okayAction]
+	tinyModal.showAlert options

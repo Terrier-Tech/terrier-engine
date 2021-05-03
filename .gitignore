@@ -9,3 +9,4 @@ test/dummy/tmp/
 test/dummy/public/system
 .idea/
 .DS_Store
+/tmp

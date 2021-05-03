@@ -88,3 +88,16 @@ window.tinyTemplate = (root) ->
 		root(args...)
 		_context.content
 
+# converts an array of classes to a dot-prefixed selector string
+window.tinyTemplate.classesToSelector = (classes) ->
+	_.map(classes, (c) -> ".#{c}").join()
+
+# parses a string container classes into an array
+# passing an array simply returns the array
+window.tinyTemplate.parseClasses = (classes) ->
+	unless classes?.length
+		return
+	if typeof classes == 'string'
+		classes.split /[\s\.]+/
+	else
+		classes
