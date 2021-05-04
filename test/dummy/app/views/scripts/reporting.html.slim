@@ -1,0 +1,61 @@
+.panel
+    .panel-header
+        h3.with-icon
+            i.ion-podium
+            | Reports
+    table.data
+        thead
+            tr
+                th
+                    a == 'Report Name'
+                th
+                    a == 'Updated At'
+                th
+                    a == 'Created At'
+                th
+                    a.with-icon
+                        | Run Report
+        tbody
+            - @scripts.each do |script|
+                tr.script
+                    td.col-title
+                        | #{script.title}
+                    td.col-updated_at
+                        | #{script.updated_at.strftime(PRETTY_TIME_FORMAT)}
+                    td.col-created_at
+                        | #{script.created_at.strftime(PRETTY_TIME_FORMAT)}
+                    td
+                        a.open-script-report-modal.button.secondary data-id="#{script.id}"
+                            i.ion-loop
+
+
+coffee:
+    showReportExecModal = (scriptId) ->
+        constants = null
+        script = null
+        onDone = _.after 2, ->
+            modal = window.scripts.newReportExecModal(script, constants, {hide_settings: true})
+        $.get(
+                '/scripts/constants.json'
+            (res) =>
+                puts 'constants done'
+                if res.status == 'success'
+                    constants = res.constants
+                    onDone()
+                else
+                    alert res.message
+        )
+        $.get(
+                "/scripts/#{scriptId}.json"
+            (res) =>
+                if res.status == 'success'
+                    script = res.script
+                    script.script_fields = _.toArray script.script_fields
+                    onDone()
+                else
+                    alert res.message
+        )
+
+    $('a.open-script-report-modal').click ->
+        scriptId = $(this).data 'id'
+        showReportExecModal scriptId

@@ -176,7 +176,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 
 
 class ReportExecModal
-	constructor: (@script, @constants, @options = {}) ->
+	constructor: (@script, @constants, @options={}) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
 		$.post(
