@@ -29,15 +29,15 @@ class ScriptExecutor
     @stream = stream
     script_run = ScriptRun.new script_id: @script.id, created_at: Time.now, duration: 0
 
-    # set added field value to script run from params
-    # ex: ?org_id=123456 -> script_run.org_id=123456
-    unless params.nil? || params.blank?
-      Terrier::ScriptConfig.added_fields.each do |field|
-        if params.keys.include? field[:key].to_s
-          script_run.send("#{field[:key].to_s}=", params[field[:key].to_s])
-        end
-      end
-    end
+    # # set added field value to script run from params
+    # # ex: ?org_id=123456 -> script_run.org_id=123456
+    # unless params.nil? || params.blank?
+    #   Terrier::ScriptConfig.added_fields.each do |field|
+    #     if params.keys.include? field[:key].to_s
+    #       script_run.send("#{field[:key].to_s}=", params[field[:key].to_s])
+    #     end
+    #   end
+    # end
 
     if script_run.respond_to?(:fields)
       script_run.fields = @field_values

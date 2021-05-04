@@ -7,7 +7,7 @@ class ScriptField
 
   field :values, type: String
 
-  enum_field :field_type, %w(date string select csv)
+  enum_field :field_type, %w(date string select csv hidden)
 
   def self.compute_date_value(s)
     if s =~ /\d{4}-\d{2}-\d{2}/
@@ -24,6 +24,8 @@ class ScriptField
     when 'string'
       s
     when 'select'
+      s
+    when 'hidden'
       s
     when 'csv'
       if s.blank?

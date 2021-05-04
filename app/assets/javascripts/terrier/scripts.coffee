@@ -141,7 +141,10 @@ _fieldControls.select = (name, value, options) ->
 _fieldControls.csv = (name, value, options) ->
 	"<input type='file' name='#{name}' accept='text/csv'/>"
 
-_reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions) ->
+_fieldControls.hidden = (name, value) ->
+  "<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
+
+_reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions, disabledFields) ->
 	div '.script-report-exec-modal.horizontal-grid', ->
 		div '.shrink-column.io-column', ->
 			div '.fixed-controls', ->
@@ -155,9 +158,12 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 					for field in fields
 						value = fieldValues[field.name]
 						options = fieldOptions[field.name]
+						disabledFields = {org: 'terminix'}
+						if disabledFields[field.name]
+							value = disabledFields[field.name]
 						div '.field-controls', ->
-							label '', field.name
-							puts "value for #{field.name} is #{value}"
+							unless disabledFields[field.name]
+								label '', field.name
 							div '', _fieldControls[field.field_type](field.name, value, options)
 				h4 '.with-icon', ->
 					icon '.ion-ios-copy-outline'
@@ -171,7 +177,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 
 
 class ReportExecModal
-	constructor: (@script, @constants, @options={}) ->
+	constructor: (@script, @constants, @options = {}) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
 		$.post(
@@ -183,7 +189,11 @@ class ReportExecModal
 					return
 				fieldValues = res.field_values
 				fieldOptions = res.field_options
-				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions)
+				if @options.disabled_fields
+					disabledFields = @options.disabled_fields
+				else
+					disabledFields = {}
+				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions, disabledFields)
 				modalOptions = {
 					title: @script.title
 					title_icon: 'play'
