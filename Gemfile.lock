@@ -1,4 +1,4 @@
-GIT
+:GIT
   remote: git@github.com:Terrier-Tech/sql_builder.git
   revision: 7f9c75a55fcce79b5b9e2d9866315a6377175f2d
   specs:

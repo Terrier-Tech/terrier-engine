@@ -158,7 +158,6 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 					for field in fields
 						value = fieldValues[field.name]
 						options = fieldOptions[field.name]
-						disabledFields = {org: 'terminix'}
 						if disabledFields[field.name]
 							value = disabledFields[field.name]
 						div '.field-controls', ->
