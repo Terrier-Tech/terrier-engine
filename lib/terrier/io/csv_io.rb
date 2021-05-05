@@ -92,7 +92,7 @@ module CsvIo
 
   def self.create_sheet(book, data, options)
     if (data.is_a?(Array) || data.is_a?(QueryResult)) && data.length > 0
-      columns = data.first.keys
+      columns = options[:columns] || data.first.keys
     else
       columns = []
     end
