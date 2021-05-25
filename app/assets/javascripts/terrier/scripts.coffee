@@ -320,7 +320,7 @@ class ReportExecModal
 
 	addOutputFile: (file) ->
 		fileName = _.last file.body.split('/')
-		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
+		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document.lyph-document'></i>#{fileName}</a>"
 
 
 window.scripts.newReportExecModal = (script, constants, options={}) ->
@@ -352,7 +352,7 @@ _searcherTemplate = tinyTemplate ->
 	div '.script-searcher', ->
 		div '.results-list'
 		div '.body-pane#script-search-editor'
-		a '.open-script.ion-android-open', title: 'Open Script'
+		a '.open-script.ion-android-open.lyph-open', title: 'Open Script'
 
 _searchInputTemplate = tinyTemplate ->
 	div '.script-search-input', ->
@@ -538,7 +538,7 @@ _scheduleRulePartial = (script, constants) ->
 							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null
 							input '.month', type: 'checkbox',  value: month, checked: checked
 							span '', month[0..2].capitalize()
-		a '.all-months.ion-android-done-all', 'All Months'
+		a '.all-months.ion-android-done-all.lyph-checkbox', 'All Months'
 
 # ensures that the schedule_rules_s field always contains the latest value from the controls inside of @ui
 class ScheduleRulesEditor
@@ -585,14 +585,14 @@ _fieldPartial = (field, constants) ->
 	div '.script-field', ->
 		div '.horizontal-grid', ->
 			div '.shrink-columns', ->
-				div '.sort-handle.ion-android-more-vertical'
+				div '.sort-handle.ion-android-more-vertical.lyph-navicon'
 			div '.stretch-column', ->
 				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
 			div '.stretch-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
 			div '.shrink-columns', ->
-				a '.remove-field.ion-close-round.alert', title: 'Remove Field'
+				a '.remove-field.ion-close-round.lyph-close.alert', title: 'Remove Field'
 
 		input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
 
@@ -662,7 +662,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 			a '.toggle-settings', ->
 				icon '.ion-arrow-left-c.lyph-arrow-left'
 			a '.save.with-icon', ->
-				icon '.ion-upload'
+				icon '.ion-upload.lyph-import'
 				span '', 'Save <span class="shortcut">&#8984S</span>'
 			a '.run.with-icon', ->
 				icon '.ion-play.lyph-play'
@@ -960,7 +960,7 @@ class Workspace
 		@layout.on 'stateChanged', =>
 			this.saveState()
 
-		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
+		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open.lyph-open'/>Open</a>"
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>
