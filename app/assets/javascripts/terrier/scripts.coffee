@@ -710,7 +710,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
-					icon '.ion-plus-round'
+					icon '.ion-plus-round.lyph-plus'
 				h4 '.with-icon', ->
 					icon '.ion-toggle-filled'
 					span '', 'Fields'
