@@ -663,10 +663,13 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				icon '.ion-arrow-left-c.lyph-arrow-left'
 			a '.save.with-icon', ->
 				icon '.ion-upload.lyph-import'
-				span '', 'Save <span class="shortcut">&#8984S</span>'
+				span '', 'Save <span class="shortcut"><span class="control-key"></span>S</span>'
 			a '.run.with-icon', ->
 				icon '.ion-play.lyph-play'
-				span '', 'Run <span class="shortcut">&#8984&#9166</span>'
+				span '', 'Run <span class="shortcut"><span class="control-key"></span>&#9166</span>'
+			a '.history.with-icon', ->
+				icon '.ion-clock.lyph-expiring'
+				span '', 'Run History'
 		div '.editor-container', ->
 			div '.ace-container' #, script.body
 			div '.syntax-error-output'
@@ -733,6 +736,13 @@ class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
 
+		# insert platform-specific control key into the shortcuts
+		controlKeys = @ui.find '.control-key'
+		if navigator.platform.indexOf('Mac')==0
+			controlKeys.html '&#8984'
+		else
+			controlKeys.html 'Ctrl+'
+
 		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
 		schedulePanel = @ui.find '.settings-panel.schedule'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
@@ -754,11 +764,20 @@ class Editor
 		@buttons = {
 			save: @ui.find('a.save')
 			run: @ui.find('a.run')
+			history: @ui.find('a.history')
 		}
 		@buttons.save.click =>
 			this.save()
 		@buttons.run.click =>
 			this.run()
+		@buttons.history.click =>
+			if @script.id?.length
+				new RunsModal(@script.id)
+			else
+				tinyModal.noticeAlert(
+					'Script Not Saved'
+					"Save the script before viewing the run history!"
+				)
 
 		aceContainer = @ui.find '.ace-container'
 		@aceEditor = ace.edit aceContainer[0]
@@ -843,6 +862,7 @@ class Editor
 
 	updateUi: ->
 		@buttons.save.toggleClass 'disabled', !@hasChanges
+		@buttons.history.toggleClass 'disabled', !@script.id?.length
 		title = @ui.find('input[name=title]').val()
 		unless title?.length
 			title = 'Untitled'
@@ -1131,7 +1151,9 @@ _fieldValuesPartial = (fields) ->
 	for k, v of fields
 		div '.field', ->
 			span '.key', "#{k}: "
-			vString = if v.match(/\d{4}-\d{2}-\d{2}/)
+			vString = if _.isArray(v)
+				"#{v.length} Rows"
+			else if v.match(/\d{4}-\d{2}-\d{2}/)
 				v.formatShortDate()
 			else
 				v

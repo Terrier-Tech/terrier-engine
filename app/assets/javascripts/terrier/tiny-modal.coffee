@@ -243,7 +243,7 @@ _alertTemplate = tinyTemplate (options) ->
 				classes.push 'button'
 				classes.push "action-#{i}"
 				if action.icon?.length
-					classes.push action.icon
+					classes = classes.concat action.icon.split(/\s+/)
 				a tinyTemplate.classesToSelector(classes), href: action.href, action.title||'No title'
 				i += 1
 
@@ -277,7 +277,7 @@ tinyModal.showAlert = (options) ->
 		options.actions.push {
 			title: 'Close'
 			classes: 'close'
-			icon: 'ion-close-round'
+			icon: 'ion-close-round lyph-close'
 		}
 
 	ui = $(_alertTemplate(options)).appendTo 'body'
@@ -316,12 +316,12 @@ tinyModal.confirmAlert = (title, body, callback) ->
 			title: 'Okay'
 			classes: 'primary'
 			callback: callback
-			icon: 'ion-checkmark-round'
+			icon: 'ion-checkmark-round lyph-checkmark'
 		}
 		{
 			title: 'Cancel'
 			classes: 'cancel close'
-			icon: 'ion-close-round'
+			icon: 'ion-close-round lyph-close'
 		}
 	]
 	tinyModal.showAlert options
@@ -334,7 +334,7 @@ tinyModal.noticeAlert = (title, body, action={}) ->
 		title: title
 		body: body
 	}
-	okayAction = {title: 'No Title', icon: 'ion-checkmark-round'}
+	okayAction = {title: 'Okay', icon: 'ion-checkmark-round lyph-checkmark'}
 	okayAction = Object.assign okayAction, action
 	okayAction.classes ||= 'close'
 	classes = tinyTemplate.parseClasses okayAction.classes
