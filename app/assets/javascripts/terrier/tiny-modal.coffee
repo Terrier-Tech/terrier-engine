@@ -296,7 +296,7 @@ tinyModal.showAlert = (options) ->
 	)
 
 tinyModal.closeAlert = ->
-	unless $('modal-window').hasClass('show')
+	unless $('#modal-window').hasClass('show')
 		removeOverlay()
 	ui = $ '#modal-alert'
 	ui.removeClass 'show'
