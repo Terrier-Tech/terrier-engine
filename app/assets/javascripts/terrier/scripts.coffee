@@ -151,7 +151,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 				if script.description?.length
 					p '.description', script.description
 				h4 '.with-icon', ->
-					icon '.ion-ios-upload-outline'
+					icon '.ion-ios-upload-outline.lyph-import'
 					span '', 'Inputs'
 				div '.script-field-controls', ->
 					fields = JSON.parse script.script_fields_json
@@ -165,12 +165,12 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 								label '', field.name
 							div '', _fieldControls[field.field_type](field.name, value, options)
 				h4 '.with-icon', ->
-					icon '.ion-ios-copy-outline'
+					icon '.ion-ios-copy-outline.lyph-copy'
 					span '', 'Files'
 				div '.output-files'
 		div '.stretch-column', ->
 			h4 '.with-icon', ->
-				icon '.ion-ios-download-outline'
+				icon '.ion-ios-download-outline.lyph-download'
 				span '', 'Output'
 			div '.script-messages'
 
@@ -195,16 +195,16 @@ class ReportExecModal
 				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions, disabledFields)
 				modalOptions = {
 					title: @script.title
-					title_icon: 'play'
+					title_icon: 'play.lyph-play'
 					actions: [
 						{
 							title: 'Cancel'
-							icon: 'close-round'
+							icon: 'close-round.lyph-close'
 							class: 'alert cancel'
 						}
 						{
 							title: 'Run'
-							icon: 'play'
+							icon: 'play.lyph-play'
 							class: 'primary run'
 						}
 					]
@@ -215,13 +215,13 @@ class ReportExecModal
 					modalOptions.actions.push {
 						title: 'History'
 						class: 'show-history secondary'
-						icon: 'clock'
+						icon: 'clock.lyph-expiring'
 						end: true
 					}
 					modalOptions.actions.push {
 						title: 'Settings'
 						class: 'show-settings secondary'
-						icon: 'compose'
+						icon: 'compose.lyph-settings'
 						end: true
 					}
 				tinyModal.showDirect(
@@ -320,7 +320,7 @@ class ReportExecModal
 
 	addOutputFile: (file) ->
 		fileName = _.last file.body.split('/')
-		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document'></i>#{fileName}</a>"
+		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document.lyph-document'></i>#{fileName}</a>"
 
 
 window.scripts.newReportExecModal = (script, constants, options={}) ->
@@ -352,7 +352,7 @@ _searcherTemplate = tinyTemplate ->
 	div '.script-searcher', ->
 		div '.results-list'
 		div '.body-pane#script-search-editor'
-		a '.open-script.ion-android-open', title: 'Open Script'
+		a '.open-script.ion-android-open.lyph-open', title: 'Open Script'
 
 _searchInputTemplate = tinyTemplate ->
 	div '.script-search-input', ->
@@ -368,7 +368,7 @@ class ScriptSearcher
 	constructor: ->
 		tinyModal.showDirect _searcherTemplate(), {
 			title: 'Script Search'
-			title_icon: 'ios-search-strong'
+			title_icon: 'ios-search-strong.lyph-search'
 			callback: (modal) => this.init(modal)
 		}
 
@@ -538,7 +538,7 @@ _scheduleRulePartial = (script, constants) ->
 							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null
 							input '.month', type: 'checkbox',  value: month, checked: checked
 							span '', month[0..2].capitalize()
-		a '.all-months.ion-android-done-all', 'All Months'
+		a '.all-months.ion-android-done-all.lyph-checkbox', 'All Months'
 
 # ensures that the schedule_rules_s field always contains the latest value from the controls inside of @ui
 class ScheduleRulesEditor
@@ -585,14 +585,14 @@ _fieldPartial = (field, constants) ->
 	div '.script-field', ->
 		div '.horizontal-grid', ->
 			div '.shrink-columns', ->
-				div '.sort-handle.ion-android-more-vertical'
+				div '.sort-handle.ion-android-more-vertical.lyph-navicon'
 			div '.stretch-column', ->
 				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
 			div '.stretch-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
 			div '.shrink-columns', ->
-				a '.remove-field.ion-close-round.alert', title: 'Remove Field'
+				a '.remove-field.ion-close-round.lyph-close.alert', title: 'Remove Field'
 
 		input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
 
@@ -660,13 +660,16 @@ _editorTemplate = tinyTemplate (script, constants) ->
 	form '.script-editor.show-settings', ->
 		div '.toolbar', ->
 			a '.toggle-settings', ->
-				icon '.ion-arrow-left-c'
+				icon '.ion-arrow-left-c.lyph-arrow-left'
 			a '.save.with-icon', ->
-				icon '.ion-upload'
-				span '', 'Save <span class="shortcut">&#8984S</span>'
+				icon '.ion-upload.lyph-import'
+				span '', 'Save <span class="shortcut"><span class="control-key"></span>S</span>'
 			a '.run.with-icon', ->
-				icon '.ion-play'
-				span '', 'Run <span class="shortcut">&#8984&#9166</span>'
+				icon '.ion-play.lyph-play'
+				span '', 'Run <span class="shortcut"><span class="control-key"></span>&#9166</span>'
+			a '.history.with-icon', ->
+				icon '.ion-clock.lyph-expiring'
+				span '', 'Run History'
 		div '.editor-container', ->
 			div '.ace-container' #, script.body
 			div '.syntax-error-output'
@@ -675,7 +678,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.general', ->
 				h4 '.with-icon', ->
-					icon '.ion-information-circled'
+					icon '.ion-information-circled.lyph-info'
 					span '', 'General'
 				input '', type: 'text', name: 'title', value: script.title, placeholder: 'Title'
 				div '.horizontal-grid', ->
@@ -710,9 +713,9 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
-					icon '.ion-plus-round'
+					icon '.ion-plus-round.lyph-plus'
 				h4 '.with-icon', ->
-					icon '.ion-toggle-filled'
+					icon '.ion-toggle-filled.lyph-template'
 					span '', 'Fields'
 				input '', type: 'hidden', name: 'script_fields_json'
 				div '.script-fields', ->
@@ -724,7 +727,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				select '.schedule-time', name: 'schedule_time', ->
 					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
 				h4 '.with-icon', ->
-					icon '.ion-calendar'
+					icon '.ion-calendar.lyph-calendar'
 					span '', 'Schedule'
 				_scheduleRulePartial script, constants
 
@@ -732,6 +735,13 @@ _editorTemplate = tinyTemplate (script, constants) ->
 class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
+
+		# insert platform-specific control key into the shortcuts
+		controlKeys = @ui.find '.control-key'
+		if navigator.platform.indexOf('Mac')==0
+			controlKeys.html '&#8984'
+		else
+			controlKeys.html 'Ctrl+'
 
 		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
 		schedulePanel = @ui.find '.settings-panel.schedule'
@@ -754,11 +764,20 @@ class Editor
 		@buttons = {
 			save: @ui.find('a.save')
 			run: @ui.find('a.run')
+			history: @ui.find('a.history')
 		}
 		@buttons.save.click =>
 			this.save()
 		@buttons.run.click =>
 			this.run()
+		@buttons.history.click =>
+			if @script.id?.length
+				new RunsModal(@script.id)
+			else
+				tinyModal.noticeAlert(
+					'Script Not Saved'
+					"Save the script before viewing the run history!"
+				)
 
 		aceContainer = @ui.find '.ace-container'
 		@aceEditor = ace.edit aceContainer[0]
@@ -843,6 +862,7 @@ class Editor
 
 	updateUi: ->
 		@buttons.save.toggleClass 'disabled', !@hasChanges
+		@buttons.history.toggleClass 'disabled', !@script.id?.length
 		title = @ui.find('input[name=title]').val()
 		unless title?.length
 			title = 'Untitled'
@@ -960,7 +980,7 @@ class Workspace
 		@layout.on 'stateChanged', =>
 			this.saveState()
 
-		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open'/>Open</a>"
+		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open.lyph-open'/>Open</a>"
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>
@@ -1069,7 +1089,7 @@ _pickerTemplate = tinyTemplate (scripts) ->
 									null
 								div '.schedule.with-icon', ->
 									if emailRecipients?
-										icon '.ion-email', title: emailRecipients
+										icon '.ion-email.lyph-email', title: emailRecipients
 									span '', script.schedule_rule_summaries.replace('{', '').replace('}', '').replace(/"/g, '')
 						td '.col-created_by_name', script.created_by_name
 						td '', ->
@@ -1089,7 +1109,7 @@ class PickerModal
 				if res.status == 'success'
 					tinyModal.showDirect _pickerTemplate(res.scripts), {
 						title: "Select Script"
-						title_icon: 'ios-folder-outline'
+						title_icon: 'ios-folder-outline.lyph-open'
 						callback: (modal) => this.init(res.scripts, modal)
 					}
 				else
@@ -1131,7 +1151,9 @@ _fieldValuesPartial = (fields) ->
 	for k, v of fields
 		div '.field', ->
 			span '.key', "#{k}: "
-			vString = if v.match(/\d{4}-\d{2}-\d{2}/)
+			vString = if _.isArray(v)
+				"#{v.length} Rows"
+			else if v.match(/\d{4}-\d{2}-\d{2}/)
 				v.formatShortDate()
 			else
 				v
@@ -1164,7 +1186,7 @@ _runsTemplate = tinyTemplate (runs) ->
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
 							a '.with-icon', href: run.log_url, target: '_blank', ->
-								icon '.ion-ios-list-outline'
+								icon '.ion-ios-list-outline.lyph-roster'
 								span '', 'Log'
 
 
@@ -1178,7 +1200,7 @@ class RunsModal
 						_runsTemplate(res.runs)
 						{
 							title: 'Script Runs'
-							title_icon: 'clock'
+							title_icon: 'clock.lyph-expired'
 						}
 					)
 				else
@@ -1208,7 +1230,7 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 				textarea '', name: 'description', rows: '4', script.description
 			div '.shrink-column.schedule-column', ->
 				h3 '.with-icon', ->
-					icon '.ion-ios-calendar-outline'
+					icon '.ion-ios-calendar-outline.lyph-calendar'
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
 					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
@@ -1224,11 +1246,11 @@ class SettingsModal
 			_settingsFormTemplate(@script, @constants)
 			{
 				title: 'Script Settings'
-				title_icon: 'ios-gear-outline'
+				title_icon: 'ios-gear-outline.lyph-settings'
 				actions: [
 					{
 						title: 'Save'
-						icon: 'checkmark-round'
+						icon: 'checkmark-round.lyph-checkmark'
 						class: 'save-script'
 					}
 				]
