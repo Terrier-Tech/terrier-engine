@@ -34,7 +34,14 @@ coffee:
         constants = null
         script = null
         onDone = _.after 2, ->
-            modal = window.scripts.newReportExecModal(script, constants, {hide_settings: true})
+            modal = window.scripts.newReportExecModal(
+                    script,
+                    constants,
+                    {
+                        hide_settings: true
+                        field_options: {print: ['','Yes', 'No']}
+                    }
+                    )
         $.get(
                 '/scripts/constants.json'
             (res) =>
