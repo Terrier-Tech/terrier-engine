@@ -320,7 +320,7 @@ class ReportExecModal
 
 	addOutputFile: (file) ->
 		fileName = _.last file.body.split('/')
-		@outputFilesView.append "<a class='file with-icon' href='#{file.body}' target='_blank'><i class='ion-document.lyph-document'></i>#{fileName}</a>"
+		@outputFilesView.append "<a class='file with-icon' href='#{file.body}?timestamp=#{Time.now.to_i}' target='_blank'><i class='ion-document.lyph-document'></i>#{fileName}</a>"
 
 
 window.scripts.newReportExecModal = (script, constants, options={}) ->
