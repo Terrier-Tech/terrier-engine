@@ -188,6 +188,9 @@ class ReportExecModal
 					return
 				fieldValues = res.field_values
 				fieldOptions = res.field_options
+				if @options.field_options
+					for field, options of @options.field_options
+						fieldOptions[field] = options
 				if @options.disabled_fields
 					disabledFields = @options.disabled_fields
 				else
