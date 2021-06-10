@@ -13,6 +13,9 @@ _template = tinyTemplate (state) ->
 				div '.readonly-field', ->
 					span '', 'Count: '
 					span '.count', state.count.toString()
+		div ->
+			p '', 'foo'
+
 
 window.tinyTemplateDemo.show = (container) ->
 	state = {

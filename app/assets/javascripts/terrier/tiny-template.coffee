@@ -56,6 +56,13 @@ serializeAttributes = (attrs) ->
 appendTag = (tag, selector, attrs, func) ->
 	_context.content += "<#{tag}"
 
+	# tr -> can be used instead of tr '', ->
+	if _.isFunction(selector)
+		_context.content += '>'
+		selector()
+		_context.content +="</#{tag}>"
+		return
+
 	# add the attributes
 	selAttrs = parseSelector(selector)
 	if selAttrs.classes
