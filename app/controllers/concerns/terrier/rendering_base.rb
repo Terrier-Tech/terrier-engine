@@ -29,7 +29,7 @@ module Terrier::RenderingBase
           if keys.length != 1
             return error "There must be exactly one additional argument to render_success (besides status and message) - found [#{keys.join(', ')}]"
           end
-          return render text: CsvIo.write(data[keys.first])
+          return render plain: CsvIo.write(data[keys.first])
         end
         format.html do
           if params[:modal]&.is_true?
@@ -55,7 +55,7 @@ module Terrier::RenderingBase
           options[:message] = message
           render json: options
         end
-        format.csv {render text: "error\n#{message}"}
+        format.csv {render plain: "error\n#{message}"}
       end
     end
 
@@ -73,7 +73,7 @@ module Terrier::RenderingBase
       @backtrace = ex.backtrace
       respond_to do |format|
         format.json {render json: {status: 'error', message: @message, backtrace: ex.backtrace}}
-        format.csv {render text: "error\n#{@message}"}
+        format.csv {render plain: "error\n#{@message}"}
         format.html do
           options[:template] = 'application/error'
           render options
