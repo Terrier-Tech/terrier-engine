@@ -1,7 +1,7 @@
 require 'terrier/io/csv_io'
 
 class ScriptExecutor
-  include Loggable
+  # DO NOT MAKE THIS CLASS Loggable, IT WILL BREAK THE SCRIPT LOGGING
 
   attr_reader :cache, :each_count, :each_total
   attr_accessor :me, :params
