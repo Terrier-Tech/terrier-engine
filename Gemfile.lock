@@ -170,7 +170,7 @@ GEM
       method_source
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
-    rake (12.3.2)
+    rake (13.0.3)
     ruby-ole (1.2.12.2)
     ruby2_keywords (0.0.4)
     sassc (2.0.0)
