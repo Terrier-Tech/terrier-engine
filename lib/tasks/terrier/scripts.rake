@@ -13,7 +13,8 @@ namespace :scripts do
         puts "Running script #{script.id}: #{script.title}"
         executor = ScriptExecutor.new script, ModelCache.new
         executor.me = "#{time.titleize} Runner"
-        run = executor.run nil
+        run = executor.init_run
+        executor.run run, nil
         puts "Completed with status '#{run.status}' in #{run.duration} seconds"
         if run.errors && run.errors.full_messages.length > 0
           puts "error saving script run: #{run.errors.full_messages.join(', ')}"

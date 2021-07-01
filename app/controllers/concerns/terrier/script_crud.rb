@@ -66,9 +66,31 @@ module Terrier::ScriptCrud
       end
     end
 
+    def clear_run
+      begin
+        script = Script.find params[:script_id]
+        run = script.script_runs.where(id: params[:run_id]).first
+        unless run
+          raise "No script run with id #{params[:run_id]}"
+        end
+        unless run.status == 'running'
+          raise "Run has status '#{run.status}', so can't be cleared!"
+        end
+        run.status = 'cleared'
+        save_run? run
+        render_success "Marked run as cleared", run: run
+      rescue => ex
+        render_exception ex
+      end
+    end
+
 
     def save_script?(script)
       raise "Concrete classes must implement save_script?"
+    end
+
+    def save_run?(script)
+      raise "Concrete classes must implement save_run?"
     end
 
     def create

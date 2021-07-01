@@ -1176,7 +1176,7 @@ _runsTemplate = tinyTemplate (runs) ->
 					th ''
 			tbody '', ->
 				for run in runs
-					tr '.script-run', ->
+					tr '.script-run', data: {id: run.id}, ->
 						td '', ->
 							div '.date', run.created_at.formatShortDate()
 							div '.time', run.created_at.formatShortTime()
@@ -1189,9 +1189,14 @@ _runsTemplate = tinyTemplate (runs) ->
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
-							a '.with-icon', href: run.log_url, target: '_blank', ->
-								icon '.ion-ios-list-outline.lyph-roster'
-								span '', 'Log'
+							if run.status == 'running'
+								a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
+									icon '.ion-android-cancel.lyph-close'
+									span '', 'Clear'
+							else if run.log_file_name?.length
+								a '.with-icon', href: run.log_url, target: '_blank', ->
+									icon '.ion-ios-list-outline.lyph-roster'
+									span '', 'Log'
 
 
 class RunsModal
@@ -1205,11 +1210,31 @@ class RunsModal
 						{
 							title: 'Script Runs'
 							title_icon: 'clock.lyph-expired'
+							callback: (modal) =>
+								this.init modal
 						}
 					)
 				else
 					alert res.message
 		)
+
+	init: (@ui) ->
+		@ui.on 'click', 'a.clear-run', (evt) =>
+			this.clearRun $(evt.target).parents('tr.script-run')
+
+	clearRun: (row) ->
+		id = row.data 'id'
+		unless confirm "Clear this run so that the script can be run again? This will NOT cancel the actual running script, so running it again may have undesired side effects!"
+			return false
+		$.post(
+			"/scripts/#{@id}/clear_run/#{id}.json"
+			(res) =>
+				unless res.status == 'success'
+					return alert res.message
+				row.find('a.clear-run').remove()
+				row.find('.status').text 'Cleared'
+		)
+
 
 
 ################################################################################

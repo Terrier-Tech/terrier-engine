@@ -6,7 +6,7 @@ module Terrier::ScriptRunBase
 
     belongs_to :script
 
-    enum_field :status, %w(success error cancelled)
+    enum_field :status, %w(running success error cancelled cleared)
 
     validates :duration, presence: true
 

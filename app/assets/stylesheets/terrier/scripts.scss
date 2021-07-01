@@ -549,6 +549,9 @@ table.script-runs {
 		&.error {
 			color: $alert-color;
 		}
+		&.running, &.cleared {
+			color: $warn-color;
+		}
 		&.cancelled {
 			color: #aaa;
 		}
@@ -561,6 +564,10 @@ table.script-runs {
 	}
 	.key {
 		opacity: 0.8;
+	}
+	a.clear-run {
+		font-weight: bold;
+		color: $alert-color;
 	}
 }
 

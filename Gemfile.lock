@@ -13,6 +13,7 @@ PATH
       loofah (>= 2.3.1)
       nokogiri (>= 1.10.4)
       parser
+      rack (< 2.2)
       rails (>= 4.2)
       spreadsheet
       terminal-table

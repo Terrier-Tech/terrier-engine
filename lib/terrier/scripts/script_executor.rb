@@ -1,9 +1,9 @@
 require 'terrier/io/csv_io'
 
 class ScriptExecutor
-  # DO NOT MAKE THIS CLASS Loggable, IT WILL BREAK THE SCRIPT LOGGING
+  # Doesn't need to be Loggable, it already has all the methods
 
-  attr_reader :cache, :each_count, :each_total
+  attr_reader :cache, :each_count, :each_total, :log_lines
   attr_accessor :me, :params
 
   def should_soft_destroy
@@ -25,23 +25,19 @@ class ScriptExecutor
   end
 
   # returns a ScriptRun object describing the run
-  def run(stream)
-    @stream = stream
-    script_run = ScriptRun.new script_id: @script.id, created_at: Time.now, duration: 0
-
-    # # set added field value to script run from params
-    # # ex: ?org_id=123456 -> script_run.org_id=123456
-    # unless params.nil? || params.blank?
-    #   Terrier::ScriptConfig.added_fields.each do |field|
-    #     if params.keys.include? field[:key].to_s
-    #       script_run.send("#{field[:key].to_s}=", params[field[:key].to_s])
-    #     end
-    #   end
-    # end
+  def init_run
+    script_run = ScriptRun.new script_id: @script.id, status: 'running', created_at: Time.now, duration: 0
 
     if script_run.respond_to?(:fields)
       script_run.fields = @field_values
     end
+
+    script_run
+  end
+
+  # actually executes the script
+  def run(script_run, stream)
+    @stream = stream
     t = Time.now
     begin
       escaped_body = @script.body.gsub('\"', '"')
@@ -58,6 +54,7 @@ class ScriptExecutor
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
       end
+      true
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
       write_raw 'error', "Error on line #{line}: #{ex.message}"
@@ -71,11 +68,10 @@ class ScriptExecutor
         @log_lines << line
         write_raw 'error', line
       end
+      false
     ensure
       @stream.close if @stream
     end
-
-    script_run
   end
 
   def write_raw(type, body, extra={})
