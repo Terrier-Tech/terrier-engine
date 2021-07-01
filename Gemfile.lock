@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.1.14)
+    terrier-engine (2.2.0)
       awesome_print
       elasticsearch
       loofah (>= 2.3.1)
