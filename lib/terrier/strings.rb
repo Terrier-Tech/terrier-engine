@@ -21,6 +21,18 @@ else
   RGEO_FACTORY = nil
 end
 
+class NilClass
+
+  def is_true?
+    false
+  end
+
+  def is_float?
+    false
+  end
+
+end
+
 class String
 
   def uncapitalize
@@ -40,7 +52,7 @@ class String
   end
 
   def is_true?
-    %w(true 1).index self.downcase.strip
+    !(%w(true 1 on).index(self.downcase.strip)).nil?
   end
 
   def smart_strip
