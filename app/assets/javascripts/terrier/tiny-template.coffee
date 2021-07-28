@@ -13,19 +13,21 @@ _ropeCase = (s) ->
 		if match then '-' + match.toLowerCase() else ''
 	).trim()
 
+makeTagFunc = (t) ->
+	rct = _ropeCase(tag)
+	window[tag] = (selector, attrs, func) ->
+		appendTag(rct, selector, attrs, func)
 for tag in _tags
-	eval "#{tag} = function(selector, attrs, func) { appendTag('#{_ropeCase(tag)}', selector, attrs, func) }"
-eval "t = function(s) {_context.content += ' ' + s + ' '}"
+	makeTagFunc tag
 
 # parse a css selector into classes and an id (returned as an object)
 parseSelector = (selector) ->
-	res = {
-	}
+	res = {}
 	classes = selector.match(_classRegex)
 	if classes
 		res.classes = for c in classes then c.substring(1)
 	ids = selector.match(_idRegex)
-	if ids? and ids.length > 0
+	if ids?.length
 		res.id = ids[0].substring(1)
 	res
 
