@@ -22,6 +22,7 @@
 #= require terrier/tiny-render.coffee
 #= require terrier/tiny-logger.coffee
 #= require terrier/tiny-modal.coffee
+#= require terrier/tiny-notify.coffee
 #= require terrier/tiny-sql.coffee
 #= require terrier/scripts.coffee
 #= require terrier/urls.coffee

@@ -5,3 +5,18 @@ a.demo-link href='/sql' SQL
 a.demo-link href='/tinytemplate' TinyTemplate
 a.demo-link href='/urls' URLs
 a.demo-link href='/versions' Versions
+
+-['ne', 'nw', 'se', 'sw'].each do |dir|
+ #tiny-notifications class=dir
+
+
+
+coffee:
+  fun = () ->
+      puts 'foo'
+  window.tinyNotify.notice('Test message', {autoclose: false, icon: 'ion-jet', side: 'nw', duration: 7000, action: { href: '/', class: 'test-action-class', icon: 'ion-jet', title: 'Title', callback: fun}})
+  window.tinyNotify.notice('NE', {autoclose: false, side: 'ne', action: {icon:'ion-jet'}})
+  window.tinyNotify.notice('SE', {autoclose: false, side: 'se', action: {callback: fun}})
+  window.tinyNotify.notice('hello', {autoclose: false, side: 'se'})
+  window.tinyNotify.notice('hello', {autoclose: false, side: 'se'})
+

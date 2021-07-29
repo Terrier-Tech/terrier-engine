@@ -1,0 +1,47 @@
+@import "theme";
+#tiny-notifications {
+  position: fixed;
+  $xspace: 12px;
+  $yspace: 12px;
+  display: flex;
+  z-index: 200;
+  &.ne {
+    right: $xspace;
+    top: $yspace;
+    flex-direction: column;
+
+  }
+  &.nw {
+    left: $xspace;
+    top: $yspace;
+    flex-direction: column;
+  }
+  &.se {
+    right: $xspace;
+    bottom: $yspace;
+    flex-direction: column-reverse;
+  }
+  &.sw {
+    left: $xspace;
+    bottom: $yspace;
+    flex-direction: column-reverse;
+  }
+  .tiny-notify {
+      padding: 16px 32px;
+      color: #fff;
+      transition: right 0.5s ease;
+      box-shadow: 0 2px 12px rgba(#000, 0.2);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 12px;
+
+      &.alert {
+          background-color: $alert-color;
+      }
+      &.notice {
+          background-color: $primary-color;
+      }
+	}
+}
+
