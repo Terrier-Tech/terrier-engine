@@ -15,7 +15,11 @@
 # +------------------+-----------+-------------------+
 class Script < ApplicationRecord
   include Terrier::ScriptBase
+  include Terrier::FullTextSearch
 
+  can_full_text_search :body
+  can_full_text_search :title
+  can_full_text_search :description
 
   validates :title, uniqueness: true
 end
