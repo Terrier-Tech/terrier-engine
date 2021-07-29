@@ -1,4 +1,4 @@
-module FullTextSearch
+module Terrier::FullTextSearch
   extend ActiveSupport::Concern
 
   class_methods do
