@@ -2,8 +2,11 @@ module Terrier::FullTextSearch
   extend ActiveSupport::Concern
 
   class_methods do
-    # sample query
-    # SELECT id, display_name FROM locations WHERE display_name @@ to_tsquery('english', 'Target & Express');
+	# sample query
+	# SELECT id, display_name, ts_rank(to_tsvector('english', display_name),to_tsquery('english', 'Target&Express'))
+	# FROM locations
+	# WHERE display_name @@ to_tsquery('english', 'Target & Express')
+	# ORDER BY ts_rank(to_tsvector('english', display_name),to_tsquery('english', 'Target&Express')) DESC;
     def can_full_text_search(col_name)
       table_sql_name = self.name.underscore.pluralize
       define_singleton_method "#{col_name}_full_text_search" do |plain_text|
@@ -19,7 +22,8 @@ module Terrier::FullTextSearch
         # do actualy query
         query_text = plain_text.to_s.strip.squeeze(' ')
         sql_where = "#{col_name} @@ plainto_tsquery('english', '#{query_text}')"
-        self.where(sql_where)
+		sql_order = "ts_rank(to_tsvector('english', #{col_name}), to_tsquery('english', '#{query_text}')) DESC"
+        self.where(sql_where).order(sql_order)
       end
     end
   end
