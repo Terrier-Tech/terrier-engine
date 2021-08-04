@@ -47,11 +47,11 @@ module Top
   end
 
   def self.linux_memory
-    mem_line = `top -bn 1 -d 0`.split("\n").select{|line| line.index('MiB Mem')}.first
-    vals = mem_line.scan(/\d+\.\d+/).map(&:to_f)
+    mem_line = `free -k`.split("\n").select{|line| line.index('Mem:')}.first
+    vals = mem_line.scan(/\s\d+\s/).map(&:to_f)
     {
-      total: vals[0] / KILO,
-      used: vals[2] / KILO
+      total: vals[0] / MEGA,
+      used: (vals[1] + vals[3]) / MEGA # used + shared
     }
   end
 
