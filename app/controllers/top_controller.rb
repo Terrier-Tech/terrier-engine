@@ -5,6 +5,9 @@ module Top
 
     platform = RUBY_PLATFORM.index('darwin') ? :mac : :linux
 
+    # CPU count
+    data[:cpus] = `nproc`.to_i
+
     # CPU load
     out = `w | head -1`
     data[:load] = out.split(':').last.strip.split(/[\s,]+/).map(&:to_f)
