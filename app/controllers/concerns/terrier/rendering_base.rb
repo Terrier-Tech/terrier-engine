@@ -33,9 +33,9 @@ module Terrier::RenderingBase
         end
         format.html do
           if params[:modal]&.is_true?
-            options[:layout] ||= 'modal'
+            data[:layout] ||= 'modal'
           end
-          render options
+          render data
         end
       end
     end

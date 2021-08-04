@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     end
     post 'scripts_streaming/exec'
     post 'sql/exec'
+    get 'top' => 'top#index'
   end
 
 end

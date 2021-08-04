@@ -13,6 +13,10 @@ PRETTY_DATE_FORMAT = '%B %e, %Y'
 PRETTY_TIME_FORMAT = '%Y-%m-%d %l:%M %p'
 SHORT_DATE_FORMAT = '%m/%d/%y'
 
+GIGA = 1024 * 1024 * 1024
+MEGA = 1024 * 1024
+KILO = 1024
+
 # needed to parse WKB geo points
 if defined? RGeo
   RGEO_FACTORY = RGeo::Geographic.spherical_factory(
