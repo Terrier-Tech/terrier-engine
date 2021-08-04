@@ -26,7 +26,7 @@ module Top
     # disk
     df = `df -m`
     root_line = df.split("\n").select{|s| s.ends_with?('/')}.first
-    root_comps = root_line.scan(/\s\d+\s/).map(&:strip).map{|s| s.to_f/KILO}
+    root_comps = root_line.scan(/\s\d+/).map(&:strip).map{|s| s.to_f/KILO}
     data[:disk] = {
       total: root_comps[0],
       used: root_comps[1],
