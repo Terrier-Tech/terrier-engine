@@ -25,6 +25,17 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '>= 1.10.4'
   s.add_dependency 'loofah', '>= 2.3.1'
   s.add_dependency 'awesome_print'
+  s.add_dependency 'puma'
+  s.add_dependency 'puma-daemon'
+  s.add_dependency 'sys-proctable'
+  s.add_dependency 'dotenv'
 
   s.add_development_dependency 'pg'
+  s.add_development_dependency 'sassc-rails'
+  s.add_development_dependency 'slim-rails'
+  s.add_development_dependency 'jquery-rails'
+  s.add_development_dependency 'turbolinks', '~> 5'
+  s.add_development_dependency 'lodash-rails'
+  s.add_development_dependency 'coffee-rails', '~> 4.2'
+  s.add_development_dependency 'paperclip'
 end

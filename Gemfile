@@ -11,17 +11,5 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# To use a debugger
-# gem 'byebug', group: [:development, :test]
-
-gem 'sassc-rails'
-gem 'slim-rails'
-gem 'jquery-rails'
-gem 'turbolinks', '~> 5'
-gem 'lodash-rails'
-gem 'coffee-rails', '~> 4.2'
-gem 'puma', '> 4.3.5'
-gem 'pg'
-gem 'paperclip'
 
 gem 'sql_builder', git: 'git@github.com:Terrier-Tech/sql_builder.git'
