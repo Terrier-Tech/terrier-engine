@@ -12,6 +12,8 @@ UPCASE_BLACKLIST = %w(at by to is or)
 PRETTY_DATE_FORMAT = '%B %e, %Y'
 PRETTY_TIME_FORMAT = '%Y-%m-%d %l:%M %p'
 SHORT_DATE_FORMAT = '%m/%d/%y'
+SQL_DATE_FORMAT = '%Y-%m-%d'
+SQL_TIME_FORMAT = '%Y-%m-%d %H:%M:%S%z'
 
 GIGA = 1024 * 1024 * 1024
 MEGA = 1024 * 1024
@@ -152,5 +154,17 @@ class Hash
       h[k.to_sym] = v
     end
     h
+  end
+end
+
+class TrueClass
+  def is_true?
+    true
+  end
+end
+
+class FalseClass
+  def is_true?
+    false
   end
 end
