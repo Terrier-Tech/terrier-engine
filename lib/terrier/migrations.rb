@@ -55,9 +55,11 @@ class ActiveRecord::Migration
   end
 
   # adds a reference to to_table on from_table, plus an index and foreign key
+  # pass a type option if it needs to be something other than text
   def add_foreign_key_column(from_table, to_table, options = {})
     column = options[:column].presence || (to_table.to_s.singularize + '_id')
-    add_column from_table, column, :text
+    type = options[:type].presence || :text
+    add_column from_table, column, type
     if !options.has_key?(:index) || options[:index]
       add_index from_table, column
     end
