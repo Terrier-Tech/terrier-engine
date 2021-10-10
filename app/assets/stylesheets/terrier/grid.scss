@@ -26,6 +26,9 @@ $breakpoint: 900px !default;
 		&:last-child {
 			padding-right: 0;
 		}
+		&.align-bottom { // align the content of this column to the bottom
+			align-self: end;
+		}
 	}
 	.stretch-column {
 		flex: 1;

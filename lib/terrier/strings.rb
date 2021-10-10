@@ -10,10 +10,11 @@ UPCASE_VALUES = %w(cod csr html pdf ach eft)
 UPCASE_BLACKLIST = %w(at by to is or)
 
 PRETTY_DATE_FORMAT = '%B %e, %Y'
-PRETTY_TIME_FORMAT = '%Y-%m-%d %l:%M %p'
 SHORT_DATE_FORMAT = '%m/%d/%y'
 SQL_DATE_FORMAT = '%Y-%m-%d'
-SQL_TIME_FORMAT = '%Y-%m-%d %H:%M:%S%z'
+SQL_TIME_FORMAT = "#{SQL_DATE_FORMAT} %H:%M:%S%z"
+PRETTY_TIME_FORMAT = "#{SHORT_DATE_FORMAT} %l:%M %p"
+SHORT_TIME_FORMAT = "%l:%M %p"
 
 GIGA = 1024 * 1024 * 1024
 MEGA = 1024 * 1024

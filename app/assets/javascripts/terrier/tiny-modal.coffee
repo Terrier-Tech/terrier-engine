@@ -1,7 +1,7 @@
 window.tinyModal = {}
 
 # this can be overridden to customize the class of the close button icon
-window.tinyModal.closeIconClass = '.la.la-close.ion-android-close'
+window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lypy-close'
 
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.alertIcon = 'alert'
@@ -37,7 +37,15 @@ window.tinyModal.pop = ->
 	if row.children('.modal-column').length > 1
 		row.children('.modal-column:last').remove()
 		_layoutRow row
-		tinyModal.removeLoadingOverlay()
+		column = row.children('.modal-column:last')
+
+		# reload the current column from a name=modal-src hidden input
+		srcField = column.find('input[name=modal-src]')
+		if srcField.length
+			column.load srcField.val(), ->
+				tinyModal.removeLoadingOverlay()
+		else
+			tinyModal.removeLoadingOverlay()
 	else
 		tinyModal.close()
 
@@ -277,7 +285,7 @@ tinyModal.showAlert = (options) ->
 		options.actions.push {
 			title: 'Close'
 			classes: 'close'
-			icon: 'ion-close-round lyph-close'
+			icon: 'lyph-close glyp-close'
 		}
 
 	ui = $(_alertTemplate(options)).appendTo 'body'
@@ -319,12 +327,12 @@ tinyModal.confirmAlert = (title, body, callback) ->
 			callback: ->
 				tinyModal.closeAlert()
 				callback()
-			icon: 'ion-checkmark-round lyph-checkmark'
+			icon: 'ion-checkmark-round lyph-checkmark glyp-checkmark'
 		}
 		{
 			title: 'Cancel'
 			classes: 'cancel close secondary'
-			icon: 'ion-close-round lyph-close'
+			icon: 'lyph-close glyp-close'
 		}
 	]
 	tinyModal.showAlert options
