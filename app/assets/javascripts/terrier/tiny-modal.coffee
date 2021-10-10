@@ -91,7 +91,7 @@ _template = tinyTemplate (options, content) ->
 		a '.close-modal', ->
 			icon tinyModal.closeIconClass
 		h2 '.with-icon', ->
-			icon ".la.la-#{options.title_icon}.ion-#{options.title_icon}"
+			icon ".la.la-#{options.title_icon}.ion-#{options.title_icon}.#{options.title_icon}"
 			span '', options.title
 	div '.modal-content', content
 	if options.actions?
