@@ -38,3 +38,14 @@ window.urls.changParam = (param, value) ->
 	params = urls.getParams()
 	params[param] = value
 	urls.setParams params
+
+# same as urls.setParams, except it uses replaceState so the content of the page isn't changed
+window.urls.replaceParams = (newParams, newHash = null) ->
+	url = urls.forParams newParams, newHash
+	history.replaceState null, null, url
+
+# same as urls.changeParam, except it uses replaceState so the content of the page isn't changed
+window.urls.replaceParam = (param, value) ->
+	params = urls.getParams()
+	params[param] = value
+	urls.replaceParams params
