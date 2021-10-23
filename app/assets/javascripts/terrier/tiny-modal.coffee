@@ -120,7 +120,7 @@ window.tinyModal.replaceContent = (content)	->
 # loads a URL into the top modal stack
 window.tinyModal.replaceColumn = (url) ->
 	# add the modal parameter to the link
-	unless url.indexOf('modal=true')>-1
+	unless url.indexOf('modal=true') > -1
 		if url.indexOf('?') > -1
 			url += '&modal=true'
 		else
@@ -128,7 +128,7 @@ window.tinyModal.replaceColumn = (url) ->
 
 	container = $('#modal-window .modal-column:last')
 	container.showLoadingOverlay()
-	container.load content
+	container.load url
 
 # expands the modal window to take up the whole width
 window.tinyModal.expand = ->
@@ -182,8 +182,8 @@ window.tinyModal.show = (url, options={}) ->
 	showOverlay()
 
 	# add the modal parameter to the link
-	unless url.indexOf('modal=true')>-1
-		if url.indexOf('?')>-1
+	unless url.indexOf('modal=true') > -1
+		if url.indexOf('?') > -1
 			url += '&modal=true'
 		else
 			url += '?modal=true'
