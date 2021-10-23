@@ -112,9 +112,14 @@ _emptyColumnTemplate = tinyTemplate ->
 		div '.modal-actions'
 
 
-# replaces the content of the top modal on the stack
+# replaces the content of the top modal on the stack with either HTML or by loading a URL
 window.tinyModal.replaceContent = (content)	->
-	$('#modal-window .modal-content:last').html content
+	container = $('#modal-window .modal-content:last')
+	if content.startsWith('<')
+		container.html content
+	else
+		container.showLoadingOverlay()
+		container.load content
 
 # expands the modal window to take up the whole width
 window.tinyModal.expand = ->
