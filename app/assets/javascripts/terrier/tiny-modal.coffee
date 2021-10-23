@@ -112,14 +112,23 @@ _emptyColumnTemplate = tinyTemplate ->
 		div '.modal-actions'
 
 
-# replaces the content of the top modal on the stack with either HTML or by loading a URL
+# replaces the content of the top modal on the stack with the given HTML
 window.tinyModal.replaceContent = (content)	->
 	container = $('#modal-window .modal-content:last')
-	if content.startsWith('<')
-		container.html content
-	else
-		container.showLoadingOverlay()
-		container.load content
+	container.html content
+
+# loads a URL into the top modal stack
+window.tinyModal.replaceColumn = (url) ->
+	# add the modal parameter to the link
+	unless url.indexOf('modal=true')>-1
+		if url.indexOf('?') > -1
+			url += '&modal=true'
+		else
+			url += '?modal=true'
+
+	container = $('#modal-window .modal-column:last')
+	container.showLoadingOverlay()
+	container.load content
 
 # expands the modal window to take up the whole width
 window.tinyModal.expand = ->
@@ -173,10 +182,11 @@ window.tinyModal.show = (url, options={}) ->
 	showOverlay()
 
 	# add the modal parameter to the link
-	if url.indexOf('?')>-1
-		url += '&modal=true'
-	else
-		url += '?modal=true'
+	unless url.indexOf('modal=true')>-1
+		if url.indexOf('?')>-1
+			url += '&modal=true'
+		else
+			url += '?modal=true'
 
 	# custom modifications to the URL
 	url = window.tinyModal.modifyUrl url
