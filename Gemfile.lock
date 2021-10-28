@@ -16,7 +16,7 @@ PATH
       parser
       puma
       puma-daemon
-      rack (< 2.2)
+      rack (< 2.3)
       rails (>= 4.2)
       spreadsheet
       sys-proctable
@@ -157,7 +157,7 @@ GEM
     puma-daemon (0.1.2)
       puma (>= 5.0)
       rack
-    rack (2.0.6)
+    rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.2)
