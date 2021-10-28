@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'dotenv'
 
   s.add_development_dependency 'pg'
+  s.add_development_dependency 'sassc', '>= 2.4.0'
   s.add_development_dependency 'sassc-rails'
   s.add_development_dependency 'slim-rails'
   s.add_development_dependency 'jquery-rails'

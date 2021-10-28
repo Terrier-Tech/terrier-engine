@@ -1,7 +1,7 @@
 window.tinyModal = {}
 
 # this can be overridden to customize the class of the close button icon
-window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lypy-close'
+window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lyph-close'
 
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.alertIcon = 'alert'
@@ -83,7 +83,7 @@ _actionPartial = (action) ->
 		sel += '.with-icon'
 	a "#{sel}#{_classToSel(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
-			icon ".ion-#{action.icon}.la.la-#{action.icon}"
+			icon ".ion-#{action.icon}.la.la-#{action.icon}.#{action.icon}"
 		span '.title', action.title
 
 _template = tinyTemplate (options, content) ->
@@ -91,7 +91,9 @@ _template = tinyTemplate (options, content) ->
 		a '.close-modal', ->
 			icon tinyModal.closeIconClass
 		h2 '.with-icon', ->
-			icon ".la.la-#{options.title_icon}.ion-#{options.title_icon}.#{options.title_icon}"
+			i = options.title_icon || options.icon
+			if i?.length
+				icon ".la.la-#{i}.ion-#{i}.#{i}"
 			span '', options.title
 	div '.modal-content', content
 	if options.actions?
