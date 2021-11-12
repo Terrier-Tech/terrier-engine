@@ -1349,7 +1349,6 @@ _actionLogTemplate = tinyTemplate (script) ->
 
 _actionLogEntryTemplate = tinyTemplate (logEntry) ->
 	time = _time()
-	puts logEntry
 	isUpdate = logEntry.action_type.includes("update")
 	changes = logEntry.entity_changes
 	keys = Object.keys(changes)
