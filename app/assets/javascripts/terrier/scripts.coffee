@@ -1,6 +1,5 @@
 window.scripts = {}
 
-
 _scheduleDaysDisplay = (days) ->
 	if !days or days.length == 0
 		return 'never'
@@ -674,6 +673,8 @@ _editorTemplate = tinyTemplate (script, constants) ->
 			a '.history.with-icon', ->
 				icon '.ion-clock.lyph-expiring'
 				span '', 'Run History'
+			a '.action-log', ->
+				span '', 'Action Log'
 		div '.editor-container', ->
 			div '.ace-container' #, script.body
 			div '.syntax-error-output'
@@ -769,6 +770,7 @@ class Editor
 			save: @ui.find('a.save')
 			run: @ui.find('a.run')
 			history: @ui.find('a.history')
+			action_log: @ui.find('a.action-log')
 		}
 		@buttons.save.click =>
 			this.save()
@@ -781,6 +783,14 @@ class Editor
 				tinyModal.noticeAlert(
 					'Script Not Saved'
 					"Save the script before viewing the run history!"
+				)
+		@buttons.action_log.click =>
+			if @script.id?.length
+				new ActionLogModal(@script)
+			else
+				tinyModal.noticeAlert(
+					'Script Not Saved'
+					"Save the script before viewing the action log!"
 				)
 
 		aceContainer = @ui.find '.ace-container'
@@ -1312,4 +1322,123 @@ class SettingsModal
 					puts res.script
 					puts res.errors
 					@form.showErrors res.errors
+		)
+
+
+################################################################################
+# Action Log Modal
+################################################################################
+
+_time = -> window.dayjs || window.moment
+
+_actionLogTemplate = tinyTemplate (script) ->
+	time = _time()
+	div '.script-action-log', ->
+		div '.horizontal-grid.small-bottom-pad.timestamps', ->
+			div '.stretch-column', ->
+				if script.created_at?
+					span '', "Created #{time(script.created_at).format('MM/DD/YY')}"
+					if script.created_by_name?
+						span '', " by #{script.created_by_name}"
+			div '.stretch-column', ->
+				if script.updated_at?
+					span '', "Updated #{time(script.updated_at).format('MM/DD/YY')}"
+					if script.updated_by_name?
+						span '', " by #{script.updated_by_name}"
+		div '.action-log-listing'
+
+_actionLogEntryTemplate = tinyTemplate (logEntry) ->
+	time = _time()
+	isUpdate = logEntry.action_type.includes("update")
+	changes = logEntry.entity_changes
+	keys = Object.keys(changes)
+	changed_keys = keys.filter((key) -> _.first(changes[key]) != _.last(changes[key]))
+	changed_keys = if isUpdate then changed_keys else keys
+	return if _.isEmpty(changed_keys)
+	div '.horizontal-grid', ->
+		div '.stretch-column', ->
+			table '.data.action-log', ->
+				thead ->
+					tr ->
+						th '.date.key', time(logEntry.time || logEntry.created_at).format('MM/DD/YY h:mm a')
+						th '.user', logEntry.user_name || 'Unknown User'
+						th '.text-right', ->
+							div '.action-type', logEntry.action_type.titleize()
+				tbody ->
+					tr '.subheader', ->
+						td '.key', 'Field'
+						if isUpdate
+							td '', 'Old Value'
+							td '', 'New Value'
+						else
+							td '', { colspan: 2 }, 'Value'
+					for key in changed_keys.filter((key) -> key != "body")
+						old_val = _.first(changes[key])
+						new_val = _.last(changes[key])
+						tr ->
+							td '.key', (if key.startsWith("_") then key.toString() else key.titleize())
+							if isUpdate
+								td '', old_val
+								td '', new_val
+							else
+								td '', { colspan: 2 }, new_val
+
+					if isUpdate && changes.body?
+						tr ->
+							td '.key', "Body"
+							td '', { colspan: 2 }, _produceDiffHtml(changes.body[0], changes.body[1])
+
+_produceDiffHtml = (string1, string2) ->
+	diffOptions = {
+		fromfile: "body"
+		tofile: "body"
+		lineterm: ""
+	}
+	unifiedDiff = difflib.unifiedDiff(string1.split("\n"), string2.split("\n"), diffOptions)
+		.join("\n")
+	renderOptions = {
+		outputFormat: "side-by-side"
+		drawFileList: false
+	}
+	html = Diff2Html.html(unifiedDiff, renderOptions)
+
+
+class ActionLogModal
+	constructor: (@script) ->
+		tinyModal.showDirect(
+			_actionLogTemplate(@script)
+			{
+				title: 'Action Log'
+				title_icon: '.glyp-action_log.lyph-action-log'
+				callback: (modal) =>
+					this.init modal
+			}
+		)
+
+	init: (@ui) ->
+		@ui.showLoadingOverlay()
+		@actionLogListing = @ui.find(".action-log-listing")
+		$.get(
+			"/scripts/#{@script.id}/action_log.json"
+			(res) =>
+				tinyModal.removeLoadingOverlay()
+				if res.status == 'success'
+					this.injectActionLogs(@actionLogListing, res.log_entries)
+				else
+					alert res.message
+		)
+
+	injectActionLogs: (container, entries) ->
+		for entry in entries
+			entryElement = $(_actionLogEntryTemplate(entry))
+			container.append(entryElement)
+
+		# Remove diff file headers. We're only comparing one file at a time so it is extraneous
+		container.find(".d2h-wrapper .d2h-file-header").remove()
+
+		# Remove cluttering "unified diff hunk identifier", i.e. "@@ -11,7 +11,10 @@"
+		container.find(".d2h-wrapper table.d2h-diff-table").each( ->
+			hunkIdentifierRows = $(this).find("tr:has(> .d2h-info)")
+			hunkIdentifierRows.find(".d2h-code-side-line").text("")
+			hunkIdentifierRows.first().remove()
 		)
