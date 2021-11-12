@@ -66,6 +66,12 @@ module Terrier::ScriptCrud
       end
     end
 
+    # Returns a json response containing an array of action log entries
+    # The entity changes should already be formatted
+    def action_log
+      raise "Subclasses must override action_log!"
+    end
+
     def clear_run
       begin
         script = Script.find params[:script_id]

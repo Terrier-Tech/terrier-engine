@@ -667,3 +667,57 @@ $results-list-width: 400px;
 		font-size: 32px;
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Action Log Diff
+////////////////////////////////////////////////////////////////////////////////
+
+.script-action-log {
+  .action-log-listing {
+    min-height: 800px;
+
+    th.key {
+      width: 160px;
+    }
+
+    table.data.action-log:not(.d2h-diff-table) {
+      table-layout: fixed;
+    }
+
+    .d2h-wrapper {
+      position: relative;
+
+      .d2h-file-header {
+        display: none;
+      }
+      table.d2h-diff-table {
+        margin-bottom: 0;
+        border: 0;
+        background-color: unset;
+
+        .d2h-info {
+          background-color: #cfd2d3;
+        }
+
+        tr {
+          background-color: unset;
+        }
+
+        td {
+          padding: unset;
+          line-height: unset;
+          position: unset;
+          border: 0;
+          border-radius: 0;
+          font-size: .8rem;
+
+          &.d2h-code-side-linenumber {
+            position: absolute;
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
