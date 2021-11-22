@@ -43,7 +43,10 @@ body.with-modal {
 	transform: translate(-50%, -120%);
 	transition: $animation-duration ease transform;
 	box-shadow: 0 2px $modal-pad rgba(#000, 0.25);
-	overflow-x: hidden;
+	// as of Chrome 96, overflow: hidden seems to be broken in some circumstances and doesn't respect
+	// the relative positioning, so we're forced to make it visible with a clip path
+	overflow-x: visible;
+	clip-path: inset(0); // clip everything outside of the view
 	background-color: #fff;
 	&.show {
 		transform: translate(-50%,0);
