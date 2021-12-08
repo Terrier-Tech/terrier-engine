@@ -27,4 +27,11 @@ class CsvTest < ActiveSupport::TestCase
     book = Spreadsheet::Excel::Workbook.open open(path)
     book.sheet_count
   end
+
+  test 'sorted columns' do
+    data = 0.upto(10).map do |i|
+      {foo: i.to_s, bar: rand(), baz: 'ignore'}
+    end
+    out_path = CsvIo.save data, 'test/sorted_columns.csv', columns: %i[bar foo]
+  end
 end

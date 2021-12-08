@@ -64,41 +64,13 @@ module CsvIo
     data
   end
 
-  # converts an array of hashes to a csv string
-  def self.write(data)
-    return '' unless data && data.count > 0
-    fields = data.first.keys
-    CSV.generate do |csv|
-      csv << fields
-      data.each do |row|
-        csv << fields.map{|f| row[f]}
-      end
-    end
-  end
-
-  # dumps data to a csv file
-  def self.save(data, rel_path)
-    abs_path = CsvIo.rel_to_abs_path rel_path
-    dir = File.dirname abs_path
-    unless File.exists? dir
-      Dir.mkdir dir
-    end
-    File.open abs_path, 'wt' do |f|
-      f.write CsvIo.write(data)
-    end
-    abs_path
-  end
-
-
-  def self.create_sheet(book, data, options)
+  # returns columns and their string versions (columns_s)
+  def self.compute_columns(data, options)
     if (data.is_a?(Array) || data.is_a?(QueryResult)) && data.length > 0
-      columns = options[:columns] || data.first.keys
+      columns = options[:columns].presence || data.first.keys
     else
       columns = []
     end
-
-    sheet = book.create_worksheet name: options[:sheet_name]
-
     columns_s = columns.map(&:to_s)
     if options[:titleize_columns]
       columns_s = columns_s.map do |c|
@@ -110,6 +82,43 @@ module CsvIo
         end
       end
     end
+
+    [columns, columns_s]
+  end
+
+  # converts an array of hashes to a csv string
+  def self.write(data, options={})
+    return '' unless data && data.count > 0
+
+    columns, columns_s = self.compute_columns data, options
+
+    CSV.generate do |csv|
+      csv << columns_s
+      data.each do |row|
+        csv << columns.map{|f| row[f]}
+      end
+    end
+  end
+
+  # dumps data to a csv file
+  def self.save(data, rel_path, options={})
+    abs_path = CsvIo.rel_to_abs_path rel_path
+    dir = File.dirname abs_path
+    unless File.exists? dir
+      Dir.mkdir dir
+    end
+    File.open abs_path, 'wt' do |f|
+      f.write CsvIo.write(data, options)
+    end
+    abs_path
+  end
+
+
+  def self.create_sheet(book, data, options)
+    sheet = book.create_worksheet name: options[:sheet_name]
+
+    columns, columns_s = self.compute_columns data, options
+
     sheet.row(0).concat columns_s
     r = 0
     data.each do |row|
