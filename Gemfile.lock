@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.5.0)
+    terrier-engine (2.5.1)
       awesome_print
       dotenv
       elasticsearch
@@ -81,12 +81,12 @@ GEM
     concurrent-ruby (1.1.4)
     crass (1.0.5)
     dotenv (2.7.6)
-    elasticsearch (7.15.0)
-      elasticsearch-api (= 7.15.0)
-      elasticsearch-transport (= 7.15.0)
-    elasticsearch-api (7.15.0)
+    elasticsearch (7.16.0)
+      elasticsearch-api (= 7.16.0)
+      elasticsearch-transport (= 7.16.0)
+    elasticsearch-api (7.16.0)
       multi_json
-    elasticsearch-transport (7.15.0)
+    elasticsearch-transport (7.16.0)
       faraday (~> 1)
       multi_json
     erubi (1.7.1)
@@ -111,7 +111,7 @@ GEM
     faraday-patron (1.0.0)
     faraday-rack (1.0.0)
     ffi (1.15.4)
-    globalid (0.5.2)
+    globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.2.0)
       concurrent-ruby (~> 1.0)
@@ -149,7 +149,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (3.0.2.0)
+    parser (3.0.3.2)
       ast (~> 2.4.1)
     pg (1.0.0)
     puma (5.5.2)
@@ -157,7 +157,7 @@ GEM
     puma-daemon (0.1.2)
       puma (>= 5.0)
       rack
-    rack (2.0.6)
+    rack (2.1.4)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (5.2.2)

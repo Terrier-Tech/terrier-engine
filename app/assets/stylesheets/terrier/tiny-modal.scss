@@ -160,6 +160,9 @@ body.with-modal {
 		transform: translate(-50%, -50%) scale(1);
 	}
 	> .title {
+		i {
+			margin-right: 0.5em;
+		}
 		padding: 1em 1em 0.5em 1em;
 		text-align: center;
 		font-weight: bold;

@@ -53,6 +53,7 @@ $(document).on 'click', 'a.confirm-modal-alert', ->
 		"Are you sure?"
 		"This is a confirm alert modal"
 		-> alert 'Confirmed'
+		icon: 'ion-ios-help-outline'
 	)
 
 $(document).on 'click', 'a.notice-modal-alert', ->
@@ -63,6 +64,7 @@ $(document).on 'click', 'a.notice-modal-alert', ->
 			title: 'Got It'
 			icon: 'ion-checkmark-round'
 		}
+		icon: 'ion-alert'
 	)
 
 

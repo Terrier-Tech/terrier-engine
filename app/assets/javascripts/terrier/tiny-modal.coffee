@@ -257,7 +257,10 @@ $(document).on 'click', 'a.close-modal', ->
 
 _alertTemplate = tinyTemplate (options) ->
 	div '#modal-alert', ->
-		div '.title', options.title || 'No Title'
+		div '.title', ->
+			if options.icon?.length
+				icon ".#{options.icon}"
+			span '', options.title || 'No Title'
 		if options.body?.length
 			div '.body', options.body
 		div '.actions', ->
@@ -277,6 +280,7 @@ _alertTemplate = tinyTemplate (options) ->
 # options can container:
 # - title
 # - body
+# - icon
 # - actions (array)
 # Each action can contain:
 # - title
@@ -332,8 +336,8 @@ tinyModal.closeAlert = ->
 
 # Shows an alert modal pre-populated with an Okay and Cancel action.
 # The Okay action calls the callback while the Cancel action just closes the alert.
-tinyModal.confirmAlert = (title, body, callback) ->
-	options = {
+tinyModal.confirmAlert = (title, body, callback, options={}) ->
+	Object.assign options, {
 		title: title
 		body: body
 	}
@@ -357,8 +361,8 @@ tinyModal.confirmAlert = (title, body, callback) ->
 # Shows an alert modal pre-populated with an Okay action.
 # The Okay action just closes the alert.
 # Optionally, the action attributes can be overridden with the action argument.
-tinyModal.noticeAlert = (title, body, action={}) ->
-	options = {
+tinyModal.noticeAlert = (title, body, action={}, options={}) ->
+	Object.assign options, {
 		title: title
 		body: body
 	}

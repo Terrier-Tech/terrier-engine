@@ -1,6 +1,6 @@
 # Terrier::Engine
 
-This Rails Engine contains common code used by all Rails applications at Plunkett's Pest Control.
+This Rails Engine contains common code used by all Rails applications at Terrier Technologies.
 
 ## Usage
 
