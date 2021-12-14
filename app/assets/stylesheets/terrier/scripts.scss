@@ -314,6 +314,7 @@ form.script-editor {
 			}
 			&.collapsed {
 				max-height: 32px;
+				overflow-y: hidden;
 			}
 		}
 		.general {
