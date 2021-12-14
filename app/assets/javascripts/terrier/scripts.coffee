@@ -43,9 +43,9 @@ class MessagesList
 
 # actually runs a script
 # listener should have the following methods:
-#   beforeRun()
-#   onChunks(chunks)
-#   afterRun()
+#	 beforeRun()
+#	 onChunks(chunks)
+#	 afterRun()
 class ScriptRunner
 	constructor: (@script, @listener) ->
 		@cancelContainer = null
@@ -141,7 +141,7 @@ _fieldControls.csv = (name, value, options) ->
 	"<input type='file' name='#{name}' accept='text/csv'/>"
 
 _fieldControls.hidden = (name, value) ->
-  "<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
+	"<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
 
 _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions, disabledFields) ->
 	div '.script-report-exec-modal.horizontal-grid', ->
@@ -525,7 +525,7 @@ _scheduleRulePartial = (script, constants) ->
 				for week in constants.weeks
 					label '', ->
 						checked = if rule.weeks?.indexOf(week)>-1 then 'checked' else null
-						input '.week', type: 'checkbox',  value: week, checked: checked
+						input '.week', type: 'checkbox',	value: week, checked: checked
 						title = switch week
 							when 'all'
 								'All Weeks'
@@ -539,7 +539,7 @@ _scheduleRulePartial = (script, constants) ->
 					for month in monthGroup
 						label '', ->
 							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null
-							input '.month', type: 'checkbox',  value: month, checked: checked
+							input '.month', type: 'checkbox',	value: month, checked: checked
 							span '', month[0..2].capitalize()
 		a '.all-months.ion-android-done-all.lyph-checkbox', 'All Months'
 
@@ -674,7 +674,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				icon '.glyp-expiring.lyph-expiring'
 				span '', 'Run History'
 			a '.action-log.with-icon', ->
-        icon '.glyp-action_log.lyph-action-log'
+				icon '.glyp-action_log.lyph-action-log'
 				span '', 'Action Log'
 		div '.editor-container', ->
 			div '.ace-container' #, script.body
@@ -700,22 +700,22 @@ _editorTemplate = tinyTemplate (script, constants) ->
 					div '.stretch-column', ->
 						label '', 'Visibility'
 						select '', name: 'visibility', ->
-              forms.optionsForSelect constants.visibility_options, script.visibility
-    label '', 'E-Mail Recipients'
+							forms.optionsForSelect constants.visibility_options, script.visibility
+		label '', 'E-Mail Recipients'
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
 				textarea '', name: 'description', placeholder: 'Description', rows: 2, script.description
 
-    if constants.added_fields.length
-      for field in constants.added_fields
-        options = field.options
-        key = field.key
-        div '.stretch-column', ->
-          label '', field.title
-          if field.text_field
-            input '', type: 'text', name: key, value: script[key]
-          else
-            select '', name: key, ->
-              forms.optionsForSelect options, script[key]
+		if constants.added_fields.length
+			for field in constants.added_fields
+				options = field.options
+				key = field.key
+				div '.stretch-column', ->
+					label '', field.title
+					if field.text_field
+						input '', type: 'text', name: key, value: script[key]
+					else
+						select '', name: key, ->
+							forms.optionsForSelect options, script[key]
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
@@ -821,14 +821,14 @@ class Editor
 
 		@aceEditor.commands.addCommand(
 			name: 'save'
-			bindKey: {win: 'Ctrl-S',  mac: 'Command-S'}
+			bindKey: {win: 'Ctrl-S',	mac: 'Command-S'}
 			exec: (e) =>
 				this.save()
 		)
 
 		@aceEditor.commands.addCommand(
 			name: 'run'
-			bindKey: {win: 'Ctrl-Enter',  mac: 'Command-Enter'}
+			bindKey: {win: 'Ctrl-Enter',	mac: 'Command-Enter'}
 			exec: (e) =>
 				this.run()
 		)
