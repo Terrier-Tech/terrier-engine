@@ -6,6 +6,10 @@ $warn-color: #e67e22;
 $success-color: #00aa00 !default;
 $animation-duration: 0.2s !default;
 
+$toolbar-height: 32px;
+$settings-width: 340px;
+$panel-pad: 12px;
+
 
 @mixin single-line {
 	white-space: nowrap;
@@ -66,30 +70,37 @@ $animation-duration: 0.2s !default;
 
 
 	.lm_header {
-		height: 24px !important;
+		height: $toolbar-height !important;
 		background-color: $secondary-color-darker;
+		[class^=lm_] {
+			// I don't get why they'd set it to content-box
+			box-sizing: border-box !important;
+		}
 		.lm_tab {
 			background-color: $secondary-color;
 			color: #fff;
 			box-shadow: none !important;
-			opacity: 0.5;
-			font-size: 13px;
-			padding: 3px 12px;
-			height: 18px;
+			opacity: 0.6;
+			font-size: 14px;
+			padding: 8px 12px;
+			height: $toolbar-height;
 			.lm_close_tab {
-				padding: 4px;
 				display: none;
+				position: relative;
+				margin-left: 0.5em;
+				top: -2px;
 				&::before {
 					font-family: Ionicons;
 					content: "\f129";
-					font-size: 12px;
+					font-size: 14px;
+					line-height: 1;
 				}
 			}
 			&:hover, &.lm_active {
 				opacity: 1;
 			}
 			&.lm_active {
-				padding: 3px 26px 3px 12px;
+				// padding: 3px 26px 3px 12px;
 				.lm_close_tab {
 					display: inline-block;
 				}
@@ -166,10 +177,6 @@ $animation-duration: 0.2s !default;
 // Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-$toolbar-height: 32px;
-$settings-width: 340px;
-$panel-pad: 12px;
-
 form.script-editor {
 	position: absolute;
 	left: 0;
@@ -188,7 +195,6 @@ form.script-editor {
 			padding: 7px 12px;
 			color: #fff;
 			font-size: 16px;
-			font-weight: bold;
 			display: inline-block;
 			line-height: 1.3;
 			&.disabled, &:disabled {
