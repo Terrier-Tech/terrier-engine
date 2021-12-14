@@ -125,76 +125,97 @@ _fieldControls.date = (name, value, options) ->
 		value.formatSortableDate()
 	else
 		''
-	"<input type='date' name='#{name}' value='#{date}'/>"
+	# "<input type='date' name='#{name}' value='#{date}'/>"
+	input '', type: 'date', name: name, value: date
 
 _fieldControls.string = (name, value, options) ->
-	"<input type='text' name='#{name}' value='#{value}'/>"
+	input '', type: 'text', name: name, value: value
+	# "<input type='text' name='#{name}' value='#{value}'/>"
 
 _fieldControls.select = (name, value, options) ->
-	s = "<select name='#{name}'>"
-	for opt in options
-		selected = if opt == value then 'selected="selected"' else ''
-		s += "<option value='#{opt}' #{selected}>#{opt}</option>"
-	s + '</select>'
+	select '', name: name, ->
+		forms.optionsForSelect options, value
+	# s = "<select name='#{name}'>"
+	# for opt in options
+	# 	if typeof opt == 'array'
+	# 		t = opt[0]
+	# 		v = _.last opt
+	# 	else
+	# 		t = opt
+	# 		v = opt
+	# 	selected = if v == value then 'selected="selected"' else ''
+	# 	s += "<option value='#{v}' #{selected}>#{t}</option>"
+	# s + '</select>'
 
 _fieldControls.csv = (name, value, options) ->
-	"<input type='file' name='#{name}' accept='text/csv'/>"
+	# "<input type='file' name='#{name}' accept='text/csv'/>"
+	input '', type: 'file', name: name, accept: 'text/csv'
 
 _fieldControls.hidden = (name, value) ->
-	"<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
+	# "<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
+	input '', type: 'hidden', name: name, value: value
 
-_reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions, disabledFields) ->
+_reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions) ->
 	div '.script-report-exec-modal.horizontal-grid', ->
 		div '.shrink-column.io-column', ->
 			div '.fixed-controls', ->
 				if script.description?.length
 					p '.description', script.description
 				h4 '.with-icon', ->
-					icon '.ion-ios-upload-outline.lyph-import'
+					icon '.glyp-upload.lyph-import'
 					span '', 'Inputs'
 				div '.script-field-controls', ->
 					fields = JSON.parse script.script_fields_json
+					puts "values", fieldValues
+					puts "options", fieldOptions
 					for field in fields
 						value = fieldValues[field.name]
 						options = fieldOptions[field.name]
-						if disabledFields[field.name]
-							value = disabledFields[field.name]
-						div '.field-controls', ->
-							unless disabledFields[field.name]
-								label '', field.name
-							div '', _fieldControls[field.field_type](field.name, value, options)
+						# don't show select fields with no options
+						if field.field_type == 'select' and !options?.length
+							_fieldControls.hidden(field.name, value, options)
+						else
+							div '.field-controls', ->
+								name = field.name
+								shouldTitleize = name.indexOf('_')>-1
+								if name.endsWith('_id')
+									name = name.replace /_id$/, ''
+								if shouldTitleize # show pretty names when they're underscored
+									name = name.titleize()
+								label '', name
+								_fieldControls[field.field_type](field.name, value, options)
 				h4 '.with-icon', ->
-					icon '.ion-ios-copy-outline.lyph-copy'
+					icon '.glyp-documents.lyph-copy'
 					span '', 'Files'
 				div '.output-files'
 		div '.stretch-column', ->
 			h4 '.with-icon', ->
-				icon '.ion-ios-download-outline.lyph-download'
+				icon '.glyp-download.lyph-download'
 				span '', 'Output'
 			div '.script-messages'
 
 
+# @options can contain field_options and field_values, which will override 
+# whatever is returned from compute_field_values
+# pass [] for a select field options to hide it (but still have a hidden field)
 class ReportExecModal
 	constructor: (@script, @constants, @options={}) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
 		$.post(
-			"/scripts/compute_field_values"
+			"/scripts/compute_field_values.json"
 			{script_fields_json: @script.script_fields_json}
 			(res) =>
 				unless res.status == 'success'
 					alert res.message
 					return
-				fieldValues = res.field_values
 				fieldOptions = res.field_options
 				if @options.field_options
-					for field, options of @options.field_options
-						fieldOptions[field] = options
-				if @options.disabled_fields
-					disabledFields = @options.disabled_fields
-				else
-					disabledFields = {}
-				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions, disabledFields)
+					Object.assign fieldOptions, @options.field_options
+				fieldValues = res.field_values
+				if @options.field_values
+					Object.assign fieldValues, @options.field_values
+				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions)
 				modalOptions = {
 					title: @script.title
 					title_icon: 'play.lyph-play'
@@ -576,7 +597,6 @@ class ScheduleRulesEditor
 			elem.value
 		).get()
 		rule = {days: days, weeks: weeks, months: months}
-		puts rule
 		@output.val JSON.stringify([rule])
 
 
@@ -588,14 +608,14 @@ _fieldPartial = (field, constants) ->
 	div '.script-field', ->
 		div '.horizontal-grid', ->
 			div '.shrink-columns', ->
-				div '.sort-handle.ion-android-more-vertical.lyph-navicon'
+				div '.sort-handle.glyp-sort.lyph-navicon'
 			div '.stretch-column', ->
 				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
-			div '.stretch-column', ->
+			div '.shrink-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
 			div '.shrink-columns', ->
-				a '.remove-field.ion-close-round.lyph-close.alert', title: 'Remove Field'
+				a '.remove-field.glyp-close.lyph-close.alert', title: 'Remove Field'
 
 		input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
 

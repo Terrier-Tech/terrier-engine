@@ -24,8 +24,9 @@ class ScriptsController < ApplicationController
     run.save_by_system?
   end
 
-  def reporting
+  def reports
     @scripts = Script.where('title IS NOT NULL')
+	@title = 'Reports'
   end
 
 end

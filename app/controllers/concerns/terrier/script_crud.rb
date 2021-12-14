@@ -46,9 +46,16 @@ module Terrier::ScriptCrud
       values = script.compute_field_values
       options = script.compute_field_options
 
+      override_fields script, values, options
+
       render_success 'Successfully Computed Field Values', field_values: values, field_options: options
     end
 
+    # subclasses can implement this to override the values and options
+    def override_fields(script, values, options)
+      values['org_unit_id'] = 'two'
+      values['hidden_id'] = 'server'
+    end
 
     def show
       @script = Script.find params[:id]

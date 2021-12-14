@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   get 'logging' => 'client_side#logging'
 
-  get 'reporting' => 'scripts#reporting'
+  get 'reports' => 'scripts#reports'
 
   mount Terrier::Engine, at: "/"
 

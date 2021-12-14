@@ -1,3 +1,9 @@
+
+#main-actions
+	a.reporting href="/scripts"
+		i.ion-code
+		.title Scripts
+
 .panel
     .panel-header
         h3.with-icon
@@ -13,8 +19,6 @@
                 th
                     a == 'Created At'
                 th
-                    a.with-icon
-                        | Run Report
         tbody
             - @scripts.each do |script|
                 tr.script
@@ -25,8 +29,9 @@
                     td.col-created_at
                         | #{script.created_at.strftime(PRETTY_TIME_FORMAT)}
                     td
-                        a.open-script-report-modal.button.secondary data-id="#{script.id}"
-                            i.ion-loop
+                        a.open-script-report-modal.button.secondary.with-icon data-id="#{script.id}"
+                            i.ion-play
+							| Run
 
 
 coffee:
@@ -35,15 +40,22 @@ coffee:
         script = null
         onDone = _.after 2, ->
             modal = window.scripts.newReportExecModal(
-                    script,
-                    constants,
-                    {
-                        hide_settings: true
-                        field_options: {print: ['','Yes', 'No']}
-                    }
-                    )
+				script
+				constants
+				{
+					hide_settings: true
+					field_options: {
+						print: ['','Yes', 'No']
+						org_unit_id: [['One', 'one'], ['Two', 'two'], ['Three', 'three']]
+						hidden_id: [] # to hide the field
+					}
+					field_values: {
+						hidden_id: 'invisible'
+					}
+				}
+            )
         $.get(
-                '/scripts/constants.json'
+            '/scripts/constants.json'
             (res) =>
                 puts 'constants done'
                 if res.status == 'success'
@@ -53,7 +65,7 @@ coffee:
                     alert res.message
         )
         $.get(
-                "/scripts/#{scriptId}.json"
+            "/scripts/#{scriptId}.json"
             (res) =>
                 if res.status == 'success'
                     script = res.script
@@ -64,5 +76,4 @@ coffee:
         )
 
     $('a.open-script-report-modal').click ->
-        scriptId = $(this).data 'id'
-        showReportExecModal scriptId
+        showReportExecModal this.dataset.id

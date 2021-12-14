@@ -9,7 +9,7 @@ window.forms.optionsForSelect = (options, current=null) ->
 	# convert a simple array of strings to the proper format
 	if options?.length and typeof options[0] == 'string'
 		options = for opt in options
-			[opt.titleize(), opt]
+			[opt.toString().titleize(), opt]
 	for opt in options
 		value = _.last opt # to match options_for_select behavior
 		selected = if value==current then 'selected' else null

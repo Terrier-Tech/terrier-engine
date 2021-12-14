@@ -649,6 +649,8 @@ ij_ruby_spaces_around_range_operators = false
 ij_ruby_spaces_around_relational_operators = true
 ij_ruby_spaces_within_array_initializer_braces = true
 ij_ruby_spaces_within_braces = true
+indent_size = 2
+indent_style = space
 
 [{*.har,*.jsb2,*.jsb3,*.json,.babelrc,.eslintrc,.stylelintrc,bowerrc,jest.config}]
 indent_size = 2

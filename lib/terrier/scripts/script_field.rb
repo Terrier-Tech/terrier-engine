@@ -42,7 +42,13 @@ class ScriptField
     return [] unless self.field_type == 'select'
     opts = eval(self.values)
     opts = opts.is_a?(Array) ? opts : []
-    [''] + opts
+	# don't add a blank space if there are no other options
+	# this way, the field will appear as a hidden field
+	if opts.size > 0 
+		[''] + opts
+	else
+		opts
+	end
   end
 
 end
