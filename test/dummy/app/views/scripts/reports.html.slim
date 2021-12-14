@@ -44,20 +44,21 @@ coffee:
 				constants
 				{
 					hide_settings: true
+					field_params: {
+						foo: 'bar'
+					}
 					field_options: {
 						print: ['','Yes', 'No']
 						org_unit_id: [['One', 'one'], ['Two', 'two'], ['Three', 'three']]
 						hidden_id: [] # to hide the field
 					}
 					field_values: {
-						hidden_id: 'invisible'
 					}
 				}
             )
         $.get(
             '/scripts/constants.json'
             (res) =>
-                puts 'constants done'
                 if res.status == 'success'
                     constants = res.constants
                     onDone()

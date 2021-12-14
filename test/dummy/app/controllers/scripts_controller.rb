@@ -24,9 +24,15 @@ class ScriptsController < ApplicationController
     run.save_by_system?
   end
 
+  # subclasses can implement this to override the values and options
+  def override_fields(script, values, options)
+    values['org_unit_id'] = 'two'
+    values['hidden_id'] = params[:foo]
+  end
+
   def reports
     @scripts = Script.where('title IS NOT NULL')
-	@title = 'Reports'
+	  @title = 'Reports'
   end
 
 end

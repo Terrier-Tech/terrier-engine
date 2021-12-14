@@ -202,9 +202,14 @@ class ReportExecModal
 	constructor: (@script, @constants, @options={}) ->
 		unless @script.script_fields_json?
 			@script.script_fields_json = JSON.stringify(@script.script_fields || @script.script_fields_array)
+		data = {
+			script_fields_json: @script.script_fields_json
+		}
+		if @options.field_params # allow the implementer to pass data to the compute_field_values call
+			Object.assign data, @options.field_params
 		$.post(
 			"/scripts/compute_field_values.json"
-			{script_fields_json: @script.script_fields_json}
+			data
 			(res) =>
 				unless res.status == 'success'
 					alert res.message

@@ -53,8 +53,6 @@ module Terrier::ScriptCrud
 
     # subclasses can implement this to override the values and options
     def override_fields(script, values, options)
-      values['org_unit_id'] = 'two'
-      values['hidden_id'] = 'server'
     end
 
     def show
