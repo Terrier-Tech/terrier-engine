@@ -345,3 +345,17 @@ String::validateEmail = ->
 
 String::validateEmailLoosely = ->
 	window.validateEmailLoosely this
+
+
+
+########################################################################################
+# Booleans
+########################################################################################
+
+_trueStrings = ['1', 'on', 'true']
+
+String::isTrue = ->
+	this? and _trueStrings.includes(this.toLowerCase())
+
+Boolean::isTrue = ->
+	this

@@ -7,6 +7,8 @@ class ScriptField
 
   field :values, type: String
 
+  field :required, type: String
+
   enum_field :field_type, %w(date string select csv hidden)
 
   def self.compute_date_value(s)
@@ -42,13 +44,17 @@ class ScriptField
     return [] unless self.field_type == 'select'
     opts = eval(self.values)
     opts = opts.is_a?(Array) ? opts : []
-	# don't add a blank space if there are no other options
-	# this way, the field will appear as a hidden field
-	if opts.size > 0 
-		[''] + opts
-	else
-		opts
-	end
+    # don't add a blank space if there are no other options
+    # this way, the field will appear as a hidden field
+    if opts.size > 0 
+      if opts.first.is_a? Array
+        [['', nil]] + opts
+      else
+        [''] + opts
+      end
+    else
+      opts
+    end
   end
 
 end

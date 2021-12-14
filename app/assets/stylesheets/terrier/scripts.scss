@@ -347,6 +347,19 @@ form.script-editor {
 			.sort-handle {
 				cursor: move;
 			}
+			label.requirement {
+				display: flex;
+				align-items: center;
+				margin: 0;
+				line-height: 1;
+				position: relative;
+				top: -4px;
+				input[type=checkbox] {
+					display: inline-block;
+					margin: 0;
+					margin-right: 0.4em;
+				}
+			}
 		}
 	}
 	&.show-settings {

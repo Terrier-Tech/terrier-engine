@@ -118,42 +118,27 @@ window.scripts.initHelp = ->
 
 _fieldControls = {}
 
-_fieldControls.date = (name, value, options) ->
+_fieldControls.date = (field, value, options) ->
 	date = if typeof value == 'number'
 		new Date(value).formatSortableDate()
 	else if value?.length
 		value.formatSortableDate()
 	else
 		''
-	# "<input type='date' name='#{name}' value='#{date}'/>"
-	input '', type: 'date', name: name, value: date
+	input field.requiredClass, type: 'date', name: field.name, value: date
 
-_fieldControls.string = (name, value, options) ->
-	input '', type: 'text', name: name, value: value
-	# "<input type='text' name='#{name}' value='#{value}'/>"
+_fieldControls.string = (field, value, options) ->
+	input field.requiredClass, type: 'text', name: field.name, value: value
 
-_fieldControls.select = (name, value, options) ->
-	select '', name: name, ->
+_fieldControls.select = (field, value, options) ->
+	select field.requiredClass, name: field.name, ->
 		forms.optionsForSelect options, value
-	# s = "<select name='#{name}'>"
-	# for opt in options
-	# 	if typeof opt == 'array'
-	# 		t = opt[0]
-	# 		v = _.last opt
-	# 	else
-	# 		t = opt
-	# 		v = opt
-	# 	selected = if v == value then 'selected="selected"' else ''
-	# 	s += "<option value='#{v}' #{selected}>#{t}</option>"
-	# s + '</select>'
 
-_fieldControls.csv = (name, value, options) ->
-	# "<input type='file' name='#{name}' accept='text/csv'/>"
-	input '', type: 'file', name: name, accept: 'text/csv'
+_fieldControls.csv = (field, value, options) ->
+	input field.requiredClass, type: 'file', name: field.name, accept: 'text/csv'
 
-_fieldControls.hidden = (name, value) ->
-	# "<input class='hidden' type='hidden' name='#{name}' value='#{value}'/>"
-	input '', type: 'hidden', name: name, value: value
+_fieldControls.hidden = (field, value) ->
+	input field.requiredClass, type: 'hidden', name: field.name, value: value
 
 _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOptions) ->
 	div '.script-report-exec-modal.horizontal-grid', ->
@@ -171,19 +156,20 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 					for field in fields
 						value = fieldValues[field.name]
 						options = fieldOptions[field.name]
+						unless field.required?
+							field.required = 'true'
+						field.requiredClass = if field.required?.isTrue() then '.required' else ''
 						# don't show select fields with no options
 						if field.field_type == 'select' and !options?.length
-							_fieldControls.hidden(field.name, value, options)
+							_fieldControls.hidden(field, value, options)
 						else
 							div '.field-controls', ->
 								name = field.name
-								shouldTitleize = name.indexOf('_')>-1
 								if name.endsWith('_id')
 									name = name.replace /_id$/, ''
-								if shouldTitleize # show pretty names when they're underscored
-									name = name.titleize()
-								label '', name
-								_fieldControls[field.field_type](field.name, value, options)
+								name = name.titleize()
+								label field.requiredClass, name
+								_fieldControls[field.field_type](field, value, options)
 				h4 '.with-icon', ->
 					icon '.glyp-documents.lyph-copy'
 					span '', 'Files'
@@ -314,9 +300,14 @@ class ReportExecModal
 			return
 		inputs.each (index, elem) =>
 			input = $(elem)
+			if elem.type == 'hidden'
+				name = input.attr('name')
+				fieldValues[name] = input.val()
+				actuallyRun()
+				return
 			do (input) =>
 				this.readInput input, (value) ->
-					unless value?.length
+					if input.hasClass('required') and !value?.length
 						input.addClass 'error'
 					name = input.attr('name')
 					fieldValues[name] = value
@@ -612,18 +603,26 @@ class ScheduleRulesEditor
 _fieldPartial = (field, constants) ->
 	div '.script-field', ->
 		div '.horizontal-grid', ->
-			div '.shrink-columns', ->
+			div '.shrink-column', ->
 				div '.sort-handle.glyp-sort.lyph-navicon'
 			div '.stretch-column', ->
 				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
 			div '.shrink-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
-			div '.shrink-columns', ->
+			div '.shrink-column', ->
 				a '.remove-field.glyp-close.lyph-close.alert', title: 'Remove Field'
 
-		input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
-
+		div '.horizontal-grid', ->
+			div '.stretch-column', ->
+				input '.field-default_value', type: 'text', value: field.default_value, placeholder: 'Default Value'
+			div '.shrink-column.align-middle', ->
+				# for backwards compatability, default to required
+				unless field.required?
+					field.required = true
+				label '.text-right.requirement', ->
+					input '.field-required', type: 'checkbox', checked: (if field.required?.isTrue() then 'checked' else null)
+					span '', 'Required?'
 		textarea '.field-values', type: 'text', placeholder: 'Values', rows: '1', (field.values || '')
 
 class FieldsControls
@@ -665,8 +664,12 @@ class FieldsControls
 		fields = @list.find('.script-field').map((index, elem) ->
 			view = $ elem
 			data = {}
-			for k in ['name', 'field_type', 'default_value', 'values']
-				data[k] = view.find(".field-#{k}").val()
+			for k in ['name', 'field_type', 'default_value', 'values', 'required']
+				f = view.find(".field-#{k}")
+				if f[0].type == 'checkbox'
+					data[k] = f[0].checked.toString()
+				else
+					data[k] = f.val()
 			data
 		).get()
 		@output.val JSON.stringify(fields)
