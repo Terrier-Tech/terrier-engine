@@ -663,17 +663,18 @@ _editorTemplate = tinyTemplate (script, constants) ->
 	form '.script-editor.show-settings', ->
 		div '.toolbar', ->
 			a '.toggle-settings', ->
-				icon '.ion-arrow-left-c.lyph-arrow-left'
+				icon '.glyp-chevron_left.lyph-arrow-left'
 			a '.save.with-icon', ->
-				icon '.ion-upload.lyph-import'
+				icon '.glyp-upload.lyph-import'
 				span '', 'Save <span class="shortcut"><span class="control-key"></span>S</span>'
 			a '.run.with-icon', ->
-				icon '.ion-play.lyph-play'
+				icon '.glyp-play.lyph-play'
 				span '', 'Run <span class="shortcut"><span class="control-key"></span>&#9166</span>'
 			a '.history.with-icon', ->
-				icon '.ion-clock.lyph-expiring'
+				icon '.glyp-expiring.lyph-expiring'
 				span '', 'Run History'
-			a '.action-log', ->
+			a '.action-log.with-icon', ->
+        icon '.glyp-action_log.lyph-action-log'
 				span '', 'Action Log'
 		div '.editor-container', ->
 			div '.ace-container' #, script.body
