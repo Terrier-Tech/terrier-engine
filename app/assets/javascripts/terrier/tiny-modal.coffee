@@ -132,6 +132,10 @@ window.tinyModal.replaceColumn = (url) ->
 	container.showLoadingOverlay()
 	container.load url
 
+# removes the actions from the last column
+window.tinyModal.removeActions = ->
+	$('#modal-window .modal-column:last .modal-actions').remove()
+
 # expands the modal window to take up the whole width
 window.tinyModal.expand = ->
 	win = $('#modal-window')
