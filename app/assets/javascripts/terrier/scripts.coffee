@@ -209,16 +209,16 @@ class ReportExecModal
 				content = _reportExecModalTemplate(@script, fieldValues, fieldOptions)
 				modalOptions = {
 					title: @script.title
-					title_icon: 'play.lyph-play'
+					title_icon: 'glyp-play.lyph-play'
 					actions: [
 						{
 							title: 'Cancel'
-							icon: 'close-round.lyph-close'
+							icon: 'glyp-close.lyph-close'
 							class: 'alert cancel'
 						}
 						{
 							title: 'Run'
-							icon: 'play.lyph-play'
+							icon: 'glyp-play.lyph-play'
 							class: 'primary run'
 						}
 					]
@@ -229,13 +229,13 @@ class ReportExecModal
 					modalOptions.actions.push {
 						title: 'History'
 						class: 'show-history secondary'
-						icon: 'clock.lyph-expiring'
+						icon: 'glyp-expiring.lyph-expiring'
 						end: true
 					}
 					modalOptions.actions.push {
 						title: 'Settings'
 						class: 'show-settings secondary'
-						icon: 'compose.lyph-settings'
+						icon: 'glyp-settings.lyph-settings'
 						end: true
 					}
 				tinyModal.showDirect(
@@ -340,7 +340,7 @@ class ReportExecModal
 	addOutputFile: (file) ->
 		fileName = _.last file.body.split('/')
 		d = new Date()
-		@outputFilesView.append "<a class='file with-icon' href='#{file.body}?timestamp=#{d.getTime()}' target='_blank'><i class='ion-document.lyph-document'></i>#{fileName}</a>"
+		@outputFilesView.append "<a class='file with-icon' href='#{file.body}?timestamp=#{d.getTime()}' target='_blank'><i class='glyp-document.lyph-document'></i>#{fileName}</a>"
 
 
 window.scripts.newReportExecModal = (script, constants, options={}) ->
@@ -372,7 +372,7 @@ _searcherTemplate = tinyTemplate ->
 	div '.script-searcher', ->
 		div '.results-list'
 		div '.body-pane#script-search-editor'
-		a '.open-script.ion-android-open.lyph-open', title: 'Open Script'
+		a '.open-script.glyp-open.lyph-open', title: 'Open Script'
 
 _searchInputTemplate = tinyTemplate ->
 	div '.script-search-input', ->
@@ -558,7 +558,7 @@ _scheduleRulePartial = (script, constants) ->
 							checked = if rule.months?.indexOf(month)>-1 then 'checked' else null
 							input '.month', type: 'checkbox',	value: month, checked: checked
 							span '', month[0..2].capitalize()
-		a '.all-months.ion-android-done-all.lyph-checkbox', 'All Months'
+		a '.all-months.glyp-check_all.lyph-checkbox', 'All Months'
 
 # ensures that the schedule_rules_s field always contains the latest value from the controls inside of @ui
 class ScheduleRulesEditor
@@ -603,14 +603,14 @@ class ScheduleRulesEditor
 _fieldPartial = (field, constants) ->
 	div '.script-field', ->
 		div '.horizontal-grid', ->
-			div '.shrink-column', ->
+			div '.shrink-column.no-padding', ->
 				div '.sort-handle.glyp-sort.lyph-navicon'
 			div '.stretch-column', ->
 				input '.field-name', type: 'text', value: field.name, placeholder: 'Name', autocomplete: false
 			div '.shrink-column', ->
 				select '.field-field_type', ->
 					forms.optionsForSelect constants.field_type_options, field.field_type
-			div '.shrink-column', ->
+			div '.shrink-column.no-padding', ->
 				a '.remove-field.glyp-close.lyph-close.alert', title: 'Remove Field'
 
 		div '.horizontal-grid', ->
@@ -735,9 +735,9 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
-					icon '.ion-plus-round.lyph-plus'
+					icon '.glyp-plus.lyph-plus'
 				h4 '.with-icon', ->
-					icon '.ion-toggle-filled.lyph-template'
+					icon '.glyp-extras.lyph-template'
 					span '', 'Fields'
 				input '', type: 'hidden', name: 'script_fields_json'
 				div '.script-fields', ->
@@ -749,7 +749,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				select '.schedule-time', name: 'schedule_time', ->
 					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
 				h4 '.with-icon', ->
-					icon '.ion-calendar.lyph-calendar'
+					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
 				_scheduleRulePartial script, constants
 
@@ -980,6 +980,9 @@ class Workspace
 
 	init: (@constants) ->
 		config = this.getSavedStated()
+		config.dimensions = {
+			headerHeight: 32
+		}
 		@layout = new GoldenLayout config, @container[0]
 
 		@scriptMap = {}
@@ -1011,7 +1014,7 @@ class Workspace
 		@layout.on 'stateChanged', =>
 			this.saveState()
 
-		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='ion-android-folder-open.lyph-open'/>Open</a>"
+		@container.find('.lm_goldenlayout').append "<a class='with-icon open-script'><i class='glyp-open.lyph-open'/>Open</a>"
 
 		$('a.open-script').click =>
 			new PickerModal (script) =>
@@ -1120,7 +1123,7 @@ _pickerTemplate = tinyTemplate (scripts) ->
 									null
 								div '.schedule.with-icon', ->
 									if emailRecipients?
-										icon '.ion-email.lyph-email', title: emailRecipients
+										icon '.glyp-email.lyph-email', title: emailRecipients
 									span '', script.schedule_rule_summaries.replace('{', '').replace('}', '').replace(/"/g, '')
 						td '.col-created_by_name', script.created_by_name
 						td '', ->
@@ -1218,11 +1221,11 @@ _runsTemplate = tinyTemplate (runs) ->
 						td '.inline-actions', ->
 							if run.status == 'running'
 								a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
-									icon '.ion-android-cancel.lyph-close'
+									icon '.glyp-cancelled.lyph-close'
 									span '', 'Clear'
 							else if run.log_file_name?.length
 								a '.with-icon', href: run.log_url, target: '_blank', ->
-									icon '.ion-ios-list-outline.lyph-roster'
+									icon '.glyp-items.lyph-list'
 									span '', 'Log'
 
 
@@ -1286,7 +1289,7 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 				textarea '', name: 'description', rows: '4', script.description
 			div '.shrink-column.schedule-column', ->
 				h3 '.with-icon', ->
-					icon '.ion-ios-calendar-outline.lyph-calendar'
+					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
 					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
