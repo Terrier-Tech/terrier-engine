@@ -8,6 +8,8 @@ Terrier::ScriptConfig.category_icons = {
     miscellaneous: 'grid'
 }
 
+Terrier::ScriptConfig.fields_help = "This is some help that is shown for the fields"
+
 # dummy needs a migration in order for this to work
 # Terrier::ScriptConfig.report_type_icons = {
 #     none: 'sad-outline', # this should never actually be used

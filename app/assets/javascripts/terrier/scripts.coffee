@@ -736,6 +736,9 @@ _editorTemplate = tinyTemplate (script, constants) ->
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
 					icon '.glyp-plus.lyph-plus'
+				if constants.fields_help?.length
+					a '.right.fields-help', title: constants.fields_help, ->
+						icon '.glyp-help.lyph-help'
 				h4 '.with-icon', ->
 					icon '.glyp-extras.lyph-template'
 					span '', 'Fields'

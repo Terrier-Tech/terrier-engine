@@ -2,7 +2,8 @@ module Terrier::ScriptConfig
 
   @values = {
       category_icons: {},
-      report_type_icons: {}
+      report_type_icons: {},
+      fields_help: ''
   }
 
   @values.keys.each do |key|
