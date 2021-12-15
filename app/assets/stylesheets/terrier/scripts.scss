@@ -481,6 +481,12 @@ form.script-editor {
 				height: 100px;
 			}
 		}
+		label.required {
+			font-weight: bold;
+			&::after {
+				content: "";
+			}
+		}
 	}
 	a.cancel-exec {
 		padding: 8px;
