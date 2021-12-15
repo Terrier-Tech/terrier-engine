@@ -10,7 +10,6 @@ module Terrier::ScriptCrud
     def constants
       render_success "Got Constants", {
           constants: {
-            added_fields: Terrier::ScriptConfig.added_fields,
             category_options: Terrier::ScriptConfig.category_options,
             report_type_options: Terrier::ScriptConfig.report_type_options,
             visibility_options: Script.visibility_options,

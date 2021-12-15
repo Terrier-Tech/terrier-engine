@@ -733,17 +733,6 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				input '', type: 'text', name: 'email_recipients_s', value: (script.email_recipients||[]).sort().join(', ')
 				textarea '', name: 'description', placeholder: 'Description', rows: 2, script.description
 
-				if constants.added_fields.length
-					for field in constants.added_fields
-						options = field.options
-						key = field.key
-						label '', field.title
-						if field.text_field
-							input '', type: 'text', name: key, value: script[key]
-						else
-							select '', name: key, ->
-								forms.optionsForSelect options, script[key]
-
 			div '.settings-panel.fields', ->
 				a '.right.add-field', ->
 					icon '.ion-plus-round.lyph-plus'

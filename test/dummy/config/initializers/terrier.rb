@@ -14,12 +14,3 @@ Terrier::ScriptConfig.category_icons = {
 #     payments: 'calculator',
 #     locations: 'location'
 # }
-
-Terrier::ScriptConfig.add_field(
-  {
-    key: :org_id,
-    title: 'Organization',
-    options: [['None', ''], ['Terrier', '12345'], ['Plunketts', '54321']],
-    text_field: false
-  }
-)

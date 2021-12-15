@@ -1,24 +1,5 @@
 module Terrier::ScriptConfig
 
-  @@added_fields = []
-
-  def self.added_fields
-    @@added_fields
-  end
-
-  # Must be passed a hash containing the key, title, and options
-  # for example:
-  # Terrier::ScriptConfig.add_field({
-  #    key: :org_id,
-  #    title: 'Organization',
-  #    options: -> {Org.options},
-  #    text_field: false
-  #   })
-  # Currently supports only select drop downs and input text fields
-  def self.add_field(field)
-    @@added_fields.append field
-  end
-
   @values = {
       category_icons: {},
       report_type_icons: {}
