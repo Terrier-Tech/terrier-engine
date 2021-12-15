@@ -8,7 +8,7 @@ Terrier::ScriptConfig.category_icons = {
     miscellaneous: 'grid'
 }
 
-Terrier::ScriptConfig.fields_help = "This is some help that is shown for the fields"
+Terrier::ScriptConfig.fields_help = "<p>This is some help that is shown for the fields.</p><ul><li>Item One</li><li>Item Two</li></ul><p>Another paragraph</p>"
 
 # dummy needs a migration in order for this to work
 # Terrier::ScriptConfig.report_type_icons = {

@@ -633,6 +633,10 @@ class FieldsControls
 			this.addField()
 		this.updateOutput()
 
+		container.on 'click', 'a.fields-help', =>
+			help = @constants.fields_help
+			tinyModal.noticeAlert 'Script Fields', help
+
 		container.on 'change', 'input, select, textarea', =>
 			this.updateOutput()
 			@editor.onChanged()
@@ -737,7 +741,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				a '.right.add-field', ->
 					icon '.glyp-plus.lyph-plus'
 				if constants.fields_help?.length
-					a '.right.fields-help', title: constants.fields_help, ->
+					a '.right.fields-help', ->
 						icon '.glyp-help.lyph-help'
 				h4 '.with-icon', ->
 					icon '.glyp-extras.lyph-template'

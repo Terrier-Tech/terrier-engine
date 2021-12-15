@@ -298,6 +298,9 @@ form.script-editor {
 				cursor: pointer;
 				line-height: 0;
 				top: -4px;
+				margin-left: 4px;
+				min-width: 18px;
+				min-height: 18px;
 			}
 			h4 {
 				font-size: 16px;
@@ -342,7 +345,7 @@ form.script-editor {
 				font-size: 24px;
 				display: block;
 				opacity: 0.5;
-				padding: 4px;
+				padding: 4px 0;
 				line-height: 1;
 				min-width: 24px; // so it's clickable without the icons
 				min-height: 24px;
