@@ -86,6 +86,19 @@ module CsvIo
     [columns, columns_s]
   end
 
+  # pulls the given column from the row, respecting the different
+  # behavior of QueryResults
+  def self.pluck_column(row, col)
+    val = row.is_a?(QueryRow) ? row.send(col) : row[col]
+    if val.nil?
+      ''
+    elsif val.is_a? Array
+      val.map(&:to_s).join(',')
+    else
+      val
+    end
+  end
+
   # converts an array of hashes to a csv string
   def self.write(data, options={})
     return '' unless data && data.count > 0
@@ -95,7 +108,9 @@ module CsvIo
     CSV.generate do |csv|
       csv << columns_s
       data.each do |row|
-        csv << columns.map{|f| row[f]}
+        csv << columns.map do |col|
+          CsvIo.pluck_column row, col
+        end
       end
     end
   end
@@ -124,14 +139,7 @@ module CsvIo
     data.each do |row|
       r += 1
       flat_row = columns.map do |col|
-        val = row.is_a?(QueryRow) ? row.send(col) : row[col]
-        if val.nil?
-          ''
-        elsif val.is_a? Array
-          val.map(&:to_s).join(',')
-        else
-          val
-        end
+        CsvIo.pluck_column row, col
       end
       sheet.row(r).concat flat_row
     end
