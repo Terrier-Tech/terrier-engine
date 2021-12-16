@@ -8,6 +8,7 @@ require 'terrier/strings'
 require 'terrier/io/csv_io'
 
 require 'terrier/logging/loggable'
+require 'terrier/logging/progress_logger'
 require 'terrier/logging/multi_logger'
 
 module Terrier
