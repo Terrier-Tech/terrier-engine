@@ -1,5 +1,6 @@
 require 'csv'
 require 'spreadsheet'
+require 'xsv'
 
 module CsvIo
 
@@ -28,7 +29,10 @@ module CsvIo
 
   # loads a csv file in the given path (absolute or relative to project root)
   # and returns a hash with keys based on the first row
-  def self.load(rel_path)
+  def self.load(rel_path, options={})
+    if rel_path.ends_with? '.xlsx'
+      return CsvIo.load_xlsx rel_path, options
+    end
     abs_path = CsvIo.rel_to_abs_path rel_path
     headers = nil
     data = []
@@ -46,7 +50,7 @@ module CsvIo
     data
   end
 
-  # same as load_csv, but works on a raw string of csv instead of from a file
+  # same as load, but works on a raw string of csv instead of from a file
   def self.parse(raw)
     headers = nil
     data = []
@@ -62,6 +66,18 @@ module CsvIo
       end
     end
     data
+  end
+
+  # loads an xlsx file into a hash of arrays of hashes
+  def self.load_xlsx(rel_path, options = {})
+    abs_path = CsvIo.rel_to_abs_path rel_path
+    x = Xsv::Workbook.open(abs_path.to_s)
+    output = {}
+    x.sheets.each do |sheet|
+      sheet.parse_headers!
+      output[sheet.name] = sheet.to_a
+    end
+    output
   end
 
   # returns columns and their string versions (columns_s)
@@ -115,11 +131,14 @@ module CsvIo
     end
   end
 
-  # dumps data to a csv file
+  # dumps data to a csv or xls file
   def self.save(data, rel_path, options={})
+    if rel_path.ends_with? '.xls'
+      return self.save_xls data, rel_path, options
+    end
     abs_path = CsvIo.rel_to_abs_path rel_path
     dir = File.dirname abs_path
-    unless File.exists? dir
+    unless File.exist? dir
       Dir.mkdir dir
     end
     File.open abs_path, 'wt' do |f|
@@ -152,7 +171,7 @@ module CsvIo
   def self.save_xls(data, rel_path, options={})
     abs_path = CsvIo.rel_to_abs_path rel_path
     dir = File.dirname abs_path
-    unless File.exists? dir
+    unless File.exist? dir
       Dir.mkdir dir
     end
     options = {

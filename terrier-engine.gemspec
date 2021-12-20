@@ -16,12 +16,13 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '>= 4.2'
+  s.add_dependency 'rails', '>= 5.0'
   s.add_dependency 'rack', '< 2.2'
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
   s.add_dependency 'elasticsearch'
   s.add_dependency 'spreadsheet'
+  s.add_dependency 'xsv'
   s.add_dependency 'nokogiri', '>= 1.10.4'
   s.add_dependency 'loofah', '>= 2.3.1'
   s.add_dependency 'awesome_print'
