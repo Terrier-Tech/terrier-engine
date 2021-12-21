@@ -5,7 +5,7 @@ require 'terrier/migrations'
 require 'terrier/engine'
 require 'terrier/strings'
 
-require 'terrier/io/csv_io'
+require 'terrier/io/tabular_io'
 
 require 'terrier/logging/loggable'
 require 'terrier/logging/progress_logger'

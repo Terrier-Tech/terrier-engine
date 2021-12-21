@@ -29,7 +29,7 @@ module Terrier::RenderingBase
           if keys.length != 1
             return error "There must be exactly one additional argument to render_success (besides status and message) - found [#{keys.join(', ')}]"
           end
-          return render plain: CsvIo.write(data[keys.first])
+          return render plain: TabularIo.write(data[keys.first])
         end
         format.html do
           if params[:modal]&.is_true?

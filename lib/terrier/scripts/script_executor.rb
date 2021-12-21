@@ -1,4 +1,4 @@
-require 'terrier/io/csv_io'
+require 'terrier/io/tabular_io'
 
 class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
@@ -120,20 +120,20 @@ class ScriptExecutor
   end
 
   def dump_xls(data, rel_path, options={})
-    abs_path = CsvIo.save_xls data, rel_path, options
-    write_raw 'file', CsvIo.abs_to_rel_path(abs_path)
+    abs_path = TabularIo.save_xls data, rel_path, options
+    write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
   def dump_csv(data, rel_path, options={})
-    abs_path = CsvIo.save data, rel_path
-    write_raw 'file', CsvIo.abs_to_rel_path(abs_path)
+    abs_path = TabularIo.save data, rel_path
+    write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
   def puts_file(path)
     if path.index(Rails.root.to_s)
-      path = CsvIo.abs_to_rel_path path
+      path = TabularIo.abs_to_rel_path path
     end
     write_raw 'file', path
     file_name = File.basename path

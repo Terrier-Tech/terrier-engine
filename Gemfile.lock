@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.6.9)
+    terrier-engine (2.7.1)
       awesome_print
       dotenv
       elasticsearch
@@ -82,12 +82,12 @@ GEM
     concurrent-ruby (1.1.4)
     crass (1.0.5)
     dotenv (2.7.6)
-    elasticsearch (7.16.0)
-      elasticsearch-api (= 7.16.0)
-      elasticsearch-transport (= 7.16.0)
-    elasticsearch-api (7.16.0)
+    elasticsearch (7.16.1)
+      elasticsearch-api (= 7.16.1)
+      elasticsearch-transport (= 7.16.1)
+    elasticsearch-api (7.16.1)
       multi_json
-    elasticsearch-transport (7.16.0)
+    elasticsearch-transport (7.16.1)
       faraday (~> 1)
       multi_json
     erubi (1.7.1)

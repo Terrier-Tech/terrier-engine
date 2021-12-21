@@ -33,7 +33,7 @@ class ScriptField
       if s.blank?
         []
       else
-        CsvIo.parse s
+        TabularIo.parse s
       end
     else
       raise "Unknown field type #{type}"

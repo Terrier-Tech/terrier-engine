@@ -2,7 +2,7 @@ require 'csv'
 require 'spreadsheet'
 require 'xsv'
 
-module CsvIo
+module TabularIo
 
   # uses some logic to convert a relative path to an absolute one:
   # - anything beginning with /system, /config, /db, /import, or /test will be relative to the app root
@@ -31,9 +31,9 @@ module CsvIo
   # and returns a hash with keys based on the first row
   def self.load(rel_path, options={})
     if rel_path.ends_with? '.xlsx'
-      return CsvIo.load_xlsx rel_path, options
+      return TabularIo.load_xlsx rel_path, options
     end
-    abs_path = CsvIo.rel_to_abs_path rel_path
+    abs_path = TabularIo.rel_to_abs_path rel_path
     headers = nil
     data = []
     CSV.open(abs_path, 'r:bom|utf-8').each do |row|
@@ -70,7 +70,7 @@ module CsvIo
 
   # loads an xlsx file into a hash of arrays of hashes
   def self.load_xlsx(rel_path, options = {})
-    abs_path = CsvIo.rel_to_abs_path rel_path
+    abs_path = TabularIo.rel_to_abs_path rel_path
     x = Xsv::Workbook.open(abs_path.to_s)
     output = {}
     x.sheets.each do |sheet|
@@ -125,7 +125,7 @@ module CsvIo
       csv << columns_s
       data.each do |row|
         csv << columns.map do |col|
-          CsvIo.pluck_column row, col
+          TabularIo.pluck_column row, col
         end
       end
     end
@@ -136,13 +136,13 @@ module CsvIo
     if rel_path.ends_with? '.xls'
       return self.save_xls data, rel_path, options
     end
-    abs_path = CsvIo.rel_to_abs_path rel_path
+    abs_path = TabularIo.rel_to_abs_path rel_path
     dir = File.dirname abs_path
     unless File.exist? dir
       Dir.mkdir dir
     end
     File.open abs_path, 'wt' do |f|
-      f.write CsvIo.write(data, options)
+      f.write TabularIo.write(data, options)
     end
     abs_path
   end
@@ -158,7 +158,7 @@ module CsvIo
     data.each do |row|
       r += 1
       flat_row = columns.map do |col|
-        CsvIo.pluck_column row, col
+        TabularIo.pluck_column row, col
       end
       sheet.row(r).concat flat_row
     end
@@ -169,7 +169,7 @@ module CsvIo
   # options can contain: columns, sheet_name, titleize_columns
   # returns the absolute path of the written file
   def self.save_xls(data, rel_path, options={})
-    abs_path = CsvIo.rel_to_abs_path rel_path
+    abs_path = TabularIo.rel_to_abs_path rel_path
     dir = File.dirname abs_path
     unless File.exist? dir
       Dir.mkdir dir
@@ -184,10 +184,10 @@ module CsvIo
     if data.is_a?(Hash)
       data.each do |sheet_name, _data|
         options[:sheet_name] = sheet_name.to_s
-        CsvIo.create_sheet book, _data, options
+        TabularIo.create_sheet book, _data, options
       end
     elsif data.is_a?(Array) || data.is_a?(QueryResult)
-      CsvIo.create_sheet book, data, options
+      TabularIo.create_sheet book, data, options
     else
       raise 'Unknown Data Type'
     end
@@ -199,3 +199,6 @@ module CsvIo
 
 
 end
+
+# for backwards compatability
+CsvIo = TabularIo
