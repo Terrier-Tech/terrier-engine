@@ -127,7 +127,7 @@ class ScriptExecutor
     dump_file data, rel_path, options
   end
 
-  # either dumps a csv or xls, depending on extension
+  # either dumps a csv or xls using TabularIo.save
   def dump_file(data, rel_path, options={})
     abs_path = TabularIo.save data, rel_path
     write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
@@ -141,6 +141,11 @@ class ScriptExecutor
     write_raw 'file', path
     file_name = File.basename path
     puts "Showing #{file_name}"
+  end
+
+  # loads either a csv or xlsx file using TabularIo.load
+  def load_file(rel_path, options={})
+    TabularIo.load rel_path, options
   end
 
   def get_field(name)

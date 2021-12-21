@@ -7,6 +7,7 @@ test/dummy/yarn-error.log
 test/dummy/storage/
 test/dummy/tmp/
 test/dummy/public/system
+test/dummy/test/output
 .idea/
 .DS_Store
 /tmp
