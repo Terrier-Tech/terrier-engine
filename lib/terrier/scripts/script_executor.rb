@@ -120,12 +120,15 @@ class ScriptExecutor
   end
 
   def dump_xls(data, rel_path, options={})
-    abs_path = TabularIo.save_xls data, rel_path, options
-    write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
-    puts "Wrote #{data.count} records to #{rel_path}"
+    dump_file data, rel_path, options
   end
 
   def dump_csv(data, rel_path, options={})
+    dump_file data, rel_path, options
+  end
+
+  # either dumps a csv or xls, depending on extension
+  def dump_file(data, rel_path, options={})
     abs_path = TabularIo.save data, rel_path
     write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"

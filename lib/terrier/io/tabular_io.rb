@@ -4,6 +4,8 @@ require 'xsv'
 
 module TabularIo
 
+  ## Paths
+
   # uses some logic to convert a relative path to an absolute one:
   # - anything beginning with /system, /config, /db, /import, or /test will be relative to the app root
   # - any other path starting with / is assumed to be absolute
@@ -27,13 +29,22 @@ module TabularIo
   end
 
 
-  # loads a csv file in the given path (absolute or relative to project root)
+  ## Loading
+
+  # loads a csv or xlsx file in the given path (absolute or relative to project root)
   # and returns a hash with keys based on the first row
   def self.load(rel_path, options={})
     if rel_path.ends_with? '.xlsx'
-      return TabularIo.load_xlsx rel_path, options
+      self.load_xlsx rel_path, options
+    elsif rel_path.ends_with? '.csv'
+      self.load_csv rel_path, options
+    else
+      raise "Don't know how to load file #{File.basename(rel_path)}"
     end
-    abs_path = TabularIo.rel_to_abs_path rel_path
+  end
+
+  def self.load_csv(rel_path, options={})
+    abs_path = self.rel_to_abs_path rel_path
     headers = nil
     data = []
     CSV.open(abs_path, 'r:bom|utf-8').each do |row|
@@ -50,8 +61,13 @@ module TabularIo
     data
   end
 
-  # same as load, but works on a raw string of csv instead of from a file
+  # TODO: remove this, bad name
   def self.parse(raw)
+    self.parse_csv raw
+  end
+
+  # same as load_csv, but works on a raw string of csv instead of from a file
+  def self.parse_csv(raw)
     headers = nil
     data = []
     CSV.parse(raw).each do |row|
@@ -70,7 +86,7 @@ module TabularIo
 
   # loads an xlsx file into a hash of arrays of hashes
   def self.load_xlsx(rel_path, options = {})
-    abs_path = TabularIo.rel_to_abs_path rel_path
+    abs_path = self.rel_to_abs_path rel_path
     x = Xsv::Workbook.open(abs_path.to_s)
     output = {}
     x.sheets.each do |sheet|
@@ -79,6 +95,9 @@ module TabularIo
     end
     output
   end
+
+
+  ## Columns
 
   # returns columns and their string versions (columns_s)
   def self.compute_columns(data, options)
@@ -115,8 +134,16 @@ module TabularIo
     end
   end
 
-  # converts an array of hashes to a csv string
+
+  ## Saving
+
+  # TODO: remove this, bad name
   def self.write(data, options={})
+    self.serialize_csv data, options
+  end
+
+  # converts an array of hashes to a csv string
+  def self.serialize_csv(data, options={})
     return '' unless data && data.count > 0
 
     columns, columns_s = self.compute_columns data, options
@@ -125,26 +152,33 @@ module TabularIo
       csv << columns_s
       data.each do |row|
         csv << columns.map do |col|
-          TabularIo.pluck_column row, col
+          self.pluck_column row, col
         end
       end
     end
   end
 
-  # dumps data to a csv or xls file
-  def self.save(data, rel_path, options={})
-    if rel_path.ends_with? '.xls'
-      return self.save_xls data, rel_path, options
-    end
-    abs_path = TabularIo.rel_to_abs_path rel_path
+  def self.save_csv(data, rel_path, options={})
+    abs_path = self.rel_to_abs_path rel_path
     dir = File.dirname abs_path
     unless File.exist? dir
       Dir.mkdir dir
     end
     File.open abs_path, 'wt' do |f|
-      f.write TabularIo.write(data, options)
+      f.write self.serialize_csv(data, options)
     end
     abs_path
+  end
+
+  # dumps data to a csv or xls file
+  def self.save(data, rel_path, options={})
+    if rel_path.ends_with? '.xls'
+      self.save_xls data, rel_path, options
+    elsif rel_path.ends_with? '.csv'
+      self.save_csv data, rel_path, options
+    else
+      raise "Don't know how to save file #{File.basename(rel_path)}"
+    end
   end
 
 
@@ -158,7 +192,7 @@ module TabularIo
     data.each do |row|
       r += 1
       flat_row = columns.map do |col|
-        TabularIo.pluck_column row, col
+        self.pluck_column row, col
       end
       sheet.row(r).concat flat_row
     end
@@ -169,7 +203,7 @@ module TabularIo
   # options can contain: columns, sheet_name, titleize_columns
   # returns the absolute path of the written file
   def self.save_xls(data, rel_path, options={})
-    abs_path = TabularIo.rel_to_abs_path rel_path
+    abs_path = self.rel_to_abs_path rel_path
     dir = File.dirname abs_path
     unless File.exist? dir
       Dir.mkdir dir
@@ -184,10 +218,10 @@ module TabularIo
     if data.is_a?(Hash)
       data.each do |sheet_name, _data|
         options[:sheet_name] = sheet_name.to_s
-        TabularIo.create_sheet book, _data, options
+        self.create_sheet book, _data, options
       end
     elsif data.is_a?(Array) || data.is_a?(QueryResult)
-      TabularIo.create_sheet book, data, options
+      self.create_sheet book, data, options
     else
       raise 'Unknown Data Type'
     end
