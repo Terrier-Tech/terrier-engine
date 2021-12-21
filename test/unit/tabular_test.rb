@@ -19,7 +19,7 @@ class TabularTest < ActiveSupport::TestCase
   end
 
   test "should save one sheet" do
-    workbook_path = TabularIo.save [{ col_1: 'h1', col_2: 'h2'}], "/test/two_pages.xls"
+    workbook_path = TabularIo.save [{ col_1: 'h1', col_2: 'h2'}], "/test/output/one_page.xls"
     assert_equal 1, count_sheets(workbook_path), 'One Sheet'
   end
 
