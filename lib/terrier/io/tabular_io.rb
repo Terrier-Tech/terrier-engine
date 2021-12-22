@@ -97,6 +97,23 @@ module TabularIo
   end
 
 
+  ## Splitting
+
+  # splits out the given file into separate csv files named based on the sheet names
+  # optionally pass a different out_dir, defaults to the same directory as the input
+  def self.split(rel_path, options={})
+    sheets = self.load rel_path
+    raise "#{rel_path} contains a single spreadsheet, nothing to split" if sheets.is_a? Array
+    raise "#{rel_path} doesn't seem to contain a spreadsheet" unless sheets.is_a? Hash
+    out_dir = options[:out_dir].presence || File.dirname(rel_path)
+    sheets.each do |name, data|
+      out_path = File.join out_dir, "#{name}.csv"
+      self.save data, out_path
+    end
+    sheets
+  end
+
+
   ## Columns
 
   # returns columns and their string versions (columns_s)

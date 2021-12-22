@@ -208,10 +208,7 @@ module Terrier::Embedded
     end
 
     def field_defs
-      unless @fields
-        @fields = {}
-      end
-      @fields
+      @fields ||= {}
     end
 
     def fields

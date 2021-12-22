@@ -2,7 +2,6 @@ require 'terminal-table'
 
 require 'terrier/migrations'
 
-require 'terrier/engine'
 require 'terrier/strings'
 
 require 'terrier/io/tabular_io'

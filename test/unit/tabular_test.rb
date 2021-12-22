@@ -3,7 +3,7 @@ require 'spreadsheet/workbook'
 
 class TabularTest < ActiveSupport::TestCase
 
-  test "should save multiple sheets" do
+  test "save multiple sheets" do
     sheets = {
         sheet_one: [
             {col_1: 'r1c1', col_2: 'r1c2'},
@@ -18,7 +18,7 @@ class TabularTest < ActiveSupport::TestCase
     assert_equal 2, count_sheets(workbook_path), "Two Sheets"
   end
 
-  test "should save one sheet" do
+  test "save one sheet" do
     workbook_path = TabularIo.save [{ col_1: 'h1', col_2: 'h2'}], "/test/output/one_page.xls"
     assert_equal 1, count_sheets(workbook_path), 'One Sheet'
   end
@@ -28,9 +28,9 @@ class TabularTest < ActiveSupport::TestCase
     book.sheet_count
   end
 
-  test 'sorted columns' do
+  test 'sort columns' do
     data = 0.upto(10).map do |i|
-      {foo: i.to_s, bar: rand(), baz: 'ignore'}
+      {foo: i.to_s, bar: rand, baz: 'ignore'}
     end
     rel_path = '/test/output/sorted_columns.csv'
     columns = %w[bar foo]
@@ -39,10 +39,20 @@ class TabularTest < ActiveSupport::TestCase
     assert_equal columns, in_data.first.keys
   end
 
-  test 'loading xlsx' do
+  test 'load xlsx' do
     data = TabularIo.load_xlsx '/test/input/test.xlsx'
     assert_equal 2, data.size
     assert_equal 10, data['Sheet 1'].size
     assert_equal 1, data['Sheet 2'].size
+  end
+
+  test 'split xlsx into csv' do
+    rel_out_dir = '/test/output'
+    sheets = TabularIo.split '/test/input/test.xlsx', out_dir: rel_out_dir
+    sheets.each do |name, xlsx_data|
+      rel_out_path = File.join rel_out_dir, "#{name}.csv"
+      csv_data = TabularIo.load rel_out_path
+      assert_equal xlsx_data.size, csv_data.size
+    end
   end
 end
