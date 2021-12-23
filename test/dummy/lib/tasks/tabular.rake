@@ -12,7 +12,7 @@ namespace :tabular do
 
   LARGE_PATH = 'tabular/large.xlsx'
 
-  desc 'Generate a large set of tabular data and write it to public/system/tabular/large.xlsx'
+  desc "Generate a large set of tabular data and write it to public/system/#{LARGE_PATH}"
   task generate_large: :environment do
     data = {}
 
@@ -38,6 +38,23 @@ namespace :tabular do
 
     bench 'Save Data' do
       TabularIo.save data, LARGE_PATH
+    end
+  end
+
+  desc "Splits the large file from public/system/#{LARGE_PATH} into separate csv files"
+  task split_large: :environment do
+    bench 'Split Data' do
+      TabularIo.split LARGE_PATH
+    end
+  end
+
+  desc "Loads the large CSV files to see if it's faster than reading them from the one xlsx"
+  task load_large: :environment do
+    %w[sheet1 sheet2].each do |name|
+      rel_path = File.join File.dirname(LARGE_PATH), "#{name}.csv"
+      bench "Load #{rel_path}" do
+        TabularIo.load rel_path
+      end
     end
   end
 
