@@ -1,6 +1,7 @@
 require 'csv'
 require 'spreadsheet'
 require 'xsv'
+require 'write_xlsx'
 
 module TabularIo
 
@@ -21,6 +22,16 @@ module TabularIo
     else
       Rails.root.join('public/system/' + rel_path)
     end
+  end
+
+  # returns the result of rel_to_abs_path but ensures that the directory exists
+  def self.safe_rel_to_abs_path(rel_path)
+    abs_path = self.rel_to_abs_path rel_path
+    dir = File.dirname abs_path
+    unless File.exist? dir
+      FileUtils.mkdir_p dir
+    end
+    abs_path
   end
 
   # converts an absolute path to a relative one
@@ -176,11 +187,7 @@ module TabularIo
   end
 
   def self.save_csv(data, rel_path, options={})
-    abs_path = self.rel_to_abs_path rel_path
-    dir = File.dirname abs_path
-    unless File.exist? dir
-      Dir.mkdir dir
-    end
+    abs_path = self.safe_rel_to_abs_path rel_path
     File.open abs_path, 'wt' do |f|
       f.write self.serialize_csv(data, options)
     end
@@ -191,6 +198,8 @@ module TabularIo
   def self.save(data, rel_path, options={})
     if rel_path.ends_with? '.xls'
       self.save_xls data, rel_path, options
+    elsif rel_path.ends_with? '.xlsx'
+      self.save_xlsx data, rel_path, options
     elsif rel_path.ends_with? '.csv'
       self.save_csv data, rel_path, options
     else
@@ -198,8 +207,8 @@ module TabularIo
     end
   end
 
-
-  def self.create_sheet(book, data, options)
+  # creates a sheet inside an xls workbook
+  def self.create_sheet_xls(book, data, options)
     sheet = book.create_worksheet name: options[:sheet_name]
 
     columns, columns_s = self.compute_columns data, options
@@ -220,11 +229,7 @@ module TabularIo
   # options can contain: columns, sheet_name, titleize_columns
   # returns the absolute path of the written file
   def self.save_xls(data, rel_path, options={})
-    abs_path = self.rel_to_abs_path rel_path
-    dir = File.dirname abs_path
-    unless File.exist? dir
-      Dir.mkdir dir
-    end
+    abs_path = self.safe_rel_to_abs_path rel_path
     options = {
         sheet_name: 'Data',
         titleize_columns: false
@@ -235,15 +240,60 @@ module TabularIo
     if data.is_a?(Hash)
       data.each do |sheet_name, _data|
         options[:sheet_name] = sheet_name.to_s
-        self.create_sheet book, _data, options
+        self.create_sheet_xls book, _data, options
       end
     elsif data.is_a?(Array) || data.is_a?(QueryResult)
-      self.create_sheet book, data, options
+      self.create_sheet_xls book, data, options
     else
-      raise 'Unknown Data Type'
+      raise "Don't know how to write a #{data.class.name} to xls"
     end
 
     book.write abs_path
+    abs_path
+  end
+
+  # creates a sheet inside an xlsx workbook
+  def self.create_sheet_xlsx(book, data, options)
+    sheet = book.add_worksheet options[:sheet_name]
+
+    columns, columns_s = self.compute_columns data, options
+
+    r = 0
+    columns_s.each_with_index do |col, c|
+      sheet.write r, c, col
+    end
+    data.each do |row|
+      r += 1
+      columns.each_with_index do |col, c|
+        val = self.pluck_column row, col
+        sheet.write r, c, val
+      end
+    end
+  end
+  
+  # writes an xlsx file
+  # data can be either an array of hashes or a hash of array of hashes
+  def self.save_xlsx(data, rel_path, options={})
+    abs_path = self.safe_rel_to_abs_path rel_path
+    options = {
+      sheet_name: 'Data',
+      titleize_columns: false
+    }.merge options
+
+    book = WriteXLSX.new abs_path
+
+    if data.is_a?(Hash)
+      data.each do |sheet_name, _data|
+        options[:sheet_name] = sheet_name.to_s
+        self.create_sheet_xlsx book, _data, options
+      end
+    elsif data.is_a?(Array) || data.is_a?(QueryResult)
+      self.create_sheet_xlsx book, data, options
+    else
+      raise "Don't know how to write a #{data.class.name} to xlsx"
+    end
+
+    book.close
     abs_path
   end
 

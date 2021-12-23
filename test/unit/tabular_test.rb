@@ -39,6 +39,19 @@ class TabularTest < ActiveSupport::TestCase
     assert_equal columns, in_data.first.keys
   end
 
+  test 'save xlsx' do
+    data_out = 0.upto(10).map do |i|
+      { foo: i.to_s, bar: rand, baz: 'ignore' }
+    end
+    rel_path = '/test/output/save_load.xlsx'
+    TabularIo.save data_out, rel_path
+    all_data_in = TabularIo.load rel_path
+    assert all_data_in.is_a?(Hash)
+    data_in = all_data_in.values.first
+    assert_equal data_out.count, data_in.count
+    assert_equal data_out.first[:foo], data_in.first['foo'].to_s
+  end
+
   test 'load xlsx' do
     data = TabularIo.load_xlsx '/test/input/test.xlsx'
     assert_equal 2, data.size

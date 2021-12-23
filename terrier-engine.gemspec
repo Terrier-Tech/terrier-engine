@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'elasticsearch'
   s.add_dependency 'spreadsheet'
   s.add_dependency 'xsv'
+  s.add_dependency 'write_xlsx'
   s.add_dependency 'nokogiri', '>= 1.10.4'
   s.add_dependency 'loofah', '>= 2.3.1'
   s.add_dependency 'awesome_print'
