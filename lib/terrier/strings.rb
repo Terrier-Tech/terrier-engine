@@ -67,7 +67,8 @@ class String
   end
 
   def smart_title
-    if (self.length<3 and !UPCASE_BLACKLIST.index(self.downcase)) or UPCASE_VALUES.index(self.downcase)
+    lower_s = self.downcase
+    if (self.length<3 and !UPCASE_BLACKLIST.index(lower_s)) or UPCASE_VALUES.index(lower_s)
       self.upcase
     else
       self.titleize
