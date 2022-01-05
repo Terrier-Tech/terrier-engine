@@ -4,7 +4,7 @@ EMAIL_SPLIT_REGEX = /[\s,;]+/
 SLUG_REGEX = /([[:lower:]]|[0-9]+-?[[:lower:]])(-[[:lower:]0-9]+|[[:lower:]0-9])*/
 
 # add values here that should always be upcased when displayed to the user
-UPCASE_VALUES = %w(cod csr html pdf ach eft)
+UPCASE_VALUES = %w(cod ace bce csr dot pca tpp it qal html pdf ach eft)
 
 # these shouldn't be upcased, even though they're only two characters
 UPCASE_BLACKLIST = %w(at by to is or)
