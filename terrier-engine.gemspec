@@ -16,8 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '>= 5.0'
-  s.add_dependency 'rack', '< 2.2'
+  s.add_dependency 'rails', '>= 5.2'
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
   s.add_dependency 'elasticsearch'
