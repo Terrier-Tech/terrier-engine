@@ -4,7 +4,7 @@ class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
 
   attr_reader :cache, :each_count, :each_total, :log_lines
-  attr_accessor :me, :params
+  attr_accessor :me, :params, :script
 
   def should_soft_destroy
     true
