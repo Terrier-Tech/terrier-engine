@@ -4,12 +4,10 @@ module MyColumnMethods
 
   def references_uuid(other, options={})
     options[:type] = :uuid
-    options[:index] = true
+    options[:index] ||= true
     options[:foreign_key] = true
-    unless options.has_key? :null
-      options[:null] = false
-    end
-    self.references other, options
+    options[:null] ||= false
+    self.references other, type: options[:type], index: options[:index], foreign_key: options[:foreign_key], null: options[:null], polymorphic: options[:polymorphic]
   end
 
   # creates a non-null, default 0 integer column
