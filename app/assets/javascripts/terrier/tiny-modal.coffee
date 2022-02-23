@@ -42,7 +42,8 @@ window.tinyModal.pop = ->
 		# reload the current column from a name=modal-src hidden input
 		srcField = column.find('input[name=modal-src]')
 		if srcField.length
-			column.load srcField.val(), ->
+			url = tinyModal.ensureModalUrl srcField.val()
+			column.load url, ->
 				tinyModal.removeLoadingOverlay()
 		else
 			tinyModal.removeLoadingOverlay()
@@ -71,17 +72,11 @@ _layoutRow = (row) ->
 	# ensure that each column isn't wider than the window
 	row.children('.modal-column').css 'max-width', $('#modal-window').width()
 
-
-_classToSel = (c) ->
-	unless c?
-		return ''
-	_.map(c.split(/\s+/), (s) -> ".#{s}").join('')
-
 _actionPartial = (action) ->
 	sel = '.action'
 	if action.icon?.length
 		sel += '.with-icon'
-	a "#{sel}#{_classToSel(action.class)}", action.attrs||{}, ->
+	a "#{sel}#{tinyTemplate.classesToSelector(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
 			icon ".ion-#{action.icon}.la.la-#{action.icon}.#{action.icon}"
 		span '.title', action.title
@@ -114,23 +109,45 @@ _emptyColumnTemplate = tinyTemplate ->
 		div '.modal-actions'
 
 
+_topColumn = ->
+	$ '#modal-window .modal-column:last'
+
+_topContent = ->
+	$ '#modal-window .modal-content:last'
+
 # replaces the content of the top modal on the stack with the given HTML
 window.tinyModal.replaceContent = (content)	->
-	container = $('#modal-window .modal-content:last')
+	container = _topContent()
 	container.html content
 
-# loads a URL into the top modal stack
-window.tinyModal.replaceColumn = (url) ->
-	# add the modal parameter to the link
+# ensures that the give url has a modal=true param
+window.tinyModal.ensureModalUrl = (url) ->
 	unless url.indexOf('modal=true') > -1
 		if url.indexOf('?') > -1
 			url += '&modal=true'
 		else
 			url += '?modal=true'
+	url
 
-	container = $('#modal-window .modal-column:last')
+# loads a URL into the top modal stack
+window.tinyModal.replaceColumn = (url) ->
+	url = tinyModal.ensureModalUrl url
+	container = _topColumn()
 	container.showLoadingOverlay()
 	container.load url
+
+# reloads the top modal using the modal-src input or the provided url
+window.tinyModal.reload = (url=null) ->
+	srcInput = _topContent().find('input[name=modal-src]')
+	if srcInput.length
+		url = srcInput.val()
+	unless url?.length
+		throw "No url provided for this modal!"
+	url = tinyModal.ensureModalUrl url
+	container = _topColumn()
+	container.showLoadingOverlay()
+	container.load url
+
 
 # removes the actions from the last column
 window.tinyModal.removeActions = ->

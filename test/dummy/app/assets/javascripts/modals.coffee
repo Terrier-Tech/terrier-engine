@@ -129,7 +129,10 @@ $(document).on 'click', 'a.stacked-modal', ->
 _replaceContentTemplate = tinyTemplate ->
 	div '.replace-content', ->
 		h1 '.text-center', ->
-			a '.replace-content', 'Replace Content'
+			a '.replace-content', 'Replace Client-Side'
+		h1 '.text-center', ->
+			input '', type: 'hidden', name: 'modal-src', value: '/replaced_content'
+			a '.reload-column', 'Reload Server-Side'
 
 $(document).on 'click', 'a.replace-content-modal', ->
 	tinyModal.showDirect(
@@ -138,8 +141,13 @@ $(document).on 'click', 'a.replace-content-modal', ->
 		title_icon: 'arrow-swap'
 		callback: (modal) ->
 			modal.find('a.replace-content').click ->
-				tinyModal.replaceContent '<h2 class="text-center">Replaced!</h2>'
+				tinyModal.replaceContent '<h2 class="text-center">Replaced Client-Side!</h2>'
 	)
+
+$(document).on 'click', 'a.reload-column', ->
+	tinyModal.reload()
+
+
 
 ## Wide Modal Content
 

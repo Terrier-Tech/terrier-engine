@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   get 'modals' => 'client_side#modals'
+  get 'replaced_content' => 'client_side#replaced_content'
 
   get 'rendering/exception'
 

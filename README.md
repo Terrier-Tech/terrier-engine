@@ -36,9 +36,11 @@ You can call `tinyModal.pop()` to pop the current modal off the stack
 or `tinyModal.close()` to close all modals.
 
 When popped, if an input with `name=modal-src` is present on the next top modal, 
-the contents of that modal will be reloaded with the value of the input.
+the contents of that modal will be reloaded with the URL specified in the input. 
+This behavior can also be called explicitly with `tinyModal.reload()`.
 
 If a `.modal-reload` element exists within the modal when it's closed, the page will be reloaded.
+
 
 ### Tiny Logger
 
