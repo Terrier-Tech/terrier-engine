@@ -101,7 +101,7 @@ window.tinyTemplate = (root) ->
 
 # converts an array of classes to a dot-prefixed selector string
 window.tinyTemplate.classesToSelector = (classes) ->
-	_.map(classes, (c) -> ".#{c}").join()
+	_.map(tinyTemplate.parseClasses(classes), (c) -> ".#{c}").join()
 
 # parses a string containing (space or period-delimited) classes into an array
 # passing an array simply returns the array
