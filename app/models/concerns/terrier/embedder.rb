@@ -28,7 +28,11 @@ module Terrier::Embedder
       }
 
       define_method field_name do
-        (super() || []).map do |h|
+        val = super() || []
+        if val.is_a? String
+          val = val.length>0 ? JSON.parse(val) : []
+        end
+        val.map do |h|
           if h.is_a? String
             model.from_string(h)
           else
@@ -41,22 +45,15 @@ module Terrier::Embedder
         if vals.class.name.index('Hash')
           vals = vals.to_hash.values
         elsif vals.instance_of?(String)
-          if vals.length > 0
-            vals = JSON.parse vals
-          else
-            vals = []
-          end
+          (vals.length > 0) ? vals = JSON.parse(vals) : vals = []
         end
-        values = if vals
-                   vals.map do |obj|
-                     if obj.respond_to? :attributes
-                       obj.attributes
-                     else
-                       obj
-                     end
+        return super [] unless vals.length
+        values = vals.map do |obj|
+                   if obj.respond_to? :attributes
+                     obj.attributes
+                   else
+                     obj
                    end
-                 else
-                   []
                  end
         super values
       end
