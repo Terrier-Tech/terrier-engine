@@ -66,7 +66,7 @@ module TabularIo
         end
         data << record
       else
-        headers = row.map(&:strip)
+        headers = row.map(&:to_s).map(&:strip)
       end
     end
     data
@@ -89,7 +89,7 @@ module TabularIo
         end
         data << record
       else
-        headers = row
+        headers = row.map(&:to_s).map(&:strip)
       end
     end
     data

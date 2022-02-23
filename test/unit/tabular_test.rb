@@ -68,4 +68,14 @@ class TabularTest < ActiveSupport::TestCase
       assert_equal xlsx_data.size, csv_data.size
     end
   end
+
+  test 'support CSV header trailing space' do
+    raw = <<CSV
+import,ServiceName,Revenue Class,program,program_element,work_code,service,treatment_groups,schedule,Notes,
+,EN-Design Fee,Enhancement,,,,,,,no contracts with this service.,
+CSV
+    data = TabularIo.parse_csv raw
+    assert_equal data.count, 1
+    assert_equal data.first['Revenue Class'], 'Enhancement'
+  end
 end
