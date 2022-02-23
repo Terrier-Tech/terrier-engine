@@ -103,7 +103,7 @@ window.tinyTemplate = (root) ->
 window.tinyTemplate.classesToSelector = (classes) ->
 	_.map(classes, (c) -> ".#{c}").join()
 
-# parses a string container classes into an array
+# parses a string containing (space or period-delimited) classes into an array
 # passing an array simply returns the array
 window.tinyTemplate.parseClasses = (classes) ->
 	unless classes?.length

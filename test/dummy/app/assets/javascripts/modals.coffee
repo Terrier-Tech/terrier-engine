@@ -62,9 +62,14 @@ $(document).on 'click', 'a.notice-modal-alert', ->
 		"This is a notice alert modal"
 		{
 			title: 'Got It'
-			icon: 'ion-checkmark-round'
 		}
 		icon: 'ion-alert'
+	)
+
+$(document).on 'click', 'a.alert-modal-alert', ->
+	tinyModal.alertAlert(
+		"Something happened!"
+		"This is an ALERT alert modal"
 	)
 
 

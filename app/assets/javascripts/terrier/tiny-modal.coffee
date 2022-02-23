@@ -277,10 +277,11 @@ $(document).on 'click', 'a.close-modal', ->
 ################################################################################
 
 _alertTemplate = tinyTemplate (options) ->
-	div '#modal-alert', ->
+	modalClasses = tinyTemplate.parseClasses options.classes
+	div "#modal-alert#{tinyTemplate.classesToSelector(modalClasses)}", ->
 		div '.title', ->
 			if options.icon?.length
-				icon ".#{options.icon}"
+				icon tinyTemplate.parseClasses(options.icon)
 			span '', options.title || 'No Title'
 		if options.body?.length
 			div '.body', options.body
@@ -387,7 +388,7 @@ tinyModal.noticeAlert = (title, body, action={}, options={}) ->
 		title: title
 		body: body
 	}
-	okayAction = {title: 'Okay', icon: 'ion-checkmark-round lyph-checkmark'}
+	okayAction = {title: 'Okay', icon: 'lyph-checkmark glyp-checkmark', classes: ['secondary']}
 	okayAction = Object.assign okayAction, action
 	okayAction.classes ||= 'close'
 	classes = tinyTemplate.parseClasses okayAction.classes
@@ -396,3 +397,11 @@ tinyModal.noticeAlert = (title, body, action={}, options={}) ->
 		okayAction.classes = classes
 	options.actions = [okayAction]
 	tinyModal.showAlert options
+
+# Same as tinyModal.noticeAlert, but defaults to .alert and with an alert icon
+tinyModal.alertAlert = (title, body, action={}, options={}) ->
+	options.icon ||= 'lyph-alert glyp-alert'
+	classes = tinyTemplate.parseClasses options.classes
+	classes.push 'alert'
+	options.classes = classes
+	tinyModal.noticeAlert title, body, action, options
