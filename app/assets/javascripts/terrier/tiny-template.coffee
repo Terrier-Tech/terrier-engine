@@ -22,6 +22,8 @@ for tag in _tags
 
 # parse a css selector into classes and an id (returned as an object)
 parseSelector = (selector) ->
+	if Array.isArray selector # allow an array of classes to be used instead of the string
+		return {classes: selector}
 	res = {}
 	classes = selector.match(_classRegex)
 	if classes
