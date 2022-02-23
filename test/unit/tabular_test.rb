@@ -78,4 +78,16 @@ CSV
     assert_equal data.count, 1
     assert_equal data.first['Revenue Class'], 'Enhancement'
   end
+
+  test 'support CSV header empty inner cells' do
+    raw = <<CSV
+one,two,,four
+ONE,TWO,THREE,FOUR
+CSV
+    data = TabularIo.parse_csv raw
+    assert_equal data.count, 1
+    row = data.first
+    assert_equal row['__3__'], 'THREE'
+    assert_equal row['four'], 'FOUR'
+  end
 end

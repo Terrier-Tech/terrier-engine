@@ -66,7 +66,7 @@ module TabularIo
         end
         data << record
       else
-        headers = row.map(&:to_s).map(&:strip)
+        headers = self.sanitize_csv_header row
       end
     end
     data
@@ -89,10 +89,21 @@ module TabularIo
         end
         data << record
       else
-        headers = row.map(&:to_s).map(&:strip)
+        headers = self.sanitize_csv_header row
       end
     end
     data
+  end
+
+  # parses a CSV header row to replace empty values with placeholders
+  def self.sanitize_csv_header(row)
+    row.map.with_index do |val, index|
+      if val.present?
+        val
+      else
+        "__#{index+1}__"
+      end
+    end
   end
 
   # loads an xlsx file into a hash of arrays of hashes
