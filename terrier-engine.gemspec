@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '>= 5.2'
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
-  s.add_dependency 'elasticsearch'
+  s.add_dependency 'elasticsearch', '<= 7.10.2' # newer elasticsearch clients won't work with OSS server
   s.add_dependency 'spreadsheet'
   s.add_dependency 'xsv'
   s.add_dependency 'write_xlsx'
