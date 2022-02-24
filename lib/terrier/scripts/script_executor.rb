@@ -40,16 +40,14 @@ class ScriptExecutor
     @stream = stream
     t = Time.now
     begin
-      escaped_body = @script.body.gsub('\"', '"')
       if @stream
         @stream.write '['
       end
-      eval(escaped_body, binding, 'script', 1)
-      if @stream
-        @stream.write '{}]'
+      res = execute_body @script.body
+      if res && res.is_a?(String) && res.present? # we probably don't need to print random crap that's returned
+        info "DONE: #{res}"
       end
       script_run.status = 'success'
-
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
@@ -69,8 +67,18 @@ class ScriptExecutor
       end
       false
     ensure
+      if @stream
+        @stream.write '{}]'
+      end
       @stream.close if @stream
     end
+  end
+
+  # executes the body code and returns the result
+  # this needs to be wrapped so that returning from the script doesn't interrupt the run method
+  def execute_body(body)
+    escaped_body = body.gsub('\"', '"')
+    eval(escaped_body, binding, 'script', 1)
   end
 
   def write_raw(type, body, extra={})
