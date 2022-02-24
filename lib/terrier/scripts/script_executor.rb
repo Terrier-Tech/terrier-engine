@@ -64,9 +64,8 @@ class ScriptExecutor
       script_run.duration = Time.now - t
       @log_lines << ex.message
       error ex
-      ex.backtrace[0..10].each do |line|
-        @log_lines << line
-        write_raw 'error', line
+      if @script.persisted? # we can't save the run if it's a temporary script
+        script_run.write_log @log_lines.join("\n")
       end
       false
     ensure
