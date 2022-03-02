@@ -58,16 +58,8 @@ body.with-modal {
 		transition: none;
 	}
 	&.expanded {
-		left: 16px;
-		right: 16px;
-		top: 16px;
-		bottom: 16px;
-		width: inherit;
+		width: 96%;
 		max-width: inherit;
-		transform: scale(0);
-		&.show {
-			transform: scale(1);
-		}
 	}
 }
 
