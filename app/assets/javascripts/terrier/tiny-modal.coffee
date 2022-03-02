@@ -82,7 +82,10 @@ _actionPartial = (action) ->
 		span '.title', action.title
 
 _template = tinyTemplate (options, content) ->
-	div '.modal-header', ->
+	headerClass = ['modal-header']
+	if options.headerClass?.length
+		headerClass = headerClass.concat tinyTemplate.parseClasses(options.headerClass)
+	div tinyTemplate.classesToSelector(headerClass), ->
 		a '.close-modal', ->
 			icon tinyModal.closeIconClass
 		h2 '.with-icon', ->
@@ -90,7 +93,10 @@ _template = tinyTemplate (options, content) ->
 			if i?.length
 				icon ".la.la-#{i}.ion-#{i}.#{i}"
 			span '', options.title
-	div '.modal-content', content
+	contentClass = ['modal-content']
+	if options.contentClass?.length
+		contentClass = contentClass.concat tinyTemplate.parseClasses(options.contentClass)
+	div tinyTemplate.classesToSelector(contentClass), content
 	if options.actions?
 		div '.modal-actions', ->
 			for action in _.filter(options.actions, (a) -> !a.end)
@@ -153,10 +159,10 @@ window.tinyModal.reload = (url=null) ->
 window.tinyModal.removeActions = ->
 	$('#modal-window .modal-column:last .modal-actions').remove()
 
-# expands the modal window to take up the whole width
+# expands the modal window to take up the whole width and height
 window.tinyModal.expand = ->
 	win = $('#modal-window')
-	win.css width: '96%'
+	win.addClass('no-transition').addClass 'expanded'
 	_layoutRow win.children('#modal-row')
 
 
@@ -169,6 +175,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	unless win.length
 		win = $('<div id="modal-window"><div id="modal-row"></div></div>').appendTo 'body'
 	win.toggleClass 'tiny', (options.tiny || false)
+	win.toggleClass 'expanded', (options.expanded || false)
 
 	# row
 	row = win.find '#modal-row'
@@ -183,6 +190,8 @@ window.tinyModal.showDirect = (content, options={}) ->
 
 	# column
 	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
+	if options.columnClasses?.length
+		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
 
 	_layoutRow row
 

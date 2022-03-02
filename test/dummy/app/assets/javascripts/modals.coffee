@@ -25,7 +25,17 @@ $(document).on 'click', 'a.modal-with-actions', ->
 				class: 'alert'
 				end: true
 			}
+			{
+				title: 'Expand'
+				icon: 'arrow-expand'
+				class: 'expand'
+				end: true
+			}
 		]
+		callback: (modal) ->
+			modal.find('a.expand').click ->
+				tinyModal.expand()
+				$(this).remove()
 	)
 
 
@@ -112,6 +122,8 @@ $(document).on 'click', 'a.stacked-modal', ->
 		_stackTemplate(depth)
 		title: 'Stacked Modal'
 		title_icon: 'navicon-round'
+		expanded: true
+		contentClass: 'stacked-content'
 		actions: [
 			{
 				title: 'Push Stack'

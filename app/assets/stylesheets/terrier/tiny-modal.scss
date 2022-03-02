@@ -54,6 +54,21 @@ body.with-modal {
 	&.tiny {
 		max-width: 500px;
 	}
+	&.no-transition {
+		transition: none;
+	}
+	&.expanded {
+		left: 16px;
+		right: 16px;
+		top: 16px;
+		bottom: 16px;
+		width: inherit;
+		max-width: inherit;
+		transform: scale(0);
+		&.show {
+			transform: scale(1);
+		}
+	}
 }
 
 @media only screen and (max-width: $modal-breakpoint) {
