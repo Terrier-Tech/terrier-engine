@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.8.7)
+    terrier-engine (2.8.8)
       awesome_print
       dotenv
       elasticsearch (<= 7.10.2)

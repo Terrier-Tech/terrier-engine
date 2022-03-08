@@ -40,6 +40,11 @@ module Terrier::RenderingBase
       end
     end
 
+    # sick of passing empty messages
+    def render_api_success(data)
+      render_success '', data
+    end
+
     def render_error(message, options={})
       @message = message
       respond_to do |format|
