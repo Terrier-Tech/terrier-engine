@@ -433,6 +433,7 @@ form.script-editor {
 .script-messages {
 	background-color: #fff;
 	overflow-y: scroll;
+	white-space: pre-wrap;
 	.message {
 		padding: 2px 8px;
 		font-size: 14px;
