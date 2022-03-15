@@ -144,6 +144,24 @@ class Array
     self.sum / self.size.to_f
   end
 
+  # remove unnecessary leading directories from backtrace lines
+  def filter_backtrace
+    dir = Dir.pwd.split('/')[0..-2].join('/') + '/'
+    self.map do |line|
+      if line.starts_with? dir
+        line.gsub dir, ''
+      elsif line.index '/gems/'
+        'gems/' + line.split('/gems/').last
+      elsif line.index '/rubygems/'
+        'rubygems/' + line.split('/rubygems/').last
+      elsif line.index '/ruby/'
+        'ruby/' + line.split('/ruby/').last
+      else
+        line
+      end
+    end
+  end
+
 end
 
 
