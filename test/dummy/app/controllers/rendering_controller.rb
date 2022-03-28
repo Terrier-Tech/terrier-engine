@@ -5,7 +5,7 @@ class RenderingController < ApplicationController
     begin
       raise "This is a test exception"
     rescue => ex
-      render_exception ex
+      render_exception ex, full: true
     end
   end
 

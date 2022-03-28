@@ -42,7 +42,8 @@ window.tinyModal.pop = ->
 		# reload the current column from a name=modal-src hidden input
 		srcField = column.find('input[name=modal-src]')
 		if srcField.length
-			column.load srcField.val(), ->
+			url = tinyModal.ensureModalUrl srcField.val()
+			column.load url, ->
 				tinyModal.removeLoadingOverlay()
 		else
 			tinyModal.removeLoadingOverlay()
@@ -71,23 +72,20 @@ _layoutRow = (row) ->
 	# ensure that each column isn't wider than the window
 	row.children('.modal-column').css 'max-width', $('#modal-window').width()
 
-
-_classToSel = (c) ->
-	unless c?
-		return ''
-	_.map(c.split(/\s+/), (s) -> ".#{s}").join('')
-
 _actionPartial = (action) ->
 	sel = '.action'
 	if action.icon?.length
 		sel += '.with-icon'
-	a "#{sel}#{_classToSel(action.class)}", action.attrs||{}, ->
+	a "#{sel}#{tinyTemplate.classesToSelector(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
 			icon ".ion-#{action.icon}.la.la-#{action.icon}.#{action.icon}"
 		span '.title', action.title
 
 _template = tinyTemplate (options, content) ->
-	div '.modal-header', ->
+	headerClass = ['modal-header']
+	if options.headerClass?.length
+		headerClass = headerClass.concat tinyTemplate.parseClasses(options.headerClass)
+	div tinyTemplate.classesToSelector(headerClass), ->
 		a '.close-modal', ->
 			icon tinyModal.closeIconClass
 		h2 '.with-icon', ->
@@ -95,7 +93,10 @@ _template = tinyTemplate (options, content) ->
 			if i?.length
 				icon ".la.la-#{i}.ion-#{i}.#{i}"
 			span '', options.title
-	div '.modal-content', content
+	contentClass = ['modal-content']
+	if options.contentClass?.length
+		contentClass = contentClass.concat tinyTemplate.parseClasses(options.contentClass)
+	div tinyTemplate.classesToSelector(contentClass), content
 	if options.actions?
 		div '.modal-actions', ->
 			for action in _.filter(options.actions, (a) -> !a.end)
@@ -114,32 +115,54 @@ _emptyColumnTemplate = tinyTemplate ->
 		div '.modal-actions'
 
 
+_topColumn = ->
+	$ '#modal-window .modal-column:last'
+
+_topContent = ->
+	$ '#modal-window .modal-content:last'
+
 # replaces the content of the top modal on the stack with the given HTML
 window.tinyModal.replaceContent = (content)	->
-	container = $('#modal-window .modal-content:last')
+	container = _topContent()
 	container.html content
 
-# loads a URL into the top modal stack
-window.tinyModal.replaceColumn = (url) ->
-	# add the modal parameter to the link
+# ensures that the give url has a modal=true param
+window.tinyModal.ensureModalUrl = (url) ->
 	unless url.indexOf('modal=true') > -1
 		if url.indexOf('?') > -1
 			url += '&modal=true'
 		else
 			url += '?modal=true'
+	url
 
-	container = $('#modal-window .modal-column:last')
+# loads a URL into the top modal stack
+window.tinyModal.replaceColumn = (url) ->
+	url = tinyModal.ensureModalUrl url
+	container = _topColumn()
 	container.showLoadingOverlay()
 	container.load url
+
+# reloads the top modal using the modal-src input or the provided url
+window.tinyModal.reload = (url=null) ->
+	srcInput = _topContent().find('input[name=modal-src]')
+	if srcInput.length
+		url = srcInput.val()
+	unless url?.length
+		throw "No url provided for this modal!"
+	url = tinyModal.ensureModalUrl url
+	container = _topColumn()
+	container.showLoadingOverlay()
+	container.load url
+
 
 # removes the actions from the last column
 window.tinyModal.removeActions = ->
 	$('#modal-window .modal-column:last .modal-actions').remove()
 
-# expands the modal window to take up the whole width
+# expands the modal window to take up the whole width and height
 window.tinyModal.expand = ->
 	win = $('#modal-window')
-	win.css width: '96%'
+	win.addClass('no-transition').addClass 'expanded'
 	_layoutRow win.children('#modal-row')
 
 
@@ -152,6 +175,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	unless win.length
 		win = $('<div id="modal-window"><div id="modal-row"></div></div>').appendTo 'body'
 	win.toggleClass 'tiny', (options.tiny || false)
+	win.toggleClass 'expanded', (options.expanded || false)
 
 	# row
 	row = win.find '#modal-row'
@@ -166,6 +190,8 @@ window.tinyModal.showDirect = (content, options={}) ->
 
 	# column
 	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
+	if options.columnClasses?.length
+		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
 
 	_layoutRow row
 
@@ -260,10 +286,11 @@ $(document).on 'click', 'a.close-modal', ->
 ################################################################################
 
 _alertTemplate = tinyTemplate (options) ->
-	div '#modal-alert', ->
+	modalClasses = tinyTemplate.parseClasses options.classes
+	div "#modal-alert#{tinyTemplate.classesToSelector(modalClasses)}", ->
 		div '.title', ->
 			if options.icon?.length
-				icon ".#{options.icon}"
+				icon tinyTemplate.parseClasses(options.icon)
 			span '', options.title || 'No Title'
 		if options.body?.length
 			div '.body', options.body
@@ -347,7 +374,7 @@ tinyModal.confirmAlert = (title, body, callback, options={}) ->
 	}
 	options.actions = [
 		{
-			title: 'Okay'
+			title: options.confirmTitle || 'Okay'
 			classes: 'primary'
 			callback: ->
 				tinyModal.closeAlert()
@@ -355,7 +382,7 @@ tinyModal.confirmAlert = (title, body, callback, options={}) ->
 			icon: 'ion-checkmark-round lyph-checkmark glyp-checkmark'
 		}
 		{
-			title: 'Cancel'
+			title: options.cancelTitle || 'Cancel'
 			classes: 'cancel close secondary'
 			icon: 'lyph-close glyp-close'
 		}
@@ -370,7 +397,7 @@ tinyModal.noticeAlert = (title, body, action={}, options={}) ->
 		title: title
 		body: body
 	}
-	okayAction = {title: 'Okay', icon: 'ion-checkmark-round lyph-checkmark'}
+	okayAction = {title: 'Okay', icon: 'lyph-checkmark glyp-checkmark', classes: ['secondary']}
 	okayAction = Object.assign okayAction, action
 	okayAction.classes ||= 'close'
 	classes = tinyTemplate.parseClasses okayAction.classes
@@ -379,3 +406,11 @@ tinyModal.noticeAlert = (title, body, action={}, options={}) ->
 		okayAction.classes = classes
 	options.actions = [okayAction]
 	tinyModal.showAlert options
+
+# Same as tinyModal.noticeAlert, but defaults to .alert and with an alert icon
+tinyModal.alertAlert = (title, body, action={}, options={}) ->
+	options.icon ||= 'lyph-alert glyp-alert'
+	classes = tinyTemplate.parseClasses options.classes
+	classes.push 'alert'
+	options.classes = classes
+	tinyModal.noticeAlert title, body, action, options

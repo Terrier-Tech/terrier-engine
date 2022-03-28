@@ -40,6 +40,11 @@ module Terrier::RenderingBase
       end
     end
 
+    # sick of passing empty messages
+    def render_api_success(data)
+      render_success '', data
+    end
+
     def render_error(message, options={})
       @message = message
       respond_to do |format|
@@ -60,15 +65,17 @@ module Terrier::RenderingBase
     end
 
     # logs the exception message and backtrace
-    def log_exception(ex)
+    # options can contain `full: true` to log the entire backtrace instead of just the first part
+    def log_exception(ex, options={})
       Rails.logger.warn ex.message
-      ex.backtrace[0..10].each do |line|
+      lines = options[:full].is_true? ? ex.backtrace : ex.backtrace[0..16]
+      lines.filter_backtrace.each do |line|
         Rails.logger.warn line
       end
     end
 
     def render_exception(ex, options={})
-      log_exception ex
+      log_exception ex, options
       @message = ex.message
       @backtrace = ex.backtrace
       respond_to do |format|

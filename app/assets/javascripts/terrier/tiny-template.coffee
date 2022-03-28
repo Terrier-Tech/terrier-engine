@@ -22,6 +22,8 @@ for tag in _tags
 
 # parse a css selector into classes and an id (returned as an object)
 parseSelector = (selector) ->
+	if Array.isArray selector # allow an array of classes to be used instead of the string
+		return {classes: selector}
 	res = {}
 	classes = selector.match(_classRegex)
 	if classes
@@ -99,9 +101,9 @@ window.tinyTemplate = (root) ->
 
 # converts an array of classes to a dot-prefixed selector string
 window.tinyTemplate.classesToSelector = (classes) ->
-	_.map(classes, (c) -> ".#{c}").join()
+	_.map(tinyTemplate.parseClasses(classes), (c) -> ".#{c}").join()
 
-# parses a string container classes into an array
+# parses a string containing (space or period-delimited) classes into an array
 # passing an array simply returns the array
 window.tinyTemplate.parseClasses = (classes) ->
 	unless classes?.length

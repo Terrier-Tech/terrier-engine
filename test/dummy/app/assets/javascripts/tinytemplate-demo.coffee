@@ -4,8 +4,8 @@ window.tinyTemplateDemo = {}
 _template = tinyTemplate (state) ->
 	div '.tinytemplate-demo', style: 'padding: 1em;', ->
 		p '', 'Click the button below to increment the counter.'
-		div '.horizontal-grid', ->
-			div '.shrink-column', ->
+		div '.horizontal-grid.phone-collapsible', ->
+			div ['shrink-column', 'foo'], -> # test array selectors
 				input '#stateful', type: 'text', name: 'stateful', placeholder: 'This should persist', value: '4'
 			div '.shrink-column', ->
 				button '.increment', 'Increment'

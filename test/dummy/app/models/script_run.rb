@@ -33,7 +33,7 @@ class ScriptRun < ApplicationRecord
 
     self.log = StringIO.new body
     self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
-
+    self.log_url
   end
 
 
