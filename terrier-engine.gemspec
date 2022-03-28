@@ -20,7 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack', '< 2.2'
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
-  s.add_dependency 'elasticsearch'
   s.add_dependency 'spreadsheet'
   s.add_dependency 'xsv'
   s.add_dependency 'write_xlsx'

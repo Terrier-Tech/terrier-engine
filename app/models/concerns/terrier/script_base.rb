@@ -61,29 +61,6 @@ module Terrier::ScriptBase
     has_many :script_runs, dependent: :destroy
 
 
-    ## Searching
-
-    def update_search_index
-      if self._state == 0
-        ScriptSearcher.new.index self
-      else
-        self.remove_search_index
-      end
-    end
-
-    after_save :update_search_index
-
-    def remove_search_index
-      begin
-        ScriptSearcher.new.unindex self
-      rescue => ex
-        Rails.logger.warn "Error removing script #{self.id} from search index: #{ex.message}"
-      end
-    end
-
-    after_destroy :remove_search_index
-
-
     ## Scheduling
 
     enum_field :schedule_time, %w(none evening morning)

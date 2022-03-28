@@ -36,18 +36,4 @@ namespace :scripts do
     run_time 'evening'
   end
 
-  desc 'Indexes all scripts for searching'
-  task index: :environment do
-    searcher = ScriptSearcher.new
-    scripts = Script.where(_state: 0)
-    total = scripts.count
-    i = 0
-    scripts.each do |script|
-      i += 1
-      puts "[#{i} of #{total}] #{script.title}"
-      $stdout.flush
-      searcher.index script
-    end
-  end
-
 end
