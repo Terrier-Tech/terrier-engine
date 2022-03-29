@@ -88,6 +88,9 @@ window.withoutParens = (s) ->
 String::withoutParams = ->
 	window.withoutParens this
 
+window.formatCommas = (n) ->
+	"#{ n }".replace(/\B(?=(\d{3})+(?!\d))/g, ",") # add commas in the thousands places
+
 window.formatCents = (cents, showCents=true) ->
 	dollars = ''
 	sign = if cents < 0 then '-' else ''
@@ -97,7 +100,13 @@ window.formatCents = (cents, showCents=true) ->
 		dollars = "#{sign}$#{(Math.abs(cents) / 100.0).toFixed(2)}"
 	else
 		dollars = "$#{sign}#{(Math.abs(cents) / 100.0).toFixed(0)}"
-	dollars.replace(/\B(?=(\d{3})+(?!\d))/g, ",") # add commas in the thousands places
+	window.formatCommas(dollars)
+
+Number::formatCommas = () ->
+	window.formatCommas this
+
+String::formatCommas = () ->
+	window.formatCommas this
 
 Number::formatCents = (showCents=true) ->
 	window.formatCents this, showCents
