@@ -67,9 +67,9 @@ namespace :db do
       source = File.read path
       source_lines = source.split("\n")
       line = source_lines.shift
-      until line =~ /^class/
+      until line =~ /^[^#]/
         if lines.empty?
-          raise "WTF, reached the end of the file without a class definition!"
+          raise "WTF, the whole file was made of comments!"
         end
         line = source_lines.shift
       end
