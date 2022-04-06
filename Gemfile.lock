@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.8.13)
+    terrier-engine (2.8.15)
       awesome_print
       dotenv
       loofah (>= 2.3.1)
@@ -204,7 +204,7 @@ GEM
     write_xlsx (1.09.2)
       rubyzip (>= 1.0.0)
       zip-zip
-    xsv (1.1.0)
+    xsv (1.1.1)
       rubyzip (>= 1.3, < 3)
     zip-zip (0.3)
       rubyzip (>= 1.0.0)

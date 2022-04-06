@@ -34,11 +34,17 @@ class NilClass
     false
   end
 
+  def is_false?
+    true
+  end
+
   def is_float?
     false
   end
 
 end
+
+TRUTHY_STRINGS = %w[true t 1 on]
 
 class String
 
@@ -59,7 +65,11 @@ class String
   end
 
   def is_true?
-    !(%w(true 1 on).index(self.downcase.strip)).nil?
+    !(TRUTHY_STRINGS.index(self.downcase.strip)).nil?
+  end
+
+  def is_false?
+    !self.is_true?
   end
 
   def smart_strip
@@ -181,10 +191,16 @@ class TrueClass
   def is_true?
     true
   end
+  def is_false?
+    false
+  end
 end
 
 class FalseClass
   def is_true?
     false
+  end
+  def is_false?
+    true
   end
 end
