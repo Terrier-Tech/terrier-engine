@@ -44,7 +44,8 @@ class NilClass
 
 end
 
-TRUTHY_STRINGS = %w[true t 1 on]
+TRUTHY_STRINGS = %w[true t on 1]
+FALSY_STRINGS = %w[false f off 0]
 
 class String
 
@@ -69,7 +70,7 @@ class String
   end
 
   def is_false?
-    !self.is_true?
+    !(FALSY_STRINGS.index(self.downcase.strip)).nil?
   end
 
   def smart_strip

@@ -9,7 +9,7 @@ class StringTest < ActiveSupport::TestCase
     assert 'on'.is_true?
     assert !'off'.is_true?
     assert 'off'.is_false?
-    assert 'foo'.is_false?
+    assert !'foo'.is_false?
     assert '0'.is_false?
     assert !'true'.is_false?
   end
