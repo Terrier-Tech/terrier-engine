@@ -111,7 +111,10 @@ module TabularIo
     abs_path = self.rel_to_abs_path rel_path
     x = Xsv::Workbook.open(abs_path.to_s)
     output = {}
+    sheets_to_import = options[:sheets]
     x.sheets.each do |sheet|
+      # Offer the option to skip importing unneeded sheets. This significantly speeds up loading.
+      next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
       sheet.parse_headers!
       output[sheet.name] = sheet.to_a
     end
