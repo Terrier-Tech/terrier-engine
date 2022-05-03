@@ -73,6 +73,10 @@ class String
     !(FALSY_STRINGS.index(self.downcase.strip)).nil?
   end
 
+  def to_bool
+    TRUTHY_STRINGS.index self.downcase.strip
+  end
+
   def smart_strip
     self.strip.gsub(/\A[[:space:]]+/, '').gsub(/[[:space:]]+\z/, '')
   end
