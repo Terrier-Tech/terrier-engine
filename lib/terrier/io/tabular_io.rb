@@ -280,6 +280,9 @@ module TabularIo
       r += 1
       columns.each_with_index do |col, c|
         val = self.pluck_column row, col
+        if val.try(:[], 0).in? %w[= + -]
+          val = "`#{val}"
+        end
         sheet.write r, c, val
       end
     end
