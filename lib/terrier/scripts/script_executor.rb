@@ -233,4 +233,17 @@ class ScriptExecutor
     puts "Sent e-mail to #{to_address}: '#{options[:subject]}'"
   end
 
+  def self_destruct(countdown=5)
+    if countdown.present? && countdown > 0
+      puts "This script will self destruct in..."
+      countdown.downto(1) do |i|
+        puts i
+        sleep(1)
+      end
+    end
+    puts "Bang!"
+    self.script._state = 2
+    self.script.save_by_user!(self.me)
+  end
+
 end
