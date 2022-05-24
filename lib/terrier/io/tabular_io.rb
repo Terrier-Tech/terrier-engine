@@ -144,7 +144,16 @@ module TabularIo
   # returns columns and their string versions (columns_s)
   def self.compute_columns(data, options)
     if (data.is_a?(Array) || data.is_a?(QueryResult)) && data.length > 0
-      columns = options[:columns].presence || data.first.keys
+      if options[:columns].is_a?(Array)
+        columns = options[:columns]
+      elsif options[:columns].is_a?(Hash)
+        sheet_name = options[:sheet_name]
+        columns = options[:columns][sheet_name]
+      else
+        columns = nil
+      end
+
+      columns = columns.presence || data.first.keys
     else
       columns = []
     end
