@@ -1351,6 +1351,8 @@ class SettingsModal
 					@form.showErrors res.errors
 		)
 
+window.scripts.newSettingsModal = (script, constants) ->
+	new SettingsModal script, constants
 
 ################################################################################
 # Action Log Modal

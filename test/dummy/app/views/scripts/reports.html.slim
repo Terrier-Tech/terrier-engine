@@ -19,6 +19,7 @@
                 th
                     a == 'Created At'
                 th
+                th
         tbody
             - @scripts.each do |script|
                 tr.script
@@ -32,6 +33,10 @@
                         a.open-script-report-modal.button.secondary.with-icon data-id="#{script.id}"
                             i.ion-play
 							| Run
+                    td
+                        a.open-script-settings-modal.button.secondary.with-icon data-id="#{script.id}"
+                            i.ion-settings
+                            | Setttings
 
 
 coffee:
@@ -43,7 +48,7 @@ coffee:
 				script
 				constants
 				{
-					hide_settings: true
+					hide_settings: false
 					field_params: {
 						foo: 'bar'
 					}
@@ -76,5 +81,36 @@ coffee:
                     alert res.message
         )
 
+    showSettingsModal = (scriptId) ->
+      constants = null
+      script = null
+      onDone = _.after 2, ->
+        modal = window.scripts.newSettingsModal(
+                script
+                constants
+                {}
+        )
+      $.get(
+              '/scripts/constants.json'
+        (res) =>
+          if res.status == 'success'
+            constants = res.constants
+            onDone()
+          else
+            alert res.message
+      )
+      $.get(
+              "/scripts/#{scriptId}.json"
+        (res) =>
+          if res.status == 'success'
+            script = res.script
+            script.script_fields = _.toArray script.script_fields
+            onDone()
+          else
+            alert res.message
+      )
+
     $('a.open-script-report-modal').click ->
         showReportExecModal this.dataset.id
+    $('a.open-script-settings-modal').click ->
+        showSettingsModal this.dataset.id
