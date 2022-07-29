@@ -19,6 +19,7 @@
                 th
                     a == 'Created At'
                 th
+                th
         tbody
             - @scripts.each do |script|
                 tr.script
@@ -32,6 +33,10 @@
                         a.open-script-report-modal.button.secondary.with-icon data-id="#{script.id}"
                             i.ion-play
 							| Run
+                    td
+                        a.open-script-settings-modal.button.secondary.with-icon data-id="#{script.id}"
+                            i.ion-settings
+                            | Setttings
 
 
 coffee:
@@ -43,7 +48,7 @@ coffee:
 				script
 				constants
 				{
-					hide_settings: true
+					hide_settings: false
 					field_params: {
 						foo: 'bar'
 					}
@@ -78,3 +83,5 @@ coffee:
 
     $('a.open-script-report-modal').click ->
         showReportExecModal this.dataset.id
+    $('a.open-script-settings-modal').click ->
+        window.scripts.newSettingsModal this.dataset.id
