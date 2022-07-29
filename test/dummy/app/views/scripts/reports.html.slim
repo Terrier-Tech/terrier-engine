@@ -81,36 +81,7 @@ coffee:
                     alert res.message
         )
 
-    showSettingsModal = (scriptId) ->
-      constants = null
-      script = null
-      onDone = _.after 2, ->
-        modal = window.scripts.newSettingsModal(
-                script
-                constants
-                {}
-        )
-      $.get(
-              '/scripts/constants.json'
-        (res) =>
-          if res.status == 'success'
-            constants = res.constants
-            onDone()
-          else
-            alert res.message
-      )
-      $.get(
-              "/scripts/#{scriptId}.json"
-        (res) =>
-          if res.status == 'success'
-            script = res.script
-            script.script_fields = _.toArray script.script_fields
-            onDone()
-          else
-            alert res.message
-      )
-
     $('a.open-script-report-modal').click ->
         showReportExecModal this.dataset.id
     $('a.open-script-settings-modal').click ->
-        showSettingsModal this.dataset.id
+        window.scripts.newSettingsModal this.dataset.id

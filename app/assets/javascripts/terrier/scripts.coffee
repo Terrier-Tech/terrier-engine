@@ -1351,8 +1351,29 @@ class SettingsModal
 					@form.showErrors res.errors
 		)
 
-window.scripts.newSettingsModal = (script, constants) ->
-	new SettingsModal script, constants
+window.scripts.newSettingsModal = (scriptId) ->
+	constants = null
+	script = null
+	onDone = _.after 2, ->
+		new SettingsModal(script, constants)
+	$.get(
+		'/scripts/constants.json'
+		(res) =>
+			if res.status == 'success'
+				constants = res.constants
+				onDone()
+			else
+				alert res.message
+	)
+	$.get(
+		"/scripts/#{scriptId}.json"
+		(res) =>
+			if res.status == 'success'
+				script = res.script
+				onDone()
+			else
+				alert res.message
+	)
 
 ################################################################################
 # Action Log Modal
