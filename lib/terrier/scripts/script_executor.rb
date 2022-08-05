@@ -52,6 +52,7 @@ class ScriptExecutor
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
       end
+      _send_email
       true
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
@@ -221,16 +222,7 @@ class ScriptExecutor
   # passes options nearly directly to ReportsMailer#custom
   # :to will be replaced with the testing email in non-production, but :cc will not
   def send_email(options)
-    to_address = options[:to]
-    if to_address.blank?
-      raise 'Must specify a :to option'
-    end
-    unless Rails.env == 'production'
-      options[:to] = 'clypboardtesting@gmail.com'
-    end
-
-    ReportsMailer.custom(options).deliver
-    puts "Sent e-mail to #{to_address}: '#{options[:subject]}'"
+    puts "send_email function is no longer supported"
   end
 
   def self_destruct(countdown=5)
@@ -244,6 +236,29 @@ class ScriptExecutor
     puts "Bang!"
     self.script._state = 2
     self.script.save_by_user!(self.me)
+  end
+
+  private
+
+  def _send_email
+    return if @script.email_recipients.blank?
+
+    body = "Here is the output for script \"#{@script.title}\" "
+    body += "that was executed on #{Time.now.strftime(PRETTY_DATE_FORMAT)} at #{Time.now.strftime(SHORT_TIME_FORMAT)} "
+    body += "by #{me.full_name}:\n"
+    body += @log_lines.join("\n")
+
+    options = {
+      to: @script.email_recipients,
+      subject: "#{@script.title} Result",
+      body: body
+    }
+    unless Rails.env == 'production'
+      options[:to] = ['clypboardtesting@gmail.com']
+    end
+
+    ReportsMailer.custom(options).deliver
+    puts "Sent e-mail to #{options[:to].join(", ")}: '#{options[:subject]}'"
   end
 
 end
