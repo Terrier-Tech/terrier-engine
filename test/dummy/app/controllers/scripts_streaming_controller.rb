@@ -7,6 +7,7 @@ class ScriptsStreamingController < ApplicationController
   def get_executor
     executor = ScriptExecutor.new @script, params: params
     executor.me = 'Script Executor'
+    executor.file_base_url = "https://testing.com"
     executor
   end
 
