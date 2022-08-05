@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.10.2)
+    terrier-engine (2.10.1)
       awesome_print
       dotenv
       loofah (>= 2.3.1)

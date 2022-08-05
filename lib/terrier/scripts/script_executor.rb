@@ -4,7 +4,7 @@ class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
 
   attr_reader :cache, :each_count, :each_total, :log_lines
-  attr_accessor :me, :params, :script
+  attr_accessor :me, :params, :script, :file_base_url
 
   def should_soft_destroy
     true
@@ -17,6 +17,7 @@ class ScriptExecutor
     @each_total = 0
     @field_values = {}
     @log_lines = []
+    @output_files = []
     @params = params
   end
 
@@ -52,7 +53,7 @@ class ScriptExecutor
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
       end
-      _send_email
+      _send_email script_run.log_url
       true
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
@@ -138,11 +139,13 @@ class ScriptExecutor
   # either dumps a csv or xls using TabularIo.save
   def dump_file(data, rel_path, options={})
     abs_path = TabularIo.save data, rel_path, options
+    @output_files << abs_path
     write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
   def puts_file(path)
+    @output_files << path
     if path.index(Rails.root.to_s)
       path = TabularIo.abs_to_rel_path path
     end
@@ -240,13 +243,19 @@ class ScriptExecutor
 
   private
 
-  def _send_email
+  def _send_email(log_url)
     return if @script.email_recipients.blank?
 
     body = "Here is the output for script \"#{@script.title}\" "
     body += "that was executed on #{Time.now.strftime(PRETTY_DATE_FORMAT)} at #{Time.now.strftime(SHORT_TIME_FORMAT)} "
-    body += "by #{me.full_name}:\n"
-    body += @log_lines.join("\n")
+    body += "by #{me.full_name}"
+    body += "\nFiles:\n"
+    body += @output_files.map do |f|
+      f = file_base_url + TabularIo.abs_to_rel_path(f)
+      return "<a href=\"#{f}\">#{f}</a>"
+    end.join("\n")
+    body += "\nExecution Log\n"
+    body += "<a href=\"#{log_url}\">#{log_url}</a>"
 
     options = {
       to: @script.email_recipients,
