@@ -248,23 +248,26 @@ class ScriptExecutor
 
     body = "Here is the output for script \"#{@script.title}\" "
     body += "that was executed on #{Time.now.strftime(PRETTY_DATE_FORMAT)} at #{Time.now.strftime(SHORT_TIME_FORMAT)} "
-    body += "by #{me.full_name}"
-    body += "\nFiles:\n"
-    body += @output_files.map do |f|
-      f = file_base_url + TabularIo.abs_to_rel_path(f)
-      return "<a href=\"#{f}\">#{f}</a>"
-    end.join("\n")
-    body += "\nExecution Log\n"
-    body += "<a href=\"#{log_url}\">#{log_url}</a>"
+    body += "by #{me.full_name}<br>"
+    if @output_files.length > 0
+      body += "Files:<br>"
+      body += @output_files.map do |f|
+        f = file_base_url + TabularIo.abs_to_rel_path(f)
+        return "<a href=\"#{f}\">#{f}</a>"
+      end.join("<br>")
+      body += "<br>"
+    end
+    body += "Execution Log:<br>"
+    body += "<a href=\"#{file_base_url + log_url}\">#{file_base_url + log_url}</a>"
 
     options = {
       to: @script.email_recipients,
       subject: "#{@script.title} Result",
       body: body
     }
-    unless Rails.env == 'production'
-      options[:to] = ['clypboardtesting@gmail.com']
-    end
+    # unless Rails.env == 'production'
+    #   options[:to] = ['clypboardtesting@gmail.com']
+    # end
 
     ReportsMailer.custom(options).deliver
     puts "Sent e-mail to #{options[:to].join(", ")}: '#{options[:subject]}'"
