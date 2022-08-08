@@ -4,7 +4,7 @@ class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
 
   attr_reader :cache, :each_count, :each_total, :log_lines
-  attr_accessor :me, :params, :script, :file_base_url
+  attr_accessor :me, :params, :script
 
   def should_soft_destroy
     true
@@ -48,12 +48,13 @@ class ScriptExecutor
       if res && res.is_a?(String) && res.present? # we probably don't need to print random crap that's returned
         info "DONE: #{res}"
       end
+      script_email_log = @script.send_email_if_necessary @output_files, script_run.log_url, me.full_name
+      puts script_email_log unless script_email_log.empty?
       script_run.status = 'success'
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
       end
-      _send_email script_run.log_url
       true
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
@@ -222,8 +223,7 @@ class ScriptExecutor
     ActiveRecord::Base.connection.execute(query).to_a
   end
 
-  # passes options nearly directly to ReportsMailer#custom
-  # :to will be replaced with the testing email in non-production, but :cc will not
+  # No longer supported, see ScriptBase::send_email_if_necessary
   def send_email(options)
     puts "send_email function is no longer supported"
   end
@@ -239,38 +239,6 @@ class ScriptExecutor
     puts "Bang!"
     self.script._state = 2
     self.script.save_by_user!(self.me)
-  end
-
-  private
-
-  def _send_email(log_url)
-    return if @script.email_recipients.blank?
-
-    body = "Here is the output for script \"#{@script.title}\" "
-    body += "that was executed on #{Time.now.strftime(PRETTY_DATE_FORMAT)} at #{Time.now.strftime(SHORT_TIME_FORMAT)} "
-    body += "by #{me.full_name}<br>"
-    if @output_files.length > 0
-      body += "Files:<br>"
-      body += @output_files.map do |f|
-        f = file_base_url + TabularIo.abs_to_rel_path(f)
-        return "<a href=\"#{f}\">#{f}</a>"
-      end.join("<br>")
-      body += "<br>"
-    end
-    body += "Execution Log:<br>"
-    body += "<a href=\"#{file_base_url + log_url}\">#{file_base_url + log_url}</a>"
-
-    options = {
-      to: @script.email_recipients,
-      subject: "#{@script.title} Result",
-      body: body
-    }
-    # unless Rails.env == 'production'
-    #   options[:to] = ['clypboardtesting@gmail.com']
-    # end
-
-    ReportsMailer.custom(options).deliver
-    puts "Sent e-mail to #{options[:to].join(", ")}: '#{options[:subject]}'"
   end
 
 end

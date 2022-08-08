@@ -1,2 +1,0 @@
-field value: hello
-dropdown value: foo
