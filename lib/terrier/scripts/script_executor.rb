@@ -52,7 +52,7 @@ class ScriptExecutor
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
-        script_email_log = @script.send_email_if_necessary @output_files, script_run.log_url, me.full_name
+        script_email_log = @script.send_email_if_necessary me, @output_files, script_run.log_url
         puts script_email_log unless script_email_log.empty?
       end
       true
