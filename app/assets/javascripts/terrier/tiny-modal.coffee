@@ -76,6 +76,8 @@ _actionPartial = (action) ->
 	sel = '.action'
 	if action.icon?.length
 		sel += '.with-icon'
+	if action._index?
+		sel += ".action-#{action._index}"
 	a "#{sel}#{tinyTemplate.classesToSelector(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
 			icon ".ion-#{action.icon}.la.la-#{action.icon}.#{action.icon}"
@@ -98,6 +100,8 @@ _template = tinyTemplate (options, content) ->
 		contentClass = contentClass.concat tinyTemplate.parseClasses(options.contentClass)
 	div tinyTemplate.classesToSelector(contentClass), content
 	if options.actions?
+		for action, i in options.actions
+			action._index = i
 		div '.modal-actions', ->
 			for action in _.filter(options.actions, (a) -> !a.end)
 				_actionPartial(action)
@@ -201,6 +205,10 @@ window.tinyModal.showDirect = (content, options={}) ->
 			column.find('input:not([type=hidden]):first').focus()
 			if options.callback?
 				options.callback column
+
+			for action in options.actions
+				if action._index? and action.callback?
+					column.find(".modal-actions .action-#{action._index}").click action.callback
 		10
 	)
 
