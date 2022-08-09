@@ -24,21 +24,15 @@ class ScriptRun < ApplicationRecord
   has_attached_file :log
   validates_attachment_content_type :log, content_type: %w(text/plain text/html)
 
-  after_create :init_log_file_name
-
-  def init_log_file_name
-    self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
-  end
-
   def write_log(body)
 
     if body.blank?
       body = 'empty log'
     end
     body = body.strip.force_encoding(Encoding::UTF_8)
-    log_file_name = self.log_file_name
-    self.log = StringIO.new body # Will reset file name, need to set it back.
-    self.log_file_name = log_file_name
+
+    self.log = StringIO.new body
+    self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
     self.log_url
   end
 
