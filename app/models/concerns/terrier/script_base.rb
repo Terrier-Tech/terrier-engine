@@ -73,8 +73,14 @@ module Terrier::ScriptBase
 
     ## Email
 
-    def send_email_if_necessary(output_files = [], log_url = "", user_full_name = "")
-      ""
+    def send_email_if_necessary(user, output_files = [], log_url = "")
+      if self.email_recipients.present?
+        send_email user, output_files, log_url
+      end
+    end
+
+    def send_email(user, output_files, log_url)
+      raise NotImplementedError
     end
 
   end
