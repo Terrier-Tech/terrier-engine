@@ -71,6 +71,12 @@ module Terrier::ScriptBase
     @visibility_levels = %w(public private)
     enum_field :visibility, @visibility_levels
 
+    ## Email
+
+    def send_email_if_necessary(output_files = [], log_url = "", user_full_name = "")
+      ""
+    end
+
   end
 
 end

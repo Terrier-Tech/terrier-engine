@@ -17,6 +17,7 @@ class ScriptExecutor
     @each_total = 0
     @field_values = {}
     @log_lines = []
+    @output_files = []
     @params = params
   end
 
@@ -51,6 +52,8 @@ class ScriptExecutor
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
+        script_email_log = @script.send_email_if_necessary @output_files, script_run.log_url, me.full_name
+        puts script_email_log unless script_email_log.empty?
       end
       true
     rescue => ex
@@ -137,11 +140,13 @@ class ScriptExecutor
   # either dumps a csv or xls using TabularIo.save
   def dump_file(data, rel_path, options={})
     abs_path = TabularIo.save data, rel_path, options
+    @output_files << abs_path
     write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
 
   def puts_file(path)
+    @output_files << path
     if path.index(Rails.root.to_s)
       path = TabularIo.abs_to_rel_path path
     end
@@ -218,19 +223,9 @@ class ScriptExecutor
     ActiveRecord::Base.connection.execute(query).to_a
   end
 
-  # passes options nearly directly to ReportsMailer#custom
-  # :to will be replaced with the testing email in non-production, but :cc will not
+  # No longer supported, see ScriptBase::send_email_if_necessary
   def send_email(options)
-    to_address = options[:to]
-    if to_address.blank?
-      raise 'Must specify a :to option'
-    end
-    unless Rails.env == 'production'
-      options[:to] = 'clypboardtesting@gmail.com'
-    end
-
-    ReportsMailer.custom(options).deliver
-    puts "Sent e-mail to #{to_address}: '#{options[:subject]}'"
+    puts "send_email function is no longer supported"
   end
 
   def self_destruct(countdown=5)

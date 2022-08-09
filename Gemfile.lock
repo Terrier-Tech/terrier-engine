@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.8.16)
+    terrier-engine (2.10.3)
       awesome_print
       dotenv
       loofah (>= 2.3.1)
@@ -80,7 +80,7 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.1.4)
     crass (1.0.5)
-    dotenv (2.7.6)
+    dotenv (2.8.1)
     erubi (1.7.1)
     execjs (2.7.0)
     ffi (1.15.4)
@@ -120,7 +120,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (3.1.1.0)
+    parser (3.1.2.0)
       ast (~> 2.4.1)
     pg (1.0.0)
     puma (5.6.4)
@@ -197,11 +197,11 @@ GEM
     turbolinks-source (5.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
-    unicode-display_width (2.1.0)
+    unicode-display_width (2.2.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    write_xlsx (1.09.2)
+    write_xlsx (1.09.3)
       rubyzip (>= 1.0.0)
       zip-zip
     xsv (1.1.1)
