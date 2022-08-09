@@ -48,13 +48,13 @@ class ScriptExecutor
       if res && res.is_a?(String) && res.present? # we probably don't need to print random crap that's returned
         info "DONE: #{res}"
       end
-      script_email_log = @script.send_email_if_necessary @output_files, script_run.log_url, me.full_name
-      puts script_email_log unless script_email_log.empty?
       script_run.status = 'success'
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
       end
+      script_email_log = @script.send_email_if_necessary @output_files, script_run.log_url, me.full_name
+      puts script_email_log unless script_email_log.empty?
       true
     rescue => ex
       line = ex.backtrace[0].split(':')[1].to_i
