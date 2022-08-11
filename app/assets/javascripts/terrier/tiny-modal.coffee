@@ -206,9 +206,10 @@ window.tinyModal.showDirect = (content, options={}) ->
 			if options.callback?
 				options.callback column
 
-			for action in options.actions
-				if action._index? and action.callback?
-					column.find(".modal-actions .action-#{action._index}").click action.callback
+			if options.actions
+				for action in options.actions
+					if action._index? and action.callback?
+						column.find(".modal-actions .action-#{action._index}").click action.callback
 		10
 	)
 
