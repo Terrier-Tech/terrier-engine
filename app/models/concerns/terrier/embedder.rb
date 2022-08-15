@@ -17,14 +17,66 @@ module Terrier::Embedder
       @_embedded_fields
     end
 
-    def embeds_many(model_name_plural, options={})
-      model_name = model_name_plural.to_s.singularize
-      model = (options[:class_name] || model_name.classify).constantize
-      field_name = model_name_plural.to_s
+    def embeds_one(model_name, options={})
+      model = (options[:class_name] || model_name.to_s.classify).constantize
+      field_name = model_name.to_s
 
-      embedded_fields[model_name_plural] = {
-          name: model_name_plural,
-          type: model
+      embedded_fields[model_name] = {
+        name: model_name,
+        type: model
+      }
+
+      define_method field_name do
+        val = super()
+        if val.is_a? String
+          val = val.length>0 ? JSON.parse(val) : nil
+        end
+        if val.blank?
+          nil # may want to have this return a new, but empty instance of the embeded model?
+        elsif val.is_a? String
+          model.from_string(val)
+        else
+          model.from_attributes(val)
+        end
+      end
+
+      define_method "#{field_name}=" do |val|
+        if val.present?
+          if val.class.name.index('Hash')
+            val = val.to_hash.values
+          elsif val.instance_of?(String)
+            val = JSON.parse(val)
+          end
+        end
+        val = val.attributes if val.respond_to? :attributes
+        super val
+      end
+
+      model.fields.each do |embeded_field_name, _|
+        define_method(embeded_field_name) do
+          if (embeded_obj = self.send(field_name)).is_a? model
+            embeded_obj.send(embeded_field_name)
+          else
+            nil
+          end
+        end
+        define_method("#{embeded_field_name}=") do |val|
+          if self.send(field_name).blank?
+            self.send("#{field_name}=", model.new(embeded_field_name => val))
+          else
+            self.send(field_name).send("#{embeded_field_name}=", val)
+          end
+        end
+      end
+    end
+
+    def embeds_many(model_name, options={})
+      model = (options[:class_name] || model_name.to_s.classify).constantize
+      field_name = model_name.to_s
+
+      embedded_fields[model_name] = {
+        name: model_name,
+        type: model
       }
 
       define_method field_name do
@@ -55,32 +107,20 @@ module Terrier::Embedder
         end
         return super [] unless vals.present?
         values = vals.map do |obj|
-                   if obj.respond_to? :attributes
-                     obj.attributes
-                   else
-                     obj
-                   end
-                 end
+          if obj.respond_to? :attributes
+            obj.attributes
+          else
+            obj
+          end
+        end
         super values
       end
 
       # for compatibility with old sync
-      define_method "#{field_name}_array" do
-        self.send field_name
-      end
-
-      define_method "#{field_name}_array=" do |array|
-        self.send "#{field_name}=", array
-      end
-
-      define_method "#{model_name_plural}_json" do
-        self.send(model_name_plural).to_json
-      end
-
-      define_method "#{model_name_plural}_json=" do |json|
-        self.send("#{model_name_plural}=", JSON.parse(json))
-      end
-
+      define_method("#{field_name}_array") { self.send field_name }
+      define_method("#{field_name}_array=") { |array| self.send "#{field_name}=", array }
+      define_method("#{model_name}_json") { self.send(model_name).to_json }
+      define_method("#{model_name}_json=") { |json| self.send("#{model_name}=", JSON.parse(json)) }
     end
   end
 

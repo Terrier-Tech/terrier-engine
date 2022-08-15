@@ -232,10 +232,20 @@ module Terrier::Embedded
       {}
     end
 
-    def embeds_many(model_name_plural, options={})
-      attr_accessor model_name_plural
-      options[:type] = model_name_plural.to_s.singularize.classify.constantize
-      field_defs[model_name_plural] = EmbeddedFieldDef.new(options)
+    def embeds_one(model_name, options={})
+      self._embed(model_name, options)
+    end
+
+    def embeds_many(model_name, options={})
+      self._embed(model_name, options)
+    end
+
+    private
+
+    def _embed(model_name, options)
+      attr_accessor model_name
+      options[:type] = model_name.to_s.classify.constantize
+      field_defs[model_name] = EmbeddedFieldDef.new(options)
     end
 
   end
