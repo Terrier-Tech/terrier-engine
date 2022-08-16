@@ -18,6 +18,7 @@ module Terrier::Embedder
     end
 
     def embeds_one(model_name, options={})
+
       model = (options[:class_name] || model_name.to_s.classify).constantize
       field_name = model_name.to_s
 
@@ -52,25 +53,10 @@ module Terrier::Embedder
         super val
       end
 
-      model.fields.each do |embeded_field_name, _|
-        define_method(embeded_field_name) do
-          if (embeded_obj = self.send(field_name)).is_a? model
-            embeded_obj.send(embeded_field_name)
-          else
-            nil
-          end
-        end
-        define_method("#{embeded_field_name}=") do |val|
-          if self.send(field_name).blank?
-            self.send("#{field_name}=", model.new(embeded_field_name => val))
-          else
-            self.send(field_name).send("#{embeded_field_name}=", val)
-          end
-        end
-      end
     end
 
     def embeds_many(model_name, options={})
+
       model = (options[:class_name] || model_name.to_s.classify).constantize
       field_name = model_name.to_s
 
@@ -121,7 +107,9 @@ module Terrier::Embedder
       define_method("#{field_name}_array=") { |array| self.send "#{field_name}=", array }
       define_method("#{model_name}_json") { self.send(model_name).to_json }
       define_method("#{model_name}_json=") { |json| self.send("#{model_name}=", JSON.parse(json)) }
+
     end
+
   end
 
 end
