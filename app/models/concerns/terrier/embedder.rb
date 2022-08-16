@@ -19,7 +19,7 @@ module Terrier::Embedder
 
     def embeds_one(model_name, options={})
 
-      model = (options[:class_name] || model_name.to_s.classify).constantize
+      model = options[:class] || (options[:class_name] || model_name.to_s.classify).constantize
       field_name = model_name.to_s
 
       embedded_fields[model_name] = {
