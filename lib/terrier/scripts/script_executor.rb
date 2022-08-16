@@ -4,7 +4,7 @@ class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
 
   attr_reader :cache, :each_count, :each_total, :log_lines
-  attr_accessor :me, :params, :script
+  attr_accessor :me, :params, :script, :email_settings
 
   def should_soft_destroy
     true
@@ -19,6 +19,14 @@ class ScriptExecutor
     @log_lines = []
     @output_files = []
     @params = params
+    @email_settings = ActiveSupport::HashWithIndifferentAccess.new({
+      disable: false, # not == false will stop the email from going out post script
+      body: '' # insert a body into the email
+    })
+  end
+
+  def set_email_settings(settings)
+    @email_settings.update(settings)
   end
 
   def set_field_values(values)
@@ -52,7 +60,7 @@ class ScriptExecutor
       script_run.duration = Time.now - t
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
-        script_email_log = @script.send_email_if_necessary me, @output_files, script_run.log_url
+        script_email_log = @script.send_email_if_necessary @email_settings, me, @output_files, script_run.log_url
         puts script_email_log if script_email_log
       end
       true
