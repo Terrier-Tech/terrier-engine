@@ -33,7 +33,7 @@ module Terrier::Embedder
           val = val.length>0 ? JSON.parse(val) : nil
         end
         if val.blank?
-          nil # may want to have this return a new, but empty instance of the embeded model?
+          nil
         elsif val.is_a? String
           model.from_string(val)
         else
