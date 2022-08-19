@@ -20,6 +20,7 @@ class ScriptExecutor
     @output_files = []
     @params = params
     @email_settings = ActiveSupport::HashWithIndifferentAccess.new({
+      file_output: 'attachment',
       disable: false, # not == false will stop the email from going out post script
       body: '' # insert a body into the email
     })
