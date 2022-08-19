@@ -74,6 +74,7 @@ module Terrier::ScriptBase
     ## Email
 
     def send_email_if_necessary(settings, user, output_files = [], log_url = "")
+      verify_settings settings
       if self.email_recipients.present? && settings[:disable] == false
         send_email settings, user, output_files, log_url
       end
@@ -81,6 +82,13 @@ module Terrier::ScriptBase
 
     def send_email(settings, user, output_files, log_url)
       raise NotImplementedError
+    end
+
+    private
+
+    def verify_settings(settings)
+      raise "email_settings file_output #{settings[:file_output]} is not valid" unless %w(attachment link).include? settings[:file_output]
+      raise "email_settings disable must be true or false" unless [true, false].include? settings[:disable]
     end
 
   end

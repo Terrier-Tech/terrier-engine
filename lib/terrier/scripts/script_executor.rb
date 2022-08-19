@@ -3,8 +3,8 @@ require 'terrier/io/tabular_io'
 class ScriptExecutor
   # Doesn't need to be Loggable, it already has all the methods
 
-  attr_reader :cache, :each_count, :each_total, :log_lines
-  attr_accessor :me, :params, :script, :email_settings
+  attr_reader :cache, :each_count, :each_total, :log_lines, :email_settings
+  attr_accessor :me, :params, :script
 
   def should_soft_destroy
     true
@@ -20,8 +20,8 @@ class ScriptExecutor
     @output_files = []
     @params = params
     @email_settings = ActiveSupport::HashWithIndifferentAccess.new({
-      file_output: 'attachment',
-      disable: false, # not == false will stop the email from going out post script
+      file_output: 'attachment', # link | attachment
+      disable: false, # true | false
       body: '' # insert a body into the email
     })
   end
@@ -149,7 +149,7 @@ class ScriptExecutor
   # either dumps a csv or xls using TabularIo.save
   def dump_file(data, rel_path, options={})
     abs_path = TabularIo.save data, rel_path, options
-    @output_files << abs_path
+    @output_files << abs_path.to_s
     write_raw 'file', TabularIo.abs_to_rel_path(abs_path)
     puts "Wrote #{data.count} records to #{rel_path}"
   end
