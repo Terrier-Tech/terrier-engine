@@ -84,6 +84,10 @@ module Terrier::ScriptBase
       raise NotImplementedError
     end
 
+    def send_explicit_email(options)
+      raise NotImplementedError
+    end
+
     private
 
     def verify_settings(settings)

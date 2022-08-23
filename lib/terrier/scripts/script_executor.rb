@@ -232,9 +232,13 @@ class ScriptExecutor
     ActiveRecord::Base.connection.execute(query).to_a
   end
 
-  # No longer supported, see ScriptBase::send_email_if_necessary
+  # No longer supported, see ScriptBase::send_email_if_necessary or send_explicit_email
   def send_email(options)
     puts "send_email function is no longer supported"
+  end
+
+  def send_explicit_email(options)
+    @script.send_explicit_email options
   end
 
   def self_destruct(countdown=5)
