@@ -238,7 +238,7 @@ class ScriptExecutor
   end
 
   def send_explicit_email(options)
-    @script.send_explicit_email options
+    puts @script.send_explicit_email options
   end
 
   def self_destruct(countdown=5)
