@@ -945,6 +945,12 @@ class Editor
 				"can't be 'New Script'"
 				"needs to be a real name - stop abusing the database"
 				"doesn't matter anymore. you can't read anyway"
+				"is illegal. Times you've failed to read these messages: #{@id10tCount}"
+				"is bad and you should feel bad"
+				"fail. We don't track scores, but #{@id10tCount} might be a new record"
+				"error. Additionally, operator error"
+				"has been invalid #{@id10tCount} times."
+				"is still invalid. Wow."
 			]
 			@ui.showErrors {title: reply[@id10tCount % reply.length]}
 			@id10tCount += 1
