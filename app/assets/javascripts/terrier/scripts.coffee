@@ -1331,12 +1331,26 @@ class SettingsModal
 		@form = @ui.find 'form'
 		@errorExplanation = @ui.find '.error-explanation'
 		@errorExplanation.hide()
+		@id10tCount = 0
 		@ui.find('a.save-script').click =>
 			this.save()
 
 	save: ->
 		@errorExplanation.hide()
 		data = @form.serializeObject()
+		if data.title == 'New Script'
+			reply = [
+				"should be more descriptive"
+				"needs to be more descriptive"
+				"can't be 'New Script'"
+				"needs to be a real name - stop abusing the database"
+				"doesn't matter anymore. you can't read anyway"
+			]
+			@form.showErrors {title: reply[@id10tCount % reply.length]}
+			@id10tCount += 1
+			return false
+
+		@id10tCount = 0
 		@ui.showLoadingOverlay()
 		$.put(
 			"/scripts/#{@script.id}.json"
