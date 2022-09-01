@@ -764,6 +764,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
+		@id10tCount = 0 # sick of seeing 'New Script'
 
 		# insert platform-specific control key into the shortcuts
 		controlKeys = @ui.find '.control-key'
@@ -937,6 +938,19 @@ class Editor
 		data = this.serialize()
 		unless data?
 			return "Fix errors before saving"
+		if data.title == 'New Script'
+			reply = [
+				"should be more descriptive"
+				"needs to be more descriptive"
+				"can't be 'New Script'"
+				"needs to be a real name - stop abusing the database"
+				"doesn't matter anymore. you can't read anyway"
+			]
+			@ui.showErrors {title: reply[@id10tCount % reply.length]}
+			@id10tCount += 1
+			return false
+
+		@id10tCount = 0
 		if @script.id?.length
 			$.put(
 				"/scripts/#{@script.id}.json"
