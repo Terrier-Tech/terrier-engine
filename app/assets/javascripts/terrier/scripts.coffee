@@ -1157,8 +1157,8 @@ _pickerTemplate = tinyTemplate (scripts) ->
 							div '.col-report_category', script.report_category.titleize()
 							div '.col-visibility', script.visibility.titleize()
 						td '', ->
-							div '.col-num_runs', script.num_runs.toString()
-							div '.col-last_run', if script.last_run?.length then script.last_run.formatShortDate() else ''
+							div '.col-num_runs', data: {col_value: script.num_runs.toString()}, script.num_runs.toString()
+							div '.col-last_run', data: {col_value: script.last_run?.formatSortableDate() || ''}, script.last_run?.formatShortDate() || ''
 
 
 
