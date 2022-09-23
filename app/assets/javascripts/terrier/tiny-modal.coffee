@@ -103,10 +103,11 @@ _template = tinyTemplate (options, content) ->
 		for action, i in options.actions
 			action._index = i
 		div '.modal-actions', ->
-			for action in _.filter(options.actions, (a) -> !a.end)
-				_actionPartial(action)
 			div '.end', ->
 				for action in _.filter(options.actions, (a) -> a.end)
+					_actionPartial(action)
+			div '.start', ->
+				for action in _.filter(options.actions, (a) -> !a.end)
 					_actionPartial(action)
 
 window.tinyModal.template = _template

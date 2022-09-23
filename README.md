@@ -93,6 +93,7 @@ will append a div to #log-output that looks something like:
 
 
 ## Installation
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -100,10 +101,29 @@ gem 'terrier-engine'
 ```
 
 And then execute:
-```bash
+```zsh
 $ bundle
+```
+
+## Development
+
+This engine comes with a test project in the `dummy` directory. 
+To set up the dummy application:
+
+```zsh
+cd dummy
+bundle
+rails db:create
+rails db:migrate
+```
+
+Optionally link to puma-dev:
+
+```zsh
+puma-dev link -n terrier-engine .
 ```
 
 
 ## License
+
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

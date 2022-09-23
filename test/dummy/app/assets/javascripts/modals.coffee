@@ -1,4 +1,4 @@
-tinyModal.closeIconClass += '.ion-close'
+tinyModal.closeIconClass = '.close-x'
 
 ## Actions
 

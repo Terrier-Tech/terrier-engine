@@ -39,4 +39,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'lodash-rails'
   s.add_development_dependency 'coffee-rails', '~> 4.2'
   s.add_development_dependency 'paperclip'
+  s.add_development_dependency 'rack', '2.2.4'
 end
