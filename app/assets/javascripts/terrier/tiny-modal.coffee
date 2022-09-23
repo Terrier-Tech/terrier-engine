@@ -7,12 +7,23 @@ window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lyph-close'
 window.tinyModal.alertIcon = 'alert'
 
 # callbacks associated with modal columns, to be executed upon tinyModal.pop()
-window.tinyModal.customCallbacks = {}
+window.tinyModal.customCallbacks = {
+	onPop: {},
+	onShow: {}
+}
 
-addCallback = (column, callback) ->
+clearCallbacks = ->
+	tinyModal.customCallbacks.onPop = {}
+	tinyModal.customCallbacks.onShow = {}
+
+addCallbacks = (options, column) ->
 	key = new Date().getTime()
-	column.data('callback-id', key)
-	tinyModal.customCallbacks[key] = callback
+	if options.onShow?
+		column.data('callback-id', key)
+		tinyModal.customCallbacks.onShow[key] = options.onShow
+	if options.onPop?
+		column.data('callback-id', key)
+		tinyModal.customCallbacks.onPop[key] = options.onPop
 
 # shows the overlay and applies the with-modal class to the body
 showOverlay = ->
@@ -28,7 +39,7 @@ removeOverlay = ->
 
 # this shouldn't generally be called directly, use tinyModal.pop() instead
 window.tinyModal.close = ->
-	tinyModal.customCallbacks = {}
+	clearCallbacks()
 	removeOverlay()
 
 	win = $('#modal-window')
@@ -44,7 +55,7 @@ window.tinyModal.close = ->
 window.tinyModal.pop = ->
 	row = $('#modal-row')
 	if row.children('.modal-column').length > 1
-		row.children('.modal-column:last').remove()
+		poppedColumn = row.children('.modal-column:last').remove()
 		_layoutRow row
 		column = row.children('.modal-column:last')
 
@@ -56,11 +67,13 @@ window.tinyModal.pop = ->
 			url = tinyModal.ensureModalUrl srcField.val()
 			column.load url, ->
 				tinyModal.removeLoadingOverlay()
-		else if tinyModal.customCallbacks[callbackId]?
-			tinyModal.customCallbacks[callbackId]()
-			delete tinyModal.customCallbacks[callbackId]
-			tinyModal.removeLoadingOverlay()
 		else
+			if tinyModal.customCallbacks.onPop[callbackId]?
+				tinyModal.customCallbacks.onPop[callbackId] poppedColumn
+				delete tinyModal.customCallbacks.onPop[callbackId]
+			if tinyModal.customCallbacks.onShow[callbackId]?
+				tinyModal.customCallbacks.onShow[callbackId] column
+
 			tinyModal.removeLoadingOverlay()
 	else
 		tinyModal.close()
@@ -211,8 +224,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
 	if options.columnClasses?.length
 		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
-	if options.onPop?
-		addCallback column, options.onPop
+	addCallbacks options, column
 
 	_layoutRow row
 
@@ -222,6 +234,8 @@ window.tinyModal.showDirect = (content, options={}) ->
 			column.find('input:not([type=hidden]):first').focus()
 			if options.callback?
 				options.callback column
+			if options.onShow?
+				options.onShow column
 
 			if options.actions
 				for action in options.actions
@@ -260,8 +274,7 @@ window.tinyModal.show = (url, options={}) ->
 
 	# create the column
 	column = $(_emptyColumnTemplate()).appendTo row
-	if options.onPop?
-		addCallback column, options.onPop
+	addCallbacks options, column
 
 	_layoutRow row
 
@@ -275,6 +288,8 @@ window.tinyModal.show = (url, options={}) ->
 				column.find('input:not([type=hidden]):first').focus()
 				if options.callback?
 					options.callback column
+				if options.onShow?
+					options.onShow column
 	)
 
 	setTimeout(
