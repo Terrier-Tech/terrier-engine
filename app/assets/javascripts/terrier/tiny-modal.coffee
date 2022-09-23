@@ -1,13 +1,18 @@
 window.tinyModal = {}
 
-# callbacks associated with modal columns, to be executed upon tinyModal.pop()
-window.tinyModal.customCallbacks = {}
-
 # this can be overridden to customize the class of the close button icon
 window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lyph-close'
 
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.alertIcon = 'alert'
+
+# callbacks associated with modal columns, to be executed upon tinyModal.pop()
+window.tinyModal.customCallbacks = {}
+
+addCallback = (column, callback) ->
+	key = new Date().getTime()
+	column.data('callback-id', key)
+	tinyModal.customCallbacks[key] = callback
 
 # shows the overlay and applies the with-modal class to the body
 showOverlay = ->
@@ -23,6 +28,7 @@ removeOverlay = ->
 
 # this shouldn't generally be called directly, use tinyModal.pop() instead
 window.tinyModal.close = ->
+	tinyModal.customCallbacks = {}
 	removeOverlay()
 
 	win = $('#modal-window')
@@ -43,13 +49,16 @@ window.tinyModal.pop = ->
 		column = row.children('.modal-column:last')
 
 		# reload the current column from a name=modal-src hidden input
+		# or execute the callback associated with the column
 		srcField = column.find('input[name=modal-src]')
+		callbackId = column.data('callback-id')
 		if srcField.length
 			url = tinyModal.ensureModalUrl srcField.val()
 			column.load url, ->
 				tinyModal.removeLoadingOverlay()
-		else if tinyModal.customCallbacks[column.data 'callback-id']?
-			tinyModal.customCallbacks[column.data 'callback-id']()
+		else if tinyModal.customCallbacks[callbackId]?
+			tinyModal.customCallbacks[callbackId]()
+			delete tinyModal.customCallbacks[callbackId]
 			tinyModal.removeLoadingOverlay()
 		else
 			tinyModal.removeLoadingOverlay()
@@ -65,7 +74,7 @@ window.tinyModal.removeLoadingOverlay = ->
 
 
 _layoutRow = (row) ->
-# ensure the row is large enough to fit all columns and that the last one is showing
+	# ensure the row is large enough to fit all columns and that the last one is showing
 	numColumns = row.children('.modal-column').length
 	row.css {width: "#{numColumns*100}%", left: "-#{(numColumns-1)*100}%"}
 
@@ -202,10 +211,8 @@ window.tinyModal.showDirect = (content, options={}) ->
 	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
 	if options.columnClasses?.length
 		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
-	if options.onShow?
-		callbackKey = Date().valueOf()
-		column.data('callback-id', callbackKey)
-		tinyModal.customCallbacks[callbackKey] = options.onShow
+	if options.onPop?
+		addCallback column, options.onPop
 
 	_layoutRow row
 
@@ -253,10 +260,8 @@ window.tinyModal.show = (url, options={}) ->
 
 	# create the column
 	column = $(_emptyColumnTemplate()).appendTo row
-	if options.onShow?
-		callbackKey = Date().valueOf()
-		column.data('callback-id', callbackKey)
-		tinyModal.customCallbacks[callbackKey] = options.onShow
+	if options.onPop?
+		addCallback column, options.onPop
 
 	_layoutRow row
 

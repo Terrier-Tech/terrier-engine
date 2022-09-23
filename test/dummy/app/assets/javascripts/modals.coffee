@@ -92,27 +92,29 @@ $(document).on 'click', 'a.modal-reload', ->
 		title_icon: 'gear-a'
 	)
 
+## On Pop
+# CTN_TODO think of an example for this
+
 ## On Show
 
-$(document).on 'click', 'a.modal-onshow', ->
+$(document).on 'click', 'a.modal-onpop', ->
 	closeAction = { title: 'Close', class: 'close-modal' }
-	openNewModal = ->
-		tinyModal.showDirect(
-			"<h1 class=text-center'>Close this modal to execute the callback associated with the previous one!</h1>"
-			title: 'New Modal'
-			actions: [ closeAction ]
-		)
 
 	tinyModal.showDirect(
-		"<h1 class='text-center'>When you open the next modal and close it, a callback associated with this modal will execute and show you an alert!</h1>"
+		"<h1 class='text-center'>When you open the next modal and pop it, a callback associated with this modal will execute and show you an alert!</h1>"
 		title: 'On-show demo'
-		onShow: ->
+		onPop: ->
 			$('h1').text 'My contents have changed!!!'
 			alert("This can be used to update the data in previous modal!")
 		actions: [
 			{
 				title: 'Open next modal'
-				callback: openNewModal
+				callback: ->
+					tinyModal.showDirect(
+						"<h1 class='text-center'>Pop this modal to execute the callback associated with the previous one!</h1>"
+						title: 'New Modal'
+						actions: [ closeAction ]
+					)
 			}
 			closeAction
 		]
