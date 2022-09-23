@@ -92,6 +92,31 @@ $(document).on 'click', 'a.modal-reload', ->
 		title_icon: 'gear-a'
 	)
 
+## On Show
+
+$(document).on 'click', 'a.modal-onshow', ->
+	closeAction = { title: 'Close', class: 'close-modal' }
+	openNewModal = ->
+		tinyModal.showDirect(
+			"<h1 class=text-center'>Close this modal to execute the callback associated with the previous one!</h1>"
+			title: 'New Modal'
+			actions: [ closeAction ]
+		)
+
+	tinyModal.showDirect(
+		"<h1 class='text-center'>When you open the next modal and close it, a callback associated with this modal will execute and show you an alert!</h1>"
+		title: 'On-show demo'
+		onShow: ->
+			$('h1').text 'My contents have changed!!!'
+			alert("This can be used to update the data in previous modal!")
+		actions: [
+			{
+				title: 'Open next modal'
+				callback: openNewModal
+			}
+			closeAction
+		]
+	)
 
 ## No Layout
 

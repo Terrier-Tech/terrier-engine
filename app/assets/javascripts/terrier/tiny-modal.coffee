@@ -1,5 +1,8 @@
 window.tinyModal = {}
 
+# callbacks associated with modal columns, to be executed upon tinyModal.pop()
+window.tinyModal.customCallbacks = {}
+
 # this can be overridden to customize the class of the close button icon
 window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lyph-close'
 
@@ -45,6 +48,9 @@ window.tinyModal.pop = ->
 			url = tinyModal.ensureModalUrl srcField.val()
 			column.load url, ->
 				tinyModal.removeLoadingOverlay()
+		else if tinyModal.customCallbacks[column.data 'callback-id']?
+			tinyModal.customCallbacks[column.data 'callback-id']()
+			tinyModal.removeLoadingOverlay()
 		else
 			tinyModal.removeLoadingOverlay()
 	else
@@ -59,7 +65,7 @@ window.tinyModal.removeLoadingOverlay = ->
 
 
 _layoutRow = (row) ->
-	# ensure the row is large enough to fit all columns and that the last one is showing
+# ensure the row is large enough to fit all columns and that the last one is showing
 	numColumns = row.children('.modal-column').length
 	row.css {width: "#{numColumns*100}%", left: "-#{(numColumns-1)*100}%"}
 
@@ -147,7 +153,7 @@ window.tinyModal.replaceColumn = (url) ->
 	container.load url
 
 # reloads the top modal using the modal-src input or the provided url
-window.tinyModal.reload = (url=null) ->
+window.tinyModal.reload = (url=null, callback=null) ->
 	srcInput = _topContent().find('input[name=modal-src]')
 	if srcInput.length
 		url = srcInput.val()
@@ -156,7 +162,7 @@ window.tinyModal.reload = (url=null) ->
 	url = tinyModal.ensureModalUrl url
 	container = _topColumn()
 	container.showLoadingOverlay()
-	container.load url
+	container.load url, callback
 
 
 # removes the actions from the last column
@@ -196,6 +202,10 @@ window.tinyModal.showDirect = (content, options={}) ->
 	column = $("<div class='modal-column'>#{fullContent}</div>").appendTo row
 	if options.columnClasses?.length
 		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
+	if options.onShow?
+		callbackKey = Date().valueOf()
+		column.data('callback-id', callbackKey)
+		tinyModal.customCallbacks[callbackKey] = options.onShow
 
 	_layoutRow row
 
@@ -243,6 +253,10 @@ window.tinyModal.show = (url, options={}) ->
 
 	# create the column
 	column = $(_emptyColumnTemplate()).appendTo row
+	if options.onShow?
+		callbackKey = Date().valueOf()
+		column.data('callback-id', callbackKey)
+		tinyModal.customCallbacks[callbackKey] = options.onShow
 
 	_layoutRow row
 
