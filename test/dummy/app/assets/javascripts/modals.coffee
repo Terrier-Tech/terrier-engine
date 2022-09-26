@@ -92,6 +92,76 @@ $(document).on 'click', 'a.modal-reload', ->
 		title_icon: 'gear-a'
 	)
 
+## On Show
+$(document).on 'click', 'a.modal-on-show', ->
+	closeAction = { title: 'Close', class: 'close-modal' }
+	tinyModal.showDirect(
+		"<h1 class='text-center'>An alert will show every time this modal is shown!</h1>"
+		title: 'On-show demo'
+		onShow: -> alert('This alert is shown every time the modal is shown!')
+		actions: [
+			{
+				title: 'Open next modal'
+				callback: ->
+					tinyModal.showDirect(
+						"<h1 class='text-center'>Close me!</h1>"
+						title: 'Open next modal'
+						actions: [ closeAction ]
+					)
+			}
+			closeAction
+		]
+	)
+
+## On Pop
+
+$(document).on 'click', 'a.modal-on-pop', ->
+	closeAction = { title: 'Close', class: 'close-modal' }
+	tinyModal.showDirect(
+		"<h1 class='text-center'>When you open the next modal and pop it, a callback associated with this modal will execute and show you an alert!</h1>"
+		title: 'On-pop demo'
+		onPop: ->
+			$('h1').text 'My contents have changed!!!'
+			alert('This can be used to update the data in previous modal!')
+		actions: [
+			{
+				title: 'Open next modal'
+				callback: ->
+					tinyModal.showDirect(
+						"<h1 class='text-center'>Pop this modal to execute the callback associated with the previous one!</h1>"
+						title: 'New Modal'
+						actions: [ closeAction ]
+					)
+			}
+			closeAction
+		]
+	)
+
+## On Show & On Pop
+
+$(document).on 'click', 'a.modal-on-show-on-pop', ->
+	closeAction = { title: 'Close', class: 'close-modal' }
+	tinyModal.showDirect(
+		"<h1 class='text-center'>On-show will fire an alert every time this modal is shown, and On-pop will change this text!</h1>"
+		title: 'On-show & on-pop demo'
+		onPop: ->
+			$('h1').text 'On-pop changed my contents!'
+		onShow: ->
+			alert('On show fired me!')
+		actions: [
+			{
+				title: 'Open next modal'
+				callback: ->
+					tinyModal.showDirect(
+						"<h1 class='text-center'>Close me</h1>"
+						title: 'New Modal'
+						actions: [ closeAction ]
+					)
+			}
+			closeAction
+		]
+	)
+
 
 ## No Layout
 
