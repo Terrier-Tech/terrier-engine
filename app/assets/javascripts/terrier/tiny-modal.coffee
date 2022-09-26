@@ -70,7 +70,6 @@ window.tinyModal.pop = ->
 		else
 			if tinyModal.customCallbacks.onPop[callbackId]?
 				tinyModal.customCallbacks.onPop[callbackId] poppedColumn
-				delete tinyModal.customCallbacks.onPop[callbackId]
 			if tinyModal.customCallbacks.onShow[callbackId]?
 				tinyModal.customCallbacks.onShow[callbackId] column
 
