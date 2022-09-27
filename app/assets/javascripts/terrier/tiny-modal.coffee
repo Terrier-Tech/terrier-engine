@@ -19,10 +19,10 @@ clearCallbacks = ->
 addCallbacks = (options, column) ->
 	key = new Date().getTime()
 	if options.onShow?
-		column.data('callback-id', key)
+		column.data('column-callback-id', key)
 		tinyModal.customCallbacks.onShow[key] = options.onShow
 	if options.onPop?
-		column.data('callback-id', key)
+		column.data('column-callback-id', key)
 		tinyModal.customCallbacks.onPop[key] = options.onPop
 
 # shows the overlay and applies the with-modal class to the body
@@ -56,10 +56,11 @@ window.tinyModal.pop = ->
 	row = $('#modal-row')
 
 	poppedColumn = row.children('.modal-column:last')
-	onPopId = poppedColumn.data('callback-id')
-	if tinyModal.customCallbacks.onPop[onPopId]?
-		tinyModal.customCallbacks.onPop[onPopId] poppedColumn
-		delete tinyModal.customCallbacks.onPop[onPopId]
+	poppedColumnCallbackId = poppedColumn.data('column-callback-id')
+	if tinyModal.customCallbacks.onPop[poppedColumnCallbackId]?
+		tinyModal.customCallbacks.onPop[poppedColumnCallbackId] poppedColumn
+		delete tinyModal.customCallbacks.onPop[poppedColumnCallbackId]
+		delete tinyModal.customCallbacks.onShow[poppedColumnCallbackId]
 
 	if row.children('.modal-column').length > 1
 		poppedColumn.remove()
@@ -70,15 +71,14 @@ window.tinyModal.pop = ->
 		# reload the current column from a name=modal-src hidden input
 		# or execute the callback associated with the column
 		srcField = column.find('input[name=modal-src]')
-		onShowId = column.data('callback-id')
+		columnCallbackId = column.data('column-callback-id')
 		if srcField.length
 			url = tinyModal.ensureModalUrl srcField.val()
 			column.load url, ->
 				tinyModal.removeLoadingOverlay()
 		else
-			if tinyModal.customCallbacks.onShow[onShowId]?
-				tinyModal.customCallbacks.onShow[onShowId] column
-				delete tinyModal.customCallbacks.onShow[onShowId]
+			if tinyModal.customCallbacks.onShow[columnCallbackId]?
+				tinyModal.customCallbacks.onShow[columnCallbackId] column
 
 			tinyModal.removeLoadingOverlay()
 	else
