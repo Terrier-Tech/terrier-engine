@@ -54,24 +54,29 @@ window.tinyModal.close = ->
 
 window.tinyModal.pop = ->
 	row = $('#modal-row')
+
+	column = row.children('.modal-column:last')
+	onPopId = column.data('callback-id')
+	if tinyModal.customCallbacks.onPop[onPopId]?
+		tinyModal.customCallbacks.onPop[onPopId] column
+
 	if row.children('.modal-column').length > 1
-		poppedColumn = row.children('.modal-column:last').remove()
+		column.remove()
+
 		_layoutRow row
 		column = row.children('.modal-column:last')
 
 		# reload the current column from a name=modal-src hidden input
 		# or execute the callback associated with the column
 		srcField = column.find('input[name=modal-src]')
-		callbackId = column.data('callback-id')
+		onShowId = column.data('callback-id')
 		if srcField.length
 			url = tinyModal.ensureModalUrl srcField.val()
 			column.load url, ->
 				tinyModal.removeLoadingOverlay()
 		else
-			if tinyModal.customCallbacks.onPop[callbackId]?
-				tinyModal.customCallbacks.onPop[callbackId] poppedColumn
-			if tinyModal.customCallbacks.onShow[callbackId]?
-				tinyModal.customCallbacks.onShow[callbackId] column
+			if tinyModal.customCallbacks.onShow[onShowId]?
+				tinyModal.customCallbacks.onShow[onShowId] column
 
 			tinyModal.removeLoadingOverlay()
 	else

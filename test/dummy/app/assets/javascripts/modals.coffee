@@ -118,21 +118,10 @@ $(document).on 'click', 'a.modal-on-show', ->
 $(document).on 'click', 'a.modal-on-pop', ->
 	closeAction = { title: 'Close', class: 'close-modal' }
 	tinyModal.showDirect(
-		"<h1 class='text-center'>When you open the next modal and pop it, a callback associated with this modal will execute and show you an alert!</h1>"
+		"<h1 class='text-center'>A callback will execute and show you an alert when you pop this modal!</h1>"
 		title: 'On-pop demo'
-		onPop: ->
-			$('h1').text 'My contents have changed!!!'
-			alert('This can be used to update the data in previous modal!')
+		onPop: -> alert('Goodbye!')
 		actions: [
-			{
-				title: 'Open next modal'
-				callback: ->
-					tinyModal.showDirect(
-						"<h1 class='text-center'>Pop this modal to execute the callback associated with the previous one!</h1>"
-						title: 'New Modal'
-						actions: [ closeAction ]
-					)
-			}
 			closeAction
 		]
 	)
@@ -142,10 +131,8 @@ $(document).on 'click', 'a.modal-on-pop', ->
 $(document).on 'click', 'a.modal-on-show-on-pop', ->
 	closeAction = { title: 'Close', class: 'close-modal' }
 	tinyModal.showDirect(
-		"<h1 class='text-center'>On-show will fire an alert every time this modal is shown, and On-pop will change this text!</h1>"
+		"<h1 class='text-center' id='first-modal'>On-show will execute an alert every time this modal is shown!</h1>"
 		title: 'On-show & on-pop demo'
-		onPop: ->
-			$('h1').text 'On-pop changed my contents!'
 		onShow: ->
 			alert('On show fired me!')
 		actions: [
@@ -153,8 +140,10 @@ $(document).on 'click', 'a.modal-on-show-on-pop', ->
 				title: 'Open next modal'
 				callback: ->
 					tinyModal.showDirect(
-						"<h1 class='text-center'>Close me</h1>"
+						"<h1 class='text-center'>On-pop will change the contents of the previous modal when you close this one!</h1>"
 						title: 'New Modal'
+						onPop: ->
+							$('h1#first-modal').text 'On-pop changed my contents!'
 						actions: [ closeAction ]
 					)
 			}
