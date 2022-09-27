@@ -55,13 +55,14 @@ window.tinyModal.close = ->
 window.tinyModal.pop = ->
 	row = $('#modal-row')
 
-	column = row.children('.modal-column:last')
-	onPopId = column.data('callback-id')
+	poppedColumn = row.children('.modal-column:last')
+	onPopId = poppedColumn.data('callback-id')
 	if tinyModal.customCallbacks.onPop[onPopId]?
-		tinyModal.customCallbacks.onPop[onPopId] column
+		tinyModal.customCallbacks.onPop[onPopId] poppedColumn
+		delete tinyModal.customCallbacks.onPop[onPopId]
 
 	if row.children('.modal-column').length > 1
-		column.remove()
+		poppedColumn.remove()
 
 		_layoutRow row
 		column = row.children('.modal-column:last')
@@ -77,6 +78,7 @@ window.tinyModal.pop = ->
 		else
 			if tinyModal.customCallbacks.onShow[onShowId]?
 				tinyModal.customCallbacks.onShow[onShowId] column
+				delete tinyModal.customCallbacks.onShow[onShowId]
 
 			tinyModal.removeLoadingOverlay()
 	else
