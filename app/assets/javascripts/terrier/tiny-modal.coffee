@@ -57,10 +57,10 @@ window.tinyModal.pop = ->
 
 	poppedColumn = row.children('.modal-column:last')
 	poppedColumnCallbackId = poppedColumn.data('column-callback-id')
+	delete tinyModal.customCallbacks.onShow[poppedColumnCallbackId]
 	if tinyModal.customCallbacks.onPop[poppedColumnCallbackId]?
 		tinyModal.customCallbacks.onPop[poppedColumnCallbackId] poppedColumn
 		delete tinyModal.customCallbacks.onPop[poppedColumnCallbackId]
-		delete tinyModal.customCallbacks.onShow[poppedColumnCallbackId]
 
 	if row.children('.modal-column').length > 1
 		poppedColumn.remove()
