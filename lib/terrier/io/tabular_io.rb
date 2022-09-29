@@ -172,6 +172,9 @@ module TabularIo
     [columns, columns_s]
   end
 
+  # you can't have these at the beginning of a cell value in Excel
+  INVALID_PREFIXES = %w[= + -]
+
   # pulls the given column from the row, respecting the different
   # behavior of QueryResults
   def self.pluck_column(row, col)
@@ -180,6 +183,16 @@ module TabularIo
       ''
     elsif val.is_a? Array
       val.map(&:to_s).join(',')
+    else
+      val
+    end
+  end
+
+  # same as `pluck_column`, but protects against unsafe values in Excel
+  def self.pluck_excel_safe_column(row, col)
+    val = self.pluck_column row, col
+    if val.try(:[], 0).in? INVALID_PREFIXES
+      "`#{val}"
     else
       val
     end
@@ -282,7 +295,7 @@ module TabularIo
       sheet << columns_s #Sheet header
 
       data.each do |row|
-        sheet << columns.map { |col| row[col] }
+        sheet << columns.map { |col| self.pluck_excel_safe_column(row, col) }
       end
     end # Saves are performed on block close
   end
