@@ -277,24 +277,14 @@ module TabularIo
 
   # creates a sheet inside an xlsx workbook
   def self.create_sheet_xlsx(book, data, options)
-    sheet = book.add_worksheet options[:sheet_name]
+    book.write_worksheet(name: options[:sheet_name], use_shared_strings: true) do |sheet|
+      columns, columns_s = self.compute_columns data, options
+      sheet << columns_s #Sheet header
 
-    columns, columns_s = self.compute_columns data, options
-
-    r = 0
-    columns_s.each_with_index do |col, c|
-      sheet.write r, c, col
-    end
-    data.each do |row|
-      r += 1
-      columns.each_with_index do |col, c|
-        val = self.pluck_column row, col
-        if val.try(:[], 0).in? %w[= + -]
-          val = "`#{val}"
-        end
-        sheet.write r, c, val
+      data.each do |row|
+        sheet << columns.map { |col| row[col] }
       end
-    end
+    end # Saves are performed on block close
   end
   
   # writes an xlsx file
@@ -306,20 +296,19 @@ module TabularIo
       titleize_columns: false
     }.merge options
 
-    book = WriteXLSX.new abs_path
-
-    if data.is_a?(Hash)
-      data.each do |sheet_name, _data|
-        options[:sheet_name] = sheet_name.to_s
-        self.create_sheet_xlsx book, _data, options
+    Xlsxtream::Workbook.open(abs_path) do |book|
+      if data.is_a?(Hash)
+        data.each do |sheet_name, _data|
+          options[:sheet_name] = sheet_name.to_s
+          self.create_sheet_xlsx book, _data, options
+        end
+      elsif data.is_a?(Array) || data.is_a?(QueryResult)
+        self.create_sheet_xlsx book, data, options
+      else
+        raise "Don't know how to write a #{data.class.name} to xlsx"
       end
-    elsif data.is_a?(Array) || data.is_a?(QueryResult)
-      self.create_sheet_xlsx book, data, options
-    else
-      raise "Don't know how to write a #{data.class.name} to xlsx"
-    end
+    end  # Saves are performed on block close
 
-    book.close
     abs_path
   end
 
