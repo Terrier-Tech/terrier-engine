@@ -12,5 +12,3 @@ gemspec
 # your gem to rubygems.org.
 
 gem 'sql_builder', git: 'git@github.com:Terrier-Tech/sql_builder.git'
-
-gem 'xlsxtream'

@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.14.0)
+    terrier-engine (2.14.2)
       awesome_print
       dotenv
       loofah (>= 2.3.1)
@@ -20,6 +20,7 @@ PATH
       sys-proctable
       terminal-table
       write_xlsx
+      xlsxtream
       xsv
 
 GEM
@@ -226,7 +227,6 @@ DEPENDENCIES
   sql_builder!
   terrier-engine!
   turbolinks (~> 5)
-  xlsxtream
 
 BUNDLED WITH
    1.17.3

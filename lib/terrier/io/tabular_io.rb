@@ -1,7 +1,7 @@
 require 'csv'
 require 'spreadsheet'
 require 'xsv'
-require 'write_xlsx'
+require 'xlsxtream'
 
 module TabularIo
 
