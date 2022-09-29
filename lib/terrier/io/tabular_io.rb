@@ -224,9 +224,21 @@ module TabularIo
 
   def self.save_csv(data, rel_path, options={})
     abs_path = self.safe_rel_to_abs_path rel_path
-    File.open abs_path, 'wt' do |f|
-      f.write self.serialize_csv(data, options)
+    # File.open abs_path, 'wt' do |f|
+    #   f.write self.serialize_csv(data, options)
+    # end
+
+    columns, columns_s = self.compute_columns data, options
+
+    CSV.open abs_path, 'w' do |csv|
+      csv << columns_s
+      data.each do |row|
+        csv << columns.map do |col|
+          self.pluck_column row, col
+        end
+      end
     end
+
     abs_path
   end
 

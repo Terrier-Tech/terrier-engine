@@ -8,6 +8,10 @@ namespace :tabular do
     res
   end
 
+  def random_string(size=8)
+    rand(36 ** size).to_s(36)
+  end
+
   N = 200000
 
   LARGE_XLSX_BOOK_PATH = 'tabular/large-book.xlsx'
@@ -20,7 +24,7 @@ namespace :tabular do
 
     bench "Generate #{N} Rows" do
       data[:sheet1] = 0.upto(N).map do |n|
-        {
+        row = {
           id: n,
           foo: rand,
           bar: "Row #{n}",
@@ -28,6 +32,10 @@ namespace :tabular do
           other_id: SecureRandom.uuid,
           date: Date.today-n.days
         }
+        50.times do |c| # generate a ton of columns
+          row["column_#{c}".to_sym] = random_string
+        end
+        row
       end
 
       data[:sheet2] = 0.upto(N).map do |n|
@@ -40,17 +48,17 @@ namespace :tabular do
       end
     end
 
-    bench "Save #{N} Rows in #{data.count} sheets to xlsx" do
-      TabularIo.save data, LARGE_XLSX_BOOK_PATH
-    end
-
-    bench "Save #{N} Rows to xlsx" do
-      TabularIo.save data[:sheet1], LARGE_XLSX_PATH
-    end
-
     bench "Save #{N} Rows to csv" do
       TabularIo.save data[:sheet1], LARGE_CSV_PATH
     end
+
+    # bench "Save #{N} Rows in #{data.count} sheets to xlsx" do
+    #   TabularIo.save data, LARGE_XLSX_BOOK_PATH
+    # end
+    #
+    # bench "Save #{N} Rows to xlsx" do
+    #   TabularIo.save data[:sheet1], LARGE_XLSX_PATH
+    # end
   end
 
   desc "Splits the large file from public/system/#{LARGE_XLSX_BOOK_PATH} into separate csv files"
