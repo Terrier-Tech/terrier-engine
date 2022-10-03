@@ -11,9 +11,11 @@ window.forms.optionsForSelect = (options, current=null) ->
 		options = for opt in options
 			[opt.toString().titleize(), opt]
 	for opt in options
+		_options = if opt.length > 2 then opt[1] else {}
 		value = _.last opt # to match options_for_select behavior
+		disabled = _options.disabled
 		selected = if value==current then 'selected' else null
-		option '', {value: value, selected: selected}, opt[0]
+		option '', {value: value, disabled: disabled, selected: selected}, opt[0]
 
 # replaces the options on an existing select element
 window.forms.replaceSelectOptions = (select, options, current=null) ->
@@ -29,9 +31,11 @@ window.forms.groupedOptionsForSelect = (options, current=null) ->
 	for group in options
 		optgroup '', label: group[0], ->
 			for opt in group[1]
+				_options = if opt.length > 2 then opt[1] else {}
 				value = _.last opt # to match options_for_select behavior
+				disabled = _options.disabled
 				selected = if value==current then 'selected' else null
-				option '', {value: value, selected: selected}, opt[0]
+				option '', {value: value, disabled: disabled, selected: selected}, opt[0]
 
 # replaces the options on an existing select element
 window.forms.replaceGroupedSelectOptions = (select, options, current=null) ->
