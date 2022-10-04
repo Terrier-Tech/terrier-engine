@@ -36,6 +36,12 @@ removeOverlay = ->
 	$('body').removeClass 'with-modal'
 	$('#modal-overlay').remove()
 
+# Helper to locate files that initiated the modal. Helps to find templates quickly.
+consoleLogTrace = ->
+	return unless window.isDevelopment?
+	console.groupCollapsed("Loading modal stack trace")
+	console.trace()
+	console.groupEnd()
 
 # this shouldn't generally be called directly, use tinyModal.pop() instead
 window.tinyModal.close = ->
@@ -208,6 +214,7 @@ window.tinyModal.expand = ->
 # shows a modal with direct content
 window.tinyModal.showDirect = (content, options={}) ->
 	showOverlay()
+	consoleLogTrace()
 
 	# window
 	win = $ '#modal-window'
@@ -259,6 +266,7 @@ window.tinyModal.modifyUrl = (url) ->
 # populate the modal from a URL
 window.tinyModal.show = (url, options={}) ->
 	showOverlay()
+	consoleLogTrace()
 
 	# add the modal parameter to the link
 	unless url.indexOf('modal=true') > -1
@@ -373,6 +381,7 @@ _alertTemplate = tinyTemplate (options) ->
 # If none is provided, one will automatically be inserted.
 tinyModal.showAlert = (options) ->
 	showOverlay()
+	consoleLogTrace()
 
 	$('#modal-alert').remove()
 
