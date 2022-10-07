@@ -438,12 +438,12 @@ tinyModal.confirmAlert = (title, body, callback, options={}) ->
 			callback: ->
 				tinyModal.closeAlert()
 				callback()
-			icon: 'ion-checkmark-round lyph-checkmark glyp-checkmark'
+			icon: options.confirmIcon || 'ion-checkmark-round lyph-checkmark glyp-checkmark'
 		}
 		{
 			title: options.cancelTitle || 'Cancel'
 			classes: (options.cancelClasses || 'secondary') + ' cancel close'
-			icon: 'lyph-close glyp-close'
+			icon: options.confirmIcon || 'lyph-close glyp-close'
 		}
 	]
 	tinyModal.showAlert options
