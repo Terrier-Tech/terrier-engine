@@ -443,7 +443,7 @@ tinyModal.confirmAlert = (title, body, callback, options={}) ->
 		{
 			title: options.cancelTitle || 'Cancel'
 			classes: (options.cancelClasses || 'secondary') + ' cancel close'
-			icon: options.confirmIcon || 'lyph-close glyp-close'
+			icon: options.cancelIcon || 'lyph-close glyp-close'
 		}
 	]
 	tinyModal.showAlert options
