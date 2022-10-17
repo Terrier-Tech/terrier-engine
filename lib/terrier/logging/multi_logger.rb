@@ -1,7 +1,7 @@
-require 'awesome_print'
+require 'amazing_print'
 
-AwesomePrint.defaults ||= {}
-AwesomePrint.defaults[:ruby19_syntax] = true
+AmazingPrint.defaults ||= {}
+AmazingPrint.defaults[:ruby19_syntax] = true
 
 class MultiLogger
 
@@ -66,7 +66,7 @@ class MultiLogger
     end
     write level, s
 
-    # awesome_print extra args
+    # amazing_print extra args
     rails_level = %w(separator success).index(level) ? 'info' : level
     args.each do |arg|
       if @use_stdout

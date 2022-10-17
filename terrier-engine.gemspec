@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'xlsxtream'
   s.add_dependency 'nokogiri', '>= 1.10.4'
   s.add_dependency 'loofah', '>= 2.3.1'
-  s.add_dependency 'awesome_print'
+  s.add_dependency 'amazing_print'
   s.add_dependency 'puma'
   s.add_dependency 'puma-daemon'
   s.add_dependency 'sys-proctable'
