@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.16.0)
+    terrier-engine (2.18.0)
       amazing_print
       dotenv
       loofah (>= 2.3.1)
@@ -183,8 +183,8 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    sys-proctable (1.2.6)
-      ffi
+    sys-proctable (1.2.7)
+      ffi (~> 1.1)
     temple (0.8.0)
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
