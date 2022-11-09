@@ -101,6 +101,7 @@ gem 'terrier-engine'
 ```
 
 And then execute:
+
 ```zsh
 $ bundle
 ```

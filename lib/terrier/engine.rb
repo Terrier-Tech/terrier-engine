@@ -4,6 +4,8 @@ require 'terrier/migrations'
 
 require 'terrier/strings'
 
+require 'terrier/time/date_period'
+
 require 'terrier/io/tabular_io'
 
 require 'terrier/logging/loggable'
