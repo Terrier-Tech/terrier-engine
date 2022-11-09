@@ -20,21 +20,32 @@ class DatePeriod
 
   # @return [String] in the original format accepted by `DatePeriod.parse`
   def to_s
-    if @end_date == @start_date + 1.year
-      # a single year
-      @start_date.year.to_s
-    elsif @start_date.month==1 && @start_date.day==1 && @end_date.month==1 && @end_date.day==1
-      # year range
-      "#{@start_date.year}:#{@end_date.year-1}"
-    elsif @end_date == @start_date + 1.month
-      # a single month
-      @start_date.strftime('%Y-%m')
-    elsif @end_date == @start_date + 1.day
-      # a single day
-      @start_date.to_s
-    else
-      "#{self.start_date}:#{self.end_date - 1.day}"
+
+    # start and end are 1/1
+    if @start_date.month==1 && @start_date.day==1 && @end_date.month==1 && @end_date.day==1
+      if @end_date == @start_date + 1.year
+        # a single year
+        return @start_date.year.to_s
+      else
+        # year range
+        return "#{@start_date.year}:#{@end_date.year-1}"
+      end
     end
+
+    # start and end are the first of the month
+    if @start_date.day == 1 && @end_date.day == 1
+      if @end_date == @start_date + 1.month
+        # a single month
+        return @start_date.strftime('%Y-%m')
+      end
+    end
+
+    # a single day
+    if @end_date == @start_date + 1.day
+      return @start_date.to_s
+    end
+
+    "#{self.start_date}:#{self.end_date - 1.day}"
   end
 
   # @param raw (String|DatePeriod) can have the following formats:
@@ -72,10 +83,25 @@ class DatePeriod
     DatePeriod.new start_date, end_date
   end
 
+  # @return a new DatePeriod for the last `n` days
+  # @param n [Fixnum]
+  # @param today [Date,String,nil] can be passed if you don't want to start at today
+  def self.last_n_days(n, today=nil)
+    today = Date.parse(today) if today.is_a?(String)
+    today ||= Date.today
+    DatePeriod.new today - n.days, today + 1.day
+  end
+
   # @return a new DatePeriod for the last 30 days
-  def self.last_30
-    today = Date.today
-    DatePeriod.new today - 30.days, today + 1.day
+  # @param today [Date,String,nil] can be passed if you don't want to start at today
+  def self.last_30(today=nil)
+    last_n_days 30, today
+  end
+
+  # @return a new DatePeriod for the last 30 days
+  # @param today [Date,String,nil] can be passed if you don't want to start at today
+  def self.last_7(today=nil)
+    last_n_days 7, today
   end
 
 end
