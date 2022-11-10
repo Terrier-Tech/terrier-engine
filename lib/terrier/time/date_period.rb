@@ -48,6 +48,36 @@ class DatePeriod
     "#{self.start_date}:#{self.end_date - 1.day}"
   end
 
+  # @return [String] a human-friendly description of the period
+  def display_name
+
+    # start and end are 1/1
+    if @start_date.month == 1 && @start_date.day == 1 && @end_date.month == 1 && @end_date.day == 1
+      if @end_date == @start_date + 1.year
+        # a single year
+        return @start_date.year.to_s
+      else
+        # year range
+        return "#{@start_date.year}-#{@end_date.year - 1}"
+      end
+    end
+
+    # start and end are the first of the month
+    if @start_date.day == 1 && @end_date.day == 1
+      if @end_date == @start_date + 1.month
+        # a single month
+        return @start_date.strftime('%B %Y')
+      end
+    end
+
+    # a single day
+    if @end_date == @start_date + 1.day
+      return @start_date.strftime(SHORT_DATE_FORMAT)
+    end
+
+    "#{self.start_date.strftime(SHORT_DATE_FORMAT)} - #{(self.end_date - 1.day).strftime(SHORT_DATE_FORMAT)}"
+  end
+
   # @param raw (String|DatePeriod) can have the following formats:
   # year: YYYY
   # year range: YYYY:YYYY
