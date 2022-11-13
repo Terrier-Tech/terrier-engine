@@ -45,13 +45,28 @@ $phone-breakpoint: 600px !default;
 			}
 		}
 	}
-	&.centered {
+	&.centered, &.justify-center {
 		justify-content: center;
+	}
+	&.align-center {
+		align-items: center;
+	}
+	&.align-start {
+		align-items: start;
+	}
+	&.align-end {
+		align-items: end;
+	}
+	&.wrapped {
+		flex-wrap: wrap;
 	}
 }
 @media only screen and (max-width: $breakpoint) {
 	.horizontal-grid.collapsible {
 		flex-direction: column;
+	}
+	.horizontal-grid.wrap-collapse {
+		flex-wrap: wrap;
 	}
 }
 @media only screen and (max-width: $phone-breakpoint) {
