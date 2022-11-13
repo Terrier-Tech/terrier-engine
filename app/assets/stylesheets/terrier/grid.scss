@@ -8,7 +8,7 @@ $phone-breakpoint: 600px !default;
 
 // space out children horizontally by either stretching (.stretch-column) or shrinking (.shrink-column) their contents
 // add .collapsible to collapse all columns under the breakpoint
-.horizontal-grid {
+.horizontal-grid, .h-grid {
 	display: flex;
 	gap: 1em;
 	&.padded {
@@ -62,16 +62,20 @@ $phone-breakpoint: 600px !default;
 	}
 }
 @media only screen and (max-width: $breakpoint) {
-	.horizontal-grid.collapsible {
-		flex-direction: column;
-	}
-	.horizontal-grid.wrap-collapse {
-		flex-wrap: wrap;
+	.horizontal-grid, .h-grid {
+		&.collapsible {
+			flex-direction: column;
+		}
+		&.wrap-collapse {
+			flex-wrap: wrap;
+		}
 	}
 }
 @media only screen and (max-width: $phone-breakpoint) {
-	.horizontal-grid.phone-collapsible {
-		flex-direction: column;
+	.horizontal-grid, .h-grid {
+		&.phone-collapsible {
+			flex-direction: column;
+		}
 	}
 }
 
