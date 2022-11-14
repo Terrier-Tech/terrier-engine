@@ -134,4 +134,19 @@ class DatePeriod
     last_n_days 7, today
   end
 
+  # Iterates from the start_date to end_date by the given interval, yielding
+  # a new period for each interval and returning the mapped results
+  # @yield [DatePeriod]
+  # @param duration [ActiveSupport::Duration] the maximum duration of each interval
+  def each(duration)
+    d = self.start_date
+    out = []
+    while d < end_date
+      end_date_ = [d + duration, @end_date].min
+      out << yield(DatePeriod.new(d, end_date_))
+      d += duration
+    end
+    out
+  end
+
 end

@@ -51,4 +51,30 @@ class DatePeriodTest < ActiveSupport::TestCase
     assert_equal '10/13/22 - 10/22/22', p.display_name
   end
 
+  test 'each' do
+    period = DatePeriod.parse '2022-10-01:2022-11-14'
+
+    # months
+    months = period.each 1.month do |mp|
+      mp
+    end
+    assert_equal 2, months.count
+    assert_equal '2022-11-15', months.last.end_date.to_s
+
+    # weeks
+    weeks = period.each 1.week do |wp|
+      wp
+    end
+    assert_equal 7, weeks.count
+    assert_equal '2022-11-15', weeks.last.end_date.to_s
+
+    # days
+    days = period.each 1.day do |dp|
+      dp
+    end
+    assert_equal 45, days.count
+    assert_equal days.first.end_date, days.first.start_date + 1.day
+    assert_equal '2022-11-15', days.last.end_date.to_s
+  end
+
 end
