@@ -198,7 +198,7 @@ SQL
       begin
         searcher = ScriptSearcher.new
         result = searcher.search query
-        scripts = Script.where("id IN #{result.ids.to_postgres_array}")
+        scripts = Script.where(_state: 0).where("id IN #{result.ids.to_postgres_array}")
         render_success "Found #{scripts.count} scripts", {scripts: scripts, key: key, elapsed_time: result.took, total: result.total}
       rescue => ex
         render_exception ex
