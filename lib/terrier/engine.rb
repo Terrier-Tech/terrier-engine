@@ -3,6 +3,7 @@ require 'terminal-table'
 require 'terrier/migrations'
 
 require 'terrier/strings'
+require 'terrier/system/top'
 
 require 'terrier/time/date_period'
 
