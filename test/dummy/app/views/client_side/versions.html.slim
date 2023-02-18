@@ -1,36 +1,39 @@
 
-table.data.versions style='width: initial'
+table.data.versions.sortable style='width: initial'
 	thead
 		tr
-			th V1
-			th Compare
-			th V2
+			th 
+				a data-column='v1' V1
+			th
+				a data-column='compare' Compare
+			th
+				a data-column='v2' V2
 	tbody
 		tr
-			td.v1 0.2.3
-			td.compare
-			td.v2 0.12.1
+			td.column-v1 0.2.3
+			td.column-compare
+			td.column-v2 0.12.1
 		tr
-			td.v1 1.2.3
-			td.compare
-			td.v2 0.12.1
+			td.column-v1 1.2.3
+			td.column-compare
+			td.column-v2 0.12.1
 		tr
-			td.v1 1.2.2
-			td.compare
-			td.v2 1.2.3
+			td.column-v1 1.2.2
+			td.column-compare
+			td.column-v2 1.2.3
 		tr
-			td.v1 1.2.3
-			td.compare
-			td.v2 1.2.3
+			td.column-v1 1.2.3
+			td.column-compare
+			td.column-v2 1.2.3
 		tr
-			td.v1 1.2.3
-			td.compare
-			td.v2 1.3.1
+			td.column-v1 1.2.3
+			td.column-compare
+			td.column-v2 1.3.1
 
 coffee:
 	$('table.versions tbody tr').each (index, elem) ->
 		row = $ elem
-		v1 = row.find('.v1').text()
-		v2 = row.find('.v2').text()
+		v1 = row.find('.column-v1').text()
+		v2 = row.find('.column-v2').text()
 		compare = versions.compare v1, v2
-		row.find('.compare').text compare
+		row.find('.column-compare').text compare

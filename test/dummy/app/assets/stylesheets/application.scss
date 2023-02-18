@@ -19,19 +19,20 @@
 
 
 $bar-height: 50px;
-$green: #275f37;
-$alert-color: #aa0000;
-
 
 body {
-    background-color: #f0f0f0;
+    --bg-color: #f6f2ef;
+    --primary-color: #d69338;
+    --link-color: #362b21;
+    --alert-color: #ed584c;
+    background-color: var(--bg-color);
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
     color: #333;
     padding-top: $bar-height;
 }
 a {
-    color: #386177;
+    color: var(--link-color);
     cursor: pointer;
     text-decoration: none;
 }
@@ -70,7 +71,7 @@ a.demo-link {
     left: 0;
     right: 0;
     height: $bar-height;
-    background-color: $green;
+    background-color: var(--primary-color);
     a.title {
         display: block;
         text-align: center;
@@ -137,7 +138,7 @@ input[type=text], input[type=email], input[type=date], select, textarea {
     width: 100%;
     font-size: 16px;
     &.error {
-        border: 2px solid $alert-color;
+        border: 2px solid var(--alert-color);
     }
 }
 .readonly-field {
@@ -162,7 +163,7 @@ button {
     padding: 6px 12px;
 }
 .error-explanation {
-    background-color: $alert-color;
+    background-color: var(--alert-color);
     color: #fff;
     font-weight: bold;
     padding: 8px;
