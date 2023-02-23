@@ -63,7 +63,7 @@ module Terrier::ScriptBase
 
     ## Scheduling
 
-    enum_field :schedule_time, %w(none evening morning)
+    enum_field :schedule_time, %w(none evening morning hourly)
 
 
     ## Visibility

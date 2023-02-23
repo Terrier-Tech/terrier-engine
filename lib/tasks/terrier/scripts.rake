@@ -4,12 +4,18 @@ require 'terrier/scripts/script_searcher'
 namespace :scripts do
 
   def run_time(time)
-    scripts = Script.where(schedule_time: time, _state: 0).where("array_length(schedule_rule_summaries,1)>0")
+    if time.is_a? String
+      scripts = Script.where(schedule_time: time, _state: 0).where("array_length(schedule_rule_summaries,1)>0")
+    else
+      scripts = Script.where(schedule_hour: time, _state: 0).where("array_length(schedule_rule_summaries,1)>0")
+    end
+    
     puts "#{scripts.count} scripts for #{time}"
 
     day = Time.now
+    hour = day.strftime('%H')
     scripts.each do |script|
-      if script.schedule_contains_day? day
+      if (script.schedule_contains_day? day) || (script.schedule_contains_hour? hour)
         puts "Running script #{script.id}: #{script.title}"
         executor = ScriptExecutor.new script, ModelCache.new
         executor.me = "#{time.titleize} Runner"
@@ -34,6 +40,11 @@ namespace :scripts do
   desc 'Runs all evening scheduled scripts for today'
   task run_evening: :environment do
     run_time 'evening'
+  end
+
+  desc 'Runs all hourly scheduled scripts for today'
+  task run_hourly: :environment do
+    run_time (Time.now.strftime('%H'))
   end
 
 end

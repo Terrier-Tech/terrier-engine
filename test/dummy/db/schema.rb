@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_171102) do
+ActiveRecord::Schema.define(version: 2023_02_23_154903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_171102) do
     t.text "order_grouping", default: "combine", null: false
     t.text "visibility", default: "private", null: false
     t.text "org_id"
+    t.integer "schedule_hour"
     t.index ["_state"], name: "index_scripts_on__state"
     t.index ["created_by_id"], name: "index_scripts_on_created_by_id"
     t.index ["extern_id"], name: "index_scripts_on_extern_id"

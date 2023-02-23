@@ -80,6 +80,15 @@ module Terrier::Schedulable
       false
     end
 
+    # returns true if one of the rules contains the given hour
+    def schedule_contains_hour?(hour)
+      (self.schedule_rules || []).each do |rule|
+        if rule.contains_hour? hour
+          return true
+        end
+      end
+      false
+    end
 
     @schedule_types = %w(every none schedule)
 

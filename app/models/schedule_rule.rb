@@ -53,9 +53,14 @@ class ScheduleRule
     'ios-calendar-outline'
   end
 
+  string_array_field :hours
   string_array_field :days
   string_array_field :weeks
   string_array_field :months
+
+  def hours_display
+    self.hours
+  end
 
   def weeks_display
     if self.weeks.index 'all'
@@ -66,6 +71,8 @@ class ScheduleRule
       'Week ' + self.weeks.join(', ')
     end
   end
+
+  @hours = %w(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23)
 
   @days = %w(sunday monday tuesday wednesday thursday friday saturday)
   @short_days = %w(Sun Mon Tue Wed Thu Fri Sat)
@@ -82,7 +89,7 @@ class ScheduleRule
   @weeks = %w(1 2 3 4 5 every_2 all)
 
   class << self
-    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks
+    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks, :hours
   end
 
 
@@ -94,6 +101,11 @@ class ScheduleRule
     weeks_s = weeks_a.compact.map(&:to_s)
     day = day.strftime('%A').downcase
     self.months.index(month) && (weeks_s.index('all') || weeks_s.index(week)) && self.days.index(day)
+  end
+
+  # returns true if the rule contains the given hour
+  def contains_hour?(hour)
+    self.hours.index(hour)
   end
 
 
@@ -165,7 +177,7 @@ class ScheduleRule
   end
 
   def summary(short_days: true, short_months: true)
-    "#{day_summary(short_days)}; #{weeks_display}; #{month_summary(short_months)}"
+    "#{hours_display}; #{day_summary(short_days)}; #{weeks_display}; #{month_summary(short_months)}"
   end
 
 end
