@@ -522,9 +522,14 @@ class ScriptSearcher
 # Schedule Rules Editor
 ################################################################################
 
-_scheduleRulePartial = tinyTemplate (script, constants, ruleInput) ->
-	rule = ruleInput.val()
-	#console.log(rule)
+_scheduleRulePartial = tinyTemplate (script, constants) ->
+	rule = if script.schedule_rules?.length
+		script.schedule_rules[0]
+	else if script.schedule_rules_s?.length
+		JSON.parse(script.schedule_rules_s)[0]
+	else
+	{}
+	console.log(rule)
 	div '.schedule-rule-editor', ->
 		div '.horizontal-grid', ->
 			div '.shrink-column.days-column', ->
@@ -555,9 +560,14 @@ _scheduleRulePartial = tinyTemplate (script, constants, ruleInput) ->
 							span '', month[0..2].capitalize()
 		a '.all-months.glyp-check_all.lyph-checkbox', 'All Months'
 
-_scheduleRuleHourlyPartial = tinyTemplate (script, constants, ruleInput) ->
-	rule = ruleInput.val()
-	#console.log(rule)
+_scheduleRuleHourlyPartial = tinyTemplate (script, constants) ->
+	rule = if script.schedule_rules?.length
+		script.schedule_rules[0]
+	else if script.schedule_rules_s?.length
+		JSON.parse(script.schedule_rules_s)[0]
+	else
+	{}
+	console.log(rule)
 	div '.schedule-rule-editor', ->
 		div '.horizontal-grid', ->
 			index = 0
@@ -790,7 +800,7 @@ class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
 		ruleInput = @ui.find('input[name=schedule_rules_s]')
-		$(_scheduleRulePartial(@script, @constants, ruleInput)).appendTo @ui.find('.settings-panel.schedule')
+		$(_scheduleRulePartial(@script, @constants, @ui)).appendTo @ui.find('.settings-panel.schedule')
 		@id10tCount = 0 # sick of seeing 'New Script'
 
 		# insert platform-specific control key into the shortcuts
@@ -809,7 +819,7 @@ class Editor
 			if scheduleTimeSelect.val() == 'hourly'
 				schedulePanelRuleEditor.html _scheduleRuleHourlyPartial(@script, @constants, ruleInput)
 			else if scheduleTimeSelect.val() == 'morning' || scheduleTimeSelect.val() == 'evening'
-				schedulePanelRuleEditor.html _scheduleRulePartial(@script, @constants, ruleInput)
+				schedulePanelRuleEditor.html _scheduleRulePartial(@script, @constants, @ui)
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
 		scheduleTimeSelect.change()
 
