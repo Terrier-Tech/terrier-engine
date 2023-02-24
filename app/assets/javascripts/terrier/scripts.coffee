@@ -524,6 +524,7 @@ class ScriptSearcher
 
 _scheduleRulePartial = tinyTemplate (script, constants, ruleInput) ->
 	rule = ruleInput.val()
+	#console.log(rule)
 	div '.schedule-rule-editor', ->
 		div '.horizontal-grid', ->
 			div '.shrink-column.days-column', ->
@@ -556,7 +557,7 @@ _scheduleRulePartial = tinyTemplate (script, constants, ruleInput) ->
 
 _scheduleRuleHourlyPartial = tinyTemplate (script, constants, ruleInput) ->
 	rule = ruleInput.val()
-	console.log(rule)
+	#console.log(rule)
 	div '.schedule-rule-editor', ->
 		div '.horizontal-grid', ->
 			index = 0
@@ -567,7 +568,7 @@ _scheduleRuleHourlyPartial = tinyTemplate (script, constants, ruleInput) ->
 						pmOrAm = if hour >= 12 then 'PM' else 'AM'
 						formatted = (hour % 12) || 12
 						label '', ->
-							checked = if rule.weeks?.indexOf(week)>-1 then 'checked' else null
+							checked = if rule.hours?.indexOf(hour)>-1 then 'checked' else null
 							input '.hour', type: 'checkbox', value: hour, checked: checked
 							span '', "#{formatted} #{pmOrAm}"
 							row = row + 1
@@ -781,6 +782,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				else
 				{}
 				input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
+				console.log(JSON.stringify([rule]))
 				#_scheduleRulePartial script, constants
 
 
@@ -803,6 +805,7 @@ class Editor
 		schedulePanelRuleEditor = @ui.find '.schedule-rule-editor'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
 		scheduleTimeSelect.change =>
+			ruleInput = @ui.find('input[name=schedule_rules_s]')
 			if scheduleTimeSelect.val() == 'hourly'
 				schedulePanelRuleEditor.html _scheduleRuleHourlyPartial(@script, @constants, ruleInput)
 			else if scheduleTimeSelect.val() == 'morning' || scheduleTimeSelect.val() == 'evening'
