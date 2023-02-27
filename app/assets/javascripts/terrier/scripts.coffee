@@ -523,14 +523,15 @@ class ScriptSearcher
 ################################################################################
 
 _scheduleRulePartial = (script, constants) ->
+	rule = if script.schedule_rules?.length
+		script.schedule_rules[0]
+	else if script.schedule_rules_s?.length
+		JSON.parse(script.schedule_rules_s)[0]
+	else
+	{}
 	div '.schedule-rule-editor', ->
+		input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 		div '.horizontal-grid', ->
-			rule = if script.schedule_rules?.length
-				script.schedule_rules[0]
-			else if script.schedule_rules_s?.length
-				JSON.parse(script.schedule_rules_s)[0]
-			else
-			{}
 			div '.shrink-column.days-column', ->
 				for day in constants.days
 					label '', ->
@@ -753,24 +754,17 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
-					scheduleTimes = constants.schedule_time_options.map (time) -> time[0]
+					scheduleTimes = constants.schedule_time_options.map (time) -> time[1]
 					for time in scheduleTimes
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
 						if time in constants.hours # Don't format none, morning, evening
 							pmOrAm = if time >= 12 then ' PM' else ' AM'
 							formatted = ((time % 12) || 12) + pmOrAm
-						option '', {value: time, selected: selected}, formatted
+						option '', {value: time, selected: selected}, formatted.titleize()
 				h4 '.with-icon', ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
-				rule = if script.schedule_rules?.length
-					script.schedule_rules[0]
-				else if script.schedule_rules_s?.length
-					JSON.parse(script.schedule_rules_s)[0]
-				else
-				{}
-				input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 				_scheduleRulePartial script, constants
 
 
@@ -788,7 +782,6 @@ class Editor
 
 		new ScheduleRulesEditor @ui.find('.settings-panel.schedule')
 		schedulePanel = @ui.find '.settings-panel.schedule'
-		schedulePanelRuleEditor = @ui.find '.schedule-rule-editor'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
 		scheduleTimeSelect.change =>
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'

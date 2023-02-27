@@ -53,14 +53,9 @@ class ScheduleRule
     'ios-calendar-outline'
   end
 
-  string_array_field :hours
   string_array_field :days
   string_array_field :weeks
   string_array_field :months
-
-  def hours_display
-    self.hours
-  end
 
   def weeks_display
     if self.weeks.index 'all'
@@ -171,7 +166,7 @@ class ScheduleRule
   end
 
   def summary(short_days: true, short_months: true)
-    "#{hours_display}; #{day_summary(short_days)}; #{weeks_display}; #{month_summary(short_months)}"
+    "#{day_summary(short_days)}; #{weeks_display}; #{month_summary(short_months)}"
   end
 
 end
