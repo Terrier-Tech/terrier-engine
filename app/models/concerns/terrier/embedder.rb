@@ -44,7 +44,7 @@ module Terrier::Embedder
       define_method "#{field_name}=" do |val|
         if val.present?
           if val.class.name.index('Hash')
-            val = val.to_hash.values
+            val = val.to_hash
           elsif val.instance_of?(String)
             val = JSON.parse(val)
           end
