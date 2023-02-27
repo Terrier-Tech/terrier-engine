@@ -1333,12 +1333,14 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
-					current = script.schedule_time
-					formattedHours = constants.hours.map (hour) -> (((hour % 12) || 12) + (if hour >= 12 then ' PM' else ' AM'))
-					combinedTimes = constants.schedule_time_options + formattedHours
-					console.log(combinedTimes)
-					for time in combinedTimes
-						option '', {value: time, selected: current}
+					scheduleTimes = constants.schedule_time_options.map (time) -> time[0]
+					for time in scheduleTimes
+						selected = if time == script.schedule_time then 'selected' else null
+						formatted = time
+						if time in constants.hours # Don't format none, morning, evening
+							pmOrAm = if time >= 12 then ' PM' else ' AM'
+							formatted = ((time % 12) || 12) + pmOrAm
+						option '', {value: time, selected: selected}, formatted
 				_scheduleRulePartial script, constants
 
 
