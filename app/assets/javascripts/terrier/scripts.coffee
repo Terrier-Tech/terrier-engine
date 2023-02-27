@@ -524,19 +524,6 @@ class ScriptSearcher
 
 _scheduleRulePartial = (script, constants) ->
 	div '.schedule-rule-editor', ->
-		div '.hours-column', hidden: true, ->
-			div '.horizontal-grid', ->
-				select '.schedule-hour', name: 'schedule_hour', ->
-					rule = if script.schedule_hour?
-						script.schedule_hour
-					else
-					null
-					for hour in constants.hours
-						console.log(parseInt(hour) == rule)
-						pmOrAm = if hour >= 12 then ' PM' else ' AM'
-						formatted = (hour % 12) || 12
-						selected = if (rule == parseInt(hour)) then 'selected' else null
-						option '', {value: hour, selected: selected, label: (formatted + pmOrAm)}, hour
 		div '.horizontal-grid', ->
 			rule = if script.schedule_rules?.length
 				script.schedule_rules[0]
@@ -577,7 +564,7 @@ class ScheduleRulesEditor
 	constructor: (@ui) ->
 		@output = @ui.find 'input[name=schedule_rules_s]'
 
-		@ui.on 'change', 'option.hour, input.day, input.month', =>
+		@ui.on 'change', 'input.day, input.month', =>
 			this.onChange()
 
 		@ui.on 'click', 'a.all-months', =>
@@ -595,9 +582,6 @@ class ScheduleRulesEditor
 		this.onChange()
 
 	onChange: ->
-		hours = @ui.find('option.hour').map((index, elem) ->
-			elem.value
-		).get()
 		days = @ui.find('input.day:checked').map((index, elem) ->
 			elem.value
 		).get()
@@ -607,7 +591,7 @@ class ScheduleRulesEditor
 		months = @ui.find('input.month:checked').map((index, elem) ->
 			elem.value
 		).get()
-		rule = {hours: hours, days: days, weeks: weeks, months: months}
+		rule = {days: days, weeks: weeks, months: months}
 		@output.val JSON.stringify([rule])
 
 
@@ -769,7 +753,14 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
-					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
+					scheduleTimes = constants.schedule_time_options.map (time) -> time[0]
+					for time in scheduleTimes
+						selected = if time == script.schedule_time then 'selected' else null
+						formatted = time
+						if time in constants.hours # Don't format none, morning, evening
+							pmOrAm = if time >= 12 then ' PM' else ' AM'
+							formatted = ((time % 12) || 12) + pmOrAm
+						option '', {value: time, selected: selected}, formatted
 				h4 '.with-icon', ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
@@ -780,14 +771,12 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				else
 				{}
 				input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
-				console.log(JSON.stringify([rule]))
 				_scheduleRulePartial script, constants
 
 
 class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
-		console.log()
 		@id10tCount = 0 # sick of seeing 'New Script'
 
 		# insert platform-specific control key into the shortcuts
@@ -801,15 +790,7 @@ class Editor
 		schedulePanel = @ui.find '.settings-panel.schedule'
 		schedulePanelRuleEditor = @ui.find '.schedule-rule-editor'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
-		scheduleHourSelect = @ui.find('option.hour:selected')
 		scheduleTimeSelect.change =>
-			ruleInput = @ui.find('input[name=schedule_rules_s]')
-			if scheduleTimeSelect.val() == 'hourly'
-				$('.hours-column').show()
-			else if scheduleTimeSelect.val() == 'morning' || scheduleTimeSelect.val() == 'evening'
-				console.log($('select.schedule-hour').val())
-				$('.hours-column').hide()
-				console.log($('select.schedule-hour').val())
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
 		scheduleTimeSelect.change()
 
@@ -1352,7 +1333,12 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
-					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
+					current = script.schedule_time
+					formattedHours = constants.hours.map (hour) -> (((hour % 12) || 12) + (if hour >= 12 then ' PM' else ' AM'))
+					combinedTimes = constants.schedule_time_options + formattedHours
+					console.log(combinedTimes)
+					for time in combinedTimes
+						option '', {value: time, selected: current}
 				_scheduleRulePartial script, constants
 
 

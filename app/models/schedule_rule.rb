@@ -72,7 +72,7 @@ class ScheduleRule
     end
   end
 
-  @hours = %w(8 9 10 11 12 13 14 15 16 17)
+  @hours = %w(7 8 9 10 11 12 13 14 15 16 17 18)
 
   @days = %w(sunday monday tuesday wednesday thursday friday saturday)
   @short_days = %w(Sun Mon Tue Wed Thu Fri Sat)
@@ -102,12 +102,6 @@ class ScheduleRule
     day = day.strftime('%A').downcase
     self.months.index(month) && (weeks_s.index('all') || weeks_s.index(week)) && self.days.index(day)
   end
-
-  # returns true if the rule contains the given hour
-  def contains_hour?(hour)
-    self.hours.index(hour)
-  end
-
 
   ## Per Year and Per Month Counting
 
