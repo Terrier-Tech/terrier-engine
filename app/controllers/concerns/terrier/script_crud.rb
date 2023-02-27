@@ -147,6 +147,7 @@ select
     ,a.schedule_rules
     ,a.schedule_rule_summaries
     ,a.schedule_time
+    ,case when a.schedule_hour = 'null' then null else a.schedule_hour end as schedule_hour
     ,a.email_recipients
     ,case when b.num_runs is null then 0 else b.num_runs end as num_runs
     ,b.last_run
@@ -164,6 +165,7 @@ FROM
       s.schedule_rules,
       s.schedule_rule_summaries,
       s.schedule_time,
+      s.schedule_hour,
       s.email_recipients
     FROM
       scripts s

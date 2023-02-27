@@ -522,16 +522,28 @@ class ScriptSearcher
 # Schedule Rules Editor
 ################################################################################
 
-_scheduleRulePartial = tinyTemplate (script, constants) ->
-	rule = if script.schedule_rules?.length
-		script.schedule_rules[0]
-	else if script.schedule_rules_s?.length
-		JSON.parse(script.schedule_rules_s)[0]
-	else
-	{}
-	console.log(rule)
+_scheduleRulePartial = (script, constants) ->
 	div '.schedule-rule-editor', ->
+		div '.hours-column', hidden: true, ->
+			div '.horizontal-grid', ->
+				select '.schedule-hour', name: 'schedule_hour', ->
+					rule = if script.schedule_hour?
+						script.schedule_hour
+					else
+					null
+					for hour in constants.hours
+						console.log(parseInt(hour) == rule)
+						pmOrAm = if hour >= 12 then ' PM' else ' AM'
+						formatted = (hour % 12) || 12
+						selected = if (rule == parseInt(hour)) then 'selected' else null
+						option '', {value: hour, selected: selected, label: (formatted + pmOrAm)}, hour
 		div '.horizontal-grid', ->
+			rule = if script.schedule_rules?.length
+				script.schedule_rules[0]
+			else if script.schedule_rules_s?.length
+				JSON.parse(script.schedule_rules_s)[0]
+			else
+			{}
 			div '.shrink-column.days-column', ->
 				for day in constants.days
 					label '', ->
@@ -560,36 +572,12 @@ _scheduleRulePartial = tinyTemplate (script, constants) ->
 							span '', month[0..2].capitalize()
 		a '.all-months.glyp-check_all.lyph-checkbox', 'All Months'
 
-_scheduleRuleHourlyPartial = tinyTemplate (script, constants) ->
-	rule = if script.schedule_rules?.length
-		script.schedule_rules[0]
-	else if script.schedule_rules_s?.length
-		JSON.parse(script.schedule_rules_s)[0]
-	else
-	{}
-	console.log(rule)
-	div '.schedule-rule-editor', ->
-		div '.horizontal-grid', ->
-			index = 0
-			for col in [0..3]
-				div '.shrink-column.day-column', ->
-					row = 0
-					for hour in constants.hours[row+index..index+5]
-						pmOrAm = if hour >= 12 then 'PM' else 'AM'
-						formatted = (hour % 12) || 12
-						label '', ->
-							checked = if rule.hours?.indexOf(hour)>-1 then 'checked' else null
-							input '.hour', type: 'checkbox', value: hour, checked: checked
-							span '', "#{formatted} #{pmOrAm}"
-							row = row + 1
-					index = index + row
-
 # ensures that the schedule_rules_s field always contains the latest value from the controls inside of @ui
 class ScheduleRulesEditor
 	constructor: (@ui) ->
 		@output = @ui.find 'input[name=schedule_rules_s]'
 
-		@ui.on 'change', 'input.hour, input.day, input.month', =>
+		@ui.on 'change', 'option.hour, input.day, input.month', =>
 			this.onChange()
 
 		@ui.on 'click', 'a.all-months', =>
@@ -607,7 +595,7 @@ class ScheduleRulesEditor
 		this.onChange()
 
 	onChange: ->
-		hours = @ui.find('input.hour:checked').map((index, elem) ->
+		hours = @ui.find('option.hour').map((index, elem) ->
 			elem.value
 		).get()
 		days = @ui.find('input.day:checked').map((index, elem) ->
@@ -793,14 +781,13 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				{}
 				input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 				console.log(JSON.stringify([rule]))
-				#_scheduleRulePartial script, constants
+				_scheduleRulePartial script, constants
 
 
 class Editor
 	constructor: (@script, @tabContainer, @constants) ->
 		@ui = $(_editorTemplate(@script, @constants)).appendTo @tabContainer.getElement()
-		ruleInput = @ui.find('input[name=schedule_rules_s]')
-		$(_scheduleRulePartial(@script, @constants, @ui)).appendTo @ui.find('.settings-panel.schedule')
+		console.log()
 		@id10tCount = 0 # sick of seeing 'New Script'
 
 		# insert platform-specific control key into the shortcuts
@@ -814,12 +801,15 @@ class Editor
 		schedulePanel = @ui.find '.settings-panel.schedule'
 		schedulePanelRuleEditor = @ui.find '.schedule-rule-editor'
 		scheduleTimeSelect = @ui.find('select.schedule-time')
+		scheduleHourSelect = @ui.find('option.hour:selected')
 		scheduleTimeSelect.change =>
 			ruleInput = @ui.find('input[name=schedule_rules_s]')
 			if scheduleTimeSelect.val() == 'hourly'
-				schedulePanelRuleEditor.html _scheduleRuleHourlyPartial(@script, @constants, ruleInput)
+				$('.hours-column').show()
 			else if scheduleTimeSelect.val() == 'morning' || scheduleTimeSelect.val() == 'evening'
-				schedulePanelRuleEditor.html _scheduleRulePartial(@script, @constants, @ui)
+				console.log($('select.schedule-hour').val())
+				$('.hours-column').hide()
+				console.log($('select.schedule-hour').val())
 			schedulePanel.toggleClass 'collapsed', scheduleTimeSelect.val()=='none'
 		scheduleTimeSelect.change()
 
@@ -1363,7 +1353,7 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
 					forms.optionsForSelect constants.schedule_time_options, script.schedule_time
-				#_scheduleRulePartial script, constants
+				_scheduleRulePartial script, constants
 
 
 class SettingsModal
