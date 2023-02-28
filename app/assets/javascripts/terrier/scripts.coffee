@@ -754,7 +754,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
-					scheduleTimes = constants.schedule_time_options.map (time) -> time[1]
+					scheduleTimes = constants.schedule_time_options.map (time) -> if typeof time == 'string' then time else time[1]
 					for time in scheduleTimes
 						console.log(time) if typeof time is 'string'
 						selected = if time == script.schedule_time then 'selected' else null
