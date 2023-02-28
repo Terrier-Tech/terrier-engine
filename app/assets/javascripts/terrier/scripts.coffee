@@ -528,7 +528,7 @@ _scheduleRulePartial = (script, constants) ->
 	else if script.schedule_rules_s?.length
 		JSON.parse(script.schedule_rules_s)[0]
 	else
-	{}
+		{}
 	div '.schedule-rule-editor', ->
 		input '', type: 'hidden', name: 'schedule_rules_s', value: JSON.stringify([rule])
 		div '.horizontal-grid', ->

@@ -98,6 +98,7 @@ class ScheduleRule
     self.months.index(month) && (weeks_s.index('all') || weeks_s.index(week)) && self.days.index(day)
   end
 
+  
   ## Per Year and Per Month Counting
 
   def num_per_year
