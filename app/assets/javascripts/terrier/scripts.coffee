@@ -754,15 +754,9 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
-					scheduleTimes = constants.schedule_time_options.map (time) -> if typeof time == 'string' then time else time[1]
-					for time in scheduleTimes
-						console.log(time) if typeof time is 'string'
-						selected = if time == script.schedule_time then 'selected' else null
-						formatted = time
-						if time in constants.hours # Don't format none, morning, evening
-							pmOrAm = if time >= 12 then ' PM' else ' AM'
-							formatted = ((time % 12) || 12) + pmOrAm
-						option '', {value: time, selected: selected}, formatted.titleize()
+					numerics = constants.hours.map (hour) -> [(((hour % 12) || 12) + (if hour >= 12 then ' PM' else ' AM')), hour]
+					scheduleTimes = constants.schedule_time_options.concat numerics
+					forms.optionsForSelect scheduleTimes, script.schedule_time
 				h4 '.with-icon', ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
