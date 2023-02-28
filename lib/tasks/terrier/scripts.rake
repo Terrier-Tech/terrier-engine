@@ -40,11 +40,4 @@ namespace :scripts do
   task run_hourly: :environment do
     run_time Time.now.strftime('%-k')
   end
-
-  desc 'descr'
-  task group_scripts: :environment do
-    Script.all.group_by(&:schedule_time).each do |schedule_time, scripts|
-      puts "#{schedule_time}=>#{scripts.count}"
-    end
-  end
 end
