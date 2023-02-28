@@ -756,6 +756,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 				select '.schedule-time', name: 'schedule_time', ->
 					scheduleTimes = constants.schedule_time_options.map (time) -> time[1]
 					for time in scheduleTimes
+						console.log(time) if typeof time is 'string'
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
 						if time in constants.hours # Don't format none, morning, evening
