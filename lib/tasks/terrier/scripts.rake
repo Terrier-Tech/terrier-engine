@@ -38,7 +38,7 @@ namespace :scripts do
 
   desc 'Runs all hourly scheduled scripts for today'
   task run_hourly: :environment do
-    run_time Time.now.strftime('%k')
+    run_time Time.now.strftime('%-k')
   end
 
 end
