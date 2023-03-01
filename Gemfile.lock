@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.20.0)
+    terrier-engine (2.20.1)
       amazing_print
       dotenv
       loofah (>= 2.3.1)
@@ -137,7 +137,7 @@ GEM
     parser (3.2.1.0)
       ast (~> 2.4.1)
     pg (1.0.0)
-    puma (6.1.0)
+    puma (6.1.1)
       nio4r (~> 2.0)
     puma-daemon (0.1.2)
       puma (>= 5.0)
