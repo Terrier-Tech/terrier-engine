@@ -754,14 +754,14 @@ _editorTemplate = tinyTemplate (script, constants) ->
 
 			div '.settings-panel.schedule', ->
 				select '.schedule-time', name: 'schedule_time', ->
-					scheduleTimes = constants.schedule_time_options.map (time) -> time[0]
+					scheduleTimes = constants.schedule_time_options.map (time) -> time[1]
 					for time in scheduleTimes
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
 						if time in constants.hours # Don't format none, morning, evening
 							pmOrAm = if time >= 12 then ' PM' else ' AM'
 							formatted = ((time % 12) || 12) + pmOrAm
-						option '', {value: time, selected: selected}, formatted
+						option '', {value: time, selected: selected}, formatted.titleize()
 				h4 '.with-icon', ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
@@ -1326,14 +1326,14 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 					icon '.glyp-calendar.lyph-calendar'
 					span '', 'Schedule'
 				select '.schedule-time', name: 'schedule_time', ->
-					scheduleTimes = constants.schedule_time_options.map (time) -> time[0]
+					scheduleTimes = constants.schedule_time_options.map (time) -> time[1]
 					for time in scheduleTimes
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
 						if time in constants.hours # Don't format none, morning, evening
 							pmOrAm = if time >= 12 then ' PM' else ' AM'
 							formatted = ((time % 12) || 12) + pmOrAm
-						option '', {value: time, selected: selected}, formatted
+						option '', {value: time, selected: selected}, formatted.titleize()
 				_scheduleRulePartial script, constants
 
 
