@@ -67,8 +67,6 @@ class ScheduleRule
     end
   end
 
-  @hours = %w(7 8 9 10 11 12 13 14 15 16 17 18)
-
   @days = %w(sunday monday tuesday wednesday thursday friday saturday)
   @short_days = %w(Sun Mon Tue Wed Thu Fri Sat)
 

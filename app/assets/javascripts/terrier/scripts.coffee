@@ -758,7 +758,7 @@ _editorTemplate = tinyTemplate (script, constants) ->
 					for time in scheduleTimes
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
-						if time in constants.hours # Don't format none, morning, evening
+						if time =~ /\A\d{1,2}$/ # Don't format none, morning, evening
 							pmOrAm = if time >= 12 then ' PM' else ' AM'
 							formatted = ((time % 12) || 12) + pmOrAm
 						option '', {value: time, selected: selected}, formatted.titleize()
@@ -1330,7 +1330,7 @@ _settingsFormTemplate = tinyTemplate (script, constants) ->
 					for time in scheduleTimes
 						selected = if time == script.schedule_time then 'selected' else null
 						formatted = time
-						if time in constants.hours # Don't format none, morning, evening
+						if time =~ /\A\d{1,2}$/ # Don't format none, morning, evening
 							pmOrAm = if time >= 12 then ' PM' else ' AM'
 							formatted = ((time % 12) || 12) + pmOrAm
 						option '', {value: time, selected: selected}, formatted.titleize()
