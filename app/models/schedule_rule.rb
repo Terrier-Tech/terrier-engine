@@ -82,7 +82,7 @@ class ScheduleRule
   @weeks = %w(1 2 3 4 5 every_2 all)
 
   class << self
-    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks
+    attr_accessor :days, :short_days, :months, :short_months, :month_groups, :quarter_january, :quarter_february, :quarter_march, :weeks, :hours
   end
 
 
@@ -96,7 +96,7 @@ class ScheduleRule
     self.months.index(month) && (weeks_s.index('all') || weeks_s.index(week)) && self.days.index(day)
   end
 
-
+  
   ## Per Year and Per Month Counting
 
   def num_per_year

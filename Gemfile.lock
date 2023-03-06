@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.19.7)
+    terrier-engine (2.20.2)
       amazing_print
       dotenv
       loofah (>= 2.3.1)
@@ -99,7 +99,7 @@ GEM
     loofah (2.3.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.8.0.1)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -134,10 +134,10 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (3.2.0.0)
+    parser (3.2.1.0)
       ast (~> 2.4.1)
     pg (1.0.0)
-    puma (6.0.2)
+    puma (6.1.1)
       nio4r (~> 2.0)
     puma-daemon (0.1.2)
       puma (>= 5.0)
@@ -206,7 +206,7 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (2.0.8)
-    timeout (0.3.1)
+    timeout (0.3.2)
     turbolinks (5.2.0)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -216,7 +216,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    write_xlsx (1.09.5)
+    write_xlsx (1.10.2)
       rubyzip (>= 1.0.0)
     xlsxtream (2.4.0)
       zip_tricks (>= 4.5, < 6)

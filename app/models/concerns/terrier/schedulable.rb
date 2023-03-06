@@ -80,7 +80,7 @@ module Terrier::Schedulable
       false
     end
 
-
+    
     @schedule_types = %w(every none schedule)
 
     def self.type_options
