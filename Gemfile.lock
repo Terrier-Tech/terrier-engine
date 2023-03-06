@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (2.20.1)
+    terrier-engine (2.20.2)
       amazing_print
       dotenv
       loofah (>= 2.3.1)
@@ -243,4 +243,4 @@ DEPENDENCIES
   turbolinks (~> 5)
 
 BUNDLED WITH
-   1.17.3
+   2.3.6
