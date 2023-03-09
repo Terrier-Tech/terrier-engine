@@ -17,7 +17,6 @@ module Terrier::ScriptCrud
             field_type_options: ScriptField.field_type_options,
             fields_help: Terrier::ScriptConfig.fields_help,
             month_groups: ScheduleRule.month_groups,
-            hours: ScheduleRule.hours,
             days: ScheduleRule.days,
             weeks: ScheduleRule.weeks
           }

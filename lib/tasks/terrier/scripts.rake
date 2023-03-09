@@ -11,7 +11,7 @@ namespace :scripts do
     scripts.each do |script|
       if script.schedule_contains_day? day
         puts "Running script #{script.id}: #{script.title}"
-        executor = ScriptExecutor.new script
+        executor = ScriptExecutor.new script, ModelCache.new
         executor.me = "#{time.titleize} Runner"
         run = executor.init_run
         executor.run run, nil
