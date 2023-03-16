@@ -42,7 +42,7 @@ window.urls.changParam = (param, value) ->
 # same as urls.setParams, except it uses replaceState so the content of the page isn't changed
 window.urls.replaceParams = (newParams, newHash = null) ->
 	url = urls.forParams newParams, newHash
-	history.replaceState null, null, url
+	history.replaceState({turbolinks: true, url: url}, null, url)
 
 # same as urls.changeParam, except it uses replaceState so the content of the page isn't changed
 window.urls.replaceParam = (param, value) ->
