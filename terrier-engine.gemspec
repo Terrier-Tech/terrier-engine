@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma-daemon'
   s.add_dependency 'sys-proctable'
   s.add_dependency 'dotenv'
+  s.add_dependency 'http'
 
   s.add_development_dependency 'pg'
   s.add_development_dependency 'sassc', '>= 2.4.0'
