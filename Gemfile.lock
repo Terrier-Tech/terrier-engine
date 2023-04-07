@@ -133,7 +133,7 @@ GEM
       nokogiri (~> 1)
       rake
     mini_mime (1.1.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.8.1)
     minitest (5.11.3)
     net-imap (0.3.4)
       date
@@ -145,8 +145,11 @@ GEM
     net-smtp (0.3.3)
       net-protocol
     nio4r (2.5.9)
-    nokogiri (1.10.5)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.14.2)
+      mini_portile2 (~> 2.8.0)
+      racc (~> 1.4)
+    nokogiri (1.14.2-x86_64-darwin)
+      racc (~> 1.4)
     paperclip (6.1.0)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
@@ -162,6 +165,7 @@ GEM
     puma-daemon (0.3.0)
       puma (>= 5.0)
       rack
+    racc (1.6.2)
     rack (2.2.4)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
