@@ -90,7 +90,9 @@ class ScriptExecutor
   # this needs to be wrapped so that returning from the script doesn't interrupt the run method
   def execute_body(body)
     escaped_body = body.gsub('\"', '"')
-    eval(escaped_body, binding, 'script', 1)
+    filename = "script"
+    filename += "<#{@script.title}>" if @script&.title.present?
+    eval(escaped_body, binding, filename, 1)
   end
 
   def write_raw(type, body, extra={})
