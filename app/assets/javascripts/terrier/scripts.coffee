@@ -1262,6 +1262,10 @@ _runsTemplate = tinyTemplate (runs) ->
 								a '.with-icon', href: run.log_url, target: '_blank', ->
 									icon '.glyp-items.lyph-list'
 									span '', 'Log'
+							if run.script_body?.length
+								a '.with-icon.view-run-body', ->
+									icon '.glyp-script'
+									span '', 'Script Content'
 
 
 class RunsModal
@@ -1287,6 +1291,9 @@ class RunsModal
 		@ui.on 'click', 'a.clear-run', (evt) =>
 			this.clearRun $(evt.target).parents('tr.script-run')
 
+		@ui.on 'click', 'a.view-run-body', (evt) =>
+			this.viewRunBody $(evt.target).parents('tr.script-run')
+
 	clearRun: (row) ->
 		id = row.data 'id'
 		unless confirm "Clear this run so that the script can be run again? This will NOT cancel the actual running script, so running it again may have undesired side effects!"
@@ -1298,6 +1305,19 @@ class RunsModal
 					return alert res.message
 				row.find('a.clear-run').remove()
 				row.find('.status').text 'Cleared'
+		)
+
+	viewRunBody: (row) ->
+		id = row.data 'id'
+		$.get(
+			"/scripts/#{@id}/runs.json"
+			(res) =>
+				if res.status == 'success'
+					run = _.filter res.runs, (r) -> r.id == id
+					console.log(run)
+					new ActionLogModal(run)
+				else
+					alert res.message
 		)
 
 

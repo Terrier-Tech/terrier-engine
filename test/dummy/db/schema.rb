@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_171102) do
+ActiveRecord::Schema.define(version: 2023_04_13_185004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_171102) do
     t.string "status", default: "success", null: false
     t.uuid "script_id", null: false
     t.text "org_id"
+    t.text "script_body"
     t.index ["_state"], name: "index_script_runs_on__state"
     t.index ["created_by_id"], name: "index_script_runs_on_created_by_id"
     t.index ["extern_id"], name: "index_script_runs_on_extern_id"
