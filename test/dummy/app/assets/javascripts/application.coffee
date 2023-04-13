@@ -15,18 +15,18 @@
 #= require turbolinks
 #= require lodash
 #= require morphdom
-#= require terrier/forms.coffee
-#= require terrier/strings.coffee
-#= require terrier/polyfills.coffee
-#= require terrier/tiny-template.coffee
-#= require terrier/tiny-render.coffee
-#= require terrier/tiny-logger.coffee
-#= require terrier/tiny-modal.coffee
-#= require terrier/tiny-sql.coffee
-#= require terrier/tables.coffee
-#= require terrier/scripts.coffee
-#= require terrier/urls.coffee
-#= require terrier/versions.coffee
+#= require terrier/forms
+#= require terrier/strings
+#= require terrier/polyfills
+#= require terrier/tiny-template
+#= require terrier/tiny-render
+#= require terrier/tiny-logger
+#= require terrier/tiny-modal
+#= require terrier/tiny-sql
+#= require terrier/tables
+#= require terrier/scripts
+#= require terrier/urls
+#= require terrier/versions
 #= require_tree .
 
 
