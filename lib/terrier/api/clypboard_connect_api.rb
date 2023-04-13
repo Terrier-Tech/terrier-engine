@@ -18,13 +18,14 @@ end
 # Extends `ExternApiBase` to add Clypboard Connect access token management.
 class ClypboardConnectApi < ExternApiBase
 
-  REDIS_KEY = 'clypboard_connect_access_token'
-
   def initialize(clyp_env, connect_host)
     @clyp_env = clyp_env
     @connect_host = connect_host
     @ssh_host = connect_host.gsub('https://', '')
     @redis = Redis.new driver: :hiredis
+
+    # use a different key for each clyp_env since some machines run more than one
+    @key = "clypboard_connect_access_token-#{clyp_env}"
   end
 
   def api_root
@@ -45,7 +46,7 @@ class ClypboardConnectApi < ExternApiBase
 
   # @return [AccessToken] either the cached token or a new one if the cached one is invalid
   def current_token
-    raw = @redis.get REDIS_KEY
+    raw = @redis.get @key
     return fetch_token if raw.blank?
     token = AccessToken.new JSON.parse(raw)
     return fetch_token unless token.is_valid?
@@ -64,13 +65,13 @@ class ClypboardConnectApi < ExternApiBase
     raw = JSON.parse res
     token = AccessToken.new raw
     info "Caching new token #{token.body.bold}, expiring at #{token.expires_at.to_s.blue}"
-    @redis.set REDIS_KEY, raw.to_json
+    @redis.set @key, raw.to_json
     token
   end
 
   # clears the currently cached token, regardless of if it's active
   def clear_token
-    @redis.set REDIS_KEY, nil
+    @redis.set @key, nil
   end
 
 end
