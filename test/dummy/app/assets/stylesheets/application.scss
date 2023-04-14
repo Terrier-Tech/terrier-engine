@@ -23,7 +23,7 @@ $bar-height: 50px;
 body {
     --bg-color: #f6f2ef;
     --primary-color: #d69338;
-    --link-color: #362b21;
+    --link-color: #376177;
     --alert-color: #ed584c;
     background-color: var(--bg-color);
     font-family: Helvetica, Arial, sans-serif;
@@ -48,6 +48,24 @@ a.demo-link {
     display: block;
     font-size: 20px;
     padding: 8px;
+}
+
+.demo-link-grid {
+	display: grid;
+	grid-gap: 1em;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	.demo-link {
+		font-size: 16px;
+		text-align: center;
+		background-color: #fff;
+		border: 1px solid #eee;
+		&:hover {
+			transform: scale(1.05);
+		}
+		&:active {
+			transform: scale(0.95);
+		}
+	}
 }
 
 .with-icon i {

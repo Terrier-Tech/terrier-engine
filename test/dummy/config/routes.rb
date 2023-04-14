@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   get 'modals' => 'client_side#modals'
   get 'replaced_content' => 'client_side#replaced_content'
+  get 'slow_page' => 'client_side#slow_page'
 
   get 'rendering/exception'
 
