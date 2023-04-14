@@ -7,7 +7,7 @@ class ClientSideController < ApplicationController
   def slow_page
     @title = "Slow Page"
 
-    # we make this response artifically long to demonstrate the loader
+    # we make this response artificially long to demonstrate the loader
     sleep 1.0
 
     render layout: 'modal'

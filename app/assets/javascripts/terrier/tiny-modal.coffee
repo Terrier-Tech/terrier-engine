@@ -25,6 +25,13 @@ addCallbacks = (options, column) ->
 		column.data('column-callback-id', key)
 		tinyModal.customCallbacks.onPop[key] = options.onPop
 
+# can be overridden to return some HTML that will be shown while the modal is loading
+window.tinyModal.renderLoader = (url, options) ->
+	null
+
+# some amount of time to allow the content to load before showing the loader
+window.tinyModal.loaderDelay = 250
+
 # shows the overlay and applies the with-modal class to the body
 showOverlay = ->
 	$('body').addClass 'with-modal'
@@ -242,7 +249,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 
 	_layoutRow row
 
-	setTimeout(
+	requestAnimationFrame(
 		->
 			win.addClass 'show'
 			column.find('input:not([type=hidden]):first').focus()
@@ -255,7 +262,6 @@ window.tinyModal.showDirect = (content, options={}) ->
 				for action in options.actions
 					if action._index? and action.callback?
 						column.find(".modal-actions .action-#{action._index}").click action.callback
-		10
 	)
 
 # allows applications to modify the URL before making the modal request
@@ -293,9 +299,11 @@ window.tinyModal.show = (url, options={}) ->
 
 	_layoutRow row
 
+	loaded = false
 	column.load(
 		url
 		(res, status, xhr) ->
+			loaded = true
 			if status == 'error'
 				column.html _template({title: 'Error', title_icon: tinyModal.alertIcon}, "<pre class='error-body'>#{res}</pre>")
 				tinyModal.removeLoadingOverlay()
@@ -307,10 +315,20 @@ window.tinyModal.show = (url, options={}) ->
 					options.onShow column
 	)
 
+	# show the window in another frame to allow the animation to happen
+	requestAnimationFrame(
+		-> win.addClass 'show'
+	)
+
+	# show the loader if it hasn't loaded yet
 	setTimeout(
 		->
-			win.addClass 'show'
-		10
+			if loaded
+				return
+			loader = tinyModal.renderLoader url, options
+			if loader?.length
+				column.find('.modal-content').html loader
+		tinyModal.loaderDelay
 	)
 
 
