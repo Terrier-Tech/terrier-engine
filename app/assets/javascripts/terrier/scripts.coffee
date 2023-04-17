@@ -1241,7 +1241,7 @@ _runsTemplate = tinyTemplate (runs) ->
 					th ''
 			tbody '', ->
 				for run in runs
-					tr '.script-run', data: {id: run.id}, ->
+					tr '.script-run', data: {id: run.id, body: run.script_body, created: run.created_at, creator: run.created_by_name}, ->
 						td '', ->
 							div '.date', run.created_at.formatShortDate()
 							div '.time', run.created_at.formatShortTime()
@@ -1308,17 +1308,17 @@ class RunsModal
 		)
 
 	viewRunBody: (row) ->
-		id = row.data 'id'
-		$.get(
-			"/scripts/#{@id}/runs.json"
-			(res) =>
-				if res.status == 'success'
-					run = _.filter res.runs, (r) -> r.id == id
-					console.log(run)
-					new ActionLogModal(run)
-				else
-					alert res.message
-		)
+		body = row.data 'body'
+		created = row.data 'created'
+		creator = row.data 'creator'
+		@script_run =
+			{
+				script_body: body,
+				created_at_date: created.formatShortDate(),
+				created_at_time: created.formatShortTime(),
+				created_by: creator
+			}
+		new ScriptRunModal(@script_run)
 
 
 
@@ -1562,3 +1562,44 @@ class ActionLogModal
 			hunkIdentifierRows.find(".d2h-code-side-line").text("")
 			hunkIdentifierRows.first().remove()
 		)
+
+################################################################################
+# Script Run Modal
+################################################################################
+
+_scriptRunTemplate = tinyTemplate (@script_run) ->
+	div '', ->
+		div '.horizontal-grid.small-bottom-pad.timestamps', ->
+			div '.stretch-column', ->
+				span '', "Ran on #{@script_run.created_at_date} at #{@script_run.created_at_time} "
+				span '', "by #{@script_run.created_by}"
+		div '.stretch-column', ->
+			table '', ->
+				thead ->
+					tr ->
+						th '.line-num', ''
+						th '.line-body', ''
+				tbody '', ->
+					lines = @script_run.script_body.split("\n");
+					for line, index in lines
+						tr ->
+							td '.script-line-number', (index + 1).toString()
+							td '.script-line', line
+
+
+class ScriptRunModal
+	constructor: (@script_run) ->
+		tinyModal.showDirect(
+			_scriptRunTemplate(@script_run)
+			{
+				title: 'Script Run'
+				title_icon: '.glyp-script'
+				callback: (modal) =>
+					this.init modal
+			}
+		)
+
+	init: (@ui) ->
+		@ui.find('.script-line').each (index, elem) ->
+			console.log('ran highlight')
+			hljs.highlightBlock elem
