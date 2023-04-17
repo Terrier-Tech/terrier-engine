@@ -37,7 +37,7 @@ class ClypboardConnectApi < ExternApiBase
   def get_json(url, params={})
     token = current_token
     params[:clyp_env] ||= @clyp_env
-    params[:token] = token.body
+    params[:token] = token&.body
     super url, params
   end
 
@@ -54,19 +54,23 @@ class ClypboardConnectApi < ExternApiBase
     token
   end
 
-  # @return [AccessToken] a new access token from the connect server
+  # @return [AccessToken|NilClass] a new access token from the connect server
   def fetch_token
     # you can't create tokens through a public API, instead we rely on
     # being able to ssh into the connect machine to execute a rake task
     hostname = `hostname`.strip
     command = "/etc/profile.d/rvm.sh ; cd /home/tiny/clypboard-actions/current ; RAILS_ENV=production /home/tiny/.rvm/wrappers/default/bundle exec rails \"access:generate_token[#{@clyp_env},#{hostname}]\""
     info "Fetching new token from #{@ssh_host.bold} with: #{command.blue}"
-    res = `ssh tiny@#{@ssh_host} bash --login -c '#{command}'`.strip
+    res = `ssh -o "StrictHostKeyChecking no" tiny@#{@ssh_host} bash --login -c '#{command}'`.strip
     raw = JSON.parse res
     token = AccessToken.new raw
     info "Caching new token #{token.body.bold}, expiring at #{token.expires_at.to_s.blue}"
     @redis.set @key, raw.to_json
     token
+  rescue => ex
+    warn "Error getting clypboard connect token: #{ex.message}"
+    error ex
+    nil
   end
 
   # clears the currently cached token, regardless of if it's active
