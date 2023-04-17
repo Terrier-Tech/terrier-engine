@@ -25,7 +25,6 @@ module Top
     # disk
     df = `df -m`
     df.split("\n").map(&:strip).each do |line|
-      Rails.logger.debug "line: #{line}"
       if line.ends_with?('/') # this is the root partition
         data[:disk] = Top.parse_disk_line line
       elsif line.index(/\s\/mnt\//) || line.index(/\/System\/Volumes\/Data$/) # /System/Volumes/Data for development

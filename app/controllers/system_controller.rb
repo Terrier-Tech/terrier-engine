@@ -1,6 +1,4 @@
 class SystemController < ApplicationController
-  include Terrier::RenderingBase
-  include Loggable
 
   def top
     @top = Top.compute
