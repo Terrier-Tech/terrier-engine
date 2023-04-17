@@ -1,5 +1,5 @@
 
-
+# TODO: remove once everyone has updated to /system
 class TopController < ApplicationController
 
   def index
