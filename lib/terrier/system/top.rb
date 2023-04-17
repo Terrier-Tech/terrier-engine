@@ -24,13 +24,14 @@ module Top
 
     # disk
     df = `df -m`
-    root_line = df.split("\n").select { |s| s.ends_with?('/') }.first
-    root_comps = root_line.scan(/\s\d+/).map(&:strip).map { |s| s.to_f / KILO }
-    data[:disk] = {
-      total: root_comps[0],
-      used: root_comps[1],
-      free: root_comps[2]
-    }
+    df.split("\n").map(&:strip).each do |line|
+      Rails.logger.debug "line: #{line}"
+      if line.ends_with?('/') # this is the root partition
+        data[:disk] = Top.parse_disk_line line
+      elsif line.index(/\s\/mnt\//) || line.index(/\/System\/Volumes\/Data$/) # /System/Volumes/Data for development
+        data[:volume] = Top.parse_disk_line line
+      end
+    end
 
     data
   end
@@ -59,6 +60,16 @@ module Top
     {
       total: vals[0] / MEGA,
       used: (vals[1] + vals[3]) / MEGA # used + shared
+    }
+  end
+
+  # parses a line from `df -m` into a total/used/free hash
+  def self.parse_disk_line(line)
+    comps = line.scan(/\s\d+/).map(&:strip).map { |s| s.to_f / KILO }
+    {
+      total: comps[0],
+      used: comps[1],
+      free: comps[2]
     }
   end
 
