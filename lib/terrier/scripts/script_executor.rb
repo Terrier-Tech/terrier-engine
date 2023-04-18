@@ -59,6 +59,7 @@ class ScriptExecutor
       end
       script_run.status = 'success'
       script_run.duration = Time.now - t
+      script_run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
       if @script.persisted? # we can't save the run if it's a temporary script
         script_run.write_log @log_lines.join("\n")
         script_email_log = @script.send_email_if_necessary @email_settings, me, @output_files, script_run.log_url
@@ -72,6 +73,7 @@ class ScriptExecutor
       script_run.exception = ex.message
       script_run.backtrace = ex.backtrace.join("\n")
       script_run.duration = Time.now - t
+      script_run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
       @log_lines << ex.message
       error ex
       if @script.persisted? # we can't save the run if it's a temporary script

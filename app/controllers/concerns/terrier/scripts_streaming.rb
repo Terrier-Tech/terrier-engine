@@ -56,6 +56,8 @@ module Terrier::ScriptsStreaming
 
         # initialize the run
         run = executor.init_run
+
+        # set its body to match the script it will run
         run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
 
         # save the run before actually running to mark it as running such that no one else
