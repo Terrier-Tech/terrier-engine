@@ -742,11 +742,14 @@ $results-list-width: 400px;
 // Script Run Body
 ////////////////////////////////////////////////////////////////////////////////
 
+.script-body-table {
+	background-color: #f8f8f8;
+}
+
 .script-line {
 	white-space: pre-wrap;
 	font-family: monospace;
 	font-size: 14px;
-	background-color: #f8f8f8;
 }
 
 .script-line-number {

@@ -1574,7 +1574,7 @@ _scriptRunTemplate = tinyTemplate (@script_run) ->
 				span '', "Ran on #{@script_run.created_at_date} at #{@script_run.created_at_time} "
 				span '', "by #{@script_run.created_by}"
 		div '.stretch-column', ->
-			table '', ->
+			table '.script-body-table', ->
 				thead ->
 					tr ->
 						th '.line-num', ''
@@ -1584,7 +1584,7 @@ _scriptRunTemplate = tinyTemplate (@script_run) ->
 					for line, index in lines
 						tr ->
 							td '.script-line-number', (index + 1).toString()
-							td '.script-line', line
+							td '.script-line.language-ruby', line
 
 
 class ScriptRunModal
@@ -1601,5 +1601,4 @@ class ScriptRunModal
 
 	init: (@ui) ->
 		@ui.find('.script-line').each (index, elem) ->
-			console.log('ran highlight')
 			hljs.highlightBlock elem
