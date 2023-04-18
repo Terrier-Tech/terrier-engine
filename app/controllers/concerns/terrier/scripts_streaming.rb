@@ -57,14 +57,14 @@ module Terrier::ScriptsStreaming
         # initialize the run
         run = executor.init_run
 
-        # set its body to match the script it will run
-        run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
-
         # save the run before actually running to mark it as running such that no one else
         save_run? run if @script.persisted?
 
         # actually run the script
         executor.run run, response.stream
+
+        # set its body to match the script it ran
+        run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
 
         # now save it again since the run has been completed
         save_run? run if @script.persisted?
