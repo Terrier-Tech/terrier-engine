@@ -1254,18 +1254,23 @@ _runsTemplate = tinyTemplate (runs) ->
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
-							if run.status == 'running'
-								a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
-									icon '.glyp-cancelled.lyph-close'
-									span '', 'Clear'
-							else if run.log_file_name?.length
-								a '.with-icon', href: run.log_url, target: '_blank', ->
-									icon '.glyp-items.lyph-list'
-									span '', 'Log'
-							if run.script_body?.length
-								a '.with-icon.view-run-body', ->
-									icon '.glyp-script'
-									span '', 'Script Content'
+							div '.horizontal-grid.text-center', ->
+								div '.horizontal-grid', ->
+									div '.stretch-column', ->
+										if run.status == 'running'
+											a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
+												icon '.glyp-cancelled.lyph-close'
+												span '', 'Clear'
+										else if run.log_file_name?.length
+											a '.with-icon', href: run.log_url, target: '_blank', ->
+												icon '.glyp-items.lyph-list'
+												span '', 'Log'
+								div '.horizontal-grid', ->
+									div '.stretch-column', ->
+										if run.script_body?.length
+											a '.with-icon.view-run-body', ->
+												icon '.glyp-document'
+												span '', 'Script Content'
 
 
 class RunsModal
