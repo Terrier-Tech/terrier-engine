@@ -1269,7 +1269,7 @@ _runsTemplate = tinyTemplate (runs) ->
 									div '.stretch-column', ->
 										if run.script_body?.length
 											a '.with-icon.view-run-body', ->
-												icon '.glyp-document'
+												icon '.glyp-code'
 												span '', 'Script Content'
 
 
@@ -1580,10 +1580,6 @@ _scriptRunTemplate = tinyTemplate (@script_run) ->
 				span '', "by #{@script_run.created_by}"
 		div '.stretch-column', ->
 			table '.script-body-table', ->
-				thead ->
-					tr ->
-						th '.line-num', ''
-						th '.line-body', ''
 				tbody '', ->
 					lines = @script_run.script_body.split("\n");
 					for line, index in lines
@@ -1607,3 +1603,5 @@ class ScriptRunModal
 	init: (@ui) ->
 		@ui.find('.script-line').each (index, elem) ->
 			hljs.highlightBlock elem
+
+		tinyModal.expand()
