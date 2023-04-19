@@ -16,13 +16,13 @@ class SshKeyManager
     info "Updating public keys for #{@clyp_s}"
 
     # get the keys
-    res = HTTP.get "https://terrier.tech/users/github_public_keys.json", params: { clyp: @clyp }
+    res = HTTP.get "https://terrier.tech/public_keys.json", params: { clyp: @clyp }
     raw = JSON.parse res.to_s
     unless raw['status'] == 'success'
       ap raw
       raise "Error getting public keys: #{res['message']}"
     end
-    new_keys = raw['keys'].sort
+    new_keys = raw['public_keys'].sort
     info "Found #{new_keys.count} keys for #{@clyp_s}:"
     new_keys.each do |key|
       puts key
