@@ -3,7 +3,7 @@ require 'redis'
 require 'hiredis-client'
 
 # Wraps the Clypboard Connect access tokens
-class AccessToken
+class ConnectAccessToken
   include ActiveModel::Model
 
   attr_accessor :body, :origin, :clyp_env, :expires_at, :id, :created_at, :updated_at, :usage_count
@@ -44,17 +44,17 @@ class ClypboardConnectApi < ExternApiBase
   # For now, don't override post_json since we don't really care if
   # someone wants to post pings or action logs, so token authentication isn't enforced
 
-  # @return [AccessToken] either the cached token or a new one if the cached one is invalid
+  # @return [ConnectAccessToken] either the cached token or a new one if the cached one is invalid
   def current_token
     raw = @redis.get @key
     return fetch_token if raw.blank?
-    token = AccessToken.new JSON.parse(raw)
+    token = ConnectAccessToken.new JSON.parse(raw)
     return fetch_token unless token.is_valid?
     info "Using cached token #{token.body.bold}"
     token
   end
 
-  # @return [AccessToken|NilClass] a new access token from the connect server
+  # @return [ConnectAccessToken|NilClass] a new access token from the connect server
   def fetch_token
     # you can't create tokens through a public API, instead we rely on
     # being able to ssh into the connect machine to execute a rake task
@@ -63,7 +63,7 @@ class ClypboardConnectApi < ExternApiBase
     info "Fetching new token from #{@ssh_host.bold} with: #{command.blue}"
     res = `ssh -o "StrictHostKeyChecking no" tiny@#{@ssh_host} bash --login -c '#{command}'`.strip
     raw = JSON.parse res
-    token = AccessToken.new raw
+    token = ConnectAccessToken.new raw
     info "Caching new token #{token.body.bold}, expiring at #{token.expires_at.to_s.blue}"
     @redis.set @key, raw.to_json
     token
