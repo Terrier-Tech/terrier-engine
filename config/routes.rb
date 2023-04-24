@@ -12,7 +12,9 @@ Rails.application.routes.draw do
     end
     post 'scripts_streaming/exec'
     post 'sql/exec'
-    get 'top' => 'top#index'
+    get 'top' => 'top#index' # TODO: remove once everyone is using /system/top
+    get 'system/top'
+    get 'system/public_key'
   end
 
 end

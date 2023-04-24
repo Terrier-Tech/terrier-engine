@@ -13,6 +13,7 @@
  *= require terrier/grid
  *= require terrier/tiny-modal
  *= require terrier/scripts
+ *= require terrier/tt-styles-all
  *= require_tree .
  *= require_self
  */
@@ -23,12 +24,13 @@ $bar-height: 50px;
 body {
     --bg-color: #f6f2ef;
     --primary-color: #d69338;
-    --link-color: #362b21;
+    --link-color: #376177;
     --alert-color: #ed584c;
     background-color: var(--bg-color);
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
-    color: #333;
+	--fg-color: #333;
+	color: var(--fg-color);
     padding-top: $bar-height;
 }
 a {
@@ -48,6 +50,24 @@ a.demo-link {
     display: block;
     font-size: 20px;
     padding: 8px;
+}
+
+.demo-link-grid {
+	display: grid;
+	grid-gap: 1em;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	.demo-link {
+		font-size: 16px;
+		text-align: center;
+		background-color: #fff;
+		border: 1px solid #eee;
+		&:hover {
+			transform: scale(1.05);
+		}
+		&:active {
+			transform: scale(0.95);
+		}
+	}
 }
 
 .with-icon i {
@@ -72,13 +92,23 @@ a.demo-link {
     right: 0;
     height: $bar-height;
     background-color: var(--primary-color);
+	display: flex;
+	align-items: center;
+	justify-content: center;
     a.title {
         display: block;
         text-align: center;
         padding: 10px;
         color: #fff;
         font-size: 22px;
+	    &:hover {
+		    text-decoration: underline;
+	    }
     }
+	span {
+		color: #fff;
+		font-size: 24px;
+	}
 }
 
 #main-actions {

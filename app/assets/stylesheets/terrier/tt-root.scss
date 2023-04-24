@@ -1,0 +1,13 @@
+/**
+ Include this file before any other tt-* stylesheets.
+*/
+
+:root {
+	--tt-pad: 1em;
+	--tt-gap: var(--tt-pad);
+	--tt-border-radius: 4px;
+	--tt-panel-background: #fff;
+	--tt-tablet-breakpoint: 1050px; // tablet portrait
+	--tt-mobile-breakpoint: 850px; // tablet portrait
+	--tt-phone-breakpoint: 550px;
+}

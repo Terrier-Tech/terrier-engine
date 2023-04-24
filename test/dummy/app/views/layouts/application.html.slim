@@ -14,4 +14,7 @@ html
 	body.application
 		#top-bar
 			a.title href='/' Terrier Engine
+			- if @title.present?
+				span == '/'
+				a.title == @title
 		#content== yield

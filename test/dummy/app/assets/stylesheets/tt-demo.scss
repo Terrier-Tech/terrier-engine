@@ -1,0 +1,48 @@
+
+.tt-demo {
+	--demo-border-color: #ccc;
+	--demo-border-radius: 4px;
+	width: 900px;
+	max-width: 92%;
+	margin: 0 auto;
+	h2 {
+		text-align: center;
+	}
+
+	.annotated {
+		position: relative;
+		border: 1px dashed var(--demo-border-color);
+		border-radius: var(--demo-border-radius);
+		.class {
+			position: absolute;
+			font-weight: bold;
+			font-size: 12px;
+			left: 1em;
+			top: -9px;
+			line-height: 1;
+			padding: 2px;
+			background-color: var(--tt-panel-background);
+			border-radius: var(--demo-border-radius);
+			opacity: 0.75;
+			&.right {
+				left: initial;
+				right: 1em;
+			}
+			&.center {
+				left: 50%;
+				transform: translate(-50%, 0);
+			}
+		}
+		&:hover {
+			border-style: solid;
+			.class {
+				opacity: 1;
+			}
+		}
+	}
+
+
+	.demo-content {
+		padding: var(--tt-pad);
+	}
+}

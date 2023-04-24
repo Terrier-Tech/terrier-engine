@@ -1,5 +1,15 @@
 tinyModal.closeIconClass = '.close-x'
 
+## Loader
+
+_loaderTemplate = tinyTemplate (url, options) ->
+	h3 '.text-center', "Loading #{url}..."
+
+window.tinyModal.renderLoader = (url, options) ->
+	puts "tinyModal.renderLoader for #{url}", options
+	_loaderTemplate url, options
+
+
 ## Actions
 
 _withActionsTemplate = tinyTemplate ->
