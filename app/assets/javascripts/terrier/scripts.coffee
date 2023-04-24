@@ -1585,7 +1585,8 @@ _scriptRunTemplate = tinyTemplate (@script_run) ->
 					for line, index in lines
 						tr ->
 							td '.script-line-number', (index + 1).toString()
-							td '.script-line.language-ruby', line
+							encodedLine = $('<div>').text(line).html();
+							td '.script-line.language-ruby', encodedLine
 
 
 class ScriptRunModal
