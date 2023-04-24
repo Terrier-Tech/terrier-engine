@@ -744,23 +744,29 @@ $results-list-width: 400px;
 
 .script-body-table {
 	background-color: #f8f8f8;
-}
 
-.script-line {
-	white-space: pre-wrap;
-	font-family: monospace;
-	font-size: 14px;
-}
+	td {
+		padding: 0px;
+	}
 
-.script-line-number {
-	font-family: monospace;
-	font-size: 14px;
-	vertical-align: top;
-	text-align: right;
-	opacity: 0.5;
-	padding-right: 1rem;
-}
+	tr {
+		.inline-actions {
+			width: 15rem;
+		}
 
-.inline-actions {
-	width: 15rem;
+		.script-line.language-ruby {
+			white-space: pre-wrap;
+			font-family: monospace;
+			font-size: 14px;
+		}
+
+		.script-line-number {
+			font-family: monospace;
+			font-size: 14px;
+			vertical-align: top;
+			text-align: right;
+			opacity: 0.5;
+			padding-right: 0.5rem;
+		}
+	}
 }
