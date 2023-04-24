@@ -30,4 +30,8 @@ class ClientSideController < ApplicationController
     @title = 'Logging'
   end
 
+  def tt_styles
+    @title = "TT Styles"
+  end
+
 end

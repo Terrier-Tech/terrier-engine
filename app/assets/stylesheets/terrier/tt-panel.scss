@@ -1,0 +1,27 @@
+
+.tt-panel {
+	border-radius: var(--tt-border-radius);
+	background: var(--tt-panel-background);
+	.panel-header {
+		display: flex;
+		align-items: center;
+		h1, h2, h3, h4, h5 {
+			margin: 0;
+			display: flex;
+			padding: var(--tt-pad);
+			gap: var(--tt-gap);
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+	}
+	.panel-content {
+		display: flex;
+		flex-direction: column;
+		&.gap {
+			gap: var(--tt-gap);
+		}
+		&.padded {
+			padding: var(--tt-pad);
+		}
+	}
+}
