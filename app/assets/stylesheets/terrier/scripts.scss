@@ -737,3 +737,39 @@ $results-list-width: 400px;
     }
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Script Run Body
+////////////////////////////////////////////////////////////////////////////////
+
+.script-body-table {
+	background-color: #f8f8f8;
+	width: 100%;
+
+	td {
+		padding: 0px;
+	}
+
+	tr {
+		.inline-actions {
+			width: 15rem;
+		}
+
+		.script-line.language-ruby {
+			white-space: pre-wrap;
+			font-family: monospace;
+			font-size: 14px;
+		}
+
+		.script-line-number {
+			font-family: monospace;
+			font-size: 14px;
+			vertical-align: top;
+			text-align: right;
+			opacity: 0.5;
+			width: 2rem;
+			padding-right: 0.5rem;
+			padding-left: 0.5rem;
+		}
+	}
+}

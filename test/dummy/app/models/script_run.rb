@@ -17,6 +17,7 @@
 # | updated_at       | timestamp         | required                   |
 # | updated_by_id    | uuid              | indexed                    |
 # | updated_by_name  | text              |                            |
+# | script_body      | text              |                            |
 # +------------------+-------------------+----------------------------+
 class ScriptRun < ApplicationRecord
   include Terrier::ScriptRunBase
@@ -35,7 +36,6 @@ class ScriptRun < ApplicationRecord
     self.log_file_name = "#{self.created_at.strftime('%Y-%m-%d_%H-%M-%S')}_script-#{self.script_id}.txt"
     self.log_url
   end
-
 
   def log_url
     self.log.url

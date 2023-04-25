@@ -1241,7 +1241,7 @@ _runsTemplate = tinyTemplate (runs) ->
 					th ''
 			tbody '', ->
 				for run in runs
-					tr '.script-run', data: {id: run.id}, ->
+					tr '.script-run', data: {id: run.id, body: run.script_body, created: run.created_at, creator: run.created_by_name}, ->
 						td '', ->
 							div '.date', run.created_at.formatShortDate()
 							div '.time', run.created_at.formatShortTime()
@@ -1254,14 +1254,23 @@ _runsTemplate = tinyTemplate (runs) ->
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
-							if run.status == 'running'
-								a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
-									icon '.glyp-cancelled.lyph-close'
-									span '', 'Clear'
-							else if run.log_file_name?.length
-								a '.with-icon', href: run.log_url, target: '_blank', ->
-									icon '.glyp-items.lyph-list'
-									span '', 'Log'
+							div '.horizontal-grid.text-center', ->
+								div '.horizontal-grid', ->
+									div '.stretch-column', ->
+										if run.status == 'running'
+											a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
+												icon '.glyp-cancelled.lyph-close'
+												span '', 'Clear'
+										else if run.log_file_name?.length
+											a '.with-icon', href: run.log_url, target: '_blank', ->
+												icon '.glyp-items.lyph-list'
+												span '', 'Log'
+								div '.horizontal-grid', ->
+									div '.stretch-column', ->
+										if run.script_body?.length
+											a '.with-icon.view-run-body', ->
+												icon '.glyp-code'
+												span '', 'Script Content'
 
 
 class RunsModal
@@ -1287,6 +1296,9 @@ class RunsModal
 		@ui.on 'click', 'a.clear-run', (evt) =>
 			this.clearRun $(evt.target).parents('tr.script-run')
 
+		@ui.on 'click', 'a.view-run-body', (evt) =>
+			this.viewRunBody $(evt.target).parents('tr.script-run')
+
 	clearRun: (row) ->
 		id = row.data 'id'
 		unless confirm "Clear this run so that the script can be run again? This will NOT cancel the actual running script, so running it again may have undesired side effects!"
@@ -1299,6 +1311,19 @@ class RunsModal
 				row.find('a.clear-run').remove()
 				row.find('.status').text 'Cleared'
 		)
+
+	viewRunBody: (row) ->
+		body = row.data 'body'
+		created = row.data 'created'
+		creator = row.data 'creator'
+		@script_run =
+			{
+				script_body: body,
+				created_at_date: created.formatShortDate(),
+				created_at_time: created.formatShortTime(),
+				created_by: creator
+			}
+		new ScriptRunModal(@script_run)
 
 
 
@@ -1542,3 +1567,42 @@ class ActionLogModal
 			hunkIdentifierRows.find(".d2h-code-side-line").text("")
 			hunkIdentifierRows.first().remove()
 		)
+
+################################################################################
+# Script Run Modal
+################################################################################
+
+_scriptRunTemplate = tinyTemplate (@script_run) ->
+	div '', ->
+		div '.horizontal-grid.small-bottom-pad.timestamps', ->
+			div '.stretch-column', ->
+				span '', "Ran on #{@script_run.created_at_date} at #{@script_run.created_at_time} "
+				span '', "by #{@script_run.created_by}"
+		div '.stretch-column', ->
+			table '.script-body-table', ->
+				tbody '', ->
+					lines = @script_run.script_body.split("\n");
+					for line, index in lines
+						tr ->
+							td '.script-line-number', (index + 1).toString()
+							encodedLine = $('<div>').text(line).html();
+							td '.script-line.language-ruby', encodedLine
+
+
+class ScriptRunModal
+	constructor: (@script_run) ->
+		tinyModal.showDirect(
+			_scriptRunTemplate(@script_run)
+			{
+				title: 'Script Run'
+				title_icon: '.glyp-script'
+				callback: (modal) =>
+					this.init modal
+			}
+		)
+
+	init: (@ui) ->
+		@ui.find('.script-line').each (index, elem) ->
+			hljs.highlightBlock elem
+
+		tinyModal.expand()
