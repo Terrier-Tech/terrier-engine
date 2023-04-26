@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir['{app,config,db,lib,vendor}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
-  s.add_dependency 'rails', '>= 5.2'
+  s.add_dependency 'rails', '>= 7.0'
   s.add_dependency 'terminal-table'
   s.add_dependency 'parser'
   s.add_dependency 'spreadsheet'
@@ -29,11 +29,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'puma'
   s.add_dependency 'puma-daemon'
   s.add_dependency 'sys-proctable'
-  s.add_dependency 'dotenv'
+  s.add_dependency 'dotenv-rails'
   s.add_dependency 'http'
   s.add_dependency 'redis'
   s.add_dependency 'hiredis-client'
   s.add_dependency 'colorize'
+  s.add_dependency 'vite_rails'
 
   s.add_development_dependency 'pg'
   s.add_development_dependency 'sassc', '>= 2.4.0'

@@ -192,6 +192,18 @@ module Terrier::Fields
         select_options
       end
     end
+
+
+    ## Frontend
+
+    def self.exclude_from_frontend!
+      @_exclude_from_frontend = true
+    end
+
+    def self.exclude_from_frontend?
+      @_exclude_from_frontend
+    end
+
   end
 
 end
