@@ -1,4 +1,4 @@
-module Terrier::Fields
+module Terrier::Model
   extend ActiveSupport::Concern
 
   module ClassMethods

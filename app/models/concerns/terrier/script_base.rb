@@ -5,7 +5,7 @@ require 'terrier/scripts/script_config'
 # include this module in the Script model
 module Terrier::ScriptBase
   extend ActiveSupport::Concern
-  include Terrier::Fields
+  include Terrier::Model
   include Terrier::Schedulable
 
 
