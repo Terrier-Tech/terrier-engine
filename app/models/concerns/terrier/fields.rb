@@ -196,11 +196,11 @@ module Terrier::Fields
 
     ## Frontend
 
-    def self.exclude_from_frontend!
+    def exclude_from_frontend!
       @_exclude_from_frontend = true
     end
 
-    def self.exclude_from_frontend?
+    def exclude_from_frontend?
       @_exclude_from_frontend
     end
 

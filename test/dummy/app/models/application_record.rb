@@ -3,6 +3,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   include Terrier::Fields
 
+  belongs_to :created_by, class_name: 'User', optional: true
+  belongs_to :updated_by, class_name: 'User', optional: true
+
   def save_by_system?
     self.created_by_name = 'system'
     self.save

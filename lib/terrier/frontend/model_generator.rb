@@ -2,9 +2,17 @@ require 'terrier/frontend/base_generator'
 
 class ModelGenerator < BaseGenerator
 
+  # @param options [Hash] a hash of options for generating the model
+  # @option options [Hash<String,Array<String>>] :imports A hash of import paths to a list of symbols
   def initialize(options={})
     super
     @has_shrine = defined?(Shrine)
+
+    @imports = options[:imports] || {}
+
+    # add the default imports
+    @imports['tuff-core/types'] ||= []
+    @imports['tuff-core/types'] << 'OptionalProps'
   end
 
   def run
