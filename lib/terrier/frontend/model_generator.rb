@@ -43,6 +43,9 @@ class ModelGenerator < BaseGenerator
     # generate the models file
     out_path = render_template 'models.ts', binding
     info "Wrote #{models.count.to_s.bold} models to #{out_path.blue}"
+
+    # format the file
+    prettier_file out_path
   end
 
   # return the typescript type associated with the given column type

@@ -55,6 +55,14 @@ class BaseGenerator
     abs_path
   end
 
+  # Uses Prettier to format a file
+  # @param path [String] the absolute path to the file
+  def prettier_file(path)
+    cmd = "npx --no-install prettier --write --no-semi #{path}"
+    info "Formatting file with #{cmd.bold}"
+    system cmd
+  end
+
   # optimize all SVG files in in_dir using SVGO
   def optimize_svgs(in_dir, out_dir)
     info "Optimizing images in #{in_dir.green} and storing them in #{out_dir.blue}"
