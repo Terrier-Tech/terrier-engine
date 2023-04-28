@@ -180,6 +180,7 @@ export type ScriptRun = {
     status: "running" | "success" | "error" | "cancelled" | "cleared"
     script_id: string
     org_id?: string
+    script_body?: string
 
     created_by?: User
 
@@ -228,6 +229,8 @@ export type UnpersistedScriptRun = {
     script_id: string
 
     org_id?: string
+
+    script_body?: string
 
     created_by?: User
 

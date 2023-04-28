@@ -1,0 +1,94 @@
+// noinspection JSAnnotator,ES6UnusedImports,TypeScriptCheckImport,TypeScriptValidateTypes,TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+
+
+/**
+ * Definition for a single column in the schema.
+ */
+export type ColumnDef = {
+  name: string
+  nullable: boolean
+  array: boolean
+  type: string
+  possible_values?: string[]
+}
+
+/**
+ * Definition for a single belongs_to relationship.
+ */
+export type BelongsToDef = {
+  name: string
+  model_name: string
+  optional: boolean
+}
+
+/**
+ * Definition for a single has_many relationship.
+ */
+export type HasManyDef = {
+  name: string
+  model_name: string
+}
+
+/**
+ * Definition for a single model in the schema.
+ */
+export type ModelDef = {
+  table_name: String
+  columns: Record<string, ColumnDef>
+  belongs_tos: Record<string, BelongsToDef>
+  has_manies: Record<string, HasManyDef>
+}
+
+/**
+ * All models in the schema.
+ */
+const models: Record<string,ModelDef> = {
+  <% models.keys.sort.each do |model_name| %>
+    <% model = models[model_name] %>
+    <%= model_name %>: {
+      table_name: "<%= model[:table_name] %>",
+      columns: {
+        <% model[:columns].each do|col| %>
+          <% enum_field = model[:enum_fields][col.name.to_sym] %>
+          <%= col.name %>: {
+            name: "<%= col.name %>",
+            nullable: <%= col.null %>,
+            array: <%= col.sql_type_metadata.sql_type.ends_with?('[]') %>,
+            type: "<%= enum_field ? 'enum' : col.type %>",
+            <% if enum_field %>
+              possible_values: [<%= enum_field.map{ |f| "'#{f}'" }.join(', ') %>]
+            <% end %>
+          },
+        <% end %>
+      },
+      belongs_tos: {
+        <% model[:belongs_tos].each do |ref_name, ref| %>
+          <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
+          <% next if ref_type.constantize.exclude_from_frontend? %>
+          <%= ref_name %>: {
+            name: "<%= ref_name %>",
+            model_name: '<%= ref_type %>',
+            optional: <%= ref.options[:optional] || false %>
+          },
+        <% end %>
+      },
+      has_manies: {
+        <% model[:has_manies].each do |ref_name, ref| %>
+          <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
+          <% next if ref_type.constantize.exclude_from_frontend? %>
+          <%= ref_name %>: {
+            name: "<%= ref_name %>",
+            model_name: '<%= ref_type %>'
+          },
+        <% end %>
+      },
+    },
+  <% end %>
+}
+
+
+const Schema = {
+  models
+}
+
+export default Schema

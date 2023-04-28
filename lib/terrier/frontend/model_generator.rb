@@ -1,5 +1,6 @@
 require 'terrier/frontend/base_generator'
 
+# Generates the models.ts and schema.ts files from the database schema.
 class ModelGenerator < BaseGenerator
 
   # @param options [Hash] a hash of options for generating the model
@@ -31,24 +32,30 @@ class ModelGenerator < BaseGenerator
       models[model.name] = {
         columns: model.columns,
         reflections: model.reflections,
+        belongs_tos: model.reflections.select { |_, ref| ref.class.name.include?('BelongsTo') },
+        has_manies: model.reflections.select { |_, ref| ref.class.name.include?('HasMany') },
         enum_fields: enum_fields,
         attachments: attachments,
-        model_class: model
+        model_class: model,
+        table_name: model.table_name
       }
     end
 
     #noinspection RubyUnusedLocalVariable
     unpersisted_columns = %w[id created_at created_by_name updated_at _state]
 
-    # generate the models file
+    # generate and format the models file
     out_path = render_template 'models.ts', binding
     info "Wrote #{models.count.to_s.bold} models to #{out_path.blue}"
+    prettier_file out_path
 
-    # format the file
+    # generate and format the schema file
+    out_path = render_template 'schema.ts', binding
+    info "Wrote schema to #{out_path.blue}"
     prettier_file out_path
   end
 
-  # return the typescript type associated with the given column type
+  # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
     case col.type
     when :integer, :float
@@ -58,7 +65,7 @@ class ModelGenerator < BaseGenerator
       if model_class.respond_to?(schema_method)
         schema = model_class.send(schema_method)
         if schema.present?
-          _typescript_type(schema)
+          typescript_schema_type(schema)
         else
           'object'
         end
@@ -78,7 +85,9 @@ class ModelGenerator < BaseGenerator
     end
   end
 
-  def _typescript_type(type)
+  # @return [String] the typescript type associated with the given
+  # schema literal returned from a `*_schema` method on a model
+  def typescript_schema_type(type)
     case type
     when Hash
       type_str = StringIO.new
@@ -87,7 +96,7 @@ class ModelGenerator < BaseGenerator
       type.keys.each_with_index do |key, i|
         type_str << key
         type_str << ": "
-        type_str << _typescript_type(type[key])
+        type_str << typescript_schema_type(type[key])
         if i < last_key
           type_str << ", "
         end

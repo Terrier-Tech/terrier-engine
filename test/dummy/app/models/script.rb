@@ -38,4 +38,6 @@ class Script < ApplicationRecord
   can_full_text_search :description
 
   validates :title, uniqueness: true
+
+  has_many :script_runs
 end

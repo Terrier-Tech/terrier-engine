@@ -5,27 +5,28 @@
 <% end %>
 
 <% models.keys.sort.each do |model_name| %>
+<% model = models[model_name] %>
 
 export type <%= model_name %> = {
-<% models[model_name][:columns].each do |col| %>
-  <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, models[model_name][:model_class], models[model_name][:enum_fields][col.name.to_sym]) %>
+<% model[:columns].each do |col| %>
+  <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
 <% end %>
-<% models[model_name][:reflections].each do |ref_name, ref| %>
+<% model[:reflections].each do |ref_name, ref| %>
   <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
   <% next if ref_type.constantize.exclude_from_frontend? %>
   <% ref_type += '[]' if ref.class == ActiveRecord::Reflection::HasManyReflection %>
   <%= ref_name %> ? : <%= ref_type %>
 <% end %>
-<% models[model_name][:attachments].each do |attachment| %>
+<% model[:attachments].each do |attachment| %>
   <%= attachment %> ? : File
 <% end %>
 }
 
 export type Unpersisted<%= model_name %> = {
-  <% models[model_name][:columns].each do |col| %>
-  <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, models[model_name][:model_class], models[model_name][:enum_fields][col.name.to_sym]) %>
+  <% model[:columns].each do |col| %>
+  <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
   <% end %>
-  <% models[model_name][:reflections].each do |ref_name, ref| %>
+  <% model[:reflections].each do |ref_name, ref| %>
     <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
     <% next if ref_type.constantize.exclude_from_frontend? %>
     <% if ref.class == ActiveRecord::Reflection::HasManyReflection %>
@@ -34,14 +35,14 @@ export type Unpersisted<%= model_name %> = {
     <% end %>
     <%= ref_name %>?: <%= ref_type %>
   <% end %>
-  <% models[model_name][:attachments].each do |attachment| %>
+  <% model[:attachments].each do |attachment| %>
     <%= attachment %>?: File
   <% end %>
 }
 
-<% if models[model_name][:enum_fields].present? %>
+<% if model[:enum_fields].present? %>
 export const <%= model_name %>EnumFields = {
-<% models[model_name][:enum_fields].each do |col, values| %>
+<% model[:enum_fields].each do |col, values| %>
   <%= col %>: [<%= values.select(&:present?).map{|f| "'#{f}'"}.join(',') %>] as const,
 <% end %>
 }
