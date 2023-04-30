@@ -17,7 +17,14 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def save_by_user!(user='system')
-    self.created_by_name = user
+    self.created_by_name ||= user
+    self.updated_by_name = user
     self.save!
   end
+
+  def save_if_needed!(change_user)
+    return false unless self.changed?
+    self.save_by_user! change_user
+  end
+
 end

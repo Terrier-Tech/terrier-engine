@@ -46,4 +46,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'coffee-rails', '~> 4.2'
   s.add_development_dependency 'paperclip'
   s.add_development_dependency 'rack'
+  s.add_development_dependency 'faker'
+  s.add_development_dependency 'bcrypt'
 end
