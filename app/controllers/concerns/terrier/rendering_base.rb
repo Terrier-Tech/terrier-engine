@@ -4,6 +4,8 @@ module Terrier::RenderingBase
 
   included do
 
+    ## Rendering
+
     def init_request_time
       @request_start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
@@ -93,6 +95,56 @@ module Terrier::RenderingBase
       end
     end
 
+  end
+
+
+  ## Params
+
+  def required_param(name)
+    val = params[name]
+    if val.blank?
+      raise "Missing required parameter '#{name}'"
+    end
+    val
+  end
+
+  def form_params(name)
+    params[name.to_sym].permit!
+  end
+
+  def true_param?(name)
+    params[name] && params[name].downcase == 'true'
+  end
+
+  def array_param(name)
+    value = params[name]
+    if value.is_a? Hash
+      return value.values
+    end
+    if value.is_a? Array
+      return value
+    end
+    if value.is_a? String
+      return value.split(',')
+    end
+    value.to_h.values
+  end
+
+  def required_array_param(name)
+    value = array_param(name)
+    if value.blank?
+      raise "Must provide non-empty #{name} parameter"
+    end
+    value
+  end
+
+  # @return A new URL string based on the current one except with the new params set
+  def change_url_params(url, new_params)
+    uri = URI.parse url
+    query = Rack::Utils.parse_query uri.query
+    query.merge! new_params
+    uri.query = Rack::Utils.build_query query
+    uri.to_s
   end
 
 end

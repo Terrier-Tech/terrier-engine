@@ -1,0 +1,21 @@
+DEFAULTS: &DEFAULTS
+  created_by_name: test
+  password_digest: ''
+bobby:
+  <<: *DEFAULTS
+  first_name: Bobby
+  last_name: Tables
+  role: office
+  email: bobby@terrier.tech
+jan:
+  <<: *DEFAULTS
+  first_name: Jan
+  last_name: Tables
+  role: technician
+  email: jan@terrier.tech
+alice:
+  <<: *DEFAULTS
+  first_name: Alice
+  last_name: Wonderland
+  role: customer
+  email: alice@example.com
