@@ -1,0 +1,7 @@
+{
+  "entrypoints/app.ts": {
+    "file": "assets/app-e3e62db9.js",
+    "isEntry": true,
+    "src": "entrypoints/app.ts"
+  }
+}
