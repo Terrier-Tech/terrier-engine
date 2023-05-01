@@ -2,9 +2,16 @@
 class BaseGenerator
   include Loggable
 
+  # @option typescript_dir [String?] the output directory for typescript files
+  # @option ruby_dir [String?] the output directory for ruby files
+  # @option template_dir [String?] the directory for templates that aren't absolute paths
   def initialize(options={})
     @typescript_dir = options[:typescript_dir].presence || Rails.root.join("app/frontend/gen").to_s
     @ruby_dir = options[:ruby_dir].presence || Rails.root.join("config/initializers").to_s
+    @template_dirs = ["#{Terrier::Engine.root}/lib/terrier/frontend"]
+    if options[:template_dir].present?
+      @template_dirs.unshift options[:template_dir]
+    end
   end
 
   # render the named template in lib/templates using the given context
@@ -13,17 +20,22 @@ class BaseGenerator
   def render_template(name, context)
     # read the template
     name = name.to_s # in case it's a Pathname
+    template_name = name
+    template_name += '.erb' unless template_name.end_with?('.erb')
     if name.start_with? '/'
       template_path = name
       name = File.basename name
+      raise "Could not find template at #{template_path}" unless File.exists?(template_path)
     else
-      template_path = "#{Terrier::Engine.root}/lib/terrier/frontend/#{name}"
-    end
-    unless template_path.end_with?('.erb')
-      template_path += '.erb'
-    end
-    unless File.exists?(template_path)
-      raise "Could not find template at #{template_path}"
+      template_path = nil
+      @template_dirs.each do |dir|
+        path = "#{dir}/#{template_name}"
+        if File.exist?(path)
+          template_path = path
+          break
+        end
+      end
+      raise "Could not find template named #{template_name}, looked in #{@template_dirs.to_sentence}" unless template_path.present?
     end
     template = ERB.new File.read(template_path), nil, '%<>'
 
