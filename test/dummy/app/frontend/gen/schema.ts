@@ -16,7 +16,7 @@ export type ColumnDef = {
  */
 export type BelongsToDef = {
     name: string
-    model_name: string
+    model: string
     optional: boolean
 }
 
@@ -25,7 +25,7 @@ export type BelongsToDef = {
  */
 export type HasManyDef = {
     name: string
-    model_name: string
+    model: string
 }
 
 /**
@@ -34,14 +34,261 @@ export type HasManyDef = {
 export type ModelDef = {
     table_name: String
     columns: Record<string, ColumnDef>
-    belongs_tos: Record<string, BelongsToDef>
-    has_manies: Record<string, HasManyDef>
+    belongs_to: Record<string, BelongsToDef>
+    has_many: Record<string, HasManyDef>
 }
 
 /**
  * All models in the schema.
  */
 const models: Record<string, ModelDef> = {
+    Contact: {
+        table_name: "contacts",
+        columns: {
+            id: {
+                name: "id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            created_at: {
+                name: "created_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            updated_at: {
+                name: "updated_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            _state: {
+                name: "_state",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            created_by_id: {
+                name: "created_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            created_by_name: {
+                name: "created_by_name",
+                nullable: false,
+                array: false,
+                type: "text",
+            },
+
+            extern_id: {
+                name: "extern_id",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            updated_by_id: {
+                name: "updated_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            updated_by_name: {
+                name: "updated_by_name",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            location_id: {
+                name: "location_id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            user_id: {
+                name: "user_id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            contact_type: {
+                name: "contact_type",
+                nullable: false,
+                array: false,
+                type: "enum",
+
+                possible_values: ["customer", "employee"],
+            },
+        },
+        belongs_to: {
+            created_by: {
+                name: "created_by",
+                model: "User",
+                optional: true,
+            },
+
+            updated_by: {
+                name: "updated_by",
+                model: "User",
+                optional: true,
+            },
+
+            user: {
+                name: "user",
+                model: "User",
+                optional: false,
+            },
+
+            location: {
+                name: "location",
+                model: "Location",
+                optional: false,
+            },
+        },
+        has_many: {},
+    },
+
+    Invoice: {
+        table_name: "invoices",
+        columns: {
+            id: {
+                name: "id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            created_at: {
+                name: "created_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            updated_at: {
+                name: "updated_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            _state: {
+                name: "_state",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            created_by_id: {
+                name: "created_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            created_by_name: {
+                name: "created_by_name",
+                nullable: false,
+                array: false,
+                type: "text",
+            },
+
+            extern_id: {
+                name: "extern_id",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            updated_by_id: {
+                name: "updated_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            updated_by_name: {
+                name: "updated_by_name",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            date: {
+                name: "date",
+                nullable: false,
+                array: false,
+                type: "date",
+            },
+
+            status: {
+                name: "status",
+                nullable: false,
+                array: false,
+                type: "enum",
+
+                possible_values: ["pending", "open", "paid", "void"],
+            },
+
+            price: {
+                name: "price",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            location_id: {
+                name: "location_id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            lines: {
+                name: "lines",
+                nullable: true,
+                array: true,
+                type: "text",
+            },
+        },
+        belongs_to: {
+            created_by: {
+                name: "created_by",
+                model: "User",
+                optional: true,
+            },
+
+            updated_by: {
+                name: "updated_by",
+                model: "User",
+                optional: true,
+            },
+
+            location: {
+                name: "location",
+                model: "Location",
+                optional: false,
+            },
+        },
+        has_many: {
+            work_orders: {
+                name: "work_orders",
+                model: "WorkOrder",
+            },
+        },
+    },
+
     Location: {
         table_name: "locations",
         columns: {
@@ -154,7 +401,9 @@ const models: Record<string, ModelDef> = {
                 name: "status",
                 nullable: false,
                 array: false,
-                type: "text",
+                type: "enum",
+
+                possible_values: ["onetime", "contract"],
             },
 
             data: {
@@ -163,21 +412,64 @@ const models: Record<string, ModelDef> = {
                 array: false,
                 type: "json",
             },
+
+            address1: {
+                name: "address1",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            address2: {
+                name: "address2",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            zip: {
+                name: "zip",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            county: {
+                name: "county",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
         },
-        belongs_tos: {
+        belongs_to: {
             created_by: {
                 name: "created_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
 
             updated_by: {
                 name: "updated_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
         },
-        has_manies: {},
+        has_many: {
+            work_orders: {
+                name: "work_orders",
+                model: "WorkOrder",
+            },
+
+            invoices: {
+                name: "invoices",
+                model: "Invoice",
+            },
+
+            contacts: {
+                name: "contacts",
+                model: "Contact",
+            },
+        },
     },
 
     Script: {
@@ -352,23 +644,23 @@ const models: Record<string, ModelDef> = {
                 type: "text",
             },
         },
-        belongs_tos: {
+        belongs_to: {
             created_by: {
                 name: "created_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
 
             updated_by: {
                 name: "updated_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
         },
-        has_manies: {
+        has_many: {
             script_runs: {
                 name: "script_runs",
-                model_name: "ScriptRun",
+                model: "ScriptRun",
             },
         },
     },
@@ -525,26 +817,127 @@ const models: Record<string, ModelDef> = {
                 type: "text",
             },
         },
-        belongs_tos: {
+        belongs_to: {
             created_by: {
                 name: "created_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
 
             updated_by: {
                 name: "updated_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
 
             script: {
                 name: "script",
-                model_name: "Script",
+                model: "Script",
                 optional: false,
             },
         },
-        has_manies: {},
+        has_many: {},
+    },
+
+    Target: {
+        table_name: "targets",
+        columns: {
+            id: {
+                name: "id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            created_at: {
+                name: "created_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            updated_at: {
+                name: "updated_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            _state: {
+                name: "_state",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            created_by_id: {
+                name: "created_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            created_by_name: {
+                name: "created_by_name",
+                nullable: false,
+                array: false,
+                type: "text",
+            },
+
+            extern_id: {
+                name: "extern_id",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            updated_by_id: {
+                name: "updated_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            updated_by_name: {
+                name: "updated_by_name",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            name: {
+                name: "name",
+                nullable: false,
+                array: false,
+                type: "text",
+            },
+
+            description: {
+                name: "description",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+        },
+        belongs_to: {
+            created_by: {
+                name: "created_by",
+                model: "User",
+                optional: true,
+            },
+
+            updated_by: {
+                name: "updated_by",
+                model: "User",
+                optional: true,
+            },
+        },
+        has_many: {
+            work_orders: {
+                name: "work_orders",
+                model: "WorkOrder",
+            },
+        },
     },
 
     User: {
@@ -708,7 +1101,9 @@ const models: Record<string, ModelDef> = {
                 name: "role",
                 nullable: false,
                 array: false,
-                type: "text",
+                type: "enum",
+
+                possible_values: ["technician", "office", "customer"],
             },
 
             state: {
@@ -732,20 +1127,194 @@ const models: Record<string, ModelDef> = {
                 type: "text",
             },
         },
-        belongs_tos: {
+        belongs_to: {
             created_by: {
                 name: "created_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
 
             updated_by: {
                 name: "updated_by",
-                model_name: "User",
+                model: "User",
                 optional: true,
             },
         },
-        has_manies: {},
+        has_many: {
+            work_orders: {
+                name: "work_orders",
+                model: "WorkOrder",
+            },
+
+            contacts: {
+                name: "contacts",
+                model: "Contact",
+            },
+        },
+    },
+
+    WorkOrder: {
+        table_name: "work_orders",
+        columns: {
+            id: {
+                name: "id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            created_at: {
+                name: "created_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            updated_at: {
+                name: "updated_at",
+                nullable: false,
+                array: false,
+                type: "datetime",
+            },
+
+            _state: {
+                name: "_state",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            created_by_id: {
+                name: "created_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            created_by_name: {
+                name: "created_by_name",
+                nullable: false,
+                array: false,
+                type: "text",
+            },
+
+            extern_id: {
+                name: "extern_id",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            updated_by_id: {
+                name: "updated_by_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            updated_by_name: {
+                name: "updated_by_name",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+
+            time: {
+                name: "time",
+                nullable: true,
+                array: false,
+                type: "datetime",
+            },
+
+            status: {
+                name: "status",
+                nullable: false,
+                array: false,
+                type: "enum",
+
+                possible_values: ["active", "complete", "cancelled"],
+            },
+
+            price: {
+                name: "price",
+                nullable: false,
+                array: false,
+                type: "integer",
+            },
+
+            location_id: {
+                name: "location_id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            user_id: {
+                name: "user_id",
+                nullable: false,
+                array: false,
+                type: "uuid",
+            },
+
+            invoice_id: {
+                name: "invoice_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            target_id: {
+                name: "target_id",
+                nullable: true,
+                array: false,
+                type: "uuid",
+            },
+
+            notes: {
+                name: "notes",
+                nullable: true,
+                array: false,
+                type: "text",
+            },
+        },
+        belongs_to: {
+            created_by: {
+                name: "created_by",
+                model: "User",
+                optional: true,
+            },
+
+            updated_by: {
+                name: "updated_by",
+                model: "User",
+                optional: true,
+            },
+
+            target: {
+                name: "target",
+                model: "Target",
+                optional: true,
+            },
+
+            invoice: {
+                name: "invoice",
+                model: "Invoice",
+                optional: true,
+            },
+
+            location: {
+                name: "location",
+                model: "Location",
+                optional: false,
+            },
+
+            user: {
+                name: "user",
+                model: "User",
+                optional: false,
+            },
+        },
+        has_many: {},
     },
 }
 

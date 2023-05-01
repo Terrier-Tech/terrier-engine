@@ -17,7 +17,7 @@ export type ColumnDef = {
  */
 export type BelongsToDef = {
   name: string
-  model_name: string
+  model: string
   optional: boolean
 }
 
@@ -26,7 +26,7 @@ export type BelongsToDef = {
  */
 export type HasManyDef = {
   name: string
-  model_name: string
+  model: string
 }
 
 /**
@@ -35,8 +35,8 @@ export type HasManyDef = {
 export type ModelDef = {
   table_name: String
   columns: Record<string, ColumnDef>
-  belongs_tos: Record<string, BelongsToDef>
-  has_manies: Record<string, HasManyDef>
+  belongs_to: Record<string, BelongsToDef>
+  has_many: Record<string, HasManyDef>
 }
 
 /**
@@ -61,24 +61,24 @@ const models: Record<string,ModelDef> = {
           },
         <% end %>
       },
-      belongs_tos: {
+      belongs_to: {
         <% model[:belongs_tos].each do |ref_name, ref| %>
           <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
           <% next if ref_type.constantize.exclude_from_frontend? %>
           <%= ref_name %>: {
             name: "<%= ref_name %>",
-            model_name: '<%= ref_type %>',
+            model: '<%= ref_type %>',
             optional: <%= ref.options[:optional] || false %>
           },
         <% end %>
       },
-      has_manies: {
+      has_many: {
         <% model[:has_manies].each do |ref_name, ref| %>
           <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify %>
           <% next if ref_type.constantize.exclude_from_frontend? %>
           <%= ref_name %>: {
             name: "<%= ref_name %>",
-            model_name: '<%= ref_type %>'
+            model: '<%= ref_type %>'
           },
         <% end %>
       },

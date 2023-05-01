@@ -2,6 +2,134 @@
 
 import { OptionalProps } from "tuff-core/types"
 
+export type Contact = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    location_id: string
+    user_id: string
+    contact_type: "customer" | "employee"
+
+    created_by?: User
+
+    updated_by?: User
+
+    user?: User
+
+    location?: Location
+}
+
+export type UnpersistedContact = {
+    id?: string
+
+    created_at?: string
+
+    updated_at?: string
+
+    _state?: number
+
+    created_by_id?: string
+
+    created_by_name?: string
+
+    extern_id?: string
+
+    updated_by_id?: string
+
+    updated_by_name?: string
+
+    location_id: string
+
+    user_id: string
+
+    contact_type: "customer" | "employee"
+
+    created_by?: User
+
+    updated_by?: User
+
+    user?: User
+
+    location?: Location
+}
+
+export const ContactEnumFields = {
+    contact_type: ["customer", "employee"] as const,
+}
+
+export type Invoice = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    date: string
+    status: "pending" | "open" | "paid" | "void"
+    price: number
+    location_id: string
+    lines?: string[]
+
+    created_by?: User
+
+    updated_by?: User
+
+    location?: Location
+
+    work_orders?: WorkOrder[]
+}
+
+export type UnpersistedInvoice = {
+    id?: string
+
+    created_at?: string
+
+    updated_at?: string
+
+    _state?: number
+
+    created_by_id?: string
+
+    created_by_name?: string
+
+    extern_id?: string
+
+    updated_by_id?: string
+
+    updated_by_name?: string
+
+    date: string
+
+    status: "pending" | "open" | "paid" | "void"
+
+    price: number
+
+    location_id: string
+
+    lines?: string[]
+
+    created_by?: User
+
+    updated_by?: User
+
+    location?: Location
+
+    work_orders?: OptionalProps<UnpersistedWorkOrder, "invoice_id">[]
+}
+
+export const InvoiceEnumFields = {
+    status: ["pending", "open", "paid", "void"] as const,
+}
+
 export type Location = {
     id: string
     created_at: string
@@ -18,12 +146,22 @@ export type Location = {
     display_name: string
     number: number
     tags?: string[]
-    status: string
+    status: "onetime" | "contract"
     data?: object
+    address1?: string
+    address2?: string
+    zip?: string
+    county?: string
 
     created_by?: User
 
     updated_by?: User
+
+    work_orders?: WorkOrder[]
+
+    invoices?: Invoice[]
+
+    contacts?: Contact[]
 }
 
 export type UnpersistedLocation = {
@@ -57,13 +195,31 @@ export type UnpersistedLocation = {
 
     tags?: string[]
 
-    status: string
+    status: "onetime" | "contract"
 
     data?: object
+
+    address1?: string
+
+    address2?: string
+
+    zip?: string
+
+    county?: string
 
     created_by?: User
 
     updated_by?: User
+
+    work_orders?: OptionalProps<UnpersistedWorkOrder, "location_id">[]
+
+    invoices?: OptionalProps<UnpersistedInvoice, "location_id">[]
+
+    contacts?: OptionalProps<UnpersistedContact, "location_id">[]
+}
+
+export const LocationEnumFields = {
+    status: ["onetime", "contract"] as const,
 }
 
 export type Script = {
@@ -243,6 +399,56 @@ export const ScriptRunEnumFields = {
     status: ["running", "success", "error", "cancelled", "cleared"] as const,
 }
 
+export type Target = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    description?: string
+
+    created_by?: User
+
+    updated_by?: User
+
+    work_orders?: WorkOrder[]
+}
+
+export type UnpersistedTarget = {
+    id?: string
+
+    created_at?: string
+
+    updated_at?: string
+
+    _state?: number
+
+    created_by_id?: string
+
+    created_by_name?: string
+
+    extern_id?: string
+
+    updated_by_id?: string
+
+    updated_by_name?: string
+
+    name: string
+
+    description?: string
+
+    created_by?: User
+
+    updated_by?: User
+
+    work_orders?: OptionalProps<UnpersistedWorkOrder, "target_id">[]
+}
+
 export type User = {
     id: string
     created_at: string
@@ -266,7 +472,7 @@ export type User = {
     password_digest: string
     password_reset_token?: string
     password_reset_token_expires_at?: string
-    role: string
+    role: "technician" | "office" | "customer"
     state?: string
     tags: string[]
     zip?: string
@@ -274,6 +480,10 @@ export type User = {
     created_by?: User
 
     updated_by?: User
+
+    work_orders?: WorkOrder[]
+
+    contacts?: Contact[]
 }
 
 export type UnpersistedUser = {
@@ -321,7 +531,7 @@ export type UnpersistedUser = {
 
     password_reset_token_expires_at?: string
 
-    role: string
+    role: "technician" | "office" | "customer"
 
     state?: string
 
@@ -332,45 +542,161 @@ export type UnpersistedUser = {
     created_by?: User
 
     updated_by?: User
+
+    work_orders?: OptionalProps<UnpersistedWorkOrder, "user_id">[]
+
+    contacts?: OptionalProps<UnpersistedContact, "user_id">[]
+}
+
+export const UserEnumFields = {
+    role: ["technician", "office", "customer"] as const,
+}
+
+export type WorkOrder = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    time?: string
+    status: "active" | "complete" | "cancelled"
+    price: number
+    location_id: string
+    user_id: string
+    invoice_id?: string
+    target_id?: string
+    notes?: string
+
+    created_by?: User
+
+    updated_by?: User
+
+    target?: Target
+
+    invoice?: Invoice
+
+    location?: Location
+
+    user?: User
+}
+
+export type UnpersistedWorkOrder = {
+    id?: string
+
+    created_at?: string
+
+    updated_at?: string
+
+    _state?: number
+
+    created_by_id?: string
+
+    created_by_name?: string
+
+    extern_id?: string
+
+    updated_by_id?: string
+
+    updated_by_name?: string
+
+    time?: string
+
+    status: "active" | "complete" | "cancelled"
+
+    price: number
+
+    location_id: string
+
+    user_id: string
+
+    invoice_id?: string
+
+    target_id?: string
+
+    notes?: string
+
+    created_by?: User
+
+    updated_by?: User
+
+    target?: Target
+
+    invoice?: Invoice
+
+    location?: Location
+
+    user?: User
+}
+
+export const WorkOrderEnumFields = {
+    status: ["active", "complete", "cancelled"] as const,
 }
 
 /**
  * Map model names to their types.
  */
 export type ModelTypeMap = {
+    contact: Contact
+
+    invoice: Invoice
+
     location: Location
 
     script: Script
 
     script_run: ScriptRun
 
+    target: Target
+
     user: User
+
+    work_order: WorkOrder
 }
 
 /**
  * Map model names to their unpersisted types.
  */
 export type UnpersistedModelTypeMap = {
+    contact: UnpersistedContact
+
+    invoice: UnpersistedInvoice
+
     location: UnpersistedLocation
 
     script: UnpersistedScript
 
     script_run: UnpersistedScriptRun
 
+    target: UnpersistedTarget
+
     user: UnpersistedUser
+
+    work_order: UnpersistedWorkOrder
 }
 
 /**
  * Map model names to their association names.
  */
 export type ModelIncludesMap = {
-    location: "created_by" | "updated_by"
+    contact: "created_by" | "location" | "updated_by" | "user"
+
+    invoice: "created_by" | "location" | "updated_by" | "work_orders"
+
+    location: "contacts" | "created_by" | "invoices" | "updated_by" | "work_orders"
 
     script: "created_by" | "script_runs" | "updated_by"
 
     script_run: "created_by" | "script" | "updated_by"
 
-    user: "created_by" | "updated_by"
+    target: "created_by" | "updated_by" | "work_orders"
+
+    user: "contacts" | "created_by" | "updated_by" | "work_orders"
+
+    work_order: "created_by" | "invoice" | "location" | "target" | "updated_by" | "user"
 }
 
 /**
