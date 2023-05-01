@@ -219,7 +219,7 @@ module Terrier::Model
     # safe_name returns default if the value isn't present
     # @param default [Hash,Array] the default value to return from safe_name if the value is nil
     # @param schema [Hash] an optional hash defining what the expected shape of the data is
-    def self.json_field(name, default = {}, schema = nil)
+    def json_field(name, default = {}, schema = nil)
       self.define_method "#{name}_s" do
         self[name]&.to_json || default.to_json
       end
