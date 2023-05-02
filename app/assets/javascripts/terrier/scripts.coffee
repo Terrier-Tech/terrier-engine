@@ -1222,7 +1222,7 @@ _fieldValuesPartial = (fields) ->
 			span '.key', "#{k}: "
 			vString = if _.isArray(v)
 				"#{v.length} Rows"
-			else if v.match(/\d{4}-\d{2}-\d{2}/)
+			else if v? && v.match(/\d{4}-\d{2}-\d{2}/)
 				v.formatShortDate()
 			else
 				v
