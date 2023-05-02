@@ -1,9 +1,9 @@
 import DbClient from "@tap/db-client"
-import {ModelIncludesMap, ModelTypeMap} from "../gen/models"
+import {ModelIncludesMap, PersistedModelTypeMap, UnpersistedModelTypeMap} from "../gen/models"
 
 /**
  * DbClient specifically for the dummy database.
  */
-class DummyDb extends DbClient<ModelTypeMap, ModelIncludesMap> {}
+class DummyDb extends DbClient<PersistedModelTypeMap, UnpersistedModelTypeMap, ModelIncludesMap> {}
 
 export default function Db() {return new DummyDb()}

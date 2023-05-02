@@ -2,7 +2,6 @@
 
 import {Logger} from "tuff-core/logging"
 import Api, {ApiResponse} from "./api"
-import {OptionalProps} from "tuff-core/types";
 
 const log = new Logger('Db')
 log.level = 'debug'
@@ -16,13 +15,11 @@ type ModelTypeMap = {
 
 type ModelIncludesMap<M extends ModelTypeMap> = Record<keyof M, any>
 
-type Unpersisted<T extends Record<string,any>> = OptionalProps<T, 'created_at' | 'id' | 'updated_at'>
-
 /**
  * Map of columns to values for the given model type.
  */
-type WhereMap<M extends ModelTypeMap, T extends keyof M> = {
-    [col in keyof M[T]]?: unknown
+type WhereMap<PM extends ModelTypeMap, T extends keyof PM> = {
+    [col in keyof PM[T]]?: unknown
 }
 
 /**
@@ -52,34 +49,34 @@ type DbCountResponse = {
  */
 export type Includes<M extends ModelTypeMap, T extends keyof M, I extends ModelIncludesMap<M>> = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [rel in I[T]]?: Includes<any,any,any>
+    [rel in I[T]]?: Includes<M,any,any>
 }
 
 /**
  * Constructs an ActiveRecord query on the client side and executes it on the server.
  */
-class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends ModelIncludesMap<M>> {
+class ModelQuery<PM extends ModelTypeMap, T extends keyof PM & string, I extends ModelIncludesMap<PM>> {
 
     constructor(readonly modelType: T) {
     }
 
-    private whereMaps = Array<WhereMap<M,T>>()
+    private whereMaps = Array<WhereMap<PM,T>>()
     private whereClauses = Array<WhereClause>()
 
     /**
      * Adds one or more filters to the query.
      * @param map a map of columns to scalar values.
      */
-    where(map: WhereMap<M,T>): ModelQuery<M,T,I>
+    where(map: WhereMap<PM,T>): ModelQuery<PM,T,I>
 
     /**
      * Adds one or more filters to the query.
      * @param clause an arbitrary string WHERE clause
      * @param args any injected arguments into the clause string
      */
-    where(clause: string, ...args: unknown[]): ModelQuery<M,T,I>
+    where(clause: string, ...args: unknown[]): ModelQuery<PM,T,I>
 
-    where(mapOrClause: WhereMap<M,T> | string, ...args: unknown[]): ModelQuery<M,T,I> {
+    where(mapOrClause: WhereMap<PM,T> | string, ...args: unknown[]): ModelQuery<PM,T,I> {
         if (typeof mapOrClause == 'object') {
             this.whereMaps.push(mapOrClause)
         } else {
@@ -88,13 +85,13 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
         return this
     }
 
-    private _includes: Includes<M,T,I> = {}
+    private _includes: Includes<PM,T,I> = {}
 
     /**
      * Add one or more ActiveRecord-style includes.
      * @param inc maps association names to potentially more association names, or empty objects.
      */
-    includes(inc: Includes<M,T,I>): ModelQuery<M,T,I> {
+    includes(inc: Includes<PM,T,I>): ModelQuery<PM,T,I> {
         this._includes = {...inc, ...this._includes}
         return this
     }
@@ -105,7 +102,7 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
      * Adds an ActiveRecord-style joins statement.
      * @param join the association to join
      */
-    joins(join: string): ModelQuery<M,T,I> {
+    joins(join: string): ModelQuery<PM,T,I> {
         this._joins.push(join)
         return this
     }
@@ -116,7 +113,7 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
      * Set an ORDER BY statement for the query.
      * @param order a SQL ORDER BY statement
      */
-    orderBy(order: string): ModelQuery<M,T,I> {
+    orderBy(order: string): ModelQuery<PM,T,I> {
         this.order = order
         return this
     }
@@ -127,7 +124,7 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
      * Adds a result limit to the query.
      * @param max the query limit
      */
-    limit(max: number): ModelQuery<M,T,I> {
+    limit(max: number): ModelQuery<PM,T,I> {
         this._limit = max
         return this
     }
@@ -136,7 +133,7 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
      * Asynchronously execute the query on the server and returns the response.
      * Only returns on success, throws otherwise.
      */
-    async exec(): Promise<M[T][]> {
+    async exec(): Promise<PM[T][]> {
         const url = `/db/model/${this.modelType}.json`
         const body = {
             where_maps: this.whereMaps,
@@ -147,14 +144,14 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
             order: this.order
         }
         log.debug(`Getting ${this.modelType} query at ${url} with body`, body)
-        const res = await Api.safePost<DbGetResponse<M[T]>>(url, body)
+        const res = await Api.safePost<DbGetResponse<PM[T]>>(url, body)
         return res.records
     }
 
     /**
      * Retrieves the first record.
      */
-    async first(): Promise<M[T] | undefined> {
+    async first(): Promise<PM[T] | undefined> {
         const records = await this.limit(1).exec()
         return records[0]
     }
@@ -176,14 +173,19 @@ class ModelQuery<M extends ModelTypeMap, T extends keyof M & string, I extends M
 
 }
 
-
-export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap<M>> {
+/**
+ * Generic database client that works with persisted and unpersisted type maps.
+ * @template PM the type map for persisted model types
+ * @template UM the type map for unpersisted model types
+ * @template I the type map for model includes
+ */
+export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, I extends ModelIncludesMap<PM>> {
 
     /**
      * Start a new query for the given model type.
      * @param modelType the camel_case name of the model
      */
-    query<T extends keyof M & string>(modelType: T) {
+    query<T extends keyof PM & string>(modelType: T) {
         return new ModelQuery(modelType)
     }
 
@@ -195,14 +197,14 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param id the id of the record
      * @param includes relations to include in the returned object
      */
-    async find<T extends keyof M & string>(modelType: T, id: string, includes?: I[T]): Promise<M[T]> {
+    async find<T extends keyof PM & string>(modelType: T, id: string, includes?: I[T]): Promise<PM[T]> {
         const query = new ModelQuery(modelType).where("id = ?", id)
         if (includes) {
             query.includes(includes)
         }
         const record = await query.first()
         if (record) {
-            return record as M[T]
+            return record as PM[T]
         } else {
             throw new DbFindException(`No ${modelType} with id=${id}`)
         }
@@ -216,7 +218,7 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param idOrSlug the id or slug of the record
      * @param includes relations to include in the returned object
      */
-    async findByIdOrSlug<T extends keyof M & string>(modelType: T, idOrSlug: string, includes?: I[T]): Promise<M[T]> {
+    async findByIdOrSlug<T extends keyof PM & string>(modelType: T, idOrSlug: string, includes?: I[T]): Promise<PM[T]> {
         const column = isUuid(idOrSlug) ? "id" : "slug"
         const query = new ModelQuery(modelType).where(`${column} = ?`, idOrSlug)
         if (includes) {
@@ -224,7 +226,7 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
         }
         const record = await query.first()
         if (record) {
-            return record as M[T]
+            return record as PM[T]
         } else {
             throw new DbFindException(`No ${modelType} with id or slug ${idOrSlug}`)
         }
@@ -237,11 +239,11 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async update<T extends keyof M & string>(modelType: T, record: M[T], includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<M,T> & ApiResponse> {
+    async update<T extends keyof PM & string>(modelType: T, record: PM[T], includes: Includes<PM,T,I> = {}): Promise<DbUpsertResponse<PM,T> & ApiResponse> {
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Updating ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<M,T>>(url, body)
+        return await Api.post<DbUpsertResponse<PM,T>>(url, body)
     }
 
     /**
@@ -251,12 +253,12 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async safeUpdate<T extends keyof M & string>(modelType: T, record: M[T], includes: Includes<M,T,I> = {}): Promise<M[T]> {
+    async safeUpdate<T extends keyof PM & string>(modelType: T, record: PM[T], includes: Includes<PM,T,I> = {}): Promise<PM[T]> {
         const res = await this.update(modelType, record, includes)
         if (res.status == 'success') {
             return res.record
         } else if (res.record) {
-            throw new DbSaveException<M, T>(res.message, res.record as Unpersisted<M[T]>, res.errors)
+            throw new DbSaveException<PM, T>(res.message, res.record as UM[T], res.errors)
         } else {
             throw `Error updating ${modelType}: ${res.message}`
         }
@@ -268,11 +270,11 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async insert<T extends keyof M & string>(modelType: T, record: Unpersisted<M[T]>, includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<M,T> & ApiResponse> {
+    async insert<T extends keyof PM & string>(modelType: T, record: UM[T], includes: Includes<PM,T,I> = {}): Promise<DbUpsertResponse<PM,T> & ApiResponse> {
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Inserting ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<M,T>>(url, body)
+        return await Api.post<DbUpsertResponse<PM,T>>(url, body)
     }
 
     /**
@@ -282,11 +284,11 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async upsert<T extends keyof M & string>(modelType: T, record: Unpersisted<M[T]>, includes: Includes<M,T,I> = {}) {
+    async upsert<T extends keyof PM & string>(modelType: T, record: UM[T], includes: Includes<PM,T,I> = {}) {
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Upserting ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<M,T>>(url, body)
+        return await Api.post<DbUpsertResponse<PM,T>>(url, body)
     }
 
     /**
@@ -296,12 +298,12 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async safeUpsert<T extends keyof M & string>(modelType: T, record: Unpersisted<M[T]>, includes: Includes<M,T,I> = {}) {
+    async safeUpsert<T extends keyof PM & string>(modelType: T, record: UM[T], includes: Includes<PM,T,I> = {}) {
         const res = await this.upsert(modelType, record, includes)
         if (res.status == 'success') {
             return res.record
         } else if (res.record)  {
-            throw new DbSaveException<M,T>(res.message, res.record as Unpersisted<M[T]>, res.errors)
+            throw new DbSaveException<PM,T>(res.message, res.record as UM[T], res.errors)
         } else {
             throw `Error upserting ${modelType}: ${res.message}`
         }
@@ -348,28 +350,28 @@ export type DbErrors<T extends {}> = DbModelErrors<T> & DbBaseErrors
 /**
  * Generic type for a create or update response.
  */
-type DbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = SuccessfulDbUpsertResponse<M,T> | UnsuccessfulDbUpsertResponse<M,T>
+type DbUpsertResponse<PM extends ModelTypeMap, T extends keyof PM & string> = SuccessfulDbUpsertResponse<PM,T> | UnsuccessfulDbUpsertResponse<PM,T>
 
-type SuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = ApiResponse & {
+type SuccessfulDbUpsertResponse<PM extends ModelTypeMap, T extends keyof PM & string> = ApiResponse & {
     status: 'success'
-    record: M[T]
+    record: PM[T]
 }
 
-type UnsuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = ApiResponse & {
+type UnsuccessfulDbUpsertResponse<PM extends ModelTypeMap, T extends keyof PM & string> = ApiResponse & {
     status: 'error'
-    errors: DbErrors<M[T]>
-    record?: M[T]
+    errors: DbErrors<PM[T]>
+    record?: PM[T]
 }
 
 
 /**
  * The exception that gets raised when an insert or update call fails.
  */
-export class DbSaveException<M extends ModelTypeMap, T extends keyof M> extends Error {
-    record?: Unpersisted<M[T]>
-    errors?: DbErrors<Unpersisted<M[T]>>
+export class DbSaveException<UM extends ModelTypeMap, T extends keyof UM> extends Error {
+    record?: UM[T]
+    errors?: DbErrors<UM[T]>
 
-    constructor(message: string, record?: Unpersisted<M[T]>, errors?: DbErrors<Unpersisted<M[T]>>) {
+    constructor(message: string, record?: UM[T], errors?: DbErrors<UM[T]>) {
         super(message)
         this.record = record
         this.errors = errors
@@ -383,5 +385,5 @@ export class DbSaveException<M extends ModelTypeMap, T extends keyof M> extends 
 /**
  * Raised when a client-side validation fails (usually during form serialization)
  */
-export class ValidationException<M extends ModelTypeMap, T extends keyof M> extends DbSaveException<M,T> {
+export class ValidationException<PM extends ModelTypeMap, T extends keyof PM> extends DbSaveException<PM,T> {
 }

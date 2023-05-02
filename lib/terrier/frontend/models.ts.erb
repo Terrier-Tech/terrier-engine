@@ -53,7 +53,7 @@ export const <%= model_name %>EnumFields = {
 /**
  * Map model names to their types.
  */
-export type ModelTypeMap = {
+export type PersistedModelTypeMap = {
   <% models.keys.sort.each do |model_name| %>
     <%= model_name.tableize.singularize %>: <%= model_name %>
   <% end %>
@@ -91,4 +91,4 @@ export type SluggableModelTypeMap = {
 /**
  * A type consisting of all possible model names.
  */
-export type ModelName = keyof ModelTypeMap
+export type ModelName = keyof PersistedModelTypeMap & keyof UnpersistedModelTypeMap

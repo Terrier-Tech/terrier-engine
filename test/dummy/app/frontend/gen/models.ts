@@ -639,7 +639,7 @@ export const WorkOrderEnumFields = {
 /**
  * Map model names to their types.
  */
-export type ModelTypeMap = {
+export type PersistedModelTypeMap = {
     contact: Contact
 
     invoice: Invoice
@@ -707,4 +707,4 @@ export type SluggableModelTypeMap = {}
 /**
  * A type consisting of all possible model names.
  */
-export type ModelName = keyof ModelTypeMap
+export type ModelName = keyof PersistedModelTypeMap & keyof UnpersistedModelTypeMap
