@@ -7,10 +7,12 @@ import {OptionalProps} from "tuff-core/types";
 const log = new Logger('Db')
 log.level = 'debug'
 
-type ModelTypeMap = Record<string, object>
-// type ModelTypeMap = {
-//     [Property in keyof ModelTypeMap]: boolean;
-// }
+/**
+ * Type that maps keys to other types.
+ */
+type ModelTypeMap = {
+    [name: string]: any
+}
 
 type ModelIncludesMap<M extends ModelTypeMap> = Record<keyof M, any>
 
@@ -348,12 +350,12 @@ export type DbErrors<T extends {}> = DbModelErrors<T> & DbBaseErrors
  */
 type DbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = SuccessfulDbUpsertResponse<M,T> | UnsuccessfulDbUpsertResponse<M,T>
 
-type SuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof ModelTypeMap & string> = ApiResponse & {
+type SuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = ApiResponse & {
     status: 'success'
     record: M[T]
 }
 
-type UnsuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof ModelTypeMap & string> = ApiResponse & {
+type UnsuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = ApiResponse & {
     status: 'error'
     errors: DbErrors<M[T]>
     record?: M[T]
