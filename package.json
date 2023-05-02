@@ -3,6 +3,7 @@
     "tuff-core": "^0.24.1"
   },
   "devDependencies": {
+    "@types/node": "^18.16.3",
     "prettier": "^2.8.8"
   }
 }

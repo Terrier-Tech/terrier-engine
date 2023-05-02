@@ -9,6 +9,7 @@ test/dummy/storage/
 test/dummy/tmp/
 test/dummy/public/system
 test/dummy/test/output
+vite-dev/
 .idea/
 .DS_Store
 /tmp
