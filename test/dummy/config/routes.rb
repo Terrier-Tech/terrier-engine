@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   get 'reports' => 'scripts#reports'
 
+  get 'frontend/tap_demo'
+
   mount Terrier::Engine, at: "/"
 
   root 'application#home'

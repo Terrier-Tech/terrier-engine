@@ -11,8 +11,9 @@ html
 		= javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 		= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ace.js', 'data-turbolinks-track': 'reload'
 		= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ext-language_tools.js', 'data-turbolinks-track': 'reload'
-		= vite_client_tag
-		= vite_typescript_tag 'app'
+		- if @entrypoint.present?
+			= vite_client_tag
+			= vite_typescript_tag @entrypoint
 	body.application
 		#top-bar
 			a.title href='/' Terrier Engine

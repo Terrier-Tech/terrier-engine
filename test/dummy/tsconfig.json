@@ -16,7 +16,6 @@
     "noUnusedLocals" : true,
     "noUnusedParameters" : true,
     "noImplicitReturns" : true,
-    "isolatedModules" : true,
     "baseUrl" : ".",
     "paths" : {
       "@tap/*" : [
