@@ -1,7 +1,7 @@
 {
   "compilerOptions" : {
     "target" : "ESNext",
-    "declaration" : true,
+    "declaration" : false,
     "useDefineForClassFields" : true,
     "module" : "ESNext",
     "lib" : [
@@ -20,7 +20,8 @@
     "baseUrl" : ".",
     "paths" : {
       "@tap/*" : [
-        "../../app/frontend/tap/*"
+        "../../app/frontend/tap/*",
+        "../app/frontend/tap/*"
       ]
     }
   }
