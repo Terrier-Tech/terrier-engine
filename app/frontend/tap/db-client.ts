@@ -8,6 +8,9 @@ const log = new Logger('Db')
 log.level = 'debug'
 
 type ModelTypeMap = Record<string, object>
+// type ModelTypeMap = {
+//     [Property in keyof ModelTypeMap]: boolean;
+// }
 
 type ModelIncludesMap<M extends ModelTypeMap> = Record<keyof M, any>
 
@@ -232,11 +235,11 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async update<T extends keyof M & string>(modelType: T, record: ModelTypeMap[T], includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<T> & ApiResponse> {
+    async update<T extends keyof M & string>(modelType: T, record: M[T], includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<M,T> & ApiResponse> {
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Updating ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<T>>(url, body)
+        return await Api.post<DbUpsertResponse<M,T>>(url, body)
     }
 
     /**
@@ -246,7 +249,7 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async safeUpdate<T extends keyof M & string>(modelType: T, record: ModelTypeMap[T], includes: Includes<M,T,I> = {}): Promise<ModelTypeMap[T]> {
+    async safeUpdate<T extends keyof M & string>(modelType: T, record: M[T], includes: Includes<M,T,I> = {}): Promise<M[T]> {
         const res = await this.update(modelType, record, includes)
         if (res.status == 'success') {
             return res.record
@@ -263,11 +266,11 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
      * @param record the record to update
      * @param includes relations to include in the returned record
      */
-    async insert<T extends keyof M & string>(modelType: T, record: Unpersisted<M[T]>, includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<T> & ApiResponse> {
+    async insert<T extends keyof M & string>(modelType: T, record: Unpersisted<M[T]>, includes: Includes<M,T,I> = {}): Promise<DbUpsertResponse<M,T> & ApiResponse> {
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Inserting ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<T>>(url, body)
+        return await Api.post<DbUpsertResponse<M,T>>(url, body)
     }
 
     /**
@@ -281,7 +284,7 @@ export default class DbClient<M extends ModelTypeMap, I extends ModelIncludesMap
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Upserting ${modelType} at ${url} with body`, body)
-        return await Api.post<DbUpsertResponse<T>>(url, body)
+        return await Api.post<DbUpsertResponse<M,T>>(url, body)
     }
 
     /**
@@ -343,17 +346,17 @@ export type DbErrors<T extends {}> = DbModelErrors<T> & DbBaseErrors
 /**
  * Generic type for a create or update response.
  */
-type DbUpsertResponse<T extends keyof ModelTypeMap> = SuccessfulDbUpsertResponse<T> | UnsuccessfulDbUpsertResponse<T>
+type DbUpsertResponse<M extends ModelTypeMap, T extends keyof M & string> = SuccessfulDbUpsertResponse<M,T> | UnsuccessfulDbUpsertResponse<M,T>
 
-type SuccessfulDbUpsertResponse<T extends keyof ModelTypeMap> = ApiResponse & {
+type SuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof ModelTypeMap & string> = ApiResponse & {
     status: 'success'
-    record: ModelTypeMap[T]
+    record: M[T]
 }
 
-type UnsuccessfulDbUpsertResponse<T extends keyof ModelTypeMap> = ApiResponse & {
+type UnsuccessfulDbUpsertResponse<M extends ModelTypeMap, T extends keyof ModelTypeMap & string> = ApiResponse & {
     status: 'error'
-    errors: DbErrors<ModelTypeMap[T]>
-    record?: ModelTypeMap[T]
+    errors: DbErrors<M[T]>
+    record?: M[T]
 }
 
 
