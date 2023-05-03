@@ -11,7 +11,7 @@ export default class TapDemoApp extends Part<NoState> {
 
     async init() {
         this.loc = await Db().query("location")
-            .where({state: "Minnesota", foo: 'bar'})
+            .where({state: "Minnesota"})
             .includes({invoices: {}})
             .orderBy("created_at desc")
             .first()

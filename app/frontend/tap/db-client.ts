@@ -186,7 +186,7 @@ export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, 
      * @param modelType the camel_case name of the model
      */
     query<T extends keyof PM & string>(modelType: T) {
-        return new ModelQuery(modelType)
+        return new ModelQuery<PM,T,I>(modelType)
     }
 
 
@@ -198,7 +198,7 @@ export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, 
      * @param includes relations to include in the returned object
      */
     async find<T extends keyof PM & string>(modelType: T, id: string, includes?: I[T]): Promise<PM[T]> {
-        const query = new ModelQuery(modelType).where("id = ?", id)
+        const query = new ModelQuery<PM,T,I>(modelType).where("id = ?", id)
         if (includes) {
             query.includes(includes)
         }
