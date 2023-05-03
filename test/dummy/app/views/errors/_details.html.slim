@@ -1,0 +1,6 @@
+table.data.error-page-details
+	- @details.each do |k, v|
+		- unless k==:backtrace
+			tr
+				td.key= k
+				td.value= v

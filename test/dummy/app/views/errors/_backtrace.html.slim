@@ -1,0 +1,4 @@
+.error-page-backtrace.inset-box
+	pre
+		- @backtrace[0..10].each do |line|
+			.line= line

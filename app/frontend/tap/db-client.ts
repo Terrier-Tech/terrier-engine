@@ -18,8 +18,8 @@ type ModelIncludesMap<M extends ModelTypeMap> = Record<keyof M, any>
 /**
  * Map of columns to values for the given model type.
  */
-type WhereMap<PM extends ModelTypeMap, T extends keyof PM> = {
-    [col in keyof PM[T]]?: unknown
+type WhereMap<M> = {
+    [col in keyof M]?: unknown
 }
 
 /**
@@ -60,14 +60,14 @@ class ModelQuery<PM extends ModelTypeMap, T extends keyof PM & string, I extends
     constructor(readonly modelType: T) {
     }
 
-    private whereMaps = Array<WhereMap<PM,T>>()
+    private whereMaps = Array<WhereMap<PM[T]>>()
     private whereClauses = Array<WhereClause>()
 
     /**
      * Adds one or more filters to the query.
      * @param map a map of columns to scalar values.
      */
-    where(map: WhereMap<PM,T>): ModelQuery<PM,T,I>
+    where(map: WhereMap<PM[T]>): ModelQuery<PM,T,I>
 
     /**
      * Adds one or more filters to the query.
@@ -76,7 +76,7 @@ class ModelQuery<PM extends ModelTypeMap, T extends keyof PM & string, I extends
      */
     where(clause: string, ...args: unknown[]): ModelQuery<PM,T,I>
 
-    where(mapOrClause: WhereMap<PM,T> | string, ...args: unknown[]): ModelQuery<PM,T,I> {
+    where(mapOrClause: WhereMap<PM[T]> | string, ...args: unknown[]): ModelQuery<PM,T,I> {
         if (typeof mapOrClause == 'object') {
             this.whereMaps.push(mapOrClause)
         } else {

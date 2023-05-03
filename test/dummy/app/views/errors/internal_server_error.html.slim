@@ -1,0 +1,18 @@
+.error-page
+	.panel.alert
+		- message_lines = @ex.message.split("\n")
+		.panel-header
+			h3.with-icon
+				== heading_octicon :alert
+				= message_lines.first
+		.panel-content.padded
+			- if message_lines.count > 1
+				.pre-container
+					pre == message_lines[1..-1].join("\n")
+			- else
+				p Something when wrong while trying to load this page, please try again later.
+
+		h3.text-center.with-icon.alert
+			| Details
+		= render partial: 'backtrace'
+		= render partial: 'details'
