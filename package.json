@@ -1,4 +1,17 @@
 {
+  "name": "terrier-engine",
+  "type": "module",
+  "files": [
+    "*"
+  ],
+  "version": "4.0.3",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Terrier-Tech/terrier-engine"
+  },
+  "license": "MIT",
+  "scripts" : {
+  },
   "dependencies": {
     "tuff-core": "^0.24.1"
   },

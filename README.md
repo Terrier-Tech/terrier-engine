@@ -103,7 +103,8 @@ gem 'terrier-engine'
 And then execute:
 
 ```zsh
-$ bundle
+bundle
+npm i
 ```
 
 ## Development
@@ -122,6 +123,12 @@ Optionally link to puma-dev:
 
 ```zsh
 puma-dev link -n terrier-engine .
+```
+
+Whenever changes are made to `app/frontend/terrier`, be sure to publish the npm package:
+
+```zsh
+rails npm:publish
 ```
 
 

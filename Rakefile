@@ -19,6 +19,9 @@ load 'rails/tasks/engine.rake'
 
 load 'rails/tasks/statistics.rake'
 
+# so that we dont' need the app: prefix
+load 'lib/tasks/npm.rake'
+
 require 'bundler/gem_tasks'
 
 require 'rake/testtask'

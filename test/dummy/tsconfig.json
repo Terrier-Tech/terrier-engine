@@ -18,9 +18,9 @@
     "noImplicitReturns" : true,
     "baseUrl" : ".",
     "paths" : {
-      "@tap/*" : [
-        "../../app/frontend/tap/*",
-        "../app/frontend/tap/*"
+      "@terrier/*" : [
+        "../../app/frontend/terrier/*",
+        "../app/frontend/terrier/*"
       ]
     }
   }

@@ -12,7 +12,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@tap': path.resolve('../../app/frontend/tap')
+            '@terrier': path.resolve('../../app/frontend/terrier')
         }
     }
 });

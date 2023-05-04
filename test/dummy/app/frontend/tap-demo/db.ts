@@ -1,4 +1,4 @@
-import DbClient from "@tap/db-client"
+import DbClient from "@terrier/db-client"
 import {ModelIncludesMap, PersistedModelTypeMap, UnpersistedModelTypeMap} from "../gen/models"
 
 /**
