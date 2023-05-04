@@ -197,7 +197,7 @@ export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, 
      * @param id the id of the record
      * @param includes relations to include in the returned object
      */
-    async find<T extends keyof PM & string>(modelType: T, id: string, includes?: I[T]): Promise<PM[T]> {
+    async find<T extends keyof PM & string>(modelType: T, id: string, includes?: Includes<PM,T,I>): Promise<PM[T]> {
         const query = new ModelQuery<PM,T,I>(modelType).where("id = ?", id)
         if (includes) {
             query.includes(includes)
@@ -218,9 +218,9 @@ export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, 
      * @param idOrSlug the id or slug of the record
      * @param includes relations to include in the returned object
      */
-    async findByIdOrSlug<T extends keyof PM & string>(modelType: T, idOrSlug: string, includes?: I[T]): Promise<PM[T]> {
+    async findByIdOrSlug<T extends keyof PM & string>(modelType: T, idOrSlug: string, includes?: Includes<PM, T, I>): Promise<PM[T]> {
         const column = isUuid(idOrSlug) ? "id" : "slug"
-        const query = new ModelQuery(modelType).where(`${column} = ?`, idOrSlug)
+        const query = new ModelQuery<PM, T, I>(modelType).where(`${column} = ?`, idOrSlug)
         if (includes) {
             query.includes(includes)
         }

@@ -17,7 +17,7 @@ namespace :npm do
     version = Terrier::VERSION
     puts "Copying #{'package.json'.bold} and overwriting version to #{version.blue}"
     pkg_json = File.read 'package.json'
-    pkg_json.gsub /"version": "\d+\.\d+\.\d+"/, "\"version\":\s*\"#{version}\""
+    pkg_json.gsub! /"version":\s*"\d+\.\d+\.\d+"/, "\"version\": \"#{version}\""
     File.write "#{dir}/package.json", pkg_json
 
     # copy the contents of the directory
