@@ -13,12 +13,17 @@ namespace :npm do
       FileUtils.mkdir_p dir
     end
 
-    # copy package.json and overwrite the version
+    # overwrite the package version
     version = Terrier::VERSION
-    puts "Copying #{'package.json'.bold} and overwriting version to #{version.blue}"
-    pkg_json = File.read 'package.json'
+    puts "Overwriting package version to #{version.bold}"
+    pkg_in = 'package.json'
+    pkg_json = File.read pkg_in
     pkg_json.gsub! /"version":\s*"\d+\.\d+\.\d+"/, "\"version\": \"#{version}\""
-    File.write "#{dir}/package.json", pkg_json
+    File.write pkg_in, pkg_json
+
+    # copy package.json
+    puts "Copying #{'package.json'.bold}"
+    FileUtils.cp pkg_in, "#{dir}/package.json"
 
     # copy the contents of the directory
     from_dir = "app/frontend/terrier/"
