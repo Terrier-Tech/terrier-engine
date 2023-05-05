@@ -18,11 +18,16 @@ Logger.level = 'info'
  */
 export abstract class TerrierApp<TT extends ThemeType> extends TerrierPart<{theme: Theme<TT>}, TT> {
 
-    theme!: Theme<TT>
+    _theme!: Theme<TT>
+
+    get theme(): Theme<TT> {
+        return this._theme
+    }
+
     overlayPart!: OverlayPart
 
     async init() {
-        this.theme = this.state.theme
+        this._theme = this.state.theme
         this.overlayPart = this.makePart(OverlayPart, {})
         log.info("Initialized")
     }

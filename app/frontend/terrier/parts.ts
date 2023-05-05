@@ -6,6 +6,7 @@ import {Dropdown} from "./dropdowns"
 import {TerrierApp} from "./app"
 import Loading from "./loading"
 import Theme, {Action, ThemeType} from "./theme"
+import Toasts, {ToastOptions} from "./toasts";
 
 const log = new Logger('Parts')
 
@@ -31,6 +32,10 @@ export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
         return this.root as TerrierApp<TT> // this should always be true
     }
 
+    get theme(): Theme<TT> {
+        return this.app.theme
+    }
+
     /// Loading
 
     /**
@@ -50,7 +55,7 @@ export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
         if (!elem) {
             return
         }
-        Loading.showOverlay(elem)
+        Loading.showOverlay(elem, this.theme)
     }
 
     /**
@@ -88,6 +93,18 @@ export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
         }
     }
 
+
+    /// Toasts
+
+    /**
+     * Shows a toast message in a bubble in the upper right corner.
+     * @param message the message text
+     * @param options
+     */
+    showToast(message: string, options: ToastOptions<TT>) {
+        Toasts.show(message, options, this.theme)
+    }
+
 }
 
 
@@ -108,10 +125,6 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
 
     get app(): TerrierApp<TT> {
         return this.root as TerrierApp<TT> // this should always be true
-    }
-
-    get theme(): Theme<TT> {
-        return this.app.theme
     }
 
 
@@ -420,7 +433,7 @@ export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, 
             panel.div('.panel-content', content => {
                 this.renderContent(content)
             })
-            Fragments.panelActions(panel, this.getAllActions())
+            Fragments.panelActions(panel, this.getAllActions(), this.theme)
         })
     }
 }

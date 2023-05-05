@@ -1,23 +1,22 @@
 import { Logger } from "tuff-core/logging"
 import { createElement } from "tuff-core/html"
-import {ColorName} from "../../../../terrier-dot-tech/app/frontend/hub/gen/theme"
-import Icons, {IconName} from "../../../../terrier-dot-tech/app/frontend/hub/gen/icons"
+import Theme, {ThemeType} from "./theme";
 
 const log = new Logger('Toasts')
 
-export type ToastType = ColorName
-
-export type ToastOptions = {
-    icon?: IconName
+export type ToastOptions<TT extends ThemeType> = {
+    color: TT['colors']
+    icon?: TT['icons']
 }
 
 /**
  * Shows a toast message in a bubble in the upper right corner.
- * @param type the color of the bubble
  * @param message the message text
+ * @param options
+ * @param theme the theme used to render the toast
  */
-function show(type: ToastType, message: string, options?: ToastOptions) {
-    log.info(`Show ${type}: ${message}`)
+function show<TT extends ThemeType>(message: string, options: ToastOptions<TT>, theme: Theme<TT>) {
+    log.info(`Show ${options.color  }: ${message}`)
 
     // ensure the container exists
     let container = document.getElementById('toasts')
@@ -30,9 +29,9 @@ function show(type: ToastType, message: string, options?: ToastOptions) {
 
     // create the toast element
     const toast = createElement('div', (parent) => {
-        parent.class(type)
+        parent.class(options.color)
         if (options?.icon) {
-            Icons.renderIcon(parent, options.icon, 'white')
+            theme.renderIcon(parent, options.icon, 'white')
         }
         parent.span('.text', {text: message})
     })

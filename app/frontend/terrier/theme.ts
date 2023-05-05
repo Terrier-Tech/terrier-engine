@@ -1,14 +1,9 @@
 import {PartTag} from "tuff-core/parts"
 import {messages} from "tuff-core"
 
-const ColorNames = [
-    'link', 'primary', 'secondary', 'active', 'pending', 'success', 'alert', 'white', 'inactive'
-] as const
-
-export type ColorName = typeof ColorNames[number]
-
 export interface ThemeType {
-    icons: string
+    readonly icons: string
+    readonly colors: string
 }
 
 
@@ -23,10 +18,10 @@ export type Packet = {
 /**
  * An action that generates a button or link.
  */
-export type Action<T extends ThemeType> = {
+export type Action<TT extends ThemeType> = {
     title?: string
     tooltip?: string
-    icon?: T['icons']
+    icon?: TT['icons']
     href?: string
     classes?: string[]
     click?: Packet
@@ -36,16 +31,18 @@ export type Action<T extends ThemeType> = {
 /**
  * Options to pass to `render` that control how the actions are displayed.
  */
-export type RenderActionOptions = {
-    iconColor?: ColorName
-    badgeColor?: ColorName
+export type RenderActionOptions<TT extends ThemeType> = {
+    iconColor?: TT['colors']
+    badgeColor?: TT['colors']
     defaultClass?: string
 }
 
-export default abstract class Theme<T extends ThemeType> {
-    abstract renderIcon(parent: PartTag, icon: T['icons'], color?: ColorName): void
+export default abstract class Theme<TT extends ThemeType> {
+    abstract renderIcon(parent: PartTag, icon: TT['icons'], color?: TT['colors']): void
 
-    abstract colorValue(name: ColorName): string
+    abstract colorValue(name: TT['colors']): string
+
+    abstract getLoaderSrc(): string
 
     /**
      * Renders one ore more `Action`s into a parent tag.
@@ -53,7 +50,7 @@ export default abstract class Theme<T extends ThemeType> {
      * @param actions the action or actions to render
      * @param options additional rendering options
      */
-    renderAction(parent: PartTag, actions: Action<T> | Action<T>[], options?: RenderActionOptions) {
+    renderAction(parent: PartTag, actions: Action<TT> | Action<TT>[], options?: RenderActionOptions<TT>) {
         if (!Array.isArray(actions)) {
             actions = [actions]
         }

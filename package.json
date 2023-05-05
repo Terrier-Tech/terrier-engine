@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "scripts" : {
+    "check" : "tsc -p app/frontend -noEmit"
   },
   "dependencies": {
     "tuff-core": "^0.25.0"

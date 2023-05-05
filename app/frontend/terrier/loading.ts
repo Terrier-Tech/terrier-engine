@@ -1,7 +1,7 @@
 import { createElement } from "tuff-core/html"
 import Time from "tuff-core/time"
-// @ts-ignore
-import loaderUrl from '../../../../terrier-dot-tech/app/frontend/hub/images/optimized/terrier-hub-loader.svg'
+import Theme, {ThemeType} from "./theme";
+
 
 
 const overlayClass = 'loading-overlay'
@@ -18,10 +18,13 @@ function getOverlay(container: Element): HTMLDivElement | null {
     return null
 }
 
-function createOverlay(): HTMLDivElement {
+function createOverlay<TT extends ThemeType>(theme: Theme<TT>): HTMLDivElement {
     return createElement('div', div => {
         div.class(overlayClass)
-        div.img({src: loaderUrl})
+        const loaderSrc = theme.getLoaderSrc()
+        if (loaderSrc?.length) {
+            div.img({src: loaderSrc})
+        }
     })
 }
 
@@ -29,12 +32,12 @@ function createOverlay(): HTMLDivElement {
  * Creates and shows a loading overlay in the given container.
  * @param container
  */
-function showOverlay(container: Element) {
+function showOverlay<TT extends ThemeType>(container: Element, theme: Theme<TT>) {
     const existingOverlay = getOverlay(container)
     if (existingOverlay) {
         return
     }
-    const overlay = createOverlay()
+    const overlay = createOverlay(theme)
     container.append(overlay)
     Time.wait(0).then(() => overlay.classList.add("active")) // start css fade in
 }

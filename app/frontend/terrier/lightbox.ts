@@ -1,7 +1,6 @@
 import { Logger } from "tuff-core/logging"
 import { untypedKey } from "tuff-core/messages"
-import {TerrierPart} from "./parts"
-import {PartTag} from "tuff-core/parts"
+import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "./app"
 
 const log = new Logger('Lightbox')
@@ -49,12 +48,12 @@ function init(root: HTMLElement, app: TerrierApp<any>, containerClass: string) {
 type LightboxState = { src: string }
 
 function showPart(app: TerrierApp<any>, state: LightboxState) {
-    app.makeOverlay(LightboxPart, state, 'lightbox')
+    app.makeOverlay(LightboxPart, {app,...state}, 'lightbox')
 }
 
 const closeKey = untypedKey()
 
-class LightboxPart extends TerrierPart<LightboxState> {
+class LightboxPart extends Part<LightboxState & {app: TerrierApp<any>}> {
 
     async init() {
         this.onClick(closeKey, _ => {
@@ -78,7 +77,7 @@ class LightboxPart extends TerrierPart<LightboxState> {
     close() {
         this.element?.classList.remove('active')
         setTimeout(_ => {
-            this.app.clearOverlay('lightbox')
+            this.state.app.clearOverlay('lightbox')
         }, 500)
     }
 }

@@ -1,6 +1,6 @@
 import {PartTag} from "tuff-core/parts"
 import {AnchorTagAttrs, HtmlParentTag} from "tuff-core/html"
-import Theme, {Action, ColorName, Packet, ThemeType} from "./theme"
+import Theme, {Action, Packet, ThemeType} from "./theme"
 import {ActionLevel, PanelActions} from "./parts"
 
 /**
@@ -168,7 +168,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     private _value?: string
     private _valueIcon?: TT['icons']
-    private _valueIconColor?: ColorName
+    private _valueIconColor?: TT['colors']
     private _valueClass?: string[]
 
     private _href?: string
@@ -178,7 +178,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     private _tooltip?: string
 
-    value(value: string, icon?: TT['icons'], iconColor?: ColorName) {
+    value(value: string, icon?: TT['icons'], iconColor?: TT['colors']) {
         this._value = value
         this._valueIcon = icon
         this._valueIconColor = iconColor
@@ -350,7 +350,7 @@ function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: 
  * @param icon
  * @param iconColor
  */
-function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor?: ColorName) {
+function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor?: TT['colors']) {
     return parent.div('.simple-value.shrink', button => {
         if (icon) {
             theme.renderIcon(button, icon, iconColor || 'link')
