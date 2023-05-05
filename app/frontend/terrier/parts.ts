@@ -1,0 +1,426 @@
+import { Logger } from "tuff-core/logging"
+import { Part } from "tuff-core/parts"
+import {PartParent, PartTag, NoState} from "tuff-core/parts"
+import Fragments from "./fragments"
+import {Dropdown} from "./dropdowns"
+import {TerrierApp} from "./app"
+import Loading from "./loading"
+import Theme, {Action, ThemeType} from "./theme"
+
+const log = new Logger('Parts')
+
+export type PanelActions<TT extends ThemeType> = {
+    primary: Array<Action<TT>>
+    secondary: Array<Action<TT>>
+    tertiary: Array<Action<TT>>
+}
+
+export type ActionLevel = keyof PanelActions<any>
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrier Part
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Base class for ALL parts in a Terrier application.
+ */
+export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
+
+    get app(): TerrierApp<TT> {
+        return this.root as TerrierApp<TT> // this should always be true
+    }
+
+    /// Loading
+
+    /**
+     * This can be overloaded if the loading overlay should go
+     * somewhere other than the part's root element.
+     */
+    getLoadingContainer(): Element | null | undefined {
+        return this.element
+    }
+
+
+    /**
+     * Shows the loading animation on top of the part.
+     */
+    startLoading() {
+        const elem = this.getLoadingContainer()
+        if (!elem) {
+            return
+        }
+        Loading.showOverlay(elem)
+    }
+
+    /**
+     * Removes the loading animation from the part.
+     */
+    stopLoading() {
+        const elem = this.getLoadingContainer()
+        if (!elem) {
+            return
+        }
+        Loading.removeOverlay(elem)
+    }
+
+    /**
+     * Shows the loading overlay until the given function completes (either returns successfully or throws an exception)
+     * @param func
+     */
+    showLoading(func: () => void): void
+    showLoading(func: () => Promise<void>): Promise<void>
+    showLoading(func: () => void | Promise<void>): void | Promise<void>  {
+        this.startLoading()
+        let stopImmediately = true
+        try {
+            const res = func()
+            if (res) {
+                stopImmediately = false
+                return res.finally(() => {
+                    this.stopLoading()
+                })
+            }
+        } finally {
+            if (stopImmediately) {
+                this.stopLoading()
+            }
+        }
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Content Part
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Base class for all Parts that render some main content, like pages, panels, and modals.
+ */
+export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T, TT> {
+
+    /**
+     * All ContentParts must implement this to render their actual content.
+     * @param parent
+     */
+    abstract renderContent(parent: PartTag): void
+
+    get app(): TerrierApp<TT> {
+        return this.root as TerrierApp<TT> // this should always be true
+    }
+
+    get theme(): Theme<TT> {
+        return this.app.theme
+    }
+
+
+    protected _title = ''
+
+    /**
+     * Sets the page, panel, or modal title.
+     * @param title
+     */
+    setTitle(title: string) {
+        this._title = title
+    }
+
+    protected _icon: TT['icons'] | null = null
+
+    setIcon(icon: TT['icons']) {
+        this._icon = icon
+    }
+
+    protected _breadcrumbClasses: string[] = []
+
+    addBreadcrumbClass(c: string) {
+        this._breadcrumbClasses.push(c)
+    }
+
+
+    /// Actions
+
+    // stored actions can be either an action object or a reference to a named action
+    actions = {
+        primary: Array<Action<TT> | string>(),
+        secondary: Array<Action<TT> | string>(),
+        tertiary: Array<Action<TT> | string>()
+    }
+
+    namedActions: Record<string, { action: Action<TT>, level: ActionLevel }> = {}
+
+    /**
+     * Add an action to the part, or replace a named action if it already exists.
+     * @param action the action to add
+     * @param level whether it's a primary, secondary, or tertiary action
+     * @param name a name to be given to this action, so it can be accessed later
+     */
+    addAction(action: Action<TT>, level: ActionLevel = 'primary', name?: string) {
+        if (name?.length) {
+            if (name in this.namedActions) {
+                const currentLevel = this.namedActions[name].level
+                if (level != currentLevel) {
+                    const index = this.actions[currentLevel].indexOf(name)
+                    this.actions[currentLevel].splice(index, 1)
+                    this.actions[level].push(name)
+                }
+                this.namedActions[name].action = action
+            } else {
+                this.namedActions[name] = { action, level }
+                this.actions[level].push(name)
+            }
+        } else {
+            this.actions[level].push(action)
+        }
+    }
+
+    /**
+     * Returns the action definition for the action with the given name, or undefined if there is no action with that name
+     * @param name
+     */
+    getNamedAction(name: string): Action<TT> | undefined {
+        return this.namedActions[name].action
+    }
+
+    /**
+     * Removes the action with the given name
+     * @param name
+     */
+    removeNamedAction(name: string) {
+        if (!(name in this.namedActions)) return
+        const level = this.actions[this.namedActions[name].level]
+        delete this.namedActions[name]
+        const actionIndex = level.indexOf(name)
+        if (actionIndex >= 0) {
+            level.splice(actionIndex, 1)
+        }
+    }
+
+    /**
+     * Clears the actions for this part
+     * @param level whether to clear the primary, secondary, or both sets of actions
+     */
+    clearActions(level: ActionLevel) {
+        for (const action of this.actions[level]) {
+            if (typeof action === 'string') {
+                delete this.namedActions[action]
+            }
+        }
+        this.actions[level] = []
+    }
+
+    getAllActions(): PanelActions<TT> {
+        return {
+            primary: this.getActions('primary'),
+            secondary: this.getActions('secondary'),
+            tertiary: this.getActions('tertiary'),
+        }
+    }
+
+    getActions(level: ActionLevel): Action<TT>[] {
+        return this.actions[level].map(action => {
+            return (typeof action === 'string') ? this.namedActions[action].action : action
+        })
+    }
+
+
+    /// Dropdowns
+
+    /**
+     * Shows the given dropdown part on the page.
+     * It's generally better to call `toggleDropdown` instead so that the dropdown will be
+     * hidden upon a subsequent click on the target.
+     * @param constructor a constructor for a dropdown part
+     * @param state the dropdown's state
+     * @param target the target element around which to show the dropdown
+     */
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TT>, DropdownStateType>(
+        constructor: {new(p: PartParent, id: string, state: DropdownStateType): DropdownType;},
+        state: DropdownStateType,
+        target: EventTarget | null) {
+        if (!(target && target instanceof HTMLElement)) {
+            throw "Trying to show a dropdown without an element target!"
+        }
+        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown') as Dropdown<DropdownStateType, TT>
+        dropdown.parentPart = this
+        dropdown.anchor(target)
+        this.app.lastDropdownTarget = target
+    }
+
+    clearDropdown() {
+        this.app.clearOverlay('dropdown')
+    }
+
+    /**
+     * Calls `makeDropdown` only if there's not a dropdown currently originating from the target.
+     * @param constructor a constructor for a dropdown part
+     * @param state the dropdown's state
+     * @param target the target element around which to show the dropdown
+     */
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TT>, DropdownStateType>(
+        constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
+        state: DropdownStateType,
+        target: EventTarget | null) {
+        if (target && target instanceof HTMLElement && target == this.app.lastDropdownTarget) {
+            this.clearDropdown()
+        } else {
+            this.makeDropdown(constructor, state, target)
+        }
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Page
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Whether some content should be constrained to a reasonable width or span the entire screen.
+ */
+export type ContentWidth = "normal" | "wide"
+
+
+/**
+ * A part that renders content to a full page.
+ */
+export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, TT> {
+
+    /// Breadcrumbs
+
+    private _breadcrumbs = Array<Action<TT>>()
+
+    addBreadcrumb(crumb: Action<TT>) {
+        this._breadcrumbs.push(crumb)
+    }
+
+
+    /**
+     * Sets both the page title and the last breadcrumb.
+     * @param title
+     */
+    setTitle(title: string) {
+        super.setTitle(title)
+        document.title = `${title} :: Terrier Hub`
+    }
+
+    private _titleHref?: string
+
+    /**
+     * Adds an href to the title (last) breadcrumb.
+     * @param href
+     */
+    setTitleHref(href: string) {
+        this._titleHref = href
+    }
+
+    /**
+     * Whether the main content should be constrained to a reasonable width (default) or span the entire screen.
+     */
+    protected mainContentWidth: ContentWidth = "normal"
+
+    render(parent: PartTag) {
+        parent.div(`.page-part.content-width-${this.mainContentWidth}`, page => {
+            page.div('.flex.top-row', topRow => {
+                // breadcrumbs
+                if (this._breadcrumbs.length || this._title?.length) {
+                    topRow.h1('.breadcrumbs', h1 => {
+                        const crumbs = Array.from(this._breadcrumbs)
+
+                        // add a breadcrumb for the page title
+                        const titleCrumb: Action<TT> = {
+                            title: this._title,
+                            icon: this._icon || undefined,
+                        }
+                        if (this._titleHref) {
+                            titleCrumb.href = this._titleHref
+                        }
+                        if (this._breadcrumbClasses?.length) {
+                            titleCrumb.classes = this._breadcrumbClasses
+                        }
+                        crumbs.push(titleCrumb)
+
+                        this.app.theme.renderAction(h1, crumbs)
+                    })
+                }
+
+                // tertiary actions
+                if (this.actions.tertiary.length) {
+                    topRow.div('.tertiary-actions', actions => {
+                        this.app.theme.renderAction(actions, this.getActions('tertiary'))
+                    })
+                }
+            }) // topRow
+
+            page.div('.lighting')
+            page.div('.page-main', main => {
+                this.renderContent(main)
+                main.div('.page-actions', actions => {
+                    actions.div('.secondary-actions', container => {
+                        this.app.theme.renderAction(container, this.getActions('secondary'), {iconColor: 'white', defaultClass: 'secondary'})
+                    })
+                    actions.div('.primary-actions', container => {
+                        this.app.theme.renderAction(container, this.getActions('primary'), {iconColor: 'white', defaultClass: 'primary'})
+                    })
+                })
+            })
+        })
+    }
+}
+
+
+
+/**
+ * Default page part if the router can't find the path.
+ */
+export class NotFoundRoute<TT extends ThemeType> extends PagePart<NoState, TT> {
+    async init() {
+        this.setTitle("Page Not Found")
+    }
+
+    renderContent(parent: PartTag) {
+        log.warn(`Not found: ${this.context.href}`)
+        parent.h1({text: "Not Found"})
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Panel
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * A part that renders content inside a panel.
+ */
+export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, TT> {
+
+    getLoadingContainer() {
+        return this.element?.getElementsByClassName('panel')[0]
+    }
+
+    protected get panelClasses(): string[] {
+        return []
+    }
+
+    render(parent: PartTag) {
+        parent.div('.panel', panel => {
+            panel.class(...this.panelClasses)
+            if (this._title?.length || this.actions.tertiary.length) {
+                panel.div('.panel-header', header => {
+                    header.h2(h2 => {
+                        if (this._icon) {
+                            this.app.theme.renderIcon(h2, this._icon, 'link')
+                        }
+                        h2.div('.title', {text: this._title || 'Call setTitle()'})
+                        this.theme.renderAction(h2, this.getActions('tertiary'))
+                    })
+                })
+            }
+            panel.div('.panel-content', content => {
+                this.renderContent(content)
+            })
+            Fragments.panelActions(panel, this.getAllActions())
+        })
+    }
+}
