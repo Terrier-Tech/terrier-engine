@@ -3,9 +3,9 @@ import {Location} from '../gen/models'
 import Db from './db'
 import {Logger} from "tuff-core/logging"
 
-const log = new Logger('TapDemoApp')
+const log = new Logger('DemoApp')
 
-export default class TapDemoApp extends Part<NoState> {
+export default class DemoApp extends Part<NoState> {
 
     loc?: Location
 
@@ -23,7 +23,7 @@ export default class TapDemoApp extends Part<NoState> {
     }
 
     render(parent: PartTag) {
-        parent.h1({text: `Terrier Application Platform`})
+        parent.h1({text: `Terrier Engine Platform`})
         parent.h2({text: `Demo App`})
         if (this.loc) {
             parent.p({text: `Location: ${this.loc.display_name}`})

@@ -1,8 +1,8 @@
 class FrontendController < ApplicationController
 
-  def tap_demo
-    @title = "TAP Demo"
-    @entrypoint = 'tap-demo'
+  def platform_demo
+    @title = "Platform Demo"
+    @entrypoint = 'platform-demo'
   end
 
 end

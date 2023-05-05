@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
   get 'reports' => 'scripts#reports'
 
-  get 'frontend/tap_demo'
+  get 'frontend/platform_demo'
 
   mount Terrier::Engine, at: "/"
 
