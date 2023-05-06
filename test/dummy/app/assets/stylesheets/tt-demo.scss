@@ -1,13 +1,22 @@
 
+$demo-colors: (
+	body: #333,
+	link: #1e6c7b,
+	primary: #01a7b1,
+	secondary: #1e6c7b,
+	active: #f49891,
+	pending: #eeba2b,
+	alert: #ed584c,
+	success: #01b201,
+	inactive: #adadad,
+);
+
 .tt-demo {
 	--demo-border-color: #ccc;
-	--demo-border-radius: 4px;
+	--demo-border-radius: 6px;
 	width: 900px;
 	max-width: 92%;
 	margin: 0 auto;
-	h2 {
-		text-align: center;
-	}
 
 	.annotated {
 		position: relative;
@@ -44,5 +53,16 @@
 
 	.demo-content {
 		padding: var(--tt-pad);
+	}
+}
+
+
+@each $name, $color in $demo-colors {
+	// button colors
+	.tt-button .#{$name},
+	.tt-panel .panel-actions a.#{$name},
+	.tt-panel .panel-header a.#{$name},
+	.tt-page-part .page-main .page-actions a.#{$name} {
+		--color: #{$color};
 	}
 }

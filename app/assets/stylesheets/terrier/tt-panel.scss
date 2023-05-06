@@ -1,17 +1,23 @@
+@import "tt-mixins";
 
 .tt-panel {
 	border-radius: var(--tt-border-radius);
 	background: var(--tt-panel-background);
+	@include tt-box-shadow;
 	.panel-header {
 		display: flex;
 		align-items: center;
+		gap: var(--tt-gap);
+		padding: var(--tt-pad);
 		h1, h2, h3, h4, h5 {
 			margin: 0;
 			display: flex;
-			padding: var(--tt-pad);
 			gap: var(--tt-gap);
 			flex: 1 1 auto;
 			min-width: 0;
+		}
+		a {
+			@include tt-button;
 		}
 	}
 	.panel-content {
@@ -23,5 +29,26 @@
 		&.padded {
 			padding: var(--tt-pad);
 		}
+	}
+	.panel-actions {
+		display: flex;
+		align-items: center;
+		.primary-actions, .secondary-actions {
+			padding: var(--tt-pad);
+			gap: var(--tt-gap);
+			display: flex;
+			align-items: center;
+			a {
+				@include tt-button;
+			}
+		}
+		.primary-actions {
+			flex: 1 1 auto;
+			justify-content: right;
+		}
+	}
+	&.padded .panel-content {
+		// .padded panel implies padded content
+		padding: var(--tt-pad);
 	}
 }

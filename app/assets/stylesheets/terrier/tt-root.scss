@@ -3,11 +3,19 @@
 */
 
 :root {
-	--tt-pad: 1em;
+	--tt-pad: 16px;
 	--tt-gap: var(--tt-pad);
 	--tt-border-radius: 4px;
 	--tt-panel-background: #fff;
+	--tt-body-color: #333;
+	--tt-white-color: #fff;
+	--tt-shadow-color: rgba(0, 0, 0, 0.15);
+	--tt-shadow-spread: 6px;
 	--tt-tablet-breakpoint: 1050px; // tablet portrait
 	--tt-mobile-breakpoint: 850px; // tablet portrait
 	--tt-phone-breakpoint: 550px;
+	--tt-scale-push-factor: 0.05;
+	--tt-button-height: 32px;
+	--tt-icon-size: 24px;
+	--tt-primary-color: #d69338;
 }

@@ -90,7 +90,7 @@ export class ActionsDropdown<TT extends ThemeType> extends Dropdown<Array<Action
                 }
             })
         }
-        this.theme.renderAction(parent, this.state, {iconColor: 'white'})
+        this.theme.renderActions(parent, this.state, {iconColor: 'white'})
     }
 
 }

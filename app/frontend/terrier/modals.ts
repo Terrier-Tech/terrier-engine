@@ -33,7 +33,7 @@ export abstract class ModalPart<T, TT extends ThemeType> extends ContentPart<T, 
                 this.theme.renderIcon(header, this._icon, 'secondary')
             }
             header.h2({text: this._title || 'Call setTitle()'})
-            this.theme.renderAction(header, this.getActions('tertiary'), {defaultClass: 'secondary'})
+            this.theme.renderActions(header, this.getActions('tertiary'), {defaultClass: 'secondary'})
             header.a('.close-modal', closeButton => {
                 this.theme.renderIcon(closeButton, 'close')
             }).emitClick(modalPopKey)
@@ -46,10 +46,10 @@ export abstract class ModalPart<T, TT extends ThemeType> extends ContentPart<T, 
         if (secondaryActions.length || primaryActions.length) {
             parent.div('.modal-actions', actions => {
                 actions.div('.secondary-actions', container => {
-                    this.theme.renderAction(container, secondaryActions, {iconColor: 'white', defaultClass: 'secondary'})
+                    this.theme.renderActions(container, secondaryActions, {iconColor: 'white', defaultClass: 'secondary'})
                 })
                 actions.div('.primary-actions', container => {
-                    this.theme.renderAction(container, primaryActions, {iconColor: 'white', defaultClass: 'primary'})
+                    this.theme.renderActions(container, primaryActions, {iconColor: 'white', defaultClass: 'primary'})
                 })
             })
         }

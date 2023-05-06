@@ -333,8 +333,8 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
     protected mainContentWidth: ContentWidth = "normal"
 
     render(parent: PartTag) {
-        parent.div(`.page-part.content-width-${this.mainContentWidth}`, page => {
-            page.div('.flex.top-row', topRow => {
+        parent.div(`.tt-page-part.content-width-${this.mainContentWidth}`, page => {
+            page.div('.tt-flex.top-row', topRow => {
                 // breadcrumbs
                 if (this._breadcrumbs.length || this._title?.length) {
                     topRow.h1('.breadcrumbs', h1 => {
@@ -353,14 +353,14 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
                         }
                         crumbs.push(titleCrumb)
 
-                        this.app.theme.renderAction(h1, crumbs)
+                        this.app.theme.renderActions(h1, crumbs)
                     })
                 }
 
                 // tertiary actions
                 if (this.actions.tertiary.length) {
                     topRow.div('.tertiary-actions', actions => {
-                        this.app.theme.renderAction(actions, this.getActions('tertiary'))
+                        this.app.theme.renderActions(actions, this.getActions('tertiary'))
                     })
                 }
             }) // topRow
@@ -370,10 +370,10 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
                 this.renderContent(main)
                 main.div('.page-actions', actions => {
                     actions.div('.secondary-actions', container => {
-                        this.app.theme.renderAction(container, this.getActions('secondary'), {iconColor: 'white', defaultClass: 'secondary'})
+                        this.app.theme.renderActions(container, this.getActions('secondary'), {iconColor: 'white', defaultClass: 'secondary'})
                     })
                     actions.div('.primary-actions', container => {
-                        this.app.theme.renderAction(container, this.getActions('primary'), {iconColor: 'white', defaultClass: 'primary'})
+                        this.app.theme.renderActions(container, this.getActions('primary'), {iconColor: 'white', defaultClass: 'primary'})
                     })
                 })
             })
@@ -409,7 +409,7 @@ export class NotFoundRoute<TT extends ThemeType> extends PagePart<NoState, TT> {
 export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, TT> {
 
     getLoadingContainer() {
-        return this.element?.getElementsByClassName('panel')[0]
+        return this.element?.getElementsByClassName('tt-panel')[0]
     }
 
     protected get panelClasses(): string[] {
@@ -417,7 +417,7 @@ export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, 
     }
 
     render(parent: PartTag) {
-        parent.div('.panel', panel => {
+        parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
             if (this._title?.length || this.actions.tertiary.length) {
                 panel.div('.panel-header', header => {
@@ -426,8 +426,8 @@ export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, 
                             this.app.theme.renderIcon(h2, this._icon, 'link')
                         }
                         h2.div('.title', {text: this._title || 'Call setTitle()'})
-                        this.theme.renderAction(h2, this.getActions('tertiary'))
                     })
+                    this.theme.renderActions(header, this.getActions('tertiary'))
                 })
             }
             panel.div('.panel-content', content => {

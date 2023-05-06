@@ -48,7 +48,7 @@ abstract class ContentFragment<TT extends ThemeType> {
 
 export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
     constructor(theme: Theme<TT>) {
-        super('panel', theme)
+        super('tt-panel', theme)
     }
 
     /// Actions
@@ -83,7 +83,7 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
                         }
                         h2.div('.title', {text: this._title})
                     })
-                    this.theme.renderAction(header, this.actions.tertiary)
+                    this.theme.renderActions(header, this.actions.tertiary)
                 })
             }
             panel.div(`.${this.prefix}-content`, content => {
@@ -106,10 +106,10 @@ function panelActions<TT extends ThemeType>(panel: PartTag, actions: PanelAction
     if (actions.primary.length || actions.secondary.length) {
         panel.div('.panel-actions', actionsContainer => {
             actionsContainer.div('.secondary-actions', secondaryContainer => {
-                theme.renderAction(secondaryContainer, actions.secondary, {iconColor: 'white', defaultClass: 'link'})
+                theme.renderActions(secondaryContainer, actions.secondary, {iconColor: 'white', defaultClass: 'link'})
             })
             actionsContainer.div('.primary-actions', primaryContainer => {
-                theme.renderAction(primaryContainer, actions.primary, {iconColor: 'white'})
+                theme.renderActions(primaryContainer, actions.primary, {iconColor: 'white'})
             })
         })
     }
@@ -334,7 +334,7 @@ function labeledList<TT extends ThemeType>(theme: Theme<TT>) {
  * @param icon
  */
 function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons']) {
-    return parent.a('.button', button => {
+    return parent.a('.tt-button', button => {
         if (icon) {
             theme.renderIcon(button, icon, 'white')
         }

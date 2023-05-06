@@ -50,7 +50,7 @@ export default abstract class Theme<TT extends ThemeType> {
      * @param actions the action or actions to render
      * @param options additional rendering options
      */
-    renderAction(parent: PartTag, actions: Action<TT> | Action<TT>[], options?: RenderActionOptions<TT>) {
+    renderActions(parent: PartTag, actions: Action<TT> | Action<TT>[], options?: RenderActionOptions<TT>) {
         if (!Array.isArray(actions)) {
             actions = [actions]
         }
@@ -58,8 +58,9 @@ export default abstract class Theme<TT extends ThemeType> {
             let iconColor = options?.iconColor
             const attrs = action.tooltip?.length ? {data: {tooltip: action.tooltip}} : {}
             parent.a(attrs, a => {
-                if (action.classes?.length) {
-                    a.class(...action.classes)
+                const classes = action.classes || []
+                if (classes?.length) {
+                    a.class(...classes)
                 } else if (options?.defaultClass?.length) {
                     a.class(options.defaultClass)
                 }

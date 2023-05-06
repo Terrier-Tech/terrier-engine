@@ -1,0 +1,208 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// Text
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin tt-single-line {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+// override the default to use our custom white color
+@mixin tt-inset-white-text {
+	color: var(--tt-white-color);
+	text-shadow: 0 -1px 0 rgba(#000, 0.2);
+}
+
+
+// same as tt-inset-text but uses a drop-shadow filter instead of a text-shadow
+// meant to be used with a non-white image
+@mixin tt-inset-img {
+	filter: drop-shadow(0 1px 0 rgba(#fff, 0.2));
+}
+
+
+// same as tt-inset-white-text but uses a drop-shadow filter instead of a text-shadow
+// uses a top dark shadow since it's meant to be used with a white image
+@mixin tt-inset-white-img {
+	filter: drop-shadow(0 -1px 0 rgba(var(--tt-shadow-color), 0.2));
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Slightly 3D backgrounds
+////////////////////////////////////////////////////////////////////////////////
+
+$color-diff: 0.08;
+
+@mixin tt-raised-bg($color, $pressable: true, $diff-mult: 1, $disabled: false) {
+	$diff: ($color-diff * $diff-mult);
+	@if $disabled {
+		$transparent-amount: ($color-diff * $diff-mult / 2);
+	}
+	$light: transparentize(white, 1.0 - $diff);
+	$dark: transparentize(black, 1.0 - $diff);
+
+	background: $color linear-gradient($light, $dark);
+	background-blend-mode: hard-light;
+	@if $pressable {
+		&:hover {
+			background-image: linear-gradient(opacify($light, $diff), opacify($dark, $diff));
+		}
+	}
+	@if $pressable and not $disabled {
+		&:active {
+			background-image: linear-gradient(transparentize($dark, $diff / 2), transparentize($light, $diff / 2));
+		}
+	}
+}
+
+@mixin tt-concave-bg($color, $pressable: true, $diff-mult: 0.5) {
+	$transparent-amount: ($color-diff * $diff-mult);
+	$light: transparentize(white, 1.0 - $transparent-amount);
+	$dark: transparentize(black, 1.0 - $transparent-amount);
+
+	background: $color linear-gradient($dark, $light);
+	background-blend-mode: hard-light;
+	@if $pressable {
+		&:hover {
+			background-image: linear-gradient(opacify($dark, $transparent-amount), opacify($light, $transparent-amount));
+		}
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Rounded Corners
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin tt-rounded-corners {
+	border-radius: var(--tt-border-radius);
+}
+
+@mixin tt-top-rounded-corners {
+	border-top-left-radius: var(--tt-border-radius);
+	border-top-right-radius: var(--tt-border-radius);
+}
+
+@mixin tt-bottom-rounded-corners {
+	border-bottom-left-radius: var(--tt-border-radius);
+	border-bottom-right-radius: var(--tt-border-radius);
+}
+
+@mixin tt-left-rounded-corners {
+	border-top-left-radius: var(--tt-border-radius);
+	border-bottom-left-radius: var(--tt-border-radius);
+}
+
+@mixin tt-right-rounded-corners {
+	border-top-right-radius: var(--tt-border-radius);
+	border-bottom-right-radius: var(--tt-border-radius);
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Interactions
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin tt-no-select {
+	-webkit-user-select: none; /* Chrome all / Safari all */
+	-moz-user-select: none; /* Firefox all */
+	-ms-user-select: none; /* IE 10+ */
+	user-select: none;
+}
+
+@mixin tt-box-shadow {
+	box-shadow: 0 calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
+}
+
+@mixin tt-scale-push {
+	@include tt-no-select;
+	&:hover {
+		transform: scale(calc(1 + var(--tt-scale-push-factor)));
+	}
+	&:active {
+		transform: scale(calc(1 - var(--tt-scale-push-factor)));
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Buttons
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin tt-button {
+	--iconSize: var(--tt-icon-size);
+	--fontSize: calc(var(--iconSize) / 2);
+	--color: var(--tt-primary-color);
+	border-radius: calc(var(--iconSize) * 2);
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	gap: 0; // let the title padding take care of this
+
+	line-height: 1;
+	font-weight: bold;
+	font-size: var(--fontSize);
+	text-align: center;
+	@include tt-no-select;
+
+	min-height: var(--tt-button-height);
+	padding: calc((var(--tt-button-height) - var(--tt-icon-size))/2) calc((var(--tt-button-height) - var(--tt-icon-size))*2);
+
+	@include tt-inset-white-text;
+	@include tt-raised-bg(#{var(--color)});
+
+	div.icon {
+		img, svg {
+			width: var(--iconSize);
+			height: var(--iconSize);
+			fill: var(--tt-white-color);
+			@include tt-inset-white-img;
+
+			* {
+				color: var(--tt-white-color);
+			}
+		}
+	}
+
+	.title {
+		padding: 8px;
+	}
+
+	&.large {
+		gap: calc(var(--tt-gap) / 2);
+		--iconSize: calc(var(--tt-icon-size) * 1.5);
+	}
+	&.x-large {
+		gap: calc(var(--tt-gap) / 2);
+		--iconSize: calc(var(--tt-icon-size) * 2);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Bubbles
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin bubble($clickable: false) {
+	display: block;
+	padding: 1em;
+	@include tt-rounded-corners;
+	@include tt-inset-white-text;
+	text-align: center;
+	font-weight: bold;
+	&.white {
+		// can't have white text on white background
+		color: var(--tt-body-color);
+	}
+	ul {
+		margin: 0;
+		padding-left: 1em;
+
+		li {
+			text-align: left;
+		}
+	}
+}

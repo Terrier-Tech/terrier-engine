@@ -1,0 +1,39 @@
+@import "tt-mixins";
+
+.tt-page-part {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tt-gap);
+	.top-row {
+		h1.breadcrumbs {
+			display: flex;
+			flex: 1 1 auto;
+		}
+		.tertiary-actions {
+			flex: 0 0 auto;
+			a {
+				@include tt-button;
+			}
+		}
+	}
+	.page-main {
+
+	}
+	.page-actions {
+		display: flex;
+		align-items: center;
+		.primary-actions, .secondary-actions {
+			padding: var(--tt-pad);
+			gap: var(--tt-gap);
+			display: flex;
+			align-items: center;
+			a {
+				@include tt-button;
+			}
+		}
+		.primary-actions {
+			flex: 1 1 auto;
+			justify-content: right;
+		}
+	}
+}
