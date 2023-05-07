@@ -20,7 +20,7 @@ export abstract class ModalPart<T, TT extends ThemeType> extends ContentPart<T, 
 
 
     get parentClasses(): Array<string> {
-        return ['modal-part']
+        return ['modal-part', 'tt-typography']
     }
 
     protected pop() {
@@ -35,7 +35,7 @@ export abstract class ModalPart<T, TT extends ThemeType> extends ContentPart<T, 
             header.h2({text: this._title || 'Call setTitle()'})
             this.theme.renderActions(header, this.getActions('tertiary'), {defaultClass: 'secondary'})
             header.a('.close-modal', closeButton => {
-                this.theme.renderIcon(closeButton, 'close')
+                this.theme.renderCloseIcon(closeButton)
             }).emitClick(modalPopKey)
         })
         parent.div('.modal-content', content => {
@@ -101,7 +101,7 @@ export class ModalStackPart<TT extends ThemeType> extends TerrierPart<{}, TT> {
         const elem = this.element
         this.displayClass = 'hide'
         if (elem) {
-            const stackElem = elem.querySelector('.modal-stack')
+            const stackElem = elem.querySelector('.tt-modal-stack')
             if (stackElem) {
                 stackElem.classList.remove('show')
             }
@@ -128,7 +128,7 @@ export class ModalStackPart<TT extends ThemeType> extends TerrierPart<{}, TT> {
         if (this.displayClass == 'show') {
             classes.push(this.displayClass)
         }
-        parent.div('.modal-stack', {classes}, stack => {
+        parent.div('.tt-modal-stack', {classes}, stack => {
             stack.div('.modal-container', container => {
                 this.eachChild(part => {
                     container.part(part)
@@ -139,7 +139,7 @@ export class ModalStackPart<TT extends ThemeType> extends TerrierPart<{}, TT> {
 
 
     update(root: HTMLElement) {
-        const stack = root.querySelector('.modal-stack')
+        const stack = root.querySelector('.tt-modal-stack')
         if (stack && this.displayClass == 'show') {
             setTimeout(
                 () => {

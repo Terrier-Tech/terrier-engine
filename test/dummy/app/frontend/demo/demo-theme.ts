@@ -31,4 +31,9 @@ export default class DemoTheme extends Theme<DemoThemeType> {
         return "";
     }
 
+    renderCloseIcon(parent: PartTag, _color: DemoThemeType["colors"] | undefined): void {
+        // we don't have icons, just render an times
+        parent.i('.close', {text: "×"})
+    }
+
 }

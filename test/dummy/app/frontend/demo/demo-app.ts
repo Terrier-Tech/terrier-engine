@@ -4,7 +4,7 @@ import Db from './db'
 import {Logger} from "tuff-core/logging"
 import {DemoThemeType} from "./demo-theme"
 import {TerrierApp} from "@terrier/app"
-import DemoPanels from "./demo-panels";
+import DemoParts from "./demo-parts";
 import {PagePart} from "@terrier/parts";
 
 const log = new Logger('DemoApp')
@@ -12,7 +12,7 @@ const log = new Logger('DemoApp')
 class DemoPage extends PagePart<NoState, DemoThemeType> {
 
     async init() {
-        this.makePart(DemoPanels.PanelPanel, {}, 'panel')
+        this.makePart(DemoParts.Panel, {}, 'panel')
 
         this.addAction({
             title: "Primary"
@@ -24,10 +24,17 @@ class DemoPage extends PagePart<NoState, DemoThemeType> {
         }, "secondary")
 
         this.addAction({
-            title: "Tertiary"
+            title: "Open Modal",
+            click: {key: DemoParts.openModalKey}
         }, "tertiary")
 
         this.setTitle("Demo Page")
+
+        this.onClick(DemoParts.openModalKey, m => {
+            log.info("Open Modal", m)
+            this.app.showModal(DemoParts.Modal, {})
+            this.dirty()
+        }, {attach: 'passive'})
     }
 
     renderContent(parent: PartTag): void {
@@ -63,6 +70,7 @@ export default class DemoApp extends TerrierApp<DemoThemeType> {
         parent.div('.tt-demo.tt-typography', container => {
             container.part(this.page)
         })
+        parent.part(this.overlayPart)
     }
 
 }

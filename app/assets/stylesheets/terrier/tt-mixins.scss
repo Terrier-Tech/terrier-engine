@@ -126,6 +126,14 @@ $color-diff: 0.08;
 	}
 }
 
+@mixin tt-absolute-fill {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Buttons
@@ -204,5 +212,19 @@ $color-diff: 0.08;
 		li {
 			text-align: left;
 		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Blur
+////////////////////////////////////////////////////////////////////////////////
+
+@mixin blur-background {
+	--duration: 0.2s;
+	transition: backdrop-filter, background-color var(--duration) ease-in-out;
+	backdrop-filter: blur(0);
+	&.active, &.show {
+		backdrop-filter: blur(8px);
 	}
 }

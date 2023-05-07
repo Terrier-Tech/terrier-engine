@@ -40,6 +40,8 @@ export type RenderActionOptions<TT extends ThemeType> = {
 export default abstract class Theme<TT extends ThemeType> {
     abstract renderIcon(parent: PartTag, icon: TT['icons'], color?: TT['colors']): void
 
+    abstract renderCloseIcon(parent: PartTag, color?: TT['colors']): void
+
     abstract colorValue(name: TT['colors']): string
 
     abstract getLoaderSrc(): string

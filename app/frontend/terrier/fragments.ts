@@ -121,7 +121,7 @@ function panelActions<TT extends ThemeType>(panel: PartTag, actions: PanelAction
  */
 class CardFragment<TT extends ThemeType> extends ContentFragment<TT> {
     constructor(theme: Theme<TT>) {
-        super('card', theme)
+        super('tt-card', theme)
     }
 
     private _href?: string
@@ -163,7 +163,7 @@ class CardFragment<TT extends ThemeType> extends ContentFragment<TT> {
 class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     constructor(theme: Theme<TT>) {
-        super('labeled-value', theme)
+        super('tt-labeled-value', theme)
     }
 
     private _value?: string
@@ -211,7 +211,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
     }
 
     render(parent: PartTag) {
-        parent.div('.labeled-value', container => {
+        parent.div('.tt-labeled-value', container => {
             if (this._title) {
                 container.div('.title', title => {
                     if (this._icon) {
@@ -257,11 +257,11 @@ class LabeledListFragment<TT extends ThemeType> extends ContentFragment<TT> {
     private _values?: ListValueDefinition[]
 
     constructor(theme: Theme<TT>) {
-        super('labeled-list', theme)
+        super('tt-labeled-list', theme)
     }
 
     render(parent: PartTag) {
-        parent.div('.labeled-list', container => {
+        parent.div('.tt-labeled-list', container => {
             if (this._title) {
                 container.div('.title', title => {
                     if (this._icon) {
@@ -270,9 +270,9 @@ class LabeledListFragment<TT extends ThemeType> extends ContentFragment<TT> {
                     title.div({ text: this._title })
                 })
             }
-            container.div('.value.flex.wrap', valueBox => {
+            container.div('.value.tt-flex.wrap', valueBox => {
                 for (const listItem of this._values ?? []) {
-                    valueBox.div('.flex.shrink.align-center.secondary', badge => {
+                    valueBox.div('.tt-flex.shrink.align-center.secondary', badge => {
                         if (listItem.tooltip) badge.dataAttr("tooltip", listItem.tooltip)
 
                         const anchorAttrs: AnchorTagAttrs = { classes: ['button'], text: listItem.value }
@@ -351,7 +351,7 @@ function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: 
  * @param iconColor
  */
 function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor?: TT['colors']) {
-    return parent.div('.simple-value.shrink', button => {
+    return parent.div('.tt-simple-value.shrink', button => {
         if (icon) {
             theme.renderIcon(button, icon, iconColor || 'link')
         }

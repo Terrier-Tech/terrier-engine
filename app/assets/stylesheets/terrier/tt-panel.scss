@@ -17,7 +17,9 @@
 			min-width: 0;
 		}
 		a {
-			@include tt-button;
+			display: block;
+			text-align: center;
+			@include tt-scale-push;
 		}
 	}
 	.panel-content {

@@ -1,0 +1,135 @@
+@import 'tt-mixins';
+
+////////////////////////////////////////////////////////////////////////////////
+// Stack
+////////////////////////////////////////////////////////////////////////////////
+
+.tt-modal-stack {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	--modal-pad: calc(var(--tt-pad) * 2);
+	@include blur-background;
+
+	// use flex so that we can fit the .modal-container directly
+	// in the center but have it full height (minus padding)
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: var(--modal-pad);
+
+	// all modals go in here, directly on top of each other
+	// then they're arranged with transforms based on their position in the stack
+	.modal-container {
+		width: var(--tt-content-width);
+		flex: 1 1 auto;
+		max-width: 96%;
+		position: relative;
+	}
+
+	.modal-part {
+		@include tt-absolute-fill;
+		margin: 0 auto;
+
+		&:last-child {
+			transform: scale(0);
+		}
+
+		transition: transform 0.2s ease;
+	}
+
+	// very minimal show/hide so that the actual modals can animate
+	pointer-events: none;
+
+	&.show {
+		pointer-events: initial;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Modal
+////////////////////////////////////////////////////////////////////////////////
+
+.tt-modal-stack .modal-part {
+	@include tt-rounded-corners;
+	@include tt-box-shadow;
+	background: var(--tt-panel-background);
+	display: flex;
+	flex-direction: column;
+
+	.modal-header, .modal-actions {
+		display: flex;
+		padding: var(--tt-pad);
+		gap: calc(var(--tt-pad)/2);
+		flex: 0 0 auto;
+		align-items: center;
+	}
+
+	.modal-header {
+		h2 {
+			flex: 1 1 auto;
+			min-width: 0;
+		}
+
+		a {
+			@include tt-scale-push;
+			line-height: 0;
+			text-align: center;
+			display: block;
+			position: relative;
+
+			.title {
+				position: relative;
+				height: 0;
+				top: 0.5em;
+				font-size: 75%;
+			}
+			i.close {
+				font-style: normal;
+				font-size: 32px;
+				line-height: 0;
+			}
+		}
+	}
+
+	.modal-actions {
+		border-top: 1px solid var(--tt-border-color);
+
+		.primary-actions, .secondary-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--tt-pad);
+		}
+
+		.secondary-actions {
+			flex: 1 1 auto;
+		}
+
+		a {
+			@include tt-button;
+		}
+	}
+
+	.modal-content {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+	// fan out the models based on their position in the stack
+	&.show {
+		&:last-child {
+			transform: scale(1);
+		}
+
+		@for $i from 1 through 6 {
+			&:nth-last-child(#{$i + 1}) {
+				transform: translate(calc(-#{$i}*var(--tt-pad)*3), 0) scale(100%-$i*4%);
+			}
+		}
+	}
+}
