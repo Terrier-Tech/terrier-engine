@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.0.5)
+    terrier-engine (4.0.7)
       amazing_print
       colorize
       dotenv-rails
@@ -294,7 +294,7 @@ GEM
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    write_xlsx (1.10.2)
+    write_xlsx (1.11.0)
       rubyzip (>= 1.0.0)
     xlsxtream (2.4.0)
       zip_tricks (>= 4.5, < 6)

@@ -74,9 +74,10 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
      * @param parent
      */
     render(parent: PartTag) {
+        const noTtPrefix = this.prefix.replace('tt-', '')
         return parent.div(this.prefix, panel => {
             if (this._title?.length) {
-                panel.div(`.${this.prefix}-header`, header => {
+                panel.div(`.${noTtPrefix}-header`, header => {
                     header.h2(h2 => {
                         if (this._icon) {
                             this.theme.renderIcon(h2, this._icon, 'link')
@@ -86,7 +87,7 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
                     this.theme.renderActions(header, this.actions.tertiary)
                 })
             }
-            panel.div(`.${this.prefix}-content`, content => {
+            panel.div(`.${noTtPrefix}-content`, content => {
                 if (this._content) {
                     this._content(content)
                 }
@@ -378,10 +379,15 @@ function simpleHeading<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, 
 
 
 const Fragments = {
+    ContentFragment,
     panel,
+    PanelFragment,
     card,
+    CardFragment,
     labeledValue,
+    LabeledValueFragment,
     labeledList,
+    LabeledListFragment,
     button,
     simpleValue,
     simpleHeading,

@@ -16,7 +16,9 @@
 	--tt-mobile-breakpoint: 850px; // tablet portrait
 	--tt-phone-breakpoint: 550px;
 	--tt-scale-push-factor: 0.05;
-	--tt-button-height: 32px;
-	--tt-icon-size: 24px;
+	--tt-button-height: 40px;
+	--tt-icon-size: 28px;
 	--tt-primary-color: #d69338;
+	--tt-dropdown-color: var(--tt-primary-color);
+	--tt-animation-duration: 0.2s;
 }

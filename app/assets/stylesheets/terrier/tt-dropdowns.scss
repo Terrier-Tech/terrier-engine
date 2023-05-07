@@ -1,0 +1,39 @@
+@import "tt-mixins";
+
+.dropdown-content {
+	pointer-events: auto;
+	position: fixed;
+	background-color: var(--tt-dropdown-color);
+	@include tt-rounded-corners;
+	@include tt-box-shadow;
+	transform: scale(0);
+	transition: transform var(--tt-animation-duration) ease;
+
+	&.show {
+		transform: scale(1);
+	}
+}
+
+.tuff-part-ActionsDropdown {
+	a {
+		display: flex;
+		align-items: center;
+		gap: calc(var(--tt-gap)/2);
+		padding: calc(var(--tt-pad) / 2) var(--tt-pad);
+
+		.title {
+			@include tt-inset-white-text;
+		}
+
+		.icon.white svg {
+			@include tt-icon-size(0.75);
+			* {
+				color: var(--tt-white-color);
+			}
+		}
+
+		&:hover {
+			background-color: rgba(#000, 0.2);
+		}
+	}
+}

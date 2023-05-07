@@ -11,9 +11,6 @@
 		}
 		.tertiary-actions {
 			flex: 0 0 auto;
-			a {
-				@include tt-button;
-			}
 		}
 	}
 	.page-main {

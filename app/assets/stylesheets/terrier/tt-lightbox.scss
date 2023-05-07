@@ -1,0 +1,33 @@
+@import "tt-mixins";
+
+
+.tuff-part-LightboxPart {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	@include blur-background;
+	.scroller {
+		@include tt-absolute-fill;
+		overflow-x: scroll;
+		overflow-y: scroll;
+		padding: var(--tt-pad);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		img {
+			@include tt-box-shadow;
+			transition: transform var(--tt-animation-duration) ease;
+			transform: scale(0);
+			max-height: 100%;
+		}
+	}
+
+	&.active {
+		background-color: rgba(#000, 0.2);
+		.scroller img {
+			transform: scale(1);
+		}
+	}
+}

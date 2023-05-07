@@ -29,6 +29,12 @@
 	filter: drop-shadow(0 -1px 0 rgba(var(--tt-shadow-color), 0.2));
 }
 
+// specify the icon size as a fraction of the standard size
+@mixin tt-icon-size($ratio) {
+	width: calc(var(--tt-icon-size) * #{$ratio});
+	height: calc(var(--tt-icon-size) * #{$ratio});
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Slightly 3D backgrounds
