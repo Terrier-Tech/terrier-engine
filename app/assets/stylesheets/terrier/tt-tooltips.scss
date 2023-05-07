@@ -1,0 +1,34 @@
+@import "tt-mixins";
+
+#tooltip {
+	position: fixed;
+	font-size: 90%;
+	padding: calc(var(--tt-pad)/2) var(--tt-pad);
+	border-top: 1px solid var(--content-bg);
+	background-color: var(--tt-tooltip-background);
+	@include tt-rounded-corners;
+	@include tt-box-shadow;
+	z-index: 9999;
+	max-width: 300px;
+	transform: scale(0);
+	transition: transform ease 0.2s;
+	pointer-events: none;
+	text-align: center;
+	color: var(--tt-tooltip-foreground);
+
+	&.show {
+		transform: scale(1);
+	}
+
+	ol, ul {
+		margin: 0.5em 0;
+	}
+
+	li {
+		text-align: left;
+	}
+
+	p:last-child {
+		margin: 0;
+	}
+}

@@ -1,0 +1,24 @@
+.tuff-part-OverlayPart {
+	z-index: 10000;
+	position: relative;
+
+	.dropdown {
+		z-index: 0;
+
+		.dropdown-content {
+			overflow-y: auto;
+		}
+	}
+
+	.modal {
+		z-index: 1;
+	}
+
+	.lightbox {
+		z-index: 2;
+	}
+
+	.jump {
+		z-index: 3;
+	}
+}

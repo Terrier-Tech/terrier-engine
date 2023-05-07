@@ -1,0 +1,23 @@
+
+#toasts {
+	position: fixed;
+	pointer-events: none;
+	top: 0;
+	right: 0;
+	max-width: var(--tt-phone-breakpoint);
+
+	> div {
+		@include bubble;
+		pointer-events: initial;
+		cursor: pointer;
+		transform: translate(120%, 0);
+		transition: transform var(--tt-animation-duration) ease;
+		display: flex;
+		align-items: center;
+		gap: calc(var(--tt-gap)/2);
+
+		&.show {
+			transform: translate(0);
+		}
+	}
+}
