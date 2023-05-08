@@ -19,6 +19,10 @@ export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, T
 
     parentPart?: StatelessPart
 
+    get parentClasses(): Array<string> {
+        return ['tt-dropdown', ...super.parentClasses]
+    }
+
     // the computed absolute position of the
     left = 0
     top = 0
@@ -75,6 +79,12 @@ export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, T
  * A concrete dropdown part that shows a list of actions.
  */
 export class ActionsDropdown<TT extends ThemeType> extends Dropdown<Array<Action<TT>>, TT> {
+
+
+    get parentClasses(): Array<string> {
+        return ['tt-actions-dropdown', ...super.parentClasses]
+    }
+
     renderContent(parent: PartTag) {
         // handle each key declared on the actions directly,
         // then clear the dropdown and re-emit them on the parent part

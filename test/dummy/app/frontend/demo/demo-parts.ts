@@ -4,18 +4,14 @@ import {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
 import {messages} from "tuff-core"
 import Toasts from "@terrier/toasts";
-import {Dropdown} from "@terrier/dropdowns";
+import {ActionsDropdown} from "@terrier/dropdowns"
+import {Action} from "@terrier/theme"
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
 const dropdownKey = messages.typedKey<{message: string}>()
 
-class SimpleDropdown extends Dropdown<{ message: string }, DemoThemeType> {
-    renderContent(parent: PartTag): void {
-        parent.div('.message.padded', {text: this.state.message})
-    }
-
-}
+type DemoAction = Action<DemoThemeType>
 
 class Panel extends PanelPart<NoState, DemoThemeType> {
 
@@ -42,8 +38,14 @@ class Panel extends PanelPart<NoState, DemoThemeType> {
             Toasts.show(`${m.data!!.color} toast`, {color: m.data!!.color}, this.theme)
         })
 
+        const dropdownActions: Array<DemoAction> = [
+            {title: "Action 1"},
+            {title: "Action 2"},
+            {title: "Action 3"},
+            {title: "Action 4"},
+        ]
         this.onClick(dropdownKey, m => {
-            this.toggleDropdown(SimpleDropdown, m.data!!, m.event.target)
+            this.toggleDropdown(ActionsDropdown, dropdownActions, m.event.target)
         })
     }
 
