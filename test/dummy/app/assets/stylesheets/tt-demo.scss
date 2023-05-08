@@ -11,6 +11,7 @@ $demo-colors: (
 	inactive: #adadad,
 );
 
+
 :root {
 	--tt-primary-color: #{map-get($demo-colors, 'primary')};
 	--tt-dropdown-color: #{map-get($demo-colors, 'secondary')};

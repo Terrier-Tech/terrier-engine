@@ -16,7 +16,7 @@ type DemoAction = Action<DemoThemeType>
 class Panel extends PanelPart<NoState, DemoThemeType> {
 
     async init() {
-        this.setTitle("Panel Header")
+        this.setTitle("Panel Header ")
 
         this.addAction({
             title: "Dropdown",
@@ -54,8 +54,15 @@ class Panel extends PanelPart<NoState, DemoThemeType> {
     }
 
     renderContent(parent: PartTag) {
-        parent.p({text: "Padded panel content"})
-            .data({tooltip: "This is a tooltip"})
+        parent.div('.tt-flex.tablet-collapsible', row => {
+            row.div('.stretch', col => {
+                col.p({text: "Stretch Column"})
+                    .data({tooltip: "This is a tooltip"})
+            })
+            row.div('.shrink', col => {
+                col.p({text: "Shrink Column"})
+            })
+        })
     }
 
 }

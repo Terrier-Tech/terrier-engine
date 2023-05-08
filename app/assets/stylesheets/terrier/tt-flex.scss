@@ -1,3 +1,5 @@
+@import "tt-mixins";
+
 
 .tt-flex {
 	display: flex;
@@ -102,23 +104,24 @@
 			@include stretch;
 		}
 	}
+}
 
-	@media screen and (max-width: var(--tt-phone-breakpoint)) {
-		&.phone-collapsible {
-			flex-direction: column;
-		}
+
+@media screen and (max-width: $phone-breakpoint) {
+	.tt-flex.phone-collapsible {
+		flex-direction: column;
 	}
+}
 
-	@media screen and (max-width: var(--tt-mobile-breakpoint)) {
-		&.mobile-collapsible {
-			flex-direction: column;
-		}
+@media screen and (max-width: $mobile-breakpoint) {
+	.tt-flex.mobile-collapsible {
+		flex-direction: column;
 	}
+}
 
-	@media screen and (max-width: var(--tt-tablet-breakpoint)) {
-		&.tablet-collapsible {
-			flex-direction: column;
-		}
+@media screen and (max-width: $tablet-breakpoint) {
+	.tt-flex.tablet-collapsible {
+		flex-direction: column;
 	}
 }
 
