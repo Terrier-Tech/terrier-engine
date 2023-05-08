@@ -1,13 +1,14 @@
+@import "tt-mixins";
 
-#toasts {
+#tt-toasts {
 	position: fixed;
 	pointer-events: none;
 	top: 0;
 	right: 0;
 	max-width: var(--tt-phone-breakpoint);
 
-	> div {
-		@include bubble;
+	.tt-toast {
+		@include tt-bubble;
 		pointer-events: initial;
 		cursor: pointer;
 		transform: translate(120%, 0);

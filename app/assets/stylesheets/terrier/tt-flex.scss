@@ -104,19 +104,19 @@
 	}
 
 	@media screen and (max-width: var(--tt-phone-breakpoint)) {
-		.tt-flex.phone-collapsible {
+		&.phone-collapsible {
 			flex-direction: column;
 		}
 	}
 
 	@media screen and (max-width: var(--tt-mobile-breakpoint)) {
-		.tt-flex.mobile-collapsible {
+		&.mobile-collapsible {
 			flex-direction: column;
 		}
 	}
 
 	@media screen and (max-width: var(--tt-tablet-breakpoint)) {
-		.tt-flex.tablet-collapsible {
+		&.tablet-collapsible {
 			flex-direction: column;
 		}
 	}

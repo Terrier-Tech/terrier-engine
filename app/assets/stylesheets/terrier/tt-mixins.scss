@@ -200,7 +200,7 @@ $color-diff: 0.08;
 // Bubbles
 ////////////////////////////////////////////////////////////////////////////////
 
-@mixin bubble($clickable: false) {
+@mixin tt-bubble($clickable: false) {
 	display: block;
 	padding: 1em;
 	@include tt-rounded-corners;
@@ -226,7 +226,7 @@ $color-diff: 0.08;
 // Blur
 ////////////////////////////////////////////////////////////////////////////////
 
-@mixin blur-background {
+@mixin tt-blur-background {
 	--duration: 0.2s;
 	transition: backdrop-filter, background-color var(--duration) ease-in-out;
 	backdrop-filter: blur(0);

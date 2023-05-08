@@ -11,7 +11,7 @@
 	right: 0;
 	bottom: 0;
 	--modal-pad: calc(var(--tt-pad) * 2);
-	@include blur-background;
+	@include tt-blur-background;
 
 	// use flex so that we can fit the .modal-container directly
 	// in the center but have it full height (minus padding)

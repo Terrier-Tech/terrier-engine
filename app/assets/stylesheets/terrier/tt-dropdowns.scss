@@ -4,6 +4,7 @@
 	pointer-events: auto;
 	position: fixed;
 	background-color: var(--tt-dropdown-color);
+	@include tt-inset-white-text;
 	@include tt-rounded-corners;
 	@include tt-box-shadow;
 	transform: scale(0);
@@ -11,6 +12,10 @@
 
 	&.show {
 		transform: scale(1);
+	}
+
+	.padded {
+		padding: var(--tt-pad);
 	}
 }
 

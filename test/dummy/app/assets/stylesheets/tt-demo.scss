@@ -11,6 +11,11 @@ $demo-colors: (
 	inactive: #adadad,
 );
 
+:root {
+	--tt-primary-color: #{map-get($demo-colors, 'primary')};
+	--tt-dropdown-color: #{map-get($demo-colors, 'secondary')};
+}
+
 .tt-demo {
 	--demo-border-color: #ccc;
 	--demo-border-radius: 6px;
@@ -60,6 +65,8 @@ $demo-colors: (
 @each $name, $color in $demo-colors {
 	// button colors
 	.tt-button .#{$name},
+	.tt-toast.#{$name},
+	.tt-modal-stack .modal-actions a.#{$name},
 	.tt-panel .panel-actions a.#{$name},
 	.tt-panel .panel-header a.#{$name},
 	.tt-page-part .page-main .page-actions a.#{$name} {
