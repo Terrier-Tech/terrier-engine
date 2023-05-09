@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>platform_windows</title>
+    <g id="platform_windows" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M27,31 L27,8.65943326 L4,12.2910122 L4,31 L27,31 Z M23,13.34 L23,27 L8,27 L8,15.708 L23,13.34 Z" id="Path-151" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M27,33 L4,33 L4,51.7089878 L27,55.3405667 L27,33 Z M23,37 L23,50.659 L8,48.291 L8,37 L23,37 Z" id="Path-152" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M60,31 L60,3.68187495 L29,8.27446755 L29,31 L60,31 Z M56,8.318 L56,27 L33,27 L33,11.725 L56,8.318 Z" id="Path-153" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M60,60 L60,32.681875 L29,37.2744675 L29,60 L60,60 Z M56,37.318 L56,56 L33,56 L33,40.725 L56,37.318 Z" id="Path-153-Copy" fill="#000000" fill-rule="nonzero" transform="translate(44.500000, 46.340937) scale(1, -1) translate(-44.500000, -46.340937) "></path>
+    </g>
+</svg>

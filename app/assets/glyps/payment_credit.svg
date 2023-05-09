@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>payment_credit</title>
+    <g id="payment_credit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M50.9982716,16 L13.0017284,16 C10.2377553,16 8,18.2373481 8,20.9992748 L8,43.0007252 C8,45.76448 10.238338,48 13.0017284,48 L50.9982716,48 C53.7622447,48 56,45.7626519 56,43.0007252 L56,20.9992748 C56,18.23552 53.761662,16 50.9982716,16 Z M13.0017284,18 L50.9982716,18 C52.6576561,18 54,19.3406539 54,20.9992748 L54,43.0007252 C54,44.6580009 52.6577567,46 50.9982716,46 L13.0017284,46 C11.3423439,46 10,44.6593461 10,43.0007252 L10,20.9992748 C10,19.3419991 11.3422433,18 13.0017284,18 Z" id="Rectangle-265" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-266" fill="#000000" fill-rule="nonzero" x="10" y="21" width="44" height="6"></rect>
+        <rect id="Rectangle-267" fill="#000000" fill-rule="nonzero" x="42" y="34" width="8" height="8" rx="2"></rect>
+    </g>
+</svg>

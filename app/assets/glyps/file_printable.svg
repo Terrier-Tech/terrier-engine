@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>file_printable</title>
+    <g id="file_printable" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-37" fill="#000000" fill-rule="nonzero" x="19" y="19" width="17" height="3"></rect>
+        <path d="M39.4142136,7 L15,7 L15,57 L49,57 L49,16.5857864 L39.4142136,7 Z M38,9 L38,18 L47,18 L47,55 L17,55 L17,9 L38,9 Z M40,10.5 L45.5,16 L40,16 L40,10.5 Z" id="page" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-37-Copy-5" fill="#000000" fill-rule="nonzero" x="19" y="35" width="20" height="3"></rect>
+        <rect id="Rectangle-37-Copy" fill="#000000" fill-rule="nonzero" x="19" y="24" width="12" height="2"></rect>
+        <rect id="Rectangle-37-Copy-2" fill="#000000" fill-rule="nonzero" x="19" y="29" width="12" height="2"></rect>
+        <rect id="Rectangle-37-Copy-4" fill="#000000" fill-rule="nonzero" x="33" y="24" width="12" height="2"></rect>
+        <rect id="Rectangle-37-Copy-3" fill="#000000" fill-rule="nonzero" x="33" y="29" width="12" height="2"></rect>
+        <rect id="Rectangle-36" fill="#000000" fill-rule="nonzero" x="19" y="11" width="10" height="4" rx="2"></rect>
+        <path d="M44.5,40 L45,40.5 L45,52.5 L44.5,53 L19.5,53 L19,52.5 L19,40.5 L19.5,40 L44.5,40 Z M24,50 L20,50 L20,52 L24,52 L24,50 Z M29,50 L25,50 L25,52 L29,52 L29,50 Z M39,50 L35,50 L35,52 L39,52 L39,50 Z M34,50 L30,50 L30,52 L34,52 L34,50 Z M44,50 L40,50 L40,52 L44,52 L44,50 Z M24,47 L20,47 L20,49 L24,49 L24,47 Z M29,47 L25,47 L25,49 L29,49 L29,47 Z M34,47 L30,47 L30,49 L34,49 L34,47 Z M39,47 L35,47 L35,49 L39,49 L39,47 Z M44,47 L40,47 L40,49 L44,49 L44,47 Z M24,44 L20,44 L20,46 L24,46 L24,44 Z M29,44 L25,44 L25,46 L29,46 L29,44 Z M34,44 L30,44 L30,46 L34,46 L34,44 Z M39,44 L35,44 L35,46 L39,46 L39,44 Z M44,44 L40,44 L40,46 L44,46 L44,44 Z M24,41 L20,41 L20,43 L24,43 L24,41 Z M29,41 L25,41 L25,43 L29,43 L29,41 Z M34,41 L30,41 L30,43 L34,43 L34,41 Z M39,41 L35,41 L35,43 L39,43 L39,41 Z M44,41 L40,41 L40,43 L44,43 L44,41 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

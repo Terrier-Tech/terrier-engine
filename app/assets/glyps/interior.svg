@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>interior</title>
+    <g id="interior" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M34,8 L34,46 L7,56 L7,16 L34,8 Z M28,19.5 L14,24 L14,52 L28,47 L28,19.5 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M35,8 L57,18 L57,56 L35,46 L35,8 Z M40,16.5 L40,35.5 L52,41 L52,22 L40,16.5 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <line x1="45.5119814" y1="18.8540957" x2="45.5119814" y2="38.1095133" id="Path-109" stroke="#000000" style="mix-blend-mode: overlay;" stroke-linecap="round" stroke-linejoin="bevel"></line>
+        <line x1="39.091819" y1="26.110154" x2="51.9670288" y2="31.5374386" id="Path-110" stroke="#000000" style="mix-blend-mode: overlay;" stroke-linecap="round" stroke-linejoin="bevel"></line>
+        <ellipse id="Oval-19" fill="#000000" fill-rule="nonzero" cx="26" cy="36.5" rx="1" ry="1.5"></ellipse>
+    </g>
+</svg>

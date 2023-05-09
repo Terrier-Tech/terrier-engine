@@ -9,6 +9,6 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.paths << Rails.root.join('node_modules')
 
 # Precompile additional assets.
-# layout.js, layout.css, and all non-JS/CSS in the app/assets
+# application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.
-# Rails.layout.config.assets.precompile += %w( admin.js admin.css )
+Rails.application.config.assets.precompile += %w( terrier/glyps.css )

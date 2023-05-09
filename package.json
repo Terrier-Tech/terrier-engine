@@ -10,14 +10,16 @@
     "url": "https://github.com/Terrier-Tech/terrier-engine"
   },
   "license": "MIT",
-  "scripts" : {
-    "check" : "tsc -p app/frontend -noEmit"
+  "scripts": {
+    "check": "tsc -p app/frontend -noEmit"
   },
   "dependencies": {
     "tuff-core": "^0.25.0"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",
-    "prettier": "^2.8.8"
+    "glyphs2font": "^1.2.4",
+    "prettier": "^2.8.8",
+    "svgo": "^3.0.2"
   }
 }

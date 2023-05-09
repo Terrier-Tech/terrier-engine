@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>school_church</title>
+    <g id="school_church" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-614" fill="#000000" fill-rule="nonzero" points="7 34 15 26 25 26 32 19 39 26 49 26 57 34 41 34 32 25 23 34"></polygon>
+        <path d="M41.415,34 L32,24.5857864 L22.584,34 L9,34 L9,51 L7,51 L7,55 L57,55 L57,51 L55,51 L55,34 L41.415,34 Z M53,53 L11,53 L11,36 L23.4142136,36 L32,27.415 L40.5857864,36 L53,36 L53,53 Z" id="Path-615" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M32,31 C29.2385763,31 27,33.2385763 27,36 C27,38.7614237 29.2385763,41 32,41 C34.7614237,41 37,38.7614237 37,36 C37,33.2385763 34.7614237,31 32,31 Z M32,33 C33.6568542,33 35,34.3431458 35,36 C35,37.6568542 33.6568542,39 32,39 C30.3431458,39 29,37.6568542 29,36 C29,34.3431458 30.3431458,33 32,33 Z" id="Oval-78" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M29,52 L35,52 L35,46 C35,46 35,44 32,44 C29,44 29,46 29,46 L29,52 Z" id="Path-616" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-113" fill="#000000" fill-rule="nonzero" x="14" y="39" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy" fill="#000000" fill-rule="nonzero" x="22" y="39" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-3" fill="#000000" fill-rule="nonzero" x="14" y="45" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-2" fill="#000000" fill-rule="nonzero" x="22" y="45" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-7" fill="#000000" fill-rule="nonzero" x="38" y="39" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-6" fill="#000000" fill-rule="nonzero" x="46" y="39" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-5" fill="#000000" fill-rule="nonzero" x="38" y="45" width="4" height="4"></rect>
+        <rect id="Rectangle-113-Copy-4" fill="#000000" fill-rule="nonzero" x="46" y="45" width="4" height="4"></rect>
+        <polyline id="Path-617" stroke="#000000" stroke-linecap="round" points="32 34 32 36 33 37"></polyline>
+        <path d="M32,8.5 C32.2454599,8.5 32.4496084,8.67687516 32.4919443,8.91012437 L32.5,9 L32.5,21.3699951 C32.5,21.6461375 32.2761424,21.8699951 32,21.8699951 C31.7545401,21.8699951 31.5503916,21.69312 31.5080557,21.4598707 L31.5,21.3699951 L31.5,9 C31.5,8.72385763 31.7238576,8.5 32,8.5 Z" id="Path-619" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M32,10 C36,10 35.9932114,11 40,11 L40,16 C35.9932114,16 36.0174435,15.1704006 32,15 C31.9563912,15.1704007 32.034887,12.2624512 32,10 Z" id="Path-620" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

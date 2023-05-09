@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sales</title>
+    <g id="sales" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M54.5857864,8.58578644 C55.366835,7.80473785 56.633165,7.80473785 57.4142136,8.58578644 C58.1541543,9.3257272 58.1930986,10.5012114 57.5310463,11.2869988 L57.4142136,11.4142136 L33.4142136,35.4142136 C32.6742728,36.1541543 31.4987886,36.1930986 30.7130012,35.5310463 L30.5857864,35.4142136 L22,26.829 L7.41421356,41.4142136 C6.6742728,42.1541543 5.49878864,42.1930986 4.71300121,41.5310463 L4.58578644,41.4142136 C3.84584567,40.6742728 3.80690142,39.4987886 4.46895369,38.7130012 L4.58578644,38.5857864 L20.5857864,22.5857864 C21.3257272,21.8458457 22.5012114,21.8069014 23.2869988,22.4689537 L23.4142136,22.5857864 L32,31.171 L54.5857864,8.58578644 Z" id="Path-59" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-60" fill="#000000" points="52 6 60 6 60 14"></polygon>
+        <rect id="Rectangle" fill="#000000" x="4" y="54" width="56" height="4" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" x="6" y="44" width="4" height="8"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="14" y="38" width="4" height="14"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="22" y="33" width="4" height="19"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="30" y="38" width="4" height="14"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" x="38" y="34" width="4" height="18"></rect>
+        <rect id="Rectangle-Copy-5" fill="#000000" x="46" y="26" width="4" height="26"></rect>
+        <rect id="Rectangle-Copy-6" fill="#000000" x="54" y="18" width="4" height="34"></rect>
+    </g>
+</svg>

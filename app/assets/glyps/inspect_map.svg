@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>inspect_map</title>
+    <g id="inspect_map" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42,4 C43.1045695,4 44,4.8954305 44,6 L44,6 L44,20 L58,20 C59.0543618,20 59.9181651,20.8158778 59.9945143,21.8507377 L59.9945143,21.8507377 L60,22 L60,58 C60,59.1045695 59.1045695,60 58,60 L58,60 L6,60 C4.8954305,60 4,59.1045695 4,58 L4,58 L4,6 C4,4.8954305 4.8954305,4 6,4 L6,4 Z M21,42 L8,42 L8,56 L21,56 L21,42 Z M56,24 L34,24 L34,38 L44,38 L44,56 L56,56 L56,24 Z M40,42 L25,42 L25,56 L40,56 L40,42 Z M40,8 L8,8 L8,38 L30,38 L30,24 L18,24 L18,20 L40,20 L40,8 Z" id="Path-37" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

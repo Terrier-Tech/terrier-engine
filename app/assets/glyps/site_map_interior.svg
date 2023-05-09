@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>site_map_interior</title>
+    <g id="site_map_interior" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M58,14 L54,14 L54,8 L58,8 L58,14 Z M58,26 L54,26 L54,20 L58,20 L58,26 Z M58,38 L54,38 L54,32 L58,32 L58,38 Z M58,50 L54,50 L54,44 L58,44 L58,50 Z M50,58 L50,54 L56,54 L56,58 L50,58 Z M38,58 L38,54 L44,54 L44,58 L38,58 Z M30,50 L34,50 L34,56 L30,56 L30,50 Z M30,38 L34,38 L34,44 L30,44 L30,38 Z M18,42 L18,38 L24,38 L24,42 L18,42 Z M6,38 L12,38 L12,42 L6,42 L6,38 Z M6,26 L10,26 L10,32 L6,32 L6,26 Z M6,14 L10,14 L10,20 L6,20 L6,14 Z M14,6 L14,10 L8,10 L8,6 L14,6 Z M26,6 L26,10 L20,10 L20,6 L26,6 Z M38,6 L38,10 L32,10 L32,6 L38,6 Z M50,6 L50,10 L44,10 L44,6 L50,6 Z" id="Path-93" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

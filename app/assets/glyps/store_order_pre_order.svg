@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>store_order_pre_order</title>
+    <g id="store_order_pre_order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M32.2899084,8.20892162 L18.4920832,8.20892162 L14.1862121,29.7587492 L32.2475451,29.7587492 L32.2899084,8.20892162 Z M29.785,10.708 L29.752,27.258 L17.235,27.258 L20.541,10.708 L29.785,10.708 Z" id="Path-165" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M43.1302441,8.2150648 L29.75,8.2150648 L29.75,29.7600861 L48.0409189,29.7600861 L43.1302441,8.2150648 Z M41.136,10.715 L44.907,27.26 L32.25,27.26 L32.25,10.715 L41.136,10.715 Z" id="Path-167" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M16.6859305,29.751111 L16.685,51.242 L31.1131644,51.2425817 L31.1131644,53.7425817 L14.1859305,53.7425817 L14.1859305,29.751111 L16.6859305,29.751111 Z M48.0403984,29.751111 L48.0403984,37 L45.5403984,37 L45.5403984,29.751111 L48.0403984,29.751111 Z" id="Path-166" fill="#000000" fill-rule="nonzero"></path>
+        <g id="Circles" transform="translate(31.000000, 37.000000)" fill="#000000" fill-rule="nonzero">
+            <path d="M10,0 C4.4771525,0 0,4.4771525 0,10 C0,15.5228475 4.4771525,20 10,20 C15.5228475,20 20,15.5228475 20,10 C20,4.4771525 15.5228475,0 10,0 Z M10,2 C14.418278,2 18,5.581722 18,10 C18,14.418278 14.418278,18 10,18 C5.581722,18 2,14.418278 2,10 C2,5.581722 5.581722,2 10,2 Z" id="Oval-31"></path>
+            <polygon id="Triangle-3" transform="translate(6.000000, 10.000000) rotate(-90.000000) translate(-6.000000, -10.000000) " points="6 6.5 10 13.5 2 13.5"></polygon>
+            <polygon id="Triangle-3" transform="translate(12.000000, 10.000000) rotate(-90.000000) translate(-12.000000, -10.000000) " points="12 6.5 16 13.5 8 13.5"></polygon>
+        </g>
+        <polygon id="Line-12" fill="#000000" fill-rule="nonzero" points="35.5 35 35.5 37 26.5 37 26.5 35"></polygon>
+    </g>
+</svg>

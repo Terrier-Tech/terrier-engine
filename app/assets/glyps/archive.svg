@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>archive</title>
+    <g id="archive" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M58,8 C59.1045695,8 60,8.8954305 60,10 L60,10 L60,20 C60,21.1045695 59.1045695,22 58,22 L58,22 L56,22 L56,54 C56,55.0543618 55.1841222,55.9181651 54.1492623,55.9945143 L54,56 L10,56 C8.8954305,56 8,55.1045695 8,54 L8,54 L8,22 L6,22 C4.9456382,22 4.08183488,21.1841222 4.00548574,20.1492623 L4,20 L4,10 C4,8.8954305 4.8954305,8 6,8 L6,8 Z M52,22 L12,22 L12,52 L52,52 L52,22 Z M56,12 L8,12 L8,18 L56,18 L56,12 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="24" y="28" width="16" height="4" rx="2"></rect>
+    </g>
+</svg>

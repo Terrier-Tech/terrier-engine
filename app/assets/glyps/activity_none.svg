@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>activity_none</title>
+    <g id="activity_none" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M32,4 C47.463973,4 60,16.536027 60,32 C60,47.463973 47.463973,60 32,60 C16.536027,60 4,47.463973 4,32 C4,16.536027 16.536027,4 32,4 Z M32,8 C18.745166,8 8,18.745166 8,32 C8,45.254834 18.745166,56 32,56 C45.254834,56 56,45.254834 56,32 C56,18.745166 45.254834,8 32,8 Z M6,30 L57,30 L57,34 L6,34 L6,30 Z" id="Oval" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

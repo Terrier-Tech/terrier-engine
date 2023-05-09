@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>health_care</title>
+    <g id="health_care" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-170" fill="#000000" fill-rule="nonzero" x="26" y="43" width="5" height="7"></rect>
+        <rect id="Rectangle-170-Copy" fill="#000000" fill-rule="nonzero" x="33" y="43" width="5" height="7"></rect>
+        <rect id="Rectangle-69" fill="#000000" fill-rule="nonzero" x="10" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy" fill="#000000" fill-rule="nonzero" x="18" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-2" fill="#000000" fill-rule="nonzero" x="26" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-3" fill="#000000" fill-rule="nonzero" x="34" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-4" fill="#000000" fill-rule="nonzero" x="42" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-5" fill="#000000" fill-rule="nonzero" x="50" y="29" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-11" fill="#000000" fill-rule="nonzero" x="10" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-10" fill="#000000" fill-rule="nonzero" x="18" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-13" fill="#000000" fill-rule="nonzero" x="10" y="43" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-12" fill="#000000" fill-rule="nonzero" x="18" y="43" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-9" fill="#000000" fill-rule="nonzero" x="26" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-8" fill="#000000" fill-rule="nonzero" x="34" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-7" fill="#000000" fill-rule="nonzero" x="42" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-6" fill="#000000" fill-rule="nonzero" x="50" y="36" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-15" fill="#000000" fill-rule="nonzero" x="42" y="43" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-14" fill="#000000" fill-rule="nonzero" x="50" y="43" width="4" height="4"></rect>
+        <path d="M36.0037973,11 C38.2108391,11 40,12.7888304 40,14.9962027 L40,23.0037973 C40,25.2108391 38.2111696,27 36.0037973,27 L27.9962027,27 C25.7891609,27 24,25.2111696 24,23.0037973 L24,14.9962027 C24,12.7891609 25.7888304,11 27.9962027,11 L36.0037973,11 Z M34,13 L30,13 L30,17 L26,17 L26,21 L30,21 L30,25 L34,25 L34,21 L38,21 L38,17 L34,17 L34,13 Z" id="Rectangle-65" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M6,53 L58,53 L58,27 C58,22.3333333 56,20 52,20 C48,20 44,20 40,20 L40,22 C45.3333333,22 49.3333333,22 52,22 C54.6666667,22 56,23.6666667 56,27 L56,51 L8,51 L8,27 C8,23.6666667 9.66666667,22 13,22 C16.3333333,22 20,22 24,22 L24,20 C21.3333333,20 17.6666667,20 13,20 C8.33333333,20 6,22.3333333 6,27 L6,53 Z" id="Path-8" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

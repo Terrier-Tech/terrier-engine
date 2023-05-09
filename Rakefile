@@ -21,6 +21,7 @@ load 'rails/tasks/statistics.rake'
 
 # so that we dont' need the app: prefix
 load 'lib/tasks/npm.rake'
+load 'lib/tasks/glyps.rake'
 
 require 'bundler/gem_tasks'
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>site_map_edit_geo</title>
+    <g id="site_map_edit_geo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-2" fill="#000000" fill-rule="nonzero" points="51 7 57 13 44 26 38 20"></polygon>
+        <polygon id="Path-2-Copy" fill="#000000" fill-rule="nonzero" points="43 27 34 30 37 21"></polygon>
+        <path d="M58,12 L52,6 L53.5857864,4.41421356 C54.366835,3.63316498 55.633165,3.63316498 56.4142136,4.41421356 L59.5857864,7.58578644 C60.366835,8.36683502 60.366835,9.63316498 59.5857864,10.4142136 L58,12 L58,12 Z" id="Path-3" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M35,4 L4,4 L4,60 L60,60 L60,30 L35,30 L35,4 Z M31,8 L31,34 L56,34 L56,56 L8,56 L8,8 L31,8 Z" id="Path-92" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

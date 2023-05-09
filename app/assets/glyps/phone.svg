@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>phone</title>
+    <g id="phone" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42.6666667,8 C44.5076158,8 46,9.44646465 46,11.2307692 L46,52.7692308 C46,54.5535353 44.5076158,56 42.6666667,56 L21.3333333,56 C19.4923842,56 18,54.5535353 18,52.7692308 L18,11.2307692 C18,9.44646465 19.4923842,8 21.3333333,8 L42.6666667,8 Z M42,12 L22,12 L22,50 L42,50 L42,12 Z M32,55 C33.1045695,55 34,54.1045695 34,53 C34,51.8954305 33.1045695,51 32,51 C30.8954305,51 30,51.8954305 30,53 C30,54.1045695 30.8954305,55 32,55 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

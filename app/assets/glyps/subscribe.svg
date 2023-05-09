@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>subscribe</title>
+    <g id="subscribe" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#000000" cx="8" cy="56" r="4"></circle>
+        <path d="M8,36 C19.045695,36 28,44.954305 28,56 L22,56 C22,48 16,42 8,42 L8,36 Z" id="Path" fill="#010101" fill-rule="nonzero"></path>
+        <path d="M8,20 C27.882251,20 44,36.117749 44,56 L38,56 C38,39 25,26 8,26 L8,20 Z" id="Path" fill="#010101" fill-rule="nonzero"></path>
+        <path d="M8,4 C36.718807,4 60,27.281193 60,56 L54,56 C54,30 34,10 8,10 L8,4 Z" id="Path" fill="#010101" fill-rule="nonzero"></path>
+    </g>
+</svg>

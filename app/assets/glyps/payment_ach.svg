@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>payment_ach</title>
+    <g id="payment_ach" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M53,47.0833333 L11,47.0833333 L11,49.0833333 L9,49.0833333 L9,51.0833333 L7,51.0833333 L7,55.0833333 L57,55.0833333 L57,51.0833333 L55,51.0833333 L55,49.0833333 L53,49.0833333 L53,47.0833333 Z M53,53.0833333 L11,53.0833333 L11,51.0833333 L13,51.0833333 L13,49.0833333 L51,49.0833333 L51,51.0833333 L53,51.0833333 L53,53.0833333 Z" id="Path-596" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M57,18.4166667 L32,8 L7,18.4166667 L7,22.0833333 L14,22.0833333 L14,25.0833333 L50,25.0833333 L50,22.0833333 L57,22.0833333 L57,18.4166667 Z M32,10.1663333 L55,19.7503333 L55,20.0833333 L48,20.0833333 L48,23.0833333 L16,23.0833333 L16,20.0833333 L9,20.0833333 L9,19.7493333 L32,10.1663333 Z" id="Path-597" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-598" fill="#000000" fill-rule="nonzero" points="15 24.0833333 14 48.0833333 20 48.0833333 19 24.0833333"></polygon>
+        <polygon id="Path-598-Copy" fill="#000000" fill-rule="nonzero" points="25 24.0833333 24 48.0833333 30 48.0833333 29 24.0833333"></polygon>
+        <polygon id="Path-598-Copy-2" fill="#000000" fill-rule="nonzero" points="35 24.0833333 34 48.0833333 40 48.0833333 39 24.0833333"></polygon>
+        <polygon id="Path-598-Copy-3" fill="#000000" fill-rule="nonzero" points="45 24.0833333 44 48.0833333 50 48.0833333 49 24.0833333"></polygon>
+    </g>
+</svg>

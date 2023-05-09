@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line_ending_circle</title>
+    <g id="line_ending_circle" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M48,20 C54.627417,20 60,25.372583 60,32 C60,38.627417 54.627417,44 48,44 C42.7754669,44 38.3307507,40.6612069 36.6831465,36.0009157 L4,36 L4,28 L36.6827945,28.0000801 C38.3301176,23.3392688 42.7750948,20 48,20 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

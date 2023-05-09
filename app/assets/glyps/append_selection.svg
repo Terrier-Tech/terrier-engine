@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>append_selection</title>
+    <g id="append_selection" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-48" fill="#000000" fill-rule="nonzero" transform="translate(46.000000, 24.000000) rotate(90.000000) translate(-46.000000, -24.000000) " x="40" y="18" width="12" height="12"></rect>
+        <rect id="Rectangle-48-Copy" fill="#000000" fill-rule="nonzero" transform="translate(32.000000, 46.000000) rotate(90.000000) translate(-32.000000, -46.000000) " x="26" y="40" width="12" height="12"></rect>
+        <rect id="Rectangle-48-Copy-2" fill="#000000" fill-rule="nonzero" transform="translate(18.000000, 18.000000) rotate(90.000000) translate(-18.000000, -18.000000) " x="12" y="12" width="12" height="12"></rect>
+        <rect id="Rectangle-49" fill="#000000" fill-rule="nonzero" x="8" y="7" width="8" height="2"></rect>
+        <rect id="Rectangle-49-Copy" fill="#000000" fill-rule="nonzero" x="24" y="7" width="8" height="2"></rect>
+        <rect id="Rectangle-49-Copy-2" fill="#000000" fill-rule="nonzero" x="40" y="7" width="8" height="2"></rect>
+        <rect id="Rectangle-49-Copy-5" fill="#000000" fill-rule="nonzero" x="16" y="55" width="8" height="2"></rect>
+        <rect id="Rectangle-49-Copy-4" fill="#000000" fill-rule="nonzero" x="32" y="55" width="8" height="2"></rect>
+        <rect id="Rectangle-49-Copy-3" fill="#000000" fill-rule="nonzero" x="48" y="55" width="8" height="2"></rect>
+        <rect id="Rectangle-50" fill="#000000" fill-rule="nonzero" x="55" y="8" width="2" height="8"></rect>
+        <rect id="Rectangle-50-Copy" fill="#000000" fill-rule="nonzero" x="55" y="24" width="2" height="8"></rect>
+        <rect id="Rectangle-50-Copy-2" fill="#000000" fill-rule="nonzero" x="55" y="40" width="2" height="8"></rect>
+        <rect id="Rectangle-50-Copy-5" fill="#000000" fill-rule="nonzero" x="7" y="16" width="2" height="8"></rect>
+        <rect id="Rectangle-50-Copy-4" fill="#000000" fill-rule="nonzero" x="7" y="32" width="2" height="8"></rect>
+        <rect id="Rectangle-50-Copy-3" fill="#000000" fill-rule="nonzero" x="7" y="48" width="2" height="8"></rect>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>store_order_pending</title>
+    <g id="store_order_pending" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Line-12" fill="#000000" fill-rule="nonzero" points="36.5 35 36.5 37 27.5 37 27.5 35"></polygon>
+        <path d="M17.6859305,29.751111 L17.685,51.242 L32.1131644,51.2425817 L32.1131644,53.7425817 L15.1859305,53.7425817 L15.1859305,29.751111 L17.6859305,29.751111 Z M49.0403984,29.751111 L49.0403984,37 L46.5403984,37 L46.5403984,29.751111 L49.0403984,29.751111 Z" id="Path-166" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M33.2899084,8.20892162 L19.4920832,8.20892162 L15.1862121,29.7587492 L33.2475451,29.7587492 L33.2899084,8.20892162 Z M30.785,10.708 L30.752,27.258 L18.235,27.258 L21.541,10.708 L30.785,10.708 Z" id="Path-165" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M44.1302441,8.2150648 L30.75,8.2150648 L30.75,29.7600861 L49.0409189,29.7600861 L44.1302441,8.2150648 Z M42.136,10.715 L45.907,27.26 L33.25,27.26 L33.25,10.715 L42.136,10.715 Z" id="Path-167" fill="#000000" fill-rule="nonzero"></path>
+        <g id="Circles" transform="translate(32.000000, 37.000000)" fill="#000000" fill-rule="nonzero">
+            <path d="M10,0 C4.4771525,0 0,4.4771525 0,10 C0,15.5228475 4.4771525,20 10,20 C15.5228475,20 20,15.5228475 20,10 C20,4.4771525 15.5228475,0 10,0 Z M10,2 C14.418278,2 18,5.581722 18,10 C18,14.418278 14.418278,18 10,18 C5.581722,18 2,14.418278 2,10 C2,5.581722 5.581722,2 10,2 Z" id="Oval-31"></path>
+            <circle id="Oval-30" cx="5" cy="10" r="2"></circle>
+            <circle id="Oval-30" cx="10" cy="10" r="2"></circle>
+            <circle id="Oval-30" cx="15" cy="10" r="2"></circle>
+        </g>
+    </g>
+</svg>

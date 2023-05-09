@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>site_map_settings_left</title>
+    <g id="site_map_settings_left" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M56,8 L56,56 L8,56 L8,8 L56,8 Z M52,12 L12,12 L12,52 L52,52 L52,12 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="12" y="12" width="16" height="28"></rect>
+    </g>
+</svg>

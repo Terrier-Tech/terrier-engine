@@ -3,7 +3,6 @@
 		- message_lines = @ex.message.split("\n")
 		.panel-header
 			h3.with-icon
-				== heading_octicon :alert
 				= message_lines.first
 		.panel-content.padded
 			- if message_lines.count > 1

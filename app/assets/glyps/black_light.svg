@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>black_light</title>
+    <g id="black_light" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" x="30" y="4" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(48.263456, 15.736544) rotate(45.000000) translate(-48.263456, -15.736544) " x="46.263456" y="10.736544" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(55.000000, 32.000000) rotate(90.000000) translate(-55.000000, -32.000000) " x="53" y="27" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(48.263456, 48.263456) rotate(135.000000) translate(-48.263456, -48.263456) " x="46.263456" y="43.263456" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(15.736544, 48.263456) rotate(225.000000) translate(-15.736544, -48.263456) " x="13.736544" y="43.263456" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(9.000000, 32.000000) rotate(270.000000) translate(-9.000000, -32.000000) " x="7" y="27" width="4" height="10" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(15.736544, 15.736544) rotate(315.000000) translate(-15.736544, -15.736544) " x="13.736544" y="10.736544" width="4" height="10" rx="2"></rect>
+        <path d="M27,52 L37,52 C37.5522847,52 38,52.4477153 38,53 L38,57 C38,57.5522847 37.5522847,58 37,58 L35,58 L35,58 C34.3333333,59.3333333 33.3333333,60 32,60 C30.6666667,60 29.6666667,59.3333333 29,58 L27,58 C26.4477153,58 26,57.5522847 26,57 L26,53 C26,52.4477153 26.4477153,52 27,52 Z" id="Path-218" fill="#000000"></path>
+        <path d="M32,20 C37,20 44,24 44,32 C44,40 38,43 38,46 L38,46 L38,49 L26,49 L26,49 L26,46 C26,43 20,40 20,32 C20,24 27,20 32,20 Z M32,24 C27.581722,24 24,27.581722 24,32 C24,33.4074239 24.3634424,34.7299612 25.0006622,35.8780328 C25.066052,29.8590886 29.9655755,25 36,25 L36,25 L35.8788792,25.0015944 C34.7299612,24.3634424 33.4074239,24 32,24 Z" id="Path-220" fill="#000000"></path>
+    </g>
+</svg>

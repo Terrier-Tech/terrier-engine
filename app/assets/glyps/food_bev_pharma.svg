@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>food_bev_pharma</title>
+    <g id="food_bev_pharma" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-177" fill="#000000" fill-rule="nonzero" x="47" y="40" width="6" height="2"></rect>
+        <rect id="Rectangle-176" fill="#000000" fill-rule="nonzero" x="48" y="39" width="4" height="11"></rect>
+        <path d="M42,34 C42.125,39.3333333 44,38.9109701 44,43.7777778 L44,50 L39,50 L39,43.7777778 C39,38.9075521 40.875,39.3333333 41,34 C41.5,34 41.5,34 42,34 Z" id="Path-592-Copy-5" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M38,24 L44.0355416,30.0352346 C40.4068727,30.3013431 37.1919986,32.0569246 34.9997718,34.6931264 L35,34 L31,34 L31,38 L32.9961993,38.0003054 C32.6007646,38.9486134 32.3144289,39.9537925 32.152871,41.0001641 L31,41 L31,45 L32.1530254,45.0008357 C32.4990804,47.240992 33.4170434,49.2923153 34.7530573,51.0009487 L14,51 L14,24 L22,32 L22,24 L30,32 L30,24 L38,32 L38,24 Z M19,41 L15,41 L15,45 L19,45 L19,41 Z M27,41 L23,41 L23,45 L27,45 L27,41 Z M19,34 L15,34 L15,38 L19,38 L19,34 Z M27,34 L23,34 L23,38 L27,38 L27,34 Z" id="Path-591-Copy-2" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-153-Copy" fill="#000000" fill-rule="nonzero" x="8" y="8" width="6" height="43"></rect>
+        <path d="M45,30 C37.8202983,30 32,35.8202983 32,43 C32,50.1797017 37.8202983,56 45,56 C52.1797017,56 58,50.1797017 58,43 C58,35.8202983 52.1797017,30 45,30 Z M45,32 C51.0751322,32 56,36.9248678 56,43 C56,49.0751322 51.0751322,54 45,54 C38.9248678,54 34,49.0751322 34,43 C34,36.9248678 38.9248678,32 45,32 Z" id="Oval-79-Copy-2" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>government</title>
+    <g id="government" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M53,47 L11,47 L11,49 L9,49 L9,51 L7,51 L7,55 L57,55 L57,51 L55,51 L55,49 L53,49 L53,47 Z M53,53 L11,53 L11,51 L13,51 L13,49 L51,49 L51,51 L53,51 L53,53 Z" id="Path-596" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M57,18.3333333 L32,7.91666667 L7,18.3333333 L7,22 L14,22 L14,25 L50,25 L50,22 L57,22 L57,18.3333333 Z M32,10.083 L55,19.667 L55,20 L48,20 L48,23 L16,23 L16,20 L9,20 L9,19.666 L32,10.083 Z" id="Path-597" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-598" fill="#000000" fill-rule="nonzero" points="15 24 14 48 20 48 19 24"></polygon>
+        <polygon id="Path-598-Copy" fill="#000000" fill-rule="nonzero" points="25 24 24 48 30 48 29 24"></polygon>
+        <polygon id="Path-598-Copy-2" fill="#000000" fill-rule="nonzero" points="35 24 34 48 40 48 39 24"></polygon>
+        <polygon id="Path-598-Copy-3" fill="#000000" fill-rule="nonzero" points="45 24 44 48 50 48 49 24"></polygon>
+    </g>
+</svg>

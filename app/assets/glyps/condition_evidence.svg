@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>condition_evidence</title>
+    <g id="condition_evidence" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(32.814340, 32.814340) rotate(-45.000000) translate(-32.814340, -32.814340) translate(16.314340, 3.141874)" fill="#000000" fill-rule="nonzero">
+            <path d="M16.5,0 C25.6126984,0 33,7.38730163 33,16.5 C33,25.6126984 25.6126984,33 16.5,33 C7.38730163,33 0,25.6126984 0,16.5 C0,7.38730163 7.38730163,0 16.5,0 Z M16.5,4 C9.5964406,4 4,9.59644063 4,16.5 C4,23.4035594 9.5964406,29 16.5,29 C23.4035594,29 29,23.4035594 29,16.5 C29,9.59644063 23.4035594,4 16.5,4 Z" id="Oval"></path>
+            <polygon id="Path-13" points="14.1464466 32.3449314 12.1464466 37.7449314 12.1464466 59.3449314 20.1464466 59.3449314 20.1464466 37.7449314 18.1464466 32.3449314"></polygon>
+        </g>
+    </g>
+</svg>

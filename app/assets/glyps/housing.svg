@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>housing</title>
+    <g id="housing" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-580" fill="#000000" fill-rule="nonzero" points="32 19 16 19 3 32 18 32"></polygon>
+        <path d="M59,31.5706886 L38,11.5 L17.6,31 L6,31 L6,52 L59,52 L59,31.5706886 Z M38,14 L57,32.429 L57,50 L8,50 L8,33 L18.3992752,33 L38,14 Z" id="Path-581" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M18,35 L10,35 L10,43 L18,43 L18,35 Z M16,37 L16,41 L12,41 L12,37 L16,37 Z" id="Rectangle-57" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M29,35 L21,35 L21,43 L29,43 L29,35 Z M27,37 L27,41 L23,41 L23,37 L27,37 Z" id="Rectangle-57-Copy" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M54,35 L46,35 L46,43 L54,43 L54,35 Z M52,37 L52,41 L48,41 L48,37 L52,37 Z" id="Rectangle-57-Copy-2" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M42,34 L42,48 L34,48 L34,34 L42,34 Z M36,41 C35.4477153,41 35,41.4477153 35,42 C35,42.5522847 35.4477153,43 36,43 C36.5522847,43 37,42.5522847 37,42 C37,41.4477153 36.5522847,41 36,41 Z" id="door-copy" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-626" fill="#000000" fill-rule="nonzero" points="48 21 48 16 52 16 52 25"></polygon>
+    </g>
+</svg>

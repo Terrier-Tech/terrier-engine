@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>condition_door_window</title>
+    <g id="condition_door_window" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Door" transform="translate(8.000000, 8.000000)" fill="#000000" fill-rule="nonzero">
+            <polygon id="Path-9" points="-1.66533454e-16 0 24 0 24 43.9933241 21 43.9933241 21 3 3 3 3 44 2.46519033e-32 44"></polygon>
+            <path d="M4,4 L19,7.81075222 L19,49 L4,43.8863636 L4,4 Z M16,29 C15.4477153,29 15,29.8954305 15,31 C15,32.1045695 15.4477153,33 16,33 C16.5522847,33 17,32.1045695 17,31 C17,29.8954305 16.5522847,29 16,29 Z" id="Path-10"></path>
+        </g>
+        <path d="M57,8 L57,36 L38,36 L38,8 L57,8 Z M54,31 L41,31 L41,33 L54,33 L54,31 Z M54,24 L41,24 L41,29 L54,29 L54,24 Z M54,18 L41,18 L41,21 L54,21 L54,18 Z M54,11 L41,11 L41,16 L54,16 L54,11 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

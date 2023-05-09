@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>zoom_fit</title>
+    <g id="zoom_fit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M8,40 L8,56 L24,56 L24,60 L8,60 C5.790861,60 4,58.209139 4,56 L4,40 L8,40 Z M60,40 L60,56 C60,58.209139 58.209139,60 56,60 L40,60 L40,56 L56,56 L56,40 L60,40 Z M24,4 L24,8 L8,8 L8,24 L4,24 L4,8 C4,5.790861 5.790861,4 8,4 L24,4 Z M56,4 C58.209139,4 60,5.790861 60,8 L60,24 L56,24 L56,8 L40,8 L40,4 L56,4 Z" id="Rectangle" fill="#000000"></path>
+    </g>
+</svg>

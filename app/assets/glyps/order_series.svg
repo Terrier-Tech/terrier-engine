@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>order_series</title>
+    <g id="order_series" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" fill-rule="nonzero" x="8" y="48" width="48" height="8" rx="2"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" fill-rule="nonzero" x="20" y="28" width="36" height="8" rx="2"></rect>
+        <rect id="Rectangle-Copy-5" fill="#000000" fill-rule="nonzero" x="20" y="8" width="36" height="8" rx="2"></rect>
+        <path d="M20,10.5 L20,13.5 C16.9118896,13.5 15.0711936,14.7594299 15.0027693,17.7534325 L15,18 L15,48 L12,48 L12,18 C12,13.2662479 14.5678324,10.6055968 19.2184665,10.5030775 L20,10.5 Z" id="Path-41" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" fill-rule="nonzero" x="15" y="30.5" width="5" height="3"></rect>
+    </g>
+</svg>

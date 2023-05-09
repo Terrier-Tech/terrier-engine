@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>tablet</title>
+    <g id="tablet" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M48.6666667,4 C50.5076158,4 52,5.44646465 52,7.23076923 L52,56.7692308 C52,58.5535353 50.5076158,60 48.6666667,60 L15.3333333,60 C13.4923842,60 12,58.5535353 12,56.7692308 L12,7.23076923 C12,5.44646465 13.4923842,4 15.3333333,4 L48.6666667,4 Z M48,8 L16,8 L16,52 L48,52 L48,8 Z M32,58 C33.1045695,58 34,57.1045695 34,56 C34,54.8954305 33.1045695,54 32,54 C30.8954305,54 30,54.8954305 30,56 C30,57.1045695 30.8954305,58 32,58 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

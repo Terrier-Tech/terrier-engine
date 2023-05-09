@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>credit_production</title>
+    <g id="credit_production" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M50.0005529,30 L11.9994471,30 C7.58278971,30 4,33.5823764 4,38 C4,42.4129371 7.58399753,46 11.9994471,46 L50.0005529,46 C54.4172103,46 58,42.4176236 58,38 L57.9957986,37.7429254 C57.8499252,33.4285864 54.3137516,30 50.0005529,30 Z M11.9994471,32 L50.0005529,32 C53.2342123,32 55.8874973,34.5725595 55.9965135,37.7936468 L56.0001428,38.0168963 C56.0001428,41.3130025 53.3126924,44 50.0005529,44 L11.9994471,44 C8.68894998,44 6,41.3087501 6,38 C6,34.6869975 8.68730756,32 11.9994471,32 Z" id="Rectangle-280" fill="#000000" fill-rule="nonzero"></path>
+        <circle id="Oval-104" fill="#000000" fill-rule="nonzero" cx="12" cy="38" r="5"></circle>
+        <circle id="Oval-104-Copy" fill="#000000" fill-rule="nonzero" cx="31" cy="38" r="5"></circle>
+        <circle id="Oval-104-Copy-2" fill="#000000" fill-rule="nonzero" cx="50" cy="38" r="5"></circle>
+        <rect id="Rectangle-281" fill="#000000" fill-rule="nonzero" x="11" y="18" width="12" height="12"></rect>
+        <rect id="Rectangle-281-Copy" fill="#000000" fill-rule="nonzero" x="29" y="18" width="12" height="12"></rect>
+        <rect id="Rectangle-281-Copy-2" fill="#000000" fill-rule="nonzero" transform="translate(53.000000, 25.000000) rotate(10.000000) translate(-53.000000, -25.000000) " x="47" y="19" width="12" height="12"></rect>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>condition_dumpster</title>
+    <g id="condition_dumpster" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-11" fill="#000000" fill-rule="nonzero" points="9.60595703 20.7653809 10.7724609 43.623291 22 51.2543945 21 27.6240234"></polygon>
+        <polygon id="Path-13" fill="#000000" fill-rule="nonzero" points="10.1315918 20.1306152 20.7441406 10.0136719 38.7177734 10.0136719 26.3190918 19.5178223"></polygon>
+        <polygon id="Path-14" fill="#000000" fill-rule="nonzero" points="27.2912598 19.5939941 40.387793 24.6768066 53.6894531 23.3012695 38.7487793 18.7910156"></polygon>
+        <circle id="Oval-1" fill="#000000" fill-rule="nonzero" cx="22.5" cy="53.5" r="1.5"></circle>
+        <circle id="Oval-2" fill="#000000" fill-rule="nonzero" cx="51.5" cy="45.5" r="1.5"></circle>
+        <circle id="Oval-3" fill="#000000" fill-rule="nonzero" cx="12.5" cy="46.5" r="1.5"></circle>
+        <polygon id="Path-45" fill="#000000" fill-rule="nonzero" points="22.7128906 51.4211426 53.1760254 43.0698242 53.4121094 37.1550293 22.5202637 43.9052734"></polygon>
+        <polygon id="Path-46" fill="#000000" fill-rule="nonzero" points="22.5596191 42.9335938 53.347168 36.4794922 53.6240234 30.8059082 22.3566406 36.1479492"></polygon>
+        <polygon id="Path-47" fill="#000000" fill-rule="nonzero" points="53.675293 30.244873 53.9191895 26.7905273 22.2250977 30.8789062 22.4445801 35.4289551"></polygon>
+        <polygon id="Path-48" fill="#000000" fill-rule="nonzero" points="22.1325684 27.826416 53.9084473 24.1147461 56 25.9794922 24 29.8731445"></polygon>
+    </g>
+</svg>

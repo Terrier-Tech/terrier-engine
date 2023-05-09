@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bar_chart</title>
+    <g id="bar_chart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M6,4 C7.0543618,4 7.91816512,4.81587779 7.99451426,5.85073766 L8,6 L8,56 L58,56 C59.0543618,56 59.9181651,56.8158778 59.9945143,57.8507377 L60,58 C60,59.0543618 59.1841222,59.9181651 58.1492623,59.9945143 L58,60 L6,60 C4.9456382,60 4.08183488,59.1841222 4.00548574,58.1492623 L4,58 L4,6 C4,4.8954305 4.8954305,4 6,4 Z" id="Path-69" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="12" y="32" width="8" height="22"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="24" y="40" width="8" height="14"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="36" y="24" width="8" height="30"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="48" y="8" width="8" height="46"></rect>
+    </g>
+</svg>

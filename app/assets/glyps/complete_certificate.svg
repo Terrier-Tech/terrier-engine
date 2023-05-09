@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>complete_certificate</title>
+    <g id="complete_certificate" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-161" fill="#000000" fill-rule="nonzero" points="58.1535619 10.3128644 58.1535619 46.821737 52.5834005 46.821737 52.5834005 43.821737 55.153 43.821 55.153 13.312 9.114 13.312 9.114 43.821 28.0327508 43.821737 28.0327508 46.821737 6.11482789 46.821737 6.11482789 10.3128644"></polygon>
+        <path d="M40,24.5 C35.0294373,24.5 31,28.5294373 31,33.5 C31,38.4705627 35.0294373,42.5 40,42.5 C44.9705627,42.5 49,38.4705627 49,33.5 C49,28.5294373 44.9705627,24.5 40,24.5 Z M40,26.5 C43.8659932,26.5 47,29.6340068 47,33.5 C47,37.3659932 43.8659932,40.5 40,40.5 C36.1340068,40.5 33,37.3659932 33,33.5 C33,29.6340068 36.1340068,26.5 40,26.5 Z" id="Oval-28" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Line" fill="#000000" fill-rule="nonzero" points="37.5 19 37.5 21 15.5 21 15.5 19"></polygon>
+        <polygon id="Line-2" fill="#000000" fill-rule="nonzero" points="29.5 27 29.5 29 15.5 29 15.5 27"></polygon>
+        <polygon id="Line-3" fill="#000000" fill-rule="nonzero" points="28.5 35 28.5 37 15.5 37 15.5 35"></polygon>
+        <polygon id="Path-162" fill="#000000" fill-rule="nonzero" points="32.0547074 37.4794362 34.0454917 37.6712112 32.729 51.336 39.8686399 47.7457114 47.076 51.354 45.9625947 37.6563686 47.9560156 37.4942789 49.3577561 54.7332467 39.87 49.983 30.3908979 54.7511607"></polygon>
+    </g>
+</svg>

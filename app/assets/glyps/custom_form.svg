@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>custom_form</title>
+    <g id="custom_form" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M40,4 C40.2652165,4 40.5195704,4.10535684 40.7071068,4.29289322 L40.7071068,4.29289322 L51.7071068,15.2928932 C51.8946432,15.4804296 52,15.7347835 52,16 L52,16 L52,59 C52,59.5522847 51.5522847,60 51,60 L51,60 L13,60 C12.4477153,60 12,59.5522847 12,59 L12,59 L12,5 C12,4.44771525 12.4477153,4 13,4 L13,4 Z M37,8 L16,8 L16,56 L48,56 L48,18.5 L38,18.5 C37.4871642,18.5 37.0644928,18.1139598 37.0067277,17.6166211 L37,17.5 L37,8 Z M46,15 L41,10 L41,15 L46,15 Z" id="page" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="18" y="12" width="12" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="18" y="21" width="12" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="18" y="30" width="28" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-6" fill="#000000" x="18" y="48" width="28" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="34" y="21" width="12" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-5" fill="#000000" x="18" y="39" width="12" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" x="34" y="39" width="12" height="4" rx="2"></rect>
+    </g>
+</svg>

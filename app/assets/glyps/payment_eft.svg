@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>payment_eft</title>
+    <g id="payment_eft" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-685" fill="#000000" fill-rule="nonzero" points="8 20 8 18 32 10 56 18 56 20"></polygon>
+        <rect id="Rectangle-272" fill="#000000" fill-rule="nonzero" x="8" y="42" width="48" height="6"></rect>
+        <rect id="Rectangle-273" fill="#000000" fill-rule="nonzero" x="23" y="21" width="6" height="20"></rect>
+        <rect id="Rectangle-273-Copy" fill="#000000" fill-rule="nonzero" x="11" y="21" width="6" height="20"></rect>
+        <rect id="Rectangle-273-Copy-3" fill="#000000" fill-rule="nonzero" x="47" y="21" width="6" height="20"></rect>
+        <rect id="Rectangle-273-Copy-2" fill="#000000" fill-rule="nonzero" x="35" y="21" width="6" height="20"></rect>
+    </g>
+</svg>

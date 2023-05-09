@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>store_order_back_order</title>
+    <g id="store_order_back_order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-166" fill="#000000" fill-rule="nonzero" points="21.25 29.2921893 21.25 50.783 50.104 50.783 50.1044679 29.2921893 52.6044679 29.2921893 52.6044679 53.2836601 18.75 53.2836601 18.75 29.2921893"></polygon>
+        <path d="M47.6943136,7.75614318 L34.3140695,7.75614318 L34.3140695,29.3011644 L52.6049884,29.3011644 L47.6943136,7.75614318 Z M45.7,10.256 L49.471,26.801 L36.814,26.801 L36.814,10.256 L45.7,10.256 Z" id="Path-167" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M36.8539779,7.75 L23.0561527,7.75 L18.7502817,29.2998275 L36.8116146,29.2998275 L36.8539779,7.75 Z M34.349,10.25 L34.316,26.799 L21.799,26.799 L25.105,10.25 L34.349,10.25 Z" id="Path-165" fill="#000000" fill-rule="nonzero"></path>
+        <g id="Back-Arrows" transform="translate(23.000000, 30.000000)" fill="#000000" fill-rule="nonzero">
+            <polygon id="Triangle-2" transform="translate(2.000000, 3.000000) rotate(-90.000000) translate(-2.000000, -3.000000) " points="2 1 5 5 -1 5"></polygon>
+            <polygon id="Triangle-2" transform="translate(11.000000, 10.000000) rotate(-90.000000) translate(-11.000000, -10.000000) " points="11 8 14 12 8 12"></polygon>
+            <polygon id="Line-15" points="7.5 2 7.5 4 3.5 4 3.5 2"></polygon>
+            <polygon id="Line-15" points="16.5 9 16.5 11 12.5 11 12.5 9"></polygon>
+            <polygon id="Line-15" points="25.5 16 25.5 18 21.5 18 21.5 16"></polygon>
+            <polygon id="Triangle-2" transform="translate(20.000000, 17.000000) rotate(-90.000000) translate(-20.000000, -17.000000) " points="20 15 23 19 17 19"></polygon>
+        </g>
+    </g>
+</svg>

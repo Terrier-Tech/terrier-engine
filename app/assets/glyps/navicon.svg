@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>navicon</title>
+    <g id="navicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" x="8" y="8" width="48" height="8" rx="4"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="8" y="28" width="48" height="8" rx="4"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="8" y="48" width="48" height="8" rx="4"></rect>
+    </g>
+</svg>

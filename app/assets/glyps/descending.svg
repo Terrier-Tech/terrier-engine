@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>descending</title>
+    <g id="descending" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(32.000000, 32.000000) scale(1, -1) translate(-32.000000, -32.000000) translate(4.000000, 4.000000)" fill="#000000">
+            <rect id="Rectangle" x="18" y="0" width="20" height="8" rx="4"></rect>
+            <rect id="Rectangle-Copy" x="12" y="16" width="32" height="8" rx="4"></rect>
+            <rect id="Rectangle-Copy-2" x="6" y="32" width="44" height="8" rx="4"></rect>
+            <rect id="Rectangle-Copy-3" x="0" y="48" width="56" height="8" rx="4"></rect>
+        </g>
+    </g>
+</svg>

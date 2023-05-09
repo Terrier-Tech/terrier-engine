@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>card_visa</title>
+    <g id="card_visa" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle-286" fill="#000000" fill-rule="nonzero" x="6" y="16" width="52" height="8"></rect>
+        <rect id="Rectangle-286-Copy" fill="#000000" fill-rule="nonzero" x="6" y="40" width="52" height="8"></rect>
+        <path d="M15,26 L20.5,26 L20.5,34 L25,26 L28,26 L21,38 L18,38 C18,38 18,29.4151042 17.5,28 C17,26.5848958 15,26 15,26 Z" id="Path-733" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-734" fill="#000000" fill-rule="nonzero" points="29 26 32 26 28 38 25 38"></polygon>
+        <path d="M40,29 L41,27 C41,27 40.1065466,26 38,26 C35.0577792,26 33.87972,26.5976562 33,28 C32.12028,29.4023438 32.5,31.465332 34,32.5 C35.5,33.534668 36.4336306,33.9468174 36,35 C35.1956418,36.3228204 31,35 31,35 L30,37 C30,37 32,38.2565107 35,38 C38,37.7434893 39.5,36.1987305 39.5,34 C39.5,31.8012695 36.6137695,31.0764976 36,30 C35.3862305,28.9235024 36.6079102,27.6805012 38,28 C39.3920898,28.3194988 40,29 40,29 Z" id="Path-735" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M49,26 L49,38 L46,38 L46,36 L43,36 L42,38 L39,38 L45,26 L49,26 Z M46,30 L44,34 L46,34 L46,30 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

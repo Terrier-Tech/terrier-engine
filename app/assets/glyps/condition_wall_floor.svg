@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>condition_wall_floor</title>
+    <g id="condition_wall_floor" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Floor" transform="translate(4.000000, 25.000000)" fill="#000000" fill-rule="nonzero">
+            <polygon id="Path-31" points="17 21.6716178 34 14 52 20.5686429 35.3934737 31"></polygon>
+            <polygon id="Path-32" points="33.5 14 21 9 32.6524993 5 46 9"></polygon>
+            <polygon id="Path-33" points="4.12803558 15 21 9.01420693 10.2746908 5 -8.01442246e-16 7.66245752 -3.73034936e-14 12.3732863"></polygon>
+            <polygon id="Path-34" points="4.10006382 15 -7.43155537e-15 16.5391197 0 29 17 21.7089358"></polygon>
+            <polygon id="Path-36" points="32.9356996 5 43 2.13715244 32.2650463 0 22 2.28973575"></polygon>
+            <polygon id="Path-37" points="28 35 35.0588235 31 43 35"></polygon>
+            <polygon id="Path-38" points="55.9643536 23 50 21.1629327 56 18"></polygon>
+            <polygon id="Path-39" points="56 5.175 55.1581659 5 46 8.90608317 56 12"></polygon>
+        </g>
+        <polygon id="Combined-Shape" fill="#000000" fill-rule="nonzero" points="38.5 4 38.5 21.326 60 26 60 29 37 24 4 32 4 29 35.5 21.364 35.5 4"></polygon>
+    </g>
+</svg>

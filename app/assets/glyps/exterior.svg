@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>exterior</title>
+    <g id="exterior" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-18" fill="#000000" fill-rule="nonzero" points="46 30.9064071 46 21.951847 56 17.4745669 56 26.1167587"></polygon>
+        <polygon id="Path-25" fill="#000000" fill-rule="nonzero" points="51 18.3075524 51 10.1859715 56 8.15028954 56 15.912725"></polygon>
+        <polygon id="Path-19" fill="#000000" fill-rule="nonzero" points="34 36.2166695 30 34.6548276 30 25.8043903 34 27.2621094 45 22.3683381 45 31.3228983"></polygon>
+        <polygon id="Path-20" fill="#000000" fill-rule="nonzero" points="40 23.4095661 40 14.8714971 50 10.7065854 50 18.9322876"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(14.500000, 14.611190) scale(-1, 1) translate(-14.500000, -14.611190) " points="8 21.1188646 8 12.7890413 21 8.10351562 21 16.433339"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(11.993664, 23.617812) scale(-1, 1) translate(-11.993664, -23.617812) " points="7.9999993 29.448688 7.9999993 20.5982507 15.9873278 17.7869353 15.9873278 26.3250043"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(30.500000, 19.557023) scale(-1, 1) translate(-30.500000, -19.557023) " points="27 25.8043903 22 23.7219344 22 15.3921111 27 17.4745669 39 13.3096552 39 21.6394786"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(23.000000, 27.678601) scale(-1, 1) translate(-23.000000, -27.678601) " points="17 34.2383365 17 25.2837763 29 21.1188646 29 29.7610564"></polygon>
+        <polygon id="Path-29" fill="#000000" fill-rule="nonzero" points="46 50.6897376 46 41.7351775 56 37.2578974 56 45.9000892"></polygon>
+        <polygon id="Path-28" fill="#000000" fill-rule="nonzero" points="51 38.0908829 51 29.7610564 56 27.5171289 56 35.6960555"></polygon>
+        <polygon id="Path-27" fill="#000000" fill-rule="nonzero" points="34 56 30 54.4381581 30 45.5877208 34 47.0454399 45 42.1516686 45 51.1062288"></polygon>
+        <polygon id="Path-24" fill="#000000" fill-rule="nonzero" points="40 43.1928966 40 34.6548276 50 30.1775476 50 38.7156181"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(14.500000, 34.238336) scale(-1, 1) translate(-14.500000, -34.238336) " points="8 40.9021951 8 32.468249 21 27.5744777 21 36.2166695"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(11.993664, 43.401142) scale(-1, 1) translate(-11.993664, -43.401142) " points="7.9999993 49.2320185 7.9999993 40.3815812 15.9873278 37.5702658 15.9873278 46.1083348"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(30.500000, 39.236231) scale(-1, 1) translate(-30.500000, -39.236231) " points="27 45.5877208 22 43.5052649 22 35.1754416 27 37.2578974 39 32.8847402 39 41.4228091"></polygon>
+        <polygon id="Path" fill="#000000" fill-rule="nonzero" transform="translate(23.000000, 47.461931) scale(-1, 1) translate(-23.000000, -47.461931) " points="17 54.021667 17 45.0671068 29 40.9021951 29 49.5443869"></polygon>
+    </g>
+</svg>

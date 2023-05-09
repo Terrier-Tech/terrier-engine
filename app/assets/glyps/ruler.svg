@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>ruler</title>
+    <g id="ruler" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M40,1 C41.1045695,1 42,1.8954305 42,3 L42,61 C42,62.1045695 41.1045695,63 40,63 L24,63 C22.8954305,63 22,62.1045695 22,61 L22,3 C22,1.8954305 22.8954305,1 24,1 L40,1 Z M38,5 L26,5 L26,10 L32,10 L32,14 L26,14 L26,20 L32,20 L32,24 L26,24 L26,30 L32,30 L32,34 L26,34 L26,40 L32,40 L32,44 L26,44 L26,50 L32,50 L32,54 L26,54 L26,59 L38,59 L38,5 Z" id="Rectangle" fill="#000000" fill-rule="nonzero" transform="translate(32.000000, 32.000000) rotate(45.000000) translate(-32.000000, -32.000000) "></path>
+    </g>
+</svg>

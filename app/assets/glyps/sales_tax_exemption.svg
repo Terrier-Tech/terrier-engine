@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sales_tax_exemption</title>
+    <g id="sales_tax_exemption" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M29,10 C15.1928813,10 4,21.1928813 4,35 C4,48.8071187 15.1928813,60 29,60 C42.8071187,60 54,48.8071187 54,35 L53.9865445,34.7667577 C53.8710143,33.7720804 53.0256717,33 52,33 L31,33 L31,12 C31,10.8954305 30.1045695,10 29,10 Z M27,14.094 L27,35 L27.0134555,35.2332423 C27.1289857,36.2279196 27.9743283,37 29,37 L49.904,37 L49.880748,37.2512106 C48.7575057,47.7906037 39.8374565,56 29,56 C17.4020203,56 8,46.5979797 8,35 C8,24.1625435 16.2093963,15.2424943 26.7487894,14.119252 L27,14.094 Z" id="Oval" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="45" y="4" width="4" height="26" rx="2"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" transform="translate(47.000000, 17.000000) rotate(45.000000) translate(-47.000000, -17.000000) " x="45" y="4" width="4" height="26" rx="2"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" transform="translate(47.000000, 17.000000) rotate(135.000000) translate(-47.000000, -17.000000) " x="45" y="4" width="4" height="26" rx="2"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" transform="translate(47.000000, 17.000000) rotate(90.000000) translate(-47.000000, -17.000000) " x="45" y="4" width="4" height="26" rx="2"></rect>
+    </g>
+</svg>

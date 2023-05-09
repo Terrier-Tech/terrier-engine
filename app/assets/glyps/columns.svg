@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>columns</title>
+    <g id="columns" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" x="4" y="8" width="8" height="48" rx="4"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="20" y="8" width="8" height="40" rx="4"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="36" y="8" width="8" height="48" rx="4"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="52" y="8" width="8" height="32" rx="4"></rect>
+    </g>
+</svg>

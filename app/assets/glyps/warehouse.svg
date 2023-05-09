@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>warehouse</title>
+    <g id="warehouse" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M57,16 L7,16 L7,44 L13,44 L13,28 L28,28 L28,44 L36,44 L36,28 L51,28 L51,44 L57,44 L57,16 Z M55,18 L55,44 L53,44 L53,26 L34,26 L34,44 L30,44 L30,26 L11,26 L11,44 L9,44 L9,18 L55,18 Z" id="Rectangle-147" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-148" fill="#000000" fill-rule="nonzero" x="6" y="44" width="52" height="3"></rect>
+        <rect id="Rectangle-150" fill="#000000" fill-rule="nonzero" x="14" y="39" width="6" height="5"></rect>
+        <rect id="Rectangle-150-Copy-2" fill="#000000" fill-rule="nonzero" x="17" y="33" width="6" height="6"></rect>
+        <rect id="Rectangle-150-Copy" fill="#000000" fill-rule="nonzero" x="21" y="39" width="6" height="5"></rect>
+        <rect id="Rectangle-177" fill="#000000" fill-rule="nonzero" x="36" y="31" width="15" height="1"></rect>
+        <rect id="Rectangle-177-Copy" fill="#000000" fill-rule="nonzero" x="36" y="35" width="15" height="1"></rect>
+        <rect id="Rectangle-177-Copy-2" fill="#000000" fill-rule="nonzero" x="36" y="39" width="15" height="1"></rect>
+        <rect id="Rectangle-177-Copy-3" fill="#000000" fill-rule="nonzero" x="36" y="43" width="15" height="1"></rect>
+    </g>
+</svg>

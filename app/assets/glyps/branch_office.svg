@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>branch_office</title>
+    <g id="branch_office" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M30,8 C32.209139,8 34,9.790861 34,12 L34,32 L34,32 L56,32 C58.3669346,32 60,33.790861 60,36 L60,56 L4,56 L4,12 C4,9.790861 5.790861,8 8,8 L30,8 Z M30,12 L8,12 L8,52 L14,52 L14,48 L24,48 L24,52 L30,52 L30,12 Z M56,36 L34,36 L34,52 L40,52 L40,48 L50,48 L50,52 L56,52 L56,36 Z M17,40 L17,44 L11,44 L11,40 L17,40 Z M27,40 L27,44 L21,44 L21,40 L27,40 Z M43,40 L43,44 L37,44 L37,40 L43,40 Z M53,40 L53,44 L47,44 L47,40 L53,40 Z M17,32 L17,36 L11,36 L11,32 L17,32 Z M27,32 L27,36 L21,36 L21,32 L27,32 Z M17,24 L17,28 L11,28 L11,24 L17,24 Z M27,24 L27,28 L21,28 L21,24 L27,24 Z M17,16 L17,20 L11,20 L11,16 L17,16 Z M27,16 L27,20 L21,20 L21,16 L27,16 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

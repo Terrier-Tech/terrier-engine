@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>license</title>
+    <g id="license" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M52,12 C56.418278,12 60,15.581722 60,20 L60,44 C60,48.418278 56.418278,52 52,52 L12,52 C7.581722,52 4,48.418278 4,44 L4,20 C4,15.581722 7.581722,12 12,12 L52,12 Z M52,16 L12,16 C9.85780461,16 8.10892112,17.6839685 8.00489531,19.8003597 L8,20 L8,44 C8,46.1421954 9.68396847,47.8910789 11.8003597,47.9951047 L12,48 L52,48 C54.1421954,48 55.8910789,46.3160315 55.9951047,44.1996403 L56,44 L56,20 C56,17.8578046 54.3160315,16.1089211 52.1996403,16.0048953 L52,16 Z" id="Rectangle-59" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-61" fill="#000000" fill-rule="nonzero" x="32" y="22" width="19" height="4" rx="2"></rect>
+        <rect id="Rectangle-61" fill="#000000" fill-rule="nonzero" x="32" y="38" width="19" height="4" rx="2"></rect>
+        <rect id="Rectangle-61" fill="#000000" fill-rule="nonzero" x="32" y="30" width="22" height="4" rx="2"></rect>
+        <path d="M29,22 L29,42 L26,42 L26,38 C25.7468774,35.9750195 24.5326894,34.7188914 22.3574359,34.2316157 C23.3528236,33.5048767 24,32.3280164 24,31 C24,28.790861 22.209139,27 20,27 C17.790861,27 16,28.790861 16,31 C16,32.3280164 16.6471764,33.5048767 17.6433483,34.2323999 C15.4673106,34.7188914 14.2531226,35.9750195 14,38 L14,38 L14,42 L11,42 L11,22 L29,22 Z" id="Rectangle-67" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

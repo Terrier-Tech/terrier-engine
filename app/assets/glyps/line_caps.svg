@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line_caps</title>
+    <g id="line_caps" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M11,4 C14.8659932,4 18,7.13400675 18,11 C18,11.8249861 17.8572845,12.6166392 17.5951954,13.3516176 L51.363961,47.1213203 L55.6066017,42.8786797 L59.8492424,59.8492424 L42.8786797,55.6066017 L47.1213203,51.363961 L13.3516176,17.5951954 C12.6166392,17.8572845 11.8249861,18 11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

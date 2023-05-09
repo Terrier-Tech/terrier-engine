@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>template</title>
+    <g id="template" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M32,4 C38.627417,4 44,9.372583 44,16 C44,22.627417 38.627417,28 32,28 C25.372583,28 20,22.627417 20,16 C20,9.372583 25.372583,4 32,4 Z M32,8 C27.581722,8 24,11.581722 24,16 C24,20.418278 27.581722,24 32,24 C36.418278,24 40,20.418278 40,16 C40,11.581722 36.418278,8 32,8 Z" id="Oval" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M38,24 L38,42 L26,42 L26,24 L38,24 Z M34,28 L30,28 L30,39 L34,39 L34,28 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M52,39 C54.209139,39 56,40.790861 56,43 L56,51 C56,53.209139 54.209139,55 52,55 L12,55 C9.790861,55 8,53.209139 8,51 L8,43 C8,40.790861 9.790861,39 12,39 L52,39 Z M52,43 L12,43 L12,51 L52,51 L52,43 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M14,56 L50,56 L50,58 C50,59.1045695 49.1045695,60 48,60 L16,60 C14.8954305,60 14,59.1045695 14,58 L14,56 L14,56 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>condition_entry_point</title>
+    <g id="condition_entry_point" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M47,8 C51.9705627,8 56,18.745166 56,32 C56,45.254834 51.9705627,56 47,56 C43.0182899,56 39.6404947,49.1048889 38.4539891,39.5479961 L46,32 L38.4539891,24.4530006 C39.6402599,14.8955906 43.0181515,8 47,8 Z" id="Oval-8" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-10-Copy" fill="#000000" fill-rule="nonzero" points="8 26 8 38 29 38 29 47 44 32 29 17 29 26"></polygon>
+    </g>
+</svg>

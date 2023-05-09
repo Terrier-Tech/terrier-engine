@@ -1,0 +1,26 @@
+
+////////////////////////////////////////////////////////////////////////////////
+// Glyps
+////////////////////////////////////////////////////////////////////////////////
+
+.glyps-preview {
+	z-index: 0;
+	display: grid;
+	grid-gap: 20px;
+	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	.icon {
+		color: var(--link-color);
+		display: block;
+		text-align: center;
+		i {
+			display: block;
+			margin: 0;
+			font-size: 40px;
+			line-height: 1.1;
+		}
+		span {
+			font-size: 12px;
+			word-wrap: anywhere;
+		}
+	}
+}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>checked-empty</title>
+    <g id="checked-empty" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M50,5 L14,5 C9.02943725,5 5,9.02943725 5,14 L5,50 C5,54.9705627 9.02943725,59 14,59 L50,59 C54.9705627,59 59,54.9705627 59,50 L59,14 C59,9.02943725 54.9705627,5 50,5 Z M14,11 L50,11 C51.6568542,11 53,12.3431458 53,14 L53,50 C53,51.6568542 51.6568542,53 50,53 L14,53 C12.3431458,53 11,51.6568542 11,50 L11,14 C11,12.3431458 12.3431458,11 14,11 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

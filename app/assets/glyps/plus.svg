@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>plus</title>
+    <g id="plus" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M32,10 C34.209139,10 36,11.790861 36,14 L36,28 L50,28 C52.209139,28 54,29.790861 54,32 C54,34.209139 52.209139,36 50,36 L36,36 L36,50 C36,52.209139 34.209139,54 32,54 C29.790861,54 28,52.209139 28,50 L28,36 L14,36 C11.790861,36 10,34.209139 10,32 C10,29.790861 11.790861,28 14,28 L28,28 L28,14 C28,11.790861 29.790861,10 32,10 Z" id="Combined-Shape" fill="#000000"></path>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>calculate</title>
+    <g id="calculate" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M48,4 C50.209139,4 52,5.790861 52,8 L52,56 C52,58.209139 50.209139,60 48,60 L16,60 C13.790861,60 12,58.209139 12,56 L12,8 C12,5.790861 13.790861,4 16,4 L48,4 Z M16,8 L16,56 L48,56 L48,8 L16,8 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M42,12 C43.1045695,12 44,12.8954305 44,14 L44,22 C44,23.1045695 43.1045695,24 42,24 L22,24 C20.8954305,24 20,23.1045695 20,22 L20,14 C20,12.8954305 20.8954305,12 22,12 L42,12 Z M40,16 L24,16 L24,20 L40,20 L40,16 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <circle id="Oval" fill="#000000" cx="23" cy="31" r="3"></circle>
+        <circle id="Oval-Copy" fill="#000000" cx="32" cy="31" r="3"></circle>
+        <circle id="Oval-Copy-2" fill="#000000" cx="41" cy="31" r="3"></circle>
+        <circle id="Oval-Copy-5" fill="#000000" cx="23" cy="40" r="3"></circle>
+        <circle id="Oval-Copy-4" fill="#000000" cx="32" cy="40" r="3"></circle>
+        <circle id="Oval-Copy-8" fill="#000000" cx="23" cy="49" r="3"></circle>
+        <circle id="Oval-Copy-7" fill="#000000" cx="32" cy="49" r="3"></circle>
+        <rect id="Rectangle" fill="#000000" x="38" y="37" width="6" height="15" rx="3"></rect>
+    </g>
+</svg>

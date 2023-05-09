@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>office</title>
+    <g id="office" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M6,56 L6,12 C6,9.790861 7.790861,8 10,8 L30,8 C32.209139,8 34,9.790861 34,12 L34,32 L34,32 L54,32 C56.209139,32 58,33.790861 58,36 L58,56 L6,56 Z M30,12 L10,12 L10,52 L30,52 L30,12 Z M54,36 L34,36 L34,52 L54,52 L54,36 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="14" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="22" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" x="14" y="24" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="22" y="24" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-8" fill="#000000" x="14" y="32" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-7" fill="#000000" x="22" y="32" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-6" fill="#000000" x="14" y="40" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-5" fill="#000000" x="22" y="40" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-12" fill="#000000" x="38" y="40" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-11" fill="#000000" x="46" y="40" width="4" height="4"></rect>
+        <rect id="Rectangle-Copy-9" fill="#000000" x="16" y="48" width="8" height="4"></rect>
+        <rect id="Rectangle-Copy-10" fill="#000000" x="40" y="48" width="8" height="4"></rect>
+    </g>
+</svg>

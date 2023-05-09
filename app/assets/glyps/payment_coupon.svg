@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>payment_coupon</title>
+    <g id="payment_coupon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="scissors" transform="translate(5.000000, 9.820007)">
+            <ellipse id="Oval-116" stroke="#000000" stroke-width="3" transform="translate(8.844520, 6.276362) rotate(18.000000) translate(-8.844520, -6.276362) " cx="8.84452011" cy="6.27636202" rx="8" ry="4"></ellipse>
+            <ellipse id="Oval-116-Copy" stroke="#000000" stroke-width="3" transform="translate(8.656828, 17.955889) rotate(-12.000000) translate(-8.656828, -17.955889) " cx="8.65682771" cy="17.9558889" rx="8" ry="4"></ellipse>
+            <path d="M42.6897537,24.0635192 C38.8127009,24.7545071 29.6026344,22.1916712 27.5330512,21.0902764 C25.4634681,19.9888816 11.0000001,12.8474742 11.0000001,12.8474742 L12.8256861,10.1799927 C12.8256861,10.1799927 46.5668065,23.3725312 42.6897537,24.0635192 Z" id="Path-790" fill="#000000" fill-rule="nonzero"></path>
+            <path d="M42.6897537,14.0635191 C38.8127009,14.754507 29.6026344,12.1916711 27.5330512,11.0902763 C25.4634681,9.98888154 11.0000001,2.8474741 11.0000001,2.8474741 L12.8256861,0.179992638 C12.8256861,0.179992638 46.5668065,13.3725311 42.6897537,14.0635191 Z" id="Path-790-Copy" fill="#000000" fill-rule="nonzero" transform="translate(27.000000, 7.179993) scale(-1, 1) rotate(-180.000000) translate(-27.000000, -7.179993) "></path>
+        </g>
+        <polygon id="Path-789" fill="#000000" fill-rule="nonzero" points="35 22.0064727 35 24.0064727 29 24.0064727 29 22.0064727"></polygon>
+        <polygon id="Path-789-Copy" fill="#000000" fill-rule="nonzero" points="45 22 45 24 39 24 39 22"></polygon>
+        <polygon id="Path-789-Copy-2" fill="#000000" fill-rule="nonzero" points="55 22 55 24 49 24 49 22"></polygon>
+        <polygon id="Path-789-Copy-3" fill="#000000" fill-rule="nonzero" points="47 52 47 54 41 54 41 52"></polygon>
+        <polygon id="Path-789-Copy-4" fill="#000000" fill-rule="nonzero" points="37 52 37 54 31 54 31 52"></polygon>
+        <polygon id="Path-789-Copy-5" fill="#000000" fill-rule="nonzero" points="27 52 27 54 21 54 21 52"></polygon>
+        <path d="M12.9528394,50.6549044 C13.5686374,51.7592863 14.0910616,51.9738831 16.4627647,51.9975876 L17,52 L17,54 L16.4046144,53.9962282 C13.4501195,53.955822 12.3431915,53.5689873 11.3062317,51.8040487 L11.2060395,51.6289115 L12.9528394,50.6549044 Z" id="Path-789-Copy-12" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M56.139051,51.4316829 L57.5656324,52.8334195 C56.6257128,53.7899985 55.589461,53.9736149 52.0089033,53.9971019 L51,54 L51,52 L52.2005614,51.9942528 C54.7611533,51.9665948 55.6896369,51.8333385 56.0973136,51.4713485 L56.139051,51.4316829 Z" id="Path-789-Copy-6" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-789-Copy-7" fill="#000000" fill-rule="nonzero" points="59 34 59 40 57 40 57 34"></polygon>
+        <polygon id="Path-789-Copy-10" fill="#000000" fill-rule="nonzero" points="13 42 13 48 11 48 11 42"></polygon>
+        <polygon id="Path-789-Copy-11" fill="#000000" fill-rule="nonzero" points="13 35 13 39 11 39 11 35"></polygon>
+        <polygon id="Path-789-Copy-8" fill="#000000" fill-rule="nonzero" points="59 44 59 50 57 50 57 44"></polygon>
+        <path d="M56.5113592,24.5155394 L58.225091,23.4844606 L58.3410271,23.6908077 C58.8538139,24.6721907 58.9778774,25.946216 58.9970873,28.9670656 L59,30 L57,30 L56.9940278,28.7243723 C56.9682733,26.2836453 56.8538791,25.1573851 56.5488805,24.5819914 L56.5113592,24.5155394 Z" id="Path-789-Copy-9" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

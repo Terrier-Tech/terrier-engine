@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>lodging</title>
+    <g id="lodging" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-88" fill="#000000" fill-rule="nonzero" cx="40.5" cy="39.5" r="1.5"></circle>
+        <path d="M42,38 L49.4936024,38 C50.3255628,38 51,38.6657972 51,39.5 L51,41 L42,41 L42,38 Z" id="Rectangle-175" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M44,28 C36.8202983,28 31,33.8202983 31,41 C31,48.1797017 36.8202983,54 44,54 C51.1797017,54 57,48.1797017 57,41 C57,33.8202983 51.1797017,28 44,28 Z M44,30 C50.0751322,30 55,34.9248678 55,41 C55,47.0751322 50.0751322,52 44,52 C37.9248678,52 33,47.0751322 33,41 C33,34.9248678 37.9248678,30 44,30 Z" id="Oval-79-Copy-3" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M47.99819,12 L12.00181,12 C9.24063991,12 7,14.2373986 7,16.9970002 L7,46.9999716 L34.2927965,47.0007474 L33.7676486,45.640538 C33.2623897,44.3318443 33,42.9348354 33,41.5 C33,35.1487254 38.1487254,30 44.5,30 C47.0252712,30 49.4244354,30.8148974 51.4002686,32.2992867 L53.0010465,33.5019071 L53,16.9969368 C53,14.2426077 50.7578479,12 47.99819,12 Z M47.99819,14 L48.1742846,14.0051071 C49.7476705,14.0966067 51,15.4060118 51,16.9970002 L51,29.665 L50.6905958,29.4998672 C48.8012811,28.5232606 46.6895474,28 44.5,28 C37.0441559,28 31,34.0441559 31,41.5 L31.0076252,41.9577032 C31.0380917,42.8708883 31.1596487,43.7701815 31.3685871,44.6454332 L31.459,45 L9,45 L9,16.9970002 C9,15.3426167 10.3445618,14 12.00181,14 L47.99819,14 Z" id="Rectangle-64-Copy" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-69" fill="#000000" fill-rule="nonzero" x="11" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy" fill="#000000" fill-rule="nonzero" x="18" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-2" fill="#000000" fill-rule="nonzero" x="25" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-3" fill="#000000" fill-rule="nonzero" x="32" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-4" fill="#000000" fill-rule="nonzero" x="39" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-5" fill="#000000" fill-rule="nonzero" x="46" y="23" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-21" fill="#000000" fill-rule="nonzero" x="11" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-20" fill="#000000" fill-rule="nonzero" x="18" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-19" fill="#000000" fill-rule="nonzero" x="25" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-18" fill="#000000" fill-rule="nonzero" x="32" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-17" fill="#000000" fill-rule="nonzero" x="39" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-16" fill="#000000" fill-rule="nonzero" x="46" y="16" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-11" fill="#000000" fill-rule="nonzero" x="11" y="30" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-10" fill="#000000" fill-rule="nonzero" x="18" y="30" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-13" fill="#000000" fill-rule="nonzero" x="11" y="37" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-12" fill="#000000" fill-rule="nonzero" x="18" y="37" width="4" height="4"></rect>
+        <rect id="Rectangle-69-Copy-9" fill="#000000" fill-rule="nonzero" x="25" y="30" width="4" height="4"></rect>
+        <path d="M32,30 L36,30 L36,32 C36,33.1045695 35.1122704,34 34,34 L32,34 L32,30 Z" id="Rectangle-69-Copy-8" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle-174" fill="#000000" fill-rule="nonzero" x="24" y="36" width="6" height="8"></rect>
+        <path d="M37,35 C37.5128358,35 37.9355072,35.3860402 37.9932723,35.8833789 L38,36 L38,42 L51,42 C51.5128358,42 51.9355072,42.3860402 51.9932723,42.8833789 L52,43 L52,46 C52,46.5522847 51.5522847,47 51,47 C50.4871642,47 50.0644928,46.6139598 50.0067277,46.1166211 L50,46 L50,44 L38,44 L38,46 C38,47.2873563 36.1355529,47.3317479 36.0069704,46.1331748 L36,46 L36,36 C36,35.4477153 36.4477153,35 37,35 Z" id="Path-624" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

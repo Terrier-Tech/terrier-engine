@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>store_order</title>
+    <g id="store_order" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M33.2899084,8.20892162 L19.4920832,8.20892162 L15.1862121,29.7587492 L33.2475451,29.7587492 L33.2899084,8.20892162 Z M30.785,10.708 L30.752,27.258 L18.235,27.258 L21.541,10.708 L30.785,10.708 Z" id="Path-165" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M44.1302441,8.2150648 L30.75,8.2150648 L30.75,29.7600861 L49.0409189,29.7600861 L44.1302441,8.2150648 Z M42.136,10.715 L45.907,27.26 L33.25,27.26 L33.25,10.715 L42.136,10.715 Z" id="Path-167" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-166" fill="#000000" fill-rule="nonzero" points="17.6859305 29.751111 17.685 51.242 46.54 51.242 46.5403984 29.751111 49.0403984 29.751111 49.0403984 53.7425817 15.1859305 53.7425817 15.1859305 29.751111"></polygon>
+        <polygon id="Line-12" fill="#000000" fill-rule="nonzero" points="36.5 36 36.5 38 27.5 38 27.5 36"></polygon>
+    </g>
+</svg>

@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get 'slow_page' => 'client_side#slow_page'
   get 'tt_styles' => 'client_side#tt_styles'
 
+  get 'icons/glyps'
+
   get 'rendering/exception'
 
   get 'sql' => 'sql#index'
