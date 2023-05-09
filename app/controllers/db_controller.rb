@@ -80,6 +80,7 @@ class DbController < ApplicationController
       render_api_success record: record.as_json(include: ar_to_json_includes(includes)), errors: {}
     rescue => ex
       log_exception ex
+      record ||= attrs # make sure there's something to return
       errors = ApplicationRecord.safe_record_errors(ex, record)
       render_error ex.message, record: record, errors: errors, backtrace: ex.backtrace
     end
