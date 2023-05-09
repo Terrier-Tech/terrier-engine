@@ -141,16 +141,17 @@ class CardFragment<TT extends ThemeType> extends ContentFragment<TT> {
      * @param parent
      */
     render(parent: PartTag) {
+        const noTtPrefix = this.prefix.replace('tt-', '')
         return parent.a({href: this._href}, this.prefix, panel => {
             if (this._title?.length) {
-                panel.div(`.${this.prefix}-header`, header => {
+                panel.div(`.${noTtPrefix}-header`, header => {
                     if (this._icon) {
                         this.theme.renderIcon(header, this._icon, 'link')
                     }
                     header.h3({text: this._title})
                 })
             }
-            panel.div(`.${this.prefix}-content`, content => {
+            panel.div(`.${noTtPrefix}-content`, content => {
                 if (this._content) {
                     this._content(content)
                 }
