@@ -26,6 +26,7 @@ class Panel extends PanelPart<NoState, DemoThemeType> {
         this.addAction({
             title: "Toast",
             classes: ['secondary'],
+            icon: 'glyp-announcement',
             click: {key: toastKey, data: {color: 'secondary'}}
         }, "secondary")
 
@@ -74,11 +75,13 @@ class Modal extends ModalPart<NoState, DemoThemeType> {
 
         this.addAction({
             title: "Push",
+            icon: 'glyp-arrow_right',
             click: {key: openModalKey}
         }, "primary")
 
         this.addAction({
             title: "Pop",
+            icon: 'glyp-arrow_left',
             classes: ['secondary'],
             click: {key: modalPopKey}
         }, "secondary")

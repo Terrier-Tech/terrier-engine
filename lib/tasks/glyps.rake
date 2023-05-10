@@ -116,6 +116,7 @@ namespace :glyps do
       app/assets/stylesheets/terrier/_glyps.scss
       app/assets/javascripts/terrier/_glyps.coffee
       lib/terrier/icons/glyps.rb
+      app/frontend/terrier/glyps.ts
     ].each do |rel_path|
       out_path = rel_path
       file_name = File.basename rel_path

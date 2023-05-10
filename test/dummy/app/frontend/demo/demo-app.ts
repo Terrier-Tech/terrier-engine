@@ -15,7 +15,8 @@ class DemoPage extends PagePart<NoState, DemoThemeType> {
         this.makePart(DemoParts.Panel, {}, 'panel')
 
         this.addAction({
-            title: "Primary"
+            title: "Primary",
+            icon: 'glyp-checkmark'
         }, "primary")
 
         this.addAction({

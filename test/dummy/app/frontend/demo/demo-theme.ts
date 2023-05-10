@@ -1,5 +1,6 @@
 import Theme, {ThemeType} from "@terrier/theme"
 import {PartTag} from "tuff-core/parts"
+import {GlypName} from "@terrier/glyps"
 
 
 const ColorNames = [
@@ -9,7 +10,7 @@ const ColorNames = [
 export type ColorName = typeof ColorNames[number]
 
 export interface DemoThemeType extends ThemeType {
-    icons: 'foo' | 'bar'
+    icons: GlypName
     colors: ColorName
 }
 
@@ -33,7 +34,7 @@ export default class DemoTheme extends Theme<DemoThemeType> {
 
     renderCloseIcon(parent: PartTag, _color: DemoThemeType["colors"] | undefined): void {
         // we don't have icons, just render an times
-        parent.i('.close', {text: "×"})
+        parent.i('.glyp-close.close')
     }
 
 }
