@@ -277,7 +277,7 @@ class LabeledListFragment<TT extends ThemeType> extends ContentFragment<TT> {
                     valueBox.div('.tt-flex.shrink.align-center.secondary', badge => {
                         if (listItem.tooltip) badge.dataAttr("tooltip", listItem.tooltip)
 
-                        const anchorAttrs: AnchorTagAttrs = { classes: ['button'], text: listItem.value }
+                        const anchorAttrs: AnchorTagAttrs = { classes: ['tt-button'], text: listItem.value }
                         if (listItem.href?.length) {
                             anchorAttrs.classes?.push('secondary')
                             anchorAttrs.href = listItem.href
