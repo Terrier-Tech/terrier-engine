@@ -4,11 +4,12 @@
 	border-radius: var(--tt-border-radius);
 	background: var(--tt-panel-background);
 	@include tt-box-shadow;
+
+	gap: var(--tt-gap);
 	.panel-header {
 		display: flex;
 		align-items: center;
 		gap: var(--tt-gap);
-		padding: var(--tt-pad);
 		h1, h2, h3, h4, h5 {
 			margin: 0;
 			display: flex;
@@ -28,15 +29,11 @@
 		&.gap {
 			gap: var(--tt-gap);
 		}
-		&.padded {
-			padding: var(--tt-pad);
-		}
 	}
 	.panel-actions {
 		display: flex;
 		align-items: center;
 		.primary-actions, .secondary-actions {
-			padding: var(--tt-pad);
 			gap: var(--tt-gap);
 			display: flex;
 			align-items: center;
@@ -49,8 +46,7 @@
 			justify-content: right;
 		}
 	}
-	&.padded .panel-content {
-		// .padded panel implies padded content
+	&.padded {
 		padding: var(--tt-pad);
 	}
 }
