@@ -33,7 +33,7 @@ function show<TT extends ThemeType>(message: string, options: ToastOptions<TT>, 
         parent.class('tt-toast')
         parent.class(options.color)
         if (options?.icon) {
-            theme.renderIcon(parent, options.icon, 'white')
+            theme.renderIcon(parent, options.icon, null)
         }
         parent.span('.text', {text: message})
     })
