@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get 'system/top'
     get 'system/public_key'
 
+    get 'db/schema'
     post 'db/model/:model' => 'db#get_model'
     post 'db/model/:model/count' => 'db#count_model'
     post 'db/model/:model/upsert' => 'db#upsert_model'

@@ -21,6 +21,10 @@
       "@terrier/*" : [
         "../../app/frontend/terrier/*",
         "../app/frontend/terrier/*"
+      ],
+      "@data-dive/*" : [
+        "../../app/frontend/data-dive/*",
+        "../app/frontend/data-dive/*"
       ]
     }
   }

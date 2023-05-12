@@ -48,11 +48,82 @@ class ModelGenerator < BaseGenerator
     out_path = render_template 'models.ts', binding
     info "Wrote #{models.count.to_s.bold} models to #{out_path.blue}"
     prettier_file out_path
+  end
 
-    # generate and format the schema file
-    out_path = render_template 'schema.ts', binding
-    info "Wrote schema to #{out_path.blue}"
-    prettier_file out_path
+  # @return [Hash] a raw representation of the schema
+  def raw_schema
+    models = load_models
+    models.each do |name, model|
+      # split out the reflections
+      refs = model.delete :reflections
+      belongs_to = {}
+      has_many = {}
+      refs.each do |ref_name, ref|
+        ref_type = ref.options[:class_name].presence || ref.name.to_s.classify
+        next if ref_type.constantize.exclude_from_frontend?
+        raw_ref = {
+          name: ref_name,
+          model: ref_type
+        }
+        if ref.class.name.include?('BelongsTo')
+          raw_ref[:optional] = ref.options[:optional] || false
+          belongs_to[ref_name] = raw_ref
+        else
+          has_many[ref_name] = raw_ref
+        end
+      end
+      model[:belongs_to] = belongs_to
+      model[:has_many] = has_many
+
+      # make the columns into a map
+      raw_cols = {}
+      model[:columns].each do |col|
+        enum_field = model[:enum_fields][col.name.to_sym]
+        raw_col = {
+          name: col.name,
+          nullable: col.null,
+          type: enum_field ? 'enum' : col.type
+        }
+        if col.sql_type_metadata.sql_type.ends_with?('[]')
+          raw_col[:array] = true
+        end
+        if enum_field
+          raw_col[:possible_values] = enum_field
+        end
+        raw_cols[col.name] = raw_col
+      end
+      model[:columns] = raw_cols
+
+    end
+    {
+      models: models
+    }
+  end
+
+  # Load all model metadata
+  # @return [Hash] a hash mapping model name to its metadata
+  def load_models
+    Rails.application.eager_load!
+    models = {}
+    ApplicationRecord.descendants.each do |model|
+      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+      enum_fields = {}
+      model.validators.each do |v|
+        if v.options[:in].present? && v.attributes.length == 1
+          enum_fields[v.attributes.first] = v.options[:in]
+        end
+      end
+      attachments = @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : []
+      models[model.name] = {
+        columns: model.columns,
+        reflections: model.reflections,
+        enum_fields: enum_fields,
+        attachments: attachments,
+        model_class: model,
+        table_name: model.table_name
+      }
+    end
+    models
   end
 
   # @return [String] the typescript type associated with the given column type

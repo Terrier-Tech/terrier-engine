@@ -1,3 +1,5 @@
+require 'terrier/frontend/model_generator'
+
 # Provides a generic interface over any database model.
 # For use with modern frontend code.
 class DbController < ApplicationController
@@ -85,6 +87,13 @@ class DbController < ApplicationController
       render_error ex.message, record: record, errors: errors, backtrace: ex.backtrace
     end
   end
+
+  def schema
+    generator = ModelGenerator.new
+    schema = generator.raw_schema
+    render_api_success schema: schema
+  end
+
 
   private
 

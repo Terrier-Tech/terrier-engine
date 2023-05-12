@@ -12,7 +12,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@terrier': path.resolve('../../app/frontend/terrier')
-        }
+            '@terrier': path.resolve('../../app/frontend/terrier'),
+            '@data-dive': path.resolve('../../app/frontend/data-dive'),
+        },
     }
 });
