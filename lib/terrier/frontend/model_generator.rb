@@ -119,7 +119,7 @@ class ModelGenerator < BaseGenerator
         reflections: model.reflections,
         enum_fields: enum_fields,
         attachments: attachments,
-        model_class: model,
+        name: model,
         table_name: model.table_name
       }
     end

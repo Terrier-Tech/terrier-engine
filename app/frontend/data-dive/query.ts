@@ -7,10 +7,8 @@ import {DateLiteral} from "./schema"
 export type ColumnRef = {
     name: string
     alias?: string
-}
-
-export type AggColumnRef = ColumnRef & {
-    function: string
+    grouped?: boolean
+    function?: string
 }
 
 
@@ -42,24 +40,106 @@ export type InclusionWhere = BaseWhere & {
     in: string[]
 }
 
+export type OrWhere = {
+    column: 'or'
+    where_type: 'or'
+    where: WhereClause[]
+}
+
+export type WhereClause = DirectWhere | DateRangeWhere | InclusionWhere | OrWhere
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Tables
 ////////////////////////////////////////////////////////////////////////////////
 
-export type BaseTableRef<C extends ColumnRef> = {
-    columns: C[]
-    joins: JoinedTableRef[]
-    aggregates: AggTableRef[]
+export type TableRef = {
+    model: string
+    columns: ColumnRef[]
+    joins?: JoinedTableRef[]
+    aggregates?: AggTableRef[]
+    where?: WhereClause[]
 }
 
-export type TableRef = BaseTableRef<ColumnRef>
 
-export type AggTableRef = BaseTableRef<AggColumnRef> & {
-    belongs_to: TableRef
+export type AggTableRef = TableRef & {
+    foreign_key?: string
 }
 
-export type JoinedTableRef = BaseTableRef<ColumnRef> & {
+export type JoinedTableRef = TableRef & {
     join_type: 'inner' | 'left'
     foreign_key?: string
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Query
+////////////////////////////////////////////////////////////////////////////////
+
+export type Query = {
+    from: TableRef
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Examples
+////////////////////////////////////////////////////////////////////////////////
+
+const query: Query = {
+    from: {
+        model: 'WorkOrder',
+        columns: [{
+            name: 'time'
+        }],
+        where: [
+            {
+                where_type: 'date_range',
+                column: 'time',
+                min: '2022-01-01',
+                max: '2022-12-31'
+            },
+            {
+                where_type: 'inclusion',
+                column: 'status',
+                in: ['active', 'complete']
+            }
+        ],
+        joins: [
+            {
+                model: 'Location',
+                join_type: 'inner',
+                columns: [
+                    {
+                        name: 'number',
+                        alias: 'location_number'
+                    },
+                    {
+                        name: 'display_name',
+                        alias: 'location_name'
+                    }
+                ],
+                where: [
+                    {
+                        where_type: 'direct',
+                        column: 'zip',
+                        operator: 'eq',
+                        value: '55122'
+                    }
+                ],
+                joins: [
+                    {
+                        model: 'branch',
+                        join_type: 'left',
+                        columns: [
+                            {
+                                name: 'name',
+                                alias: 'branch_name'
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
+console.log(query)
