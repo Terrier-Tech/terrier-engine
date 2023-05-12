@@ -170,7 +170,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     private _value?: string
     private _valueIcon?: TT['icons']
-    private _valueIconColor?: TT['colors']
+    private _valueIconColor?: TT['colors'] | null
     private _valueClass?: string[]
 
     private _href?: string
@@ -180,7 +180,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     private _tooltip?: string
 
-    value(value: string, icon?: TT['icons'], iconColor?: TT['colors']) {
+    value(value: string, icon?: TT['icons'], iconColor?: TT['colors'] | null) {
         this._value = value
         this._valueIcon = icon
         this._valueIconColor = iconColor
@@ -236,7 +236,8 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
                 if (this._tooltip) valueBox.dataAttr("tooltip", this._tooltip)
                 if (this._value) {
                     if (this._valueIcon) {
-                        this.theme.renderIcon(valueBox, this._valueIcon, this._valueIconColor ?? 'link')
+                        const color = (this._valueIconColor === undefined) ? 'link' : this._valueIconColor
+                        this.theme.renderIcon(valueBox, this._valueIcon, color)
                     }
                     valueBox.div('.value-text', {text: this._value})
                 }
@@ -331,14 +332,11 @@ function labeledList<TT extends ThemeType>(theme: Theme<TT>) {
 
 /**
  * Create a new button in the parent.
- * @param parent
- * @param title
- * @param icon
  */
-function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons']) {
+function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor: TT['colors'] | null = null) {
     return parent.a('.tt-button', button => {
         if (icon) {
-            theme.renderIcon(button, icon, 'white')
+            theme.renderIcon(button, icon, iconColor)
         }
         button.div('.title', {text: title})
     })
@@ -347,15 +345,11 @@ function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: 
 /**
  * Create a new simple value display in the parent.
  * This is just some text with an optional icon that doesn't have a separate label.
- * @param parent
- * @param title
- * @param icon
- * @param iconColor
  */
-function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor?: TT['colors']) {
+function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor: TT['colors'] | null = 'link') {
     return parent.div('.tt-simple-value.shrink', button => {
         if (icon) {
-            theme.renderIcon(button, icon, iconColor || 'link')
+            theme.renderIcon(button, icon, iconColor)
         }
         button.div('.title', {text: title})
     })

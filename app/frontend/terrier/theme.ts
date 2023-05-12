@@ -32,15 +32,15 @@ export type Action<TT extends ThemeType> = {
  * Options to pass to `render` that control how the actions are displayed.
  */
 export type RenderActionOptions<TT extends ThemeType> = {
-    iconColor?: TT['colors']
+    iconColor?: TT['colors'] | null
     badgeColor?: TT['colors']
     defaultClass?: string
 }
 
 export default abstract class Theme<TT extends ThemeType> {
-    abstract renderIcon(parent: PartTag, icon: TT['icons'], color?: TT['colors']): void
+    abstract renderIcon(parent: PartTag, icon: TT['icons'], color?: TT['colors'] | null): void
 
-    abstract renderCloseIcon(parent: PartTag, color?: TT['colors']): void
+    abstract renderCloseIcon(parent: PartTag, color?: TT['colors'] | null): void
 
     abstract colorValue(name: TT['colors']): string
 

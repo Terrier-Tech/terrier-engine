@@ -20,7 +20,7 @@ export default class DemoTheme extends Theme<DemoThemeType> {
         return name;
     }
 
-    renderIcon(parent: PartTag, icon: DemoThemeType['icons'], color: ColorName | undefined) {
+    renderIcon(parent: PartTag, icon: DemoThemeType['icons'], color?: ColorName | null) {
         const classes: string[] = [icon]
         if (color?.length) {
             classes.push(color)
@@ -32,7 +32,7 @@ export default class DemoTheme extends Theme<DemoThemeType> {
         return "";
     }
 
-    renderCloseIcon(parent: PartTag, _color: DemoThemeType["colors"] | undefined): void {
+    renderCloseIcon(parent: PartTag, _color?: DemoThemeType["colors"] | null): void {
         // we don't have icons, just render an times
         parent.i('.glyp-close.close')
     }
