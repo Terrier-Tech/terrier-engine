@@ -13,40 +13,43 @@ export type ColumnRef = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Where Clauses
+// Filters
 ////////////////////////////////////////////////////////////////////////////////
 
-type BaseWhere = {
+type BaseFilter = {
     column: string
+    editable?: 'optional' | 'required'
+    edit_label?: string
 }
 
 export const DirectOperators = ['eq', 'ne', 'ilike'] as const
 export type DirectOperator = typeof DirectOperators[number]
 
-export type DirectWhere = BaseWhere & {
-    where_type: 'direct'
+export type DirectFilter = BaseFilter & {
+    filter_type: 'direct'
     operator: DirectOperator
     value: string
 }
 
-export type DateRangeWhere = BaseWhere & {
-    where_type: 'date_range'
+export type DateRangeFilter = BaseFilter & {
+    filter_type: 'date_range'
     min?: DateLiteral
     max?: DateLiteral
 }
 
-export type InclusionWhere = BaseWhere & {
-    where_type: 'inclusion'
+export type InclusionFilter = BaseFilter & {
+    filter_type: 'inclusion'
     in: string[]
 }
 
-export type OrWhere = {
+// currently not implemented, but it would be neat
+export type OrFilter = {
     column: 'or'
-    where_type: 'or'
-    where: WhereClause[]
+    filter_type: 'or'
+    where: Filter[]
 }
 
-export type WhereClause = DirectWhere | DateRangeWhere | InclusionWhere | OrWhere
+export type Filter = DirectFilter | DateRangeFilter | InclusionFilter | OrFilter
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -54,21 +57,18 @@ export type WhereClause = DirectWhere | DateRangeWhere | InclusionWhere | OrWher
 ////////////////////////////////////////////////////////////////////////////////
 
 export type TableRef = {
-    model: string
-    columns: ColumnRef[]
+    columns?: ColumnRef[]
     joins?: JoinedTableRef[]
-    aggregates?: AggTableRef[]
-    where?: WhereClause[]
+    filters?: Filter[]
 }
 
-
-export type AggTableRef = TableRef & {
-    foreign_key?: string
+export type FromTableRef = TableRef & {
+    model: string
 }
 
 export type JoinedTableRef = TableRef & {
     join_type: 'inner' | 'left'
-    foreign_key?: string
+    belongs_to: string
 }
 
 
@@ -77,7 +77,7 @@ export type JoinedTableRef = TableRef & {
 ////////////////////////////////////////////////////////////////////////////////
 
 export type Query = {
-    from: TableRef
+    from: FromTableRef
 }
 
 
@@ -91,22 +91,22 @@ const query: Query = {
         columns: [{
             name: 'time'
         }],
-        where: [
+        filters: [
             {
-                where_type: 'date_range',
+                filter_type: 'date_range',
                 column: 'time',
                 min: '2022-01-01',
                 max: '2022-12-31'
             },
             {
-                where_type: 'inclusion',
+                filter_type: 'inclusion',
                 column: 'status',
                 in: ['active', 'complete']
             }
         ],
         joins: [
             {
-                model: 'Location',
+                belongs_to: 'location',
                 join_type: 'inner',
                 columns: [
                     {
@@ -118,22 +118,24 @@ const query: Query = {
                         alias: 'location_name'
                     }
                 ],
-                where: [
+                filters: [
                     {
-                        where_type: 'direct',
+                        filter_type: 'direct',
                         column: 'zip',
                         operator: 'eq',
-                        value: '55122'
+                        value: '55122',
+                        editable: 'required',
+                        editLabel: 'Zip Code'
                     }
                 ],
                 joins: [
                     {
-                        model: 'branch',
+                        belongs_to: 'created_by',
                         join_type: 'left',
                         columns: [
                             {
-                                name: 'name',
-                                alias: 'branch_name'
+                                name: 'email',
+                                alias: 'created_by_email'
                             }
                         ]
                     }

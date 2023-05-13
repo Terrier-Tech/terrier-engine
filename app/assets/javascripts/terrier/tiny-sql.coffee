@@ -9,7 +9,7 @@ class SqlBuilder
 	constructor: ->
 		@froms = []
 		@selects = []
-		@clauses = []
+		@filters = []
 		@joins = []
 		@groupBys = []
 		@orderBys = []
