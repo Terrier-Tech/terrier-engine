@@ -4,6 +4,8 @@
 	border-radius: var(--tt-border-radius);
 	background: var(--tt-panel-background);
 	@include tt-box-shadow;
+	display: flex;
+	flex-direction: column;
 
 	gap: var(--tt-gap);
 	.panel-header {
