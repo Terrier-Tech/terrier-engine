@@ -10,6 +10,12 @@ export default defineConfig({
             protocol: "ws",
         },
     },
+    build: {
+        minify: true
+    },
+    esbuild: {
+        keepNames: true
+    },
     resolve: {
         alias: {
             '@terrier': path.resolve('../../app/frontend/terrier'),
