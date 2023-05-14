@@ -4,7 +4,11 @@ require 'terrier/data_dive/query_engine'
 class QueryEngineTest < ActiveSupport::TestCase
 
   def setup
-    @from = {
+
+  end
+
+  test 'basic joins' do
+    from = {
       model: 'WorkOrder',
       columns: [{
                   name: 'time'
@@ -52,8 +56,8 @@ class QueryEngineTest < ActiveSupport::TestCase
               join_type: 'left',
               columns: [
                 {
-                  name: 'name',
-                  alias: 'branch_name'
+                  name: 'email',
+                  alias: 'created_by_email'
                 }
               ]
             }
@@ -61,12 +65,59 @@ class QueryEngineTest < ActiveSupport::TestCase
         }
       ]
     }
+
+    engine = QueryEngine.new({from: from})
+    builder = engine.to_sql_builder
+
+    assert_equal ["work_order.time", "location.number as location_number, location.display_name as location_name", "created_by.email as created_by_email"], builder.selects
+    assert_equal ["work_order.time >= '2022-01-01'", "work_order.time < '2023-01-01'", "work_order.status in ('active','complete')", "location.zip = '55122'"], builder.clauses
   end
 
-  test 'to_sql' do
-    engine = QueryEngine.new({from: @from})
+  test "grouping" do
+    from = {
+      model: 'WorkOrder',
+      columns: [
+        {
+          name: 'time',
+          grouped: true,
+          function: 'month',
+          alias: 'month'
+        },
+        {
+          name: '*',
+          function: 'count'
+        },
+        {
+          name: 'status',
+          grouped: true
+        }
+      ],
+      filters: [
+        {
+          filter_type: "date_range",
+          column: 'time',
+          min: "2023-01-01"
+        }
+      ],
+      joins: [
+        {
+          belongs_to: 'location',
+          join_type: 'inner',
+          columns: [
+            {
+              name: 'id',
+              grouped: true
+            }
+          ]
+        }
+      ]
+    }
+
+    engine = QueryEngine.new({ from: from })
     builder = engine.to_sql_builder
-    puts builder.to_sql
+    puts builder.to_sql.bold
+
+    assert_equal ["date_trunc('month',work_order.time)", "work_order.status", "location.id"], builder.group_bys
   end
 
 end

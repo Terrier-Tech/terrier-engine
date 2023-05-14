@@ -4,11 +4,28 @@ import {DateLiteral} from "./schema"
 // Columns
 ////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * Possible functions used to aggregate a column.
+ */
+const AggFunctions = ['count', 'min', 'max'] as const
+
+export type AggFunction = typeof AggFunctions[number]
+
+
+/**
+ * Possible functions used to manipulate a date column.
+ */
+const DateFunctions = ['year', 'month', 'day'] as const
+
+export type DateFunction = typeof DateFunctions[number]
+
+
+
 export type ColumnRef = {
     name: string
     alias?: string
     grouped?: boolean
-    function?: string
+    function?: AggFunction | DateFunction
 }
 
 
@@ -145,3 +162,44 @@ const query: Query = {
     }
 }
 console.log(query)
+
+const groupedQuery: Query = {
+    from: {
+        model: 'WorkOrder',
+        columns: [
+            {
+                name: 'time',
+                grouped: true,
+                function: 'month'
+            },
+            {
+                name: '*',
+                function: 'count'
+            },
+            {
+                name: 'status',
+                grouped: true
+            }
+        ],
+        filters: [
+            {
+                filter_type: "date_range",
+                column: 'time',
+                min: "2023-01-01"
+            }
+        ],
+        joins: [
+            {
+                belongs_to: 'location',
+                join_type: 'inner',
+                columns: [
+                    {
+                        name: 'id',
+                        grouped: true
+                    }
+                ]
+            }
+        ]
+    }
+}
+console.log(groupedQuery)

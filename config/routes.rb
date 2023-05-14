@@ -22,6 +22,8 @@ Rails.application.routes.draw do
     post 'db/model/:model' => 'db#get_model'
     post 'db/model/:model/count' => 'db#count_model'
     post 'db/model/:model/upsert' => 'db#upsert_model'
+
+    get 'data_dive/*rel' => 'data_dive#index'
   end
 
 end

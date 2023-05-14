@@ -1,7 +1,8 @@
 
 class QueryModel
   # @param attrs [Hash]
-  def initialize(attrs={})
+  def initialize(engine, attrs={})
+    @engine = engine
     attrs.each do |k, v|
       raise "Unknown attribute '#{k}' for #{self.class.name}" unless self.respond_to? k
       self.send "#{k}=", v
@@ -17,32 +18,16 @@ class TableRef < QueryModel
   # used by the runner
   attr_accessor :table_name, :alias, :model_class
 
-  @counts = {}
-
-  def self.compute_alias(prefix, table)
-    # ensure that the prefix isn't a reserved word
-    prefix = 'u' if prefix == 'user'
-
-    @counts[table.model] ||= 0
-    if @counts[table.model] == 0
-      suffix = ''
-    else
-      suffix = @counts[table.model]
-    end
-    @counts[table.model] += 1
-    "#{prefix}#{suffix}"
-  end
-
   # @param attrs [Hash]
-  def initialize(attrs)
+  def initialize(engine, attrs)
     super
 
     # parse the collections
     if @columns.present?
-      @columns = @columns.map{|col| ColumnRef.new(col)}
+      @columns = @columns.map{|col| ColumnRef.new(@engine, col)}
     end
     if @filters.present?
-      @filters = @filters.map{|filter| Filter.new(filter)}
+      @filters = @filters.map{|filter| Filter.new(@engine, filter)}
     end
 
   end
@@ -53,7 +38,7 @@ class TableRef < QueryModel
   def build_recursive(builder)
     # columns
     col_selects = (@columns || []).map do |col|
-      col.to_select self
+      col.to_select self, builder
     end
     if col_selects.present?
       builder.select col_selects.join(', ')
@@ -68,7 +53,7 @@ class TableRef < QueryModel
     
     # joins
     if @joins.present?
-      @joins = @joins.map { |join| JoinedTableRef.new(join, self) }
+      @joins = @joins.map { |join| JoinedTableRef.new(@engine, join, self) }
       @joins.each do |join|
         join.build_join builder
       end
@@ -80,13 +65,13 @@ end
 class FromTableRef < TableRef
 
   # @param attrs [Hash]
-  def initialize(attrs)
+  def initialize(engine, attrs)
     super
 
     # get the model
     @model_class = @model.constantize
     @table_name = @model_class.table_name
-    @alias = TableRef.compute_alias @table_name.singularize, self
+    @alias = @engine.compute_alias @table_name.singularize
   end
 
   # Adds the from statement, then calls #build_recursive
@@ -104,8 +89,8 @@ class JoinedTableRef < TableRef
 
   # @param attrs [Hash]
   # @param left_table [TableRef]
-  def initialize(attrs, left_table)
-    super attrs
+  def initialize(engine, attrs, left_table)
+    super engine, attrs
     @left_table = left_table
 
     raise "Missing belongs_to for JoinedTableRef" unless @belongs_to.present?
@@ -116,7 +101,7 @@ class JoinedTableRef < TableRef
     @model = ref.options[:class_name] || @belongs_to.classify
     @model_class = @model.constantize
     @table_name = @model_class.table_name
-    @alias = TableRef.compute_alias @belongs_to, self
+    @alias = @engine.compute_alias @belongs_to
   end
 
   # Adds the join statement, then calls #build_recursive
@@ -130,13 +115,44 @@ class JoinedTableRef < TableRef
   end
 end
 
+# Represents a single element of a select (and possibly group by) statement
 class ColumnRef < QueryModel
   attr_accessor :name, :alias, :grouped, :function
+
+  AGG_FUNCTIONS = %w[count min max]
   
-  def to_select(table)
+  def to_select(table, builder)
     s = "#{table.alias}.#{name}"
     if @function.present?
-      s = "#{@function}(#{s})"
+      g = nil
+      case @function
+      when *AGG_FUNCTIONS
+        # aggregate functions can be used directly
+        s = "#{@function}(#{s})"
+      when 'year'
+        if @grouped
+          g = "date_trunc('year',#{s})"
+          s = "to_char(#{g},'YYYY')"
+        else
+          s = "to_char(#{s},'YYYY')"
+        end
+      when 'month'
+        if @grouped
+          g = "date_trunc('month',#{s})"
+          s = "to_char(#{g},'YYYY-MM')"
+        else
+          s = "to_char(#{s},'YYYY-MM')"
+        end
+      when 'day'
+        builder.group_by "date_trunc('day',#{s})" if @grouped
+        s = "#{s}::date"
+        g = s if @grouped
+      else
+        raise "Unknown select function '#{@function}'"
+      end
+      builder.group_by g if g.present?
+    elsif @grouped # grouped but no function
+      builder.group_by s
     end
     if @alias.present?
       s = "#{s} as #{@alias}"
@@ -188,7 +204,8 @@ class QueryEngine
   def initialize(query)
     query = OpenStruct.new(query) if query.is_a?(Hash)
     @query = query
-    @from = FromTableRef.new query.from
+    @alias_counts = {}
+    @from = FromTableRef.new self, query.from
   end
 
   def execute!(params={})
@@ -205,5 +222,13 @@ class QueryEngine
     self.to_sql_builder(params).to_sql
   end
 
+
+  def compute_alias(prefix)
+    prefix = 'u' if prefix == 'user' # ensure that the prefix isn't a reserved word
+    @alias_counts[prefix] ||= 0
+    (@alias_counts[prefix] == 0) ? suffix = '' : suffix = @alias_counts[prefix]
+    @alias_counts[prefix] += 1
+    "#{prefix}#{suffix}"
+  end
 
 end
