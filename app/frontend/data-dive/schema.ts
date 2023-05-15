@@ -3,6 +3,8 @@
 // Column Types
 ////////////////////////////////////////////////////////////////////////////////
 
+import Api from "../terrier/api";
+
 type d = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0
 type YYYY = `19${d}${d}` | `20${d}${d}`
 type oneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
@@ -66,6 +68,22 @@ export type ModelDef = {
 /**
  * Definition for an entire schema.
  */
-export type Schema = {
+export type SchemaDef = {
     models: ModelDef
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Get Schema
+////////////////////////////////////////////////////////////////////////////////
+
+async function get(): Promise<SchemaDef> {
+    const res = await Api.safeGet<{schema: SchemaDef}>("/db/schema.json", {})
+    return res.schema
+}
+
+const Schema = {
+    get
+}
+
+export default Schema

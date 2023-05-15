@@ -94,6 +94,7 @@ export type JoinedTableRef = TableRef & {
 ////////////////////////////////////////////////////////////////////////////////
 
 export type Query = {
+    id: string
     from: FromTableRef
 }
 
@@ -102,7 +103,8 @@ export type Query = {
 // Examples
 ////////////////////////////////////////////////////////////////////////////////
 
-const query: Query = {
+const joinsQuery: Query = {
+    id: 'joins',
     from: {
         model: 'WorkOrder',
         columns: [{
@@ -161,9 +163,10 @@ const query: Query = {
         ]
     }
 }
-console.log(query)
+console.log(joinsQuery)
 
 const groupedQuery: Query = {
+    id: 'grouping',
     from: {
         model: 'WorkOrder',
         columns: [
