@@ -1,11 +1,10 @@
 import {DdContentPart, DdPagePart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
-import Schema, {SchemaDef} from "../schema"
-import {Query} from "../query"
+import Schema, {SchemaDef} from "../../terrier/schema"
+import {Query} from "./query"
 import Api from "../../terrier/api"
+import {FromTableEditor} from "./table-editor"
 
-export type SchemaState = {
-}
 
 const testIds = ['joins', 'grouping']
 
@@ -25,8 +24,15 @@ export type QueryEditorState = {
 }
 
 class QueryEditor extends DdContentPart<QueryEditorState> {
+
+    tableEditor!: FromTableEditor
+
+    async init() {
+        this.tableEditor = this.makePart(FromTableEditor, {schema: this.state.schema, table: this.state.query.from})
+    }
+
     renderContent(parent: PartTag): void {
-        parent.p({text: `Edit query ${this.state.query.id}`})
+        parent.part(this.tableEditor)
     }
 
 }
@@ -43,7 +49,9 @@ export class QueryEditorPage extends DdPagePart<{query_id: string}> {
     }
 
     renderContent(parent: PartTag): void {
-        parent.part(this.editor)
+        parent.div('.dd-query-editor-canvas', canvas => {
+            canvas.part(this.editor)
+        })
     }
 
 }

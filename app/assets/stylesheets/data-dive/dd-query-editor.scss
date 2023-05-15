@@ -1,0 +1,43 @@
+@import "../terrier/tt-mixins";
+
+
+.dd-query-editor-canvas {
+	background-color: var(--tt-inset-background);
+	overflow: scroll;
+	@include tt-inset-box-shadow;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Table Editor
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-table-editor {
+	padding: var(--tt-pad);
+	display: flex;
+	gap: var(--tt-gap);
+	--dd-table-editor-width: 200px;
+	.title {
+		padding: calc(var(--tt-pad) / 2) var(--tt-pad);
+	}
+	.table-panel {
+		min-width: var(--dd-table-editor-width);
+		.panel-header {
+			.title {
+				font-weight: bold;
+				text-align: center;
+				flex: 1 1 auto;
+			}
+		}
+		.section {
+			.title {
+				display: flex;
+				gap: var(--tt-gap);
+			}
+		}
+	}
+	.joins-column {
+		display: flex;
+		flex-direction: column;
+	}
+}

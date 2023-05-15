@@ -21,17 +21,22 @@
 
 $bar-height: 50px;
 
+:root {
+	--bg-color: #f6f2ef;
+	--primary-color: #d69338;
+	--secondary-color: #3c637a;
+	--link-color: #376177;
+	--alert-color: #ed584c;
+	--fg-color: #333;
+}
+
 body {
-    --bg-color: #f6f2ef;
-    --primary-color: #d69338;
-    --link-color: #376177;
-    --alert-color: #ed584c;
     background-color: var(--bg-color);
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
-	--fg-color: #333;
 	color: var(--fg-color);
     padding-top: $bar-height;
+	margin: 0;
 }
 a {
     color: var(--link-color);
@@ -207,4 +212,17 @@ button {
             line-height: 1.4;
         }
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Terrier Style Overrides
+////////////////////////////////////////////////////////////////////////////////
+
+.tt-page-part {
+	--tt-inset-background: var(--bg-color);
+	gap: 0;
+	> .top-row {
+		background-color: var(--secondary-color);
+	}
 }

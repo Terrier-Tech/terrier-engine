@@ -57,6 +57,24 @@ module TestQueries
                 ]
               }
             ]
+          },
+          {
+            belongs_to: 'target',
+            join_type: 'inner',
+            columns: [
+              {
+                name: 'name',
+                alias: 'target_name'
+              }
+            ],
+            filters: [
+              {
+                filter_type: 'direct',
+                column: 'name',
+                operator: 'eq',
+                value: 'Rodents'
+              }
+            ]
           }
         ]
       }
