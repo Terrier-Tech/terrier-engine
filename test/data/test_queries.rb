@@ -5,9 +5,20 @@ module TestQueries
       id: 'joins',
       from: {
         model: 'WorkOrder',
-        columns: [{
-                    name: 'time'
-                  }],
+        columns: [
+          {
+            name: 'time'
+          },
+          {
+            name: 'notes'
+          },
+          {
+            name: 'price'
+          },
+          {
+            name: 'status'
+          }
+        ],
         filters: [
           {
             filter_type: 'date_range',
@@ -55,6 +66,24 @@ module TestQueries
                     alias: 'created_by_email'
                   }
                 ]
+              }
+            ]
+          },
+          {
+            belongs_to: 'user',
+            join_type: 'inner',
+            columns: [
+              {
+                name: 'first_name',
+                alias: 'tech_first_name'
+              },
+              {
+                name: 'last_name',
+                alias: 'tech_last_name'
+              },
+              {
+                name: 'email',
+                alias: 'tech_email'
               }
             ]
           },

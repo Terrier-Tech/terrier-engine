@@ -5,8 +5,13 @@
 :root {
 	--tt-pad: 16px;
 	--tt-gap: var(--tt-pad);
+	--tt-body-font-size: 16px;
+	--tt-caption-font-size: 14px;
+	--tt-label-font-size: 12px;
 	--tt-border-radius: 4px;
+	--tt-border-color: #ddd;
 	--tt-panel-background: #fff;
+	--tt-odd-row-background: #f8f8f8;
 	--tt-body-color: #333;
 	--tt-white-color: #fff;
 	--tt-shadow-color: rgba(0, 0, 0, 0.15);

@@ -6,6 +6,7 @@
 .glyps-preview {
 	z-index: 0;
 	display: grid;
+	padding: 20px;
 	grid-gap: 20px;
 	grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 	.icon {

@@ -28,6 +28,10 @@ export class App extends TerrierApp<DdThemeType> {
         this.dirty()
     }
 
+    get parentClasses(): Array<string> {
+        return ['tt-typography']
+    }
+
     render(parent: PartTag) {
         parent.part(this.router)
         parent.part(this.overlayPart)

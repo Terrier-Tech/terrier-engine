@@ -131,6 +131,31 @@ Whenever changes are made to `app/frontend/terrier`, be sure to publish the npm 
 rails npm:publish
 ```
 
+## Terrier Platform
+
+While this project started as a collection of utilities to share between projects,
+it's evolved into a platform of shared tooling and styles to build applications.
+
+### Terrier Frontend
+
+TODO: document usage of frontend/terrier classes 
+
+### Terrier Styles
+
+The `.tt-*` styles are meant to be reusable across projects.
+To include them in a particular host stylesheet, just add:
+
+```scss
+*= require terrier/tt-styles-all
+```
+
+In order to prevent conflicts with the host application and allow for as much flexibility as possible, these are *hard* rules for their development:
+
+1. *No* styles should have any effect on elements not contained in a `.tt-*` class.
+2. This includes basic typography styles, which only apply to element inside a `.tt-typography`.
+3. *All configurability* should be done through CSS variables - not SCSS variables - so they can be changed without recompiling.
+4. All CSS variables should contain the `tt-` prefix.
+
 
 ## License
 
