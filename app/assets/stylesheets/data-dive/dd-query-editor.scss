@@ -13,16 +13,26 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 .dd-table-editor {
+	--table-editor-width: 240px;
+	--chicken-foot-size: var(--tt-pad);
+	--chicken-foot-width: 2px;
+	--chicken-foot-color: var(--tt-body-color);
+	
+	// icons
 	i {
 		display: block;
 		transform: scale(1.2);
 		line-height: 1;
 	}
-
+	
 	padding: var(--tt-pad);
-	display: flex;
 	gap: var(--tt-gap);
-	--dd-table-editor-width: 240px;
+	display: flex;
+	flex-direction: row-reverse; // render reversed so that the ends of the chicken feet are hidden
+	justify-content: start;
+	position: relative;
+	
+	// panel
 	.table-panel {
 		--pad: calc(var(--tt-pad) / 2);
 		--gap: calc(var(--tt-gap) / 2);
@@ -31,8 +41,9 @@
 			gap: var(--gap);
 			display: flex;
 		}
-		min-width: var(--dd-table-editor-width);
+		min-width: var(--table-editor-width);
 		gap: 0;
+		z-index: 1;
 		> .title {
 			font-weight: bold;
 			text-align: center;
@@ -79,8 +90,32 @@
 			}
 		}
 	}
+	
 	.joins-column {
 		display: flex;
 		flex-direction: column;
+		z-index: 0;
 	}
+	
+	.chicken-foot {
+		content: "";
+		position: absolute;
+		left: calc(-1 * var(--tt-pad));
+		width: calc(2 * var(--tt-pad));
+		top: 50%;
+		height: var(--chicken-foot-width);
+		background-color: var(--chicken-foot-color);
+		overflow: visible;
+		&::before {
+			position: absolute;
+			content: "";
+			width: var(--chicken-foot-size);
+			height: var(--chicken-foot-size);
+			border: var(--chicken-foot-width) solid var(--chicken-foot-color);
+			left: calc(-0.5 * var(--chicken-foot-size) - var(--chicken-foot-width)/2);
+			top: calc(-0.5 * var(--chicken-foot-size) - var(--chicken-foot-width)/2);
+			transform: rotate(45deg);
+		}
+	}
+
 }

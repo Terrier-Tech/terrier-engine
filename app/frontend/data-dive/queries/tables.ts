@@ -4,7 +4,7 @@ import {PartTag} from "tuff-core/parts"
 import {SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters from "./filters"
-import Columns from "./columns";
+import Columns from "./columns"
 
 
 export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
@@ -47,6 +47,14 @@ export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDe
     }
 
     renderContent(parent: PartTag): void {
+        if ('join_type' in this.state.table) {
+            parent.div('.chicken-foot')
+        }
+        parent.div('.joins-column', col => {
+            for (const jte of this.joinedEditors) {
+                col.part(jte)
+            }
+        })
         parent.div(".tt-panel.table-panel", panel => {
             panel.div('.title', title => {
                 title.i('.glyp-table')
@@ -54,11 +62,6 @@ export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDe
             })
             this.renderColumns(panel)
             this.renderFilters(panel)
-        })
-        parent.div('.joins-column', col => {
-            for (const jte of this.joinedEditors) {
-                col.part(jte)
-            }
         })
     }
 
