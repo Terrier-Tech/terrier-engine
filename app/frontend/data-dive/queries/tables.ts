@@ -1,12 +1,13 @@
 import {DdContentPart} from "../dd-parts"
-import {ColumnRef, FromTableRef, JoinedTableRef, TableRef} from "./query"
+import {FromTableRef, JoinedTableRef, TableRef} from "./query"
 import {PartTag} from "tuff-core/parts"
 import {SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters from "./filters"
+import Columns from "./columns";
 
 
-export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
+export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
 
     schema!: SchemaDef
     table!: T
@@ -47,7 +48,10 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
     renderContent(parent: PartTag): void {
         parent.div(".tt-panel.table-panel", panel => {
-            panel.div('.title', {text: this.tableName})
+            panel.div('.title', title => {
+                title.i('.glyp-table')
+                title.div().text(this.tableName)
+            })
             this.renderColumns(panel)
             this.renderFilters(panel)
         })
@@ -66,25 +70,13 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
             })
             if (this.table.columns?.length) {
                 for (const col of this.table.columns) {
-                    this.renderColumn(section, col)
+                    section.div('.column.line', line => {
+                        Columns.render(line, col)
+                    })
                 }
             }
             else {
-                section.div('.empty.line', {text: "None"})
-            }
-        })
-    }
-
-    renderColumn(parent: PartTag, col: ColumnRef) {
-        parent.div('.column.line', line => {
-            if (col.function?.length) {
-                line.div('.name').text(`${col.function}(${col.name})`)
-            }
-            else {
-                line.div('.name').text(col.name)
-            }
-            if (col.alias?.length) {
-                line.div('.alias').text(col.alias)
+                section.div('.line').div('.empty').text('None')
             }
         })
     }
@@ -102,14 +94,14 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
                     })
                 }
             } else {
-                section.div('.empty.line', {text: "None"})
+                section.div('.line').div('.empty').text('None')
             }
         })
     }
 
 }
 
-export class FromTableEditor extends TableEditor<FromTableRef> {
+export class FromTableEditor extends Tables<FromTableRef> {
 
     async init() {
         await super.init()
@@ -119,7 +111,7 @@ export class FromTableEditor extends TableEditor<FromTableRef> {
 
 }
 
-export class JoinedTableEditor extends TableEditor<JoinedTableRef> {
+export class JoinedTableEditor extends Tables<JoinedTableRef> {
 
     async init() {
         await super.init()

@@ -25,7 +25,9 @@ function render(parent: PartTag, filter: Filter) {
         case 'date_range':
             parent.div('.column').text(filter.column)
             parent.div('.operator').text("between")
-            parent.div('.value').text(`${filter.min} and ${filter.max}`)
+            parent.div('.value').text(filter.min || '-')
+            parent.div('').text('and')
+            parent.div('.value').text(filter.max || '-')
             return
         case 'inclusion':
             parent.div('.column').text(filter.column)

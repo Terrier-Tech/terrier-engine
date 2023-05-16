@@ -29,12 +29,14 @@
 		.title, .line {
 			padding: var(--pad) calc(var(--pad)*1.5);
 			gap: var(--gap);
+			display: flex;
 		}
 		min-width: var(--dd-table-editor-width);
 		gap: 0;
 		> .title {
 			font-weight: bold;
 			text-align: center;
+			justify-content: center;
 		}
 		section {
 			border-top: 1px solid var(--tt-border-color);
@@ -44,14 +46,8 @@
 				display: flex;
 				justify-content: center;
 			}
-			.empty {
-				text-align: center;
-				justify-content: center;
-				opacity: 0.5;
-			}
 			.line {
 				font-size: var(--tt-caption-font-size);
-				display: flex;
 				flex-wrap: wrap;
 				align-items: center;
 				justify-content: space-between;
@@ -67,6 +63,18 @@
 				.alias {
 					text-align: right;
 					opacity: 0.75;
+				}
+				.column {
+					font-weight: bold;
+				}
+				.in, .value {
+					color: var(--tt-secondary-color);
+				}
+				> .empty {
+					text-align: center;
+					justify-content: center;
+					flex: 1 1 auto;
+					opacity: 0.5;
 				}
 			}
 		}

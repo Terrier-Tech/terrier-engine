@@ -3,7 +3,7 @@ import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {Query} from "./query"
 import Api from "../../terrier/api"
-import {FromTableEditor} from "./table-editor"
+import {FromTableEditor} from "./tables"
 
 
 const testIds = ['joins', 'grouping']
