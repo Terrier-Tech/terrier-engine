@@ -39,6 +39,7 @@ function render(parent: PartTag, col: ColumnRef) {
         parent.div('.name').text(col.name)
     }
     if (col.alias?.length) {
+        parent.div('.as').text('as')
         parent.div('.alias').text(col.alias)
     }
 }

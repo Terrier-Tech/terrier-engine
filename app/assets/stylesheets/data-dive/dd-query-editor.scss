@@ -17,7 +17,7 @@
 	--chicken-foot-size: var(--tt-pad);
 	--chicken-foot-width: 2px;
 	--chicken-foot-color: var(--tt-body-color);
-	--label-opacity: 0.75;
+	--label-opacity: 0.7;
 	
 	// icons
 	i {
@@ -73,17 +73,16 @@
 				> div {
 					flex: 0 0 auto;
 				}
-				.name {
-					flex: 1 1 auto;
-				}
 				.alias {
 					text-align: right;
-					opacity: 0.75;
 				}
 				.column {
 					font-weight: bold;
 				}
-				.in, .value {
+				.as, .operator {
+					opacity: var(--label-opacity);
+				}
+				.value, .in {
 					color: var(--tt-secondary-color);
 				}
 				&.empty {

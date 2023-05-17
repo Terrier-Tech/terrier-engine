@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import {DateLiteral} from "../../terrier/schema"
+import Dates, {DateRange} from "./dates"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Types
@@ -22,8 +22,7 @@ export type DirectFilter = BaseFilter & {
 
 export type DateRangeFilter = BaseFilter & {
     filter_type: 'date_range'
-    min?: DateLiteral
-    max?: DateLiteral
+    range: DateRange
 }
 
 export type InclusionFilter = BaseFilter & {
@@ -58,6 +57,7 @@ function operatorDisplay(operator: DirectFilter['operator']): string {
     }
 }
 
+
 function render(parent: PartTag, filter: Filter) {
     switch (filter.filter_type) {
         case 'direct':
@@ -67,10 +67,15 @@ function render(parent: PartTag, filter: Filter) {
             return
         case 'date_range':
             parent.div('.column').text(filter.column)
-            parent.div('.operator').text("between")
-            parent.div('.value').text(filter.min || '-')
-            parent.div('').text('and')
-            parent.div('.value').text(filter.max || '-')
+            if ('min' in filter.range) { // literal range
+                parent.div('.operator').text("between")
+                parent.div('.value').text(filter.range.min || '-')
+                parent.div('').text('and')
+                parent.div('.value').text(filter.range.max || '-')
+            }
+            else { // virtual range
+                parent.div('.value').text(Dates.rangeDisplay(filter.range))
+            }
             return
         case 'inclusion':
             parent.div('.column').text(filter.column)
