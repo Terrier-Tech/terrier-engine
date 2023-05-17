@@ -1,5 +1,36 @@
 import {PartTag} from "tuff-core/parts"
-import {ColumnRef} from "./query"
+
+////////////////////////////////////////////////////////////////////////////////
+// Types
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Possible functions used to aggregate a column.
+ */
+const AggFunctions = ['count', 'min', 'max'] as const
+
+export type AggFunction = typeof AggFunctions[number]
+
+
+/**
+ * Possible functions used to manipulate a date column.
+ */
+const DateFunctions = ['year', 'month', 'day'] as const
+
+export type DateFunction = typeof DateFunctions[number]
+
+
+export type ColumnRef = {
+    name: string
+    alias?: string
+    grouped?: boolean
+    function?: AggFunction | DateFunction
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Rendering
+////////////////////////////////////////////////////////////////////////////////
 
 function render(parent: PartTag, col: ColumnRef) {
     if (col.function?.length) {
@@ -11,6 +42,11 @@ function render(parent: PartTag, col: ColumnRef) {
         parent.div('.alias').text(col.alias)
     }
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Export
+////////////////////////////////////////////////////////////////////////////////
 
 const Columns = {
     render

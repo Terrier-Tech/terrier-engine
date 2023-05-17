@@ -1,7 +1,7 @@
 import {DdContentPart, DdPagePart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
-import {Query} from "./query"
+import {Query} from "./queries"
 import Api from "../../terrier/api"
 import {FromTableEditor} from "./tables"
 

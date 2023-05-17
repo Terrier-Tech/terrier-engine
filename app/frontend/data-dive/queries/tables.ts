@@ -1,13 +1,35 @@
 import {DdContentPart} from "../dd-parts"
-import {FromTableRef, JoinedTableRef, TableRef} from "./query"
 import {PartTag} from "tuff-core/parts"
 import {SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
-import Filters from "./filters"
-import Columns from "./columns"
+import Filters, {Filter} from "./filters"
+import Columns, {ColumnRef} from "./columns"
+
+////////////////////////////////////////////////////////////////////////////////
+// Types
+////////////////////////////////////////////////////////////////////////////////
+
+export type TableRef = {
+    columns?: ColumnRef[]
+    joins?: JoinedTableRef[]
+    filters?: Filter[]
+}
+
+export type FromTableRef = TableRef & {
+    model: string
+}
+
+export type JoinedTableRef = TableRef & {
+    join_type: 'inner' | 'left'
+    belongs_to: string
+}
 
 
-export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
+////////////////////////////////////////////////////////////////////////////////
+// Editor
+////////////////////////////////////////////////////////////////////////////////
+
+export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
 
     schema!: SchemaDef
     table!: T
@@ -104,7 +126,7 @@ export class Tables<T extends TableRef> extends DdContentPart<{ schema: SchemaDe
 
 }
 
-export class FromTableEditor extends Tables<FromTableRef> {
+export class FromTableEditor extends TableEditor<FromTableRef> {
 
     async init() {
         await super.init()
@@ -114,7 +136,7 @@ export class FromTableEditor extends Tables<FromTableRef> {
 
 }
 
-export class JoinedTableEditor extends Tables<JoinedTableRef> {
+export class JoinedTableEditor extends TableEditor<JoinedTableRef> {
 
     async init() {
         await super.init()
