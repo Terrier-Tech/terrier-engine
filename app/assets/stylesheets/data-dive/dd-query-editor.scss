@@ -17,6 +17,7 @@
 	--chicken-foot-size: var(--tt-pad);
 	--chicken-foot-width: 2px;
 	--chicken-foot-color: var(--tt-body-color);
+	--label-opacity: 0.75;
 	
 	// icons
 	i {
@@ -51,11 +52,15 @@
 		}
 		section {
 			border-top: 1px solid var(--tt-border-color);
+			cursor: pointer;
+			position: relative;
+			z-index: 0;
 			.title {
 				font-size: var(--tt-label-font-size);
 				align-items: center;
 				display: flex;
 				justify-content: center;
+				opacity: var(--label-opacity);
 			}
 			.line {
 				font-size: var(--tt-caption-font-size);
@@ -81,12 +86,22 @@
 				.in, .value {
 					color: var(--tt-secondary-color);
 				}
-				> .empty {
+				&.empty {
 					text-align: center;
 					justify-content: center;
 					flex: 1 1 auto;
-					opacity: 0.5;
+					opacity: var(--label-opacity);
 				}
+			}
+			&:last-child .line:last-child {
+				@include tt-bottom-rounded-corners;
+			}
+			&:hover {
+				@include tt-box-shadow;
+				z-index: 1;
+			}
+			&:active {
+				transform: scale(0.99);
 			}
 		}
 	}
@@ -106,6 +121,7 @@
 		height: var(--chicken-foot-width);
 		background-color: var(--chicken-foot-color);
 		overflow: visible;
+		opacity: var(--label-opacity);
 		&::before {
 			position: absolute;
 			content: "";
