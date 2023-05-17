@@ -73,16 +73,6 @@ test("virtual range display", () => {
 
 test("literal range display", () => {
     testRangeDisplay({
-        min: '2023-12-01',
-        max: undefined
-    }, "On or after 12/01/23")
-
-    testRangeDisplay({
-        min: undefined,
-        max: '2023-12-01'
-    }, "On or before 11/30/23")
-
-    testRangeDisplay({
         min: '2022-03-12',
         max: '2023-12-01'
     }, "Between 03/12/22 and 11/30/23")

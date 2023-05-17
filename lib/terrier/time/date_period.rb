@@ -78,16 +78,33 @@ class DatePeriod
     "#{self.start_date.strftime(SHORT_DATE_FORMAT)} - #{(self.end_date - 1.day).strftime(SHORT_DATE_FORMAT)}"
   end
 
-  # @param raw (String|DatePeriod) can have the following formats:
+  # @param raw [String, DatePeriod, Hash] can have the following formats:
+  # @param today [Date, String, NilClass] the anchor date to use if the period is a virtual range
   # year: YYYY
   # year range: YYYY:YYYY
   # month: YYYY-MM
   # day: YYYY-MM-DD
   # explicit range: YYYY-MM-DD:YYYY-MM-DD
-  def self.parse(raw)
+  # literal hash: {min: YYYY-MM-DD, max: YYYY-MM-DD}
+  # virtual hash: {period: 'day'|'week'|'month'|'year', relative: Integer}
+  def self.parse(raw, today=nil)
+    # pass through existing periods
     if raw.is_a? DatePeriod
       return raw
     end
+
+    # hashes
+    if raw.is_a? Hash
+      raw = ActiveSupport::HashWithIndifferentAccess.new raw
+      if raw[:min] || raw[:max]
+        return DatePeriod.new raw[:min], raw[:max]
+      end
+      if raw[:period]
+        return DatePeriod.materialize_virtual raw, today
+      end
+      raise "Don't know how to parse hash into DatePeriod: #{raw.to_s}"
+    end
+
     raw = raw.to_s
 
     if raw =~ /^\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}$/
@@ -111,6 +128,22 @@ class DatePeriod
       raise "Invalid period format '#{raw}'"
     end
     DatePeriod.new start_date, end_date
+  end
+
+  # Generates a concrete date range based on the virtual one
+  # @param range [Hash] a hash containing :period and :relative
+  # @param today [Date, String] the anchor date for the relative period
+  # @return [DatePeriod]
+  def self.materialize_virtual(range, today=Date.today)
+    period = range[:period] || range['period'] || raise("Must specify a period")
+    possible_periods = %w[day week month year]
+    raise "Invalid period '#{period}', must be one of #{possible_periods.join(', ')}" unless possible_periods.include?(period)
+    relative = (range[:relative] || range['relative'] || 0).to_i
+
+    today = Date.parse(today) if today.is_a? String
+    start_date = (today + relative.send("#{period}s")).send("beginning_of_#{period}")
+    end_date = start_date + 1.send(period)
+    DatePeriod.new start_date.to_date, end_date.to_date
   end
 
   # @return a new DatePeriod for the last `n` days

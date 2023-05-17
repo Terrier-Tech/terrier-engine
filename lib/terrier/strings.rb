@@ -9,14 +9,6 @@ UPCASE_VALUES = %w[cod ace bce csr dot pca tpp it qal html pdf ach eft wdi wdo]
 # these shouldn't be upcased, even though they're only two characters
 UPCASE_BLACKLIST = %w[at by to is or]
 
-PRETTY_DATE_FORMAT = '%B %e, %Y'
-SHORT_DATE_FORMAT = '%m/%d/%y'
-SQL_DATE_FORMAT = '%Y-%m-%d'
-SQL_TIME_FORMAT = "#{SQL_DATE_FORMAT} %H:%M:%S%z"
-TIMESTAMP_FORMAT = "%Y%m%d_%H%M%S" # suitable for timestamps in paths
-PRETTY_TIME_FORMAT = "#{SHORT_DATE_FORMAT} %l:%M %p"
-SHORT_TIME_FORMAT = "%l:%M %p"
-
 GIGA = 1024 * 1024 * 1024
 MEGA = 1024 * 1024
 KILO = 1024

@@ -51,6 +51,37 @@ class DatePeriodTest < ActiveSupport::TestCase
     assert_equal '10/13/22 - 10/22/22', p.display_name
   end
 
+  test 'parse literal range hash' do
+    range = { min: '2023-05-01', max: '2023-06-01' }
+    p = DatePeriod.parse range
+    assert_equal range[:min], p.start_date.to_s
+    assert_equal range[:max], p.end_date.to_s
+  end
+
+  test 'materialize virtual range hash' do
+    today = '2023-05-12'
+
+    # days
+    assert_equal today.to_s, DatePeriod.parse({ period: 'day' }, today).to_s
+    assert_equal "2023-05-11", DatePeriod.parse({ period: 'day', relative: -1 }, today).to_s
+    assert_equal "2023-05-13", DatePeriod.parse({ period: 'day', relative: 1 }, today).to_s
+
+    # weeks
+    assert_equal "2023-05-07:2023-05-13", DatePeriod.parse({ period: 'week' }, today).to_s
+    assert_equal "2023-04-30:2023-05-06", DatePeriod.parse({ period: 'week', relative: -1 }, today).to_s
+    assert_equal "2023-05-14:2023-05-20", DatePeriod.parse({ period: 'week', relative: 1 }, today).to_s
+
+    # months
+    assert_equal "2023-05", DatePeriod.parse({ period: 'month' }, today).to_s
+    assert_equal "2023-04", DatePeriod.parse({ period: 'month', relative: -1 }, today).to_s
+    assert_equal "2023-06", DatePeriod.parse({ period: 'month', relative: 1 }, today).to_s
+
+    # years
+    assert_equal "2023", DatePeriod.parse({ period: 'year' }, today).to_s
+    assert_equal "2022", DatePeriod.parse({ period: 'year', relative: -1 }, today).to_s
+    assert_equal "2024", DatePeriod.parse({ period: 'year', relative: 1 }, today).to_s
+  end
+
   test 'each' do
     period = DatePeriod.parse '2022-10-01:2022-11-14'
 

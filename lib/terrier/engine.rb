@@ -5,6 +5,7 @@ require 'terrier/migrations'
 require 'terrier/strings'
 require 'terrier/system/top'
 
+require 'terrier/time/time_overrides'
 require 'terrier/time/date_period'
 
 require 'terrier/io/tabular_io'

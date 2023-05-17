@@ -29,8 +29,8 @@ export type DateLiteral = `${MonthLiteral}-${DD}`
  * but should be displayed as *inclusive*.
  */
 export type LiteralDateRange = {
-    min?: DateLiteral
-    max?: DateLiteral
+    min: DateLiteral
+    max: DateLiteral
 }
 
 /**
@@ -72,24 +72,13 @@ function display(date: DateLiteral): string {
  */
 function rangeDisplay(range: DateRange): string {
     if ('min' in range) { // literal range
-        if (range.min && range.max) {
-            // special case for a single day
-            const dMin = dayjs(range.min)
-            if (range.max == dMin.add(1, 'day').format(literalFormat)) {
-                return dMin.format(displayFormat)
-            }
-
-            const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
-            return `Between ${display(range.min)} and ${max}`
+        // special case for a single day
+        const dMin = dayjs(range.min)
+        if (range.max == dMin.add(1, 'day').format(literalFormat)) {
+            return dMin.format(displayFormat)
         }
-        if (range.min) {
-            return `On or after ${display(range.min)}`
-        }
-        if (range.max) {
-            const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
-            return `On or before ${max}`
-        }
-        return "All Dates"
+        const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
+        return `Between ${display(range.min)} and ${max}`
     } else if ('period' in range) { // virtual range
         // special day names
         if (range.period == 'day') {
