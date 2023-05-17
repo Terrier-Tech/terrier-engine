@@ -25,6 +25,8 @@ export type DateLiteral = `${MonthLiteral}-${DD}`
 
 /**
  * A date range described by literal start and end dates.
+ * NOTE: date ranges are always stored with the max being *exclusive*,
+ * but should be displayed as *inclusive*.
  */
 export type LiteralDateRange = {
     min?: DateLiteral
@@ -46,14 +48,22 @@ export type DateRange = LiteralDateRange | VirtualDateRange
 // Display
 ////////////////////////////////////////////////////////////////////////////////
 
-const format = 'MM/DD/YY'
+/**
+ * Format used for displaying dates to the user.
+ */
+const displayFormat = 'MM/DD/YY'
+
+/**
+ * Format used for storing dates.
+ */
+const literalFormat = 'YYYY-MM-DD'
 
 /**
  * Formats the date literal into a human-friendly string.
  * @param date
  */
 function display(date: DateLiteral): string {
-    return dayjs(date).format(format)
+    return dayjs(date).format(displayFormat)
 }
 
 /**
@@ -63,13 +73,21 @@ function display(date: DateLiteral): string {
 function rangeDisplay(range: DateRange): string {
     if ('min' in range) { // literal range
         if (range.min && range.max) {
-            return `Between ${display(range.min)} and ${display(range.max)}`
+            // special case for a single day
+            const dMin = dayjs(range.min)
+            if (range.max == dMin.add(1, 'day').format(literalFormat)) {
+                return dMin.format(displayFormat)
+            }
+
+            const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
+            return `Between ${display(range.min)} and ${max}`
         }
         if (range.min) {
             return `On or after ${display(range.min)}`
         }
         if (range.max) {
-            return `On or before ${display(range.max)}`
+            const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
+            return `On or before ${max}`
         }
         return "All Dates"
     } else if ('period' in range) { // virtual range
@@ -106,13 +124,35 @@ function rangeDisplay(range: DateRange): string {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Calculation
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Creates a literal date range based on a virtual one, relative to `today`
+ * @param range a virtual date range to materialize
+ * @param today the anchor for the relative range
+ */
+function materializeVirtualRange(range: VirtualDateRange, today?: DateLiteral): LiteralDateRange {
+    const d = dayjs(today)
+    const min = d.add(range.relative, range.period).startOf(range.period)
+    const max = min.add(1, range.period)
+    return {
+        min: min.format(literalFormat) as DateLiteral,
+        max: max.format(literalFormat) as DateLiteral
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Exports
 ////////////////////////////////////////////////////////////////////////////////
 
 const Dates = {
-    format,
+    displayFormat,
+    literalFormat,
     display,
-    rangeDisplay
+    rangeDisplay,
+    materializeVirtualRange
 }
 
 export default Dates

@@ -1,89 +1,188 @@
 import {expect, test} from 'vitest'
-import Dates, {DateRange} from "../dates"
+import Dates, {DateRange, LiteralDateRange, VirtualDateRange} from "../dates"
 
-function testDateRange(range: DateRange, expected: string) {
+function testRangeDisplay(range: DateRange, expected: string) {
     expect(Dates.rangeDisplay(range)).toBe(expected)
 }
 
-test("virtual date ranges", () => {
+test("virtual range display", () => {
     // days
-    testDateRange({
+    testRangeDisplay({
         period: 'day',
         relative: 0
     }, "Today")
-    testDateRange({
+    testRangeDisplay({
         period: 'day',
         relative: -1
     }, "Yesterday")
-    testDateRange({
+    testRangeDisplay({
         period: 'day',
         relative: 1
     }, "Tomorrow")
 
     // weeks
-    testDateRange({
+    testRangeDisplay({
         period: 'week',
         relative: 0
     }, "This week")
-    testDateRange({
+    testRangeDisplay({
         period: 'week',
         relative: -1
     }, "Last week")
-    testDateRange({
+    testRangeDisplay({
         period: 'week',
         relative: 1
     }, "Next week")
-    testDateRange({
+    testRangeDisplay({
         period: 'week',
         relative: -2
     }, "2 weeks ago")
-    testDateRange({
+    testRangeDisplay({
         period: 'week',
         relative: 2
     }, "2 weeks from now")
 
     // months
-    testDateRange({
+    testRangeDisplay({
         period: 'month',
         relative: 0
     }, "This month")
 
     // years
-    testDateRange({
+    testRangeDisplay({
         period: 'year',
         relative: 0
     }, "This year")
-    testDateRange({
+    testRangeDisplay({
         period: 'year',
         relative: -1
     }, "Last year")
-    testDateRange({
+    testRangeDisplay({
         period: 'year',
         relative: 1
     }, "Next year")
-    testDateRange({
+    testRangeDisplay({
         period: 'year',
         relative: -2
     }, "2 years ago")
-    testDateRange({
+    testRangeDisplay({
         period: 'year',
         relative: 2
     }, "2 years from now")
 })
 
-test("literal data ranges", () => {
-    testDateRange({
+test("literal range display", () => {
+    testRangeDisplay({
         min: '2023-12-01',
         max: undefined
     }, "On or after 12/01/23")
 
-    testDateRange({
+    testRangeDisplay({
         min: undefined,
         max: '2023-12-01'
-    }, "On or before 12/01/23")
+    }, "On or before 11/30/23")
 
-    testDateRange({
+    testRangeDisplay({
         min: '2022-03-12',
         max: '2023-12-01'
-    }, "Between 03/12/22 and 12/01/23")
+    }, "Between 03/12/22 and 11/30/23")
+
+    testRangeDisplay({
+        min: '2022-03-12',
+        max: '2022-03-13'
+    }, "03/12/22")
+})
+
+// use a constant reference date so that we can test materialization
+const today = '2023-05-12'
+
+function testRangeMaterialization(virtualRange: VirtualDateRange, expectedRange: LiteralDateRange) {
+    expect(Dates.materializeVirtualRange(virtualRange, today)).toMatchObject(expectedRange)
+}
+
+test("virtual range materialization", () => {
+    // days
+    testRangeMaterialization({
+        period: 'day',
+        relative: 0
+    }, {
+        min: today,
+        max: '2023-05-13'
+    })
+    testRangeMaterialization({
+        period: 'day',
+        relative: -1
+    }, {
+        min: '2023-05-11',
+        max: today
+    })
+
+    // weeks
+    testRangeMaterialization({
+        period: 'week',
+        relative: 0
+    }, {
+        min: '2023-05-07',
+        max: '2023-05-14'
+    })
+    testRangeMaterialization({
+        period: 'week',
+        relative: -1
+    }, {
+        min: '2023-04-30',
+        max: '2023-05-07'
+    })
+    testRangeMaterialization({
+        period: 'week',
+        relative: 1
+    }, {
+        min: '2023-05-14',
+        max: '2023-05-21'
+    })
+
+    // months
+    testRangeMaterialization({
+        period: 'month',
+        relative: 0
+    }, {
+        min: '2023-05-01',
+        max: '2023-06-01'
+    })
+    testRangeMaterialization({
+        period: 'month',
+        relative: -1
+    }, {
+        min: '2023-04-01',
+        max: '2023-05-01'
+    })
+    testRangeMaterialization({
+        period: 'month',
+        relative: 1
+    }, {
+        min: '2023-06-01',
+        max: '2023-07-01'
+    })
+
+    // years
+    testRangeMaterialization({
+        period: 'year',
+        relative: 0
+    }, {
+        min: '2023-01-01',
+        max: '2024-01-01'
+    })
+    testRangeMaterialization({
+        period: 'year',
+        relative: -1
+    }, {
+        min: '2022-01-01',
+        max: '2023-01-01'
+    })
+    testRangeMaterialization({
+        period: 'year',
+        relative: 1
+    }, {
+        min: '2024-01-01',
+        max: '2025-01-01'
+    })
 })
