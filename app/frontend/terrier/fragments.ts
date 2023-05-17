@@ -333,12 +333,10 @@ function labeledList<TT extends ThemeType>(theme: Theme<TT>) {
 /**
  * Create a new button in the parent.
  */
-function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor: TT['colors'] | null = null) {
+function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title?: string, icon?: TT['icons'], iconColor: TT['colors'] | null = null) {
     return parent.a('.tt-button', button => {
-        if (icon) {
-            theme.renderIcon(button, icon, iconColor)
-        }
-        button.div('.title', {text: title})
+        if (icon) theme.renderIcon(button, icon, iconColor)
+        if (title?.length) button.div('.title', {text: title})
     })
 }
 
@@ -348,18 +346,13 @@ function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: 
  */
 function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor: TT['colors'] | null = 'link') {
     return parent.div('.tt-simple-value.shrink', button => {
-        if (icon) {
-            theme.renderIcon(button, icon, iconColor)
-        }
+        if (icon) theme.renderIcon(button, icon, iconColor)
         button.div('.title', {text: title})
     })
 }
 
 /**
  * Helper to create a heading with an optional icon.
- * @param parent
- * @param title
- * @param icon
  */
 function simpleHeading<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons']) {
     return parent.h3('.shrink', heading => {
