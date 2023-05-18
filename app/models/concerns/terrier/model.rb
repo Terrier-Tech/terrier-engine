@@ -389,7 +389,7 @@ module Terrier::Model
     def safe_record_errors(ex, record)
       if ex.is_a? ValidationError
         ex.errors
-      elsif record&.errors&.present?
+      elsif record.respond_to?(:errors) && record.errors.present?
         record.errors
       else
         { base: [ex.message] }
