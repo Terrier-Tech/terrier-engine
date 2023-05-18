@@ -16,7 +16,11 @@ const log = new Logger('Lightbox')
  * @param app
  * @param containerClass
  */
-function init<TT extends ThemeType>(root: HTMLElement, app: TerrierApp<TT, Theme<TT>>, containerClass: string) {
+function init<
+    TT extends ThemeType,
+    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TTheme extends Theme<TT>
+>(root: HTMLElement, app: TApp, containerClass: string) {
     log.info("Init", root)
     root.addEventListener("click", evt => {
         if (!(evt.target instanceof HTMLElement) || evt.target.tagName != 'IMG') {
@@ -49,13 +53,21 @@ function init<TT extends ThemeType>(root: HTMLElement, app: TerrierApp<TT, Theme
 
 type LightboxState = { src: string }
 
-function showPart<TT extends ThemeType>(app: TerrierApp<TT, Theme<TT>>, state: LightboxState) {
+function showPart<
+    TT extends ThemeType,
+    TApp extends TerrierApp<TT,TApp, TTheme>,
+    TTheme extends Theme<TT>
+>(app: TApp, state: LightboxState) {
     app.makeOverlay(LightboxPart, {app,...state}, 'lightbox')
 }
 
 const closeKey = untypedKey()
 
-class LightboxPart<TT extends ThemeType> extends Part<LightboxState & {app: TerrierApp<TT, Theme<TT>>}> {
+class LightboxPart<
+    TT extends ThemeType,
+    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TTheme extends Theme<TT>
+> extends Part<LightboxState & {app: TApp}> {
 
     async init() {
         this.onClick(closeKey, _ => {

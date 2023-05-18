@@ -16,7 +16,12 @@ const clearDropdownKey = untypedKey()
  * Abstract base class for dropdown parts.
  * Subclasses must implement the `renderContent()` method to render the dropdown content.
  */
-export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, TT, TerrierApp<TT, Theme<TT>>, Theme<TT>> {
+export abstract class Dropdown<
+    TState,
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends TerrierPart<TState, TThemeType, TApp, TTheme> {
 
     parentPart?: StatelessPart
 
@@ -79,7 +84,11 @@ export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, T
 /**
  * A concrete dropdown part that shows a list of actions.
  */
-export class ActionsDropdown<TT extends ThemeType> extends Dropdown<Array<Action<TT>>, TT> {
+export class ActionsDropdown<
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends Dropdown<Array<Action<TThemeType>>, TThemeType, TApp, TTheme> {
 
 
     get parentClasses(): Array<string> {

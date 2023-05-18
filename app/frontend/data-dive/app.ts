@@ -18,7 +18,7 @@ class ContentRouterPart extends RouterPart {
 }
 
 
-export class App extends TerrierApp<DdThemeType, DdTheme> {
+export class DdApp extends TerrierApp<DdThemeType, DdApp, DdTheme> {
 
     router!: ContentRouterPart
 

@@ -30,7 +30,8 @@ export class OverlayPart extends Part<NoState> {
     makeLayer<PartType extends Part<StateType>, StateType>(
         constructor: { new(p: PartParent, id: string, state: StateType): PartType; },
         state: StateType,
-        layer: OverlayLayer): PartType {
+        layer: OverlayLayer
+    ): PartType {
         const part = this.makePart(constructor, state)
         this.clearLayer(layer)
         this.parts[layer] = part
