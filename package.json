@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "check": "tsc -p app/frontend -noEmit",
+    "check": "tsc -p app/frontend --noEmit",
     "test": "vitest"
   },
   "dependencies": {
