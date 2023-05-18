@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.0.16)
+    terrier-engine (4.0.17)
       amazing_print
       colorize
       dotenv-rails
@@ -184,8 +184,6 @@ GEM
     nio4r (2.5.9)
     nokogiri (1.14.4)
       mini_portile2 (~> 2.8.0)
-      racc (~> 1.4)
-    nokogiri (1.14.4-x86_64-darwin)
       racc (~> 1.4)
     paperclip (6.1.0)
       activemodel (>= 4.2.0)

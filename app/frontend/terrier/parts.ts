@@ -5,7 +5,7 @@ import Fragments from "./fragments"
 import {Dropdown} from "./dropdowns"
 import {TerrierApp} from "./app"
 import Loading from "./loading"
-import Theme, {Action, ThemeType} from "./theme"
+import Theme, {Action, RenderActionOptions, ThemeType} from "./theme"
 import Toasts, {ToastOptions} from "./toasts";
 
 const log = new Logger('Parts')
@@ -335,48 +335,50 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
     render(parent: PartTag) {
         parent.div(`.tt-page-part.content-width-${this.mainContentWidth}`, page => {
             page.div('.tt-flex.top-row', topRow => {
-                // breadcrumbs
-                if (this._breadcrumbs.length || this._title?.length) {
-                    topRow.h1('.breadcrumbs', h1 => {
-                        const crumbs = Array.from(this._breadcrumbs)
+                this.renderBreadcrumbs(topRow);
 
-                        // add a breadcrumb for the page title
-                        const titleCrumb: Action<TT> = {
-                            title: this._title,
-                            icon: this._icon || undefined,
-                        }
-                        if (this._titleHref) {
-                            titleCrumb.href = this._titleHref
-                        }
-                        if (this._breadcrumbClasses?.length) {
-                            titleCrumb.classes = this._breadcrumbClasses
-                        }
-                        crumbs.push(titleCrumb)
-
-                        this.app.theme.renderActions(h1, crumbs)
-                    })
-                }
-
-                // tertiary actions
                 if (this.actions.tertiary.length) {
-                    topRow.div('.tertiary-actions', actions => {
-                        this.app.theme.renderActions(actions, this.getActions('tertiary'))
-                    })
+                    this.renderActions(topRow, 'tertiary');
                 }
-            }) // topRow
+            })
 
             page.div('.lighting')
             page.div('.page-main', main => {
                 this.renderContent(main)
                 main.div('.page-actions', actions => {
-                    actions.div('.secondary-actions', container => {
-                        this.app.theme.renderActions(container, this.getActions('secondary'), {iconColor: 'white', defaultClass: 'secondary'})
-                    })
-                    actions.div('.primary-actions', container => {
-                        this.app.theme.renderActions(container, this.getActions('primary'), {iconColor: 'white', defaultClass: 'primary'})
-                    })
+                    this.renderActions(actions, 'secondary', {iconColor: null, defaultClass: 'secondary'})
+                    this.renderActions(actions, 'primary', {iconColor: null, defaultClass: 'primary'})
                 })
             })
+        })
+    }
+
+    protected renderActions(parent: PartTag, level: ActionLevel, options?: RenderActionOptions<TT>) {
+        parent.div(`.${level}-actions`, actions => {
+            this.app.theme.renderActions(actions, this.getActions(level), options)
+        })
+    }
+
+    protected renderBreadcrumbs(parent: PartTag) {
+        if (!this._breadcrumbs.length && !this._title?.length) return
+
+        parent.h1('.breadcrumbs', h1 => {
+            const crumbs = Array.from(this._breadcrumbs)
+
+            // add a breadcrumb for the page title
+            const titleCrumb: Action<TT> = {
+                title: this._title,
+                icon: this._icon || undefined,
+            }
+            if (this._titleHref) {
+                titleCrumb.href = this._titleHref
+            }
+            if (this._breadcrumbClasses?.length) {
+                titleCrumb.classes = this._breadcrumbClasses
+            }
+            crumbs.push(titleCrumb)
+
+            this.app.theme.renderActions(h1, crumbs)
         })
     }
 }
