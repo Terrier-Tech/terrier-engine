@@ -64,15 +64,20 @@
 	.modal-header, .modal-actions {
 		display: flex;
 		padding: var(--tt-pad);
-		gap: calc(var(--tt-pad)/2);
+		gap: var(--tt-gap);
 		flex: 0 0 auto;
 		align-items: center;
 	}
 
 	.modal-header {
+		i {
+			display: block;
+			transform: scale(1.25);
+		}
 		h2 {
 			flex: 1 1 auto;
 			min-width: 0;
+			font-weight: normal;
 		}
 
 		a {

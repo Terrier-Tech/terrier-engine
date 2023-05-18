@@ -1,9 +1,9 @@
 import {DdContentPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
-import {SchemaDef} from "../../terrier/schema"
+import {ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters, {Filter} from "./filters"
-import Columns, {ColumnRef} from "./columns"
+import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
 import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 
@@ -38,6 +38,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
     schema!: SchemaDef
     table!: T
     tableName!: string
+    modelDef!: ModelDef
     joinedEditors: JoinedTableEditor[] = []
 
     editColumnsKey = messages.untypedKey()
@@ -49,6 +50,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.tableName} Columns`)
+            this.app.showModal(ColumnsEditorModal, {schema: this.schema, tableEditor: this as TableEditor<TableRef>})
         })
     }
 
@@ -156,6 +158,7 @@ export class FromTableEditor extends TableEditor<FromTableRef> {
         await super.init()
 
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
+        this.modelDef = this.schema.models[this.table.model]
     }
 
 }

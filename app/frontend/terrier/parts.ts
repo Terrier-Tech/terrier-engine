@@ -7,6 +7,7 @@ import {TerrierApp} from "./app"
 import Loading from "./loading"
 import Theme, {Action, RenderActionOptions, ThemeType} from "./theme"
 import Toasts, {ToastOptions} from "./toasts";
+import {FormPart, FormPartData} from "tuff-core/forms"
 
 const log = new Logger('Parts')
 
@@ -444,4 +445,27 @@ export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, 
             Fragments.panelActions(panel, this.getAllActions(), this.theme)
         })
     }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Form Part
+////////////////////////////////////////////////////////////////////////////////
+
+export abstract class ThemedFormPart<
+    TState extends FormPartData,
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends FormPart<TState> {
+
+
+    get app(): TApp {
+        return this.root as TApp // this should always be true
+    }
+
+    get theme(): TTheme {
+        return this.app.theme
+    }
+
 }

@@ -47,7 +47,7 @@ export type ModelDef = {
  * Definition for an entire schema.
  */
 export type SchemaDef = {
-    models: ModelDef
+    models: Record<string, ModelDef>
 }
 
 
