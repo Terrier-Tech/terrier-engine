@@ -75,7 +75,7 @@ test("literal range display", () => {
     testRangeDisplay({
         min: '2022-03-12',
         max: '2023-12-01'
-    }, "Between 03/12/22 and 11/30/23")
+    }, "03/12/22 - 11/30/23")
 
     testRangeDisplay({
         min: '2022-03-12',

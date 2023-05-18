@@ -23,8 +23,10 @@ module TestQueries
           {
             filter_type: 'date_range',
             column: 'time',
-            min: '2022-01-01',
-            max: '2022-12-31'
+            range: {
+              min: '2022-01-01',
+              max: '2023-01-01'
+            }
           },
           {
             filter_type: 'inclusion',
@@ -135,7 +137,10 @@ module TestQueries
           {
             filter_type: "date_range",
             column: 'time',
-            min: "2023-01-01"
+            range: {
+              min: "2023-01-01",
+              max: "2024-01-01"
+            }
           }
         ],
         joins: [

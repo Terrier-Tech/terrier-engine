@@ -78,7 +78,7 @@ function rangeDisplay(range: DateRange): string {
             return dMin.format(displayFormat)
         }
         const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
-        return `Between ${display(range.min)} and ${max}`
+        return `${display(range.min)} - ${max}`
     } else if ('period' in range) { // virtual range
         // special day names
         if (range.period == 'day') {

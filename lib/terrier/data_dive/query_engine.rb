@@ -162,7 +162,7 @@ class ColumnRef < QueryModel
 end
 
 class Filter < QueryModel
-  attr_accessor :column, :filter_type, :operator, :value, :min, :max, :in, :editable, :edit_label
+  attr_accessor :column, :filter_type, :operator, :value, :range, :in, :editable, :edit_label
 
   def sql_operator
     case @operator
@@ -183,13 +183,9 @@ class Filter < QueryModel
       op = sql_operator
       builder.where "#{table.alias}.#{@column} #{op} ?", @value
     when 'date_range'
-      if @min
-        builder.where "#{table.alias}.#{@column} >= ?", @min
-      end
-      if @max
-        d = Date.parse(@max) + 1.day
-        builder.where "#{table.alias}.#{@column} < ?", d
-      end
+      period = DatePeriod.parse @range
+      builder.where "#{table.alias}.#{@column} >= ?", period.start_date
+      builder.where "#{table.alias}.#{@column} < ?", period.end_date
     when 'inclusion'
       builder.where "#{table.alias}.#{@column} in ?", @in
     else
