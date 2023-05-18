@@ -30,7 +30,7 @@ export type ActionLevel = keyof PanelActions<any>
 export abstract class TerrierPart<
     TState,
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TTheme>,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends Part<TState> {
 
@@ -121,12 +121,12 @@ export abstract class TerrierPart<
 /**
  * Base class for all Parts that render some main content, like pages, panels, and modals.
  */
-export abstract class ContentPart<TState, TThemeType extends ThemeType> extends TerrierPart<
+export abstract class ContentPart<
     TState,
-    TThemeType,
-    TerrierApp<TThemeType, Theme<TThemeType>>,
-    Theme<TThemeType>
-> {
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends TerrierPart<TState, TThemeType, TApp, TTheme> {
 
     /**
      * All ContentParts must implement this to render their actual content.
@@ -254,14 +254,14 @@ export abstract class ContentPart<TState, TThemeType extends ThemeType> extends 
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType>, DropdownStateType>(
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType>(
         constructor: {new(p: PartParent, id: string, state: DropdownStateType): DropdownType;},
         state: DropdownStateType,
         target: EventTarget | null) {
         if (!(target && target instanceof HTMLElement)) {
             throw "Trying to show a dropdown without an element target!"
         }
-        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown') as Dropdown<DropdownStateType, TThemeType>
+        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown')
         dropdown.parentPart = this
         dropdown.anchor(target)
         this.app.lastDropdownTarget = target
@@ -277,7 +277,7 @@ export abstract class ContentPart<TState, TThemeType extends ThemeType> extends 
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType>, DropdownStateType>(
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {
@@ -304,13 +304,18 @@ export type ContentWidth = "normal" | "wide"
 /**
  * A part that renders content to a full page.
  */
-export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, TT> {
+export abstract class PagePart<
+    TState,
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends ContentPart<TState, TThemeType, TApp, TTheme> {
 
     /// Breadcrumbs
 
-    private _breadcrumbs = Array<Action<TT>>()
+    private _breadcrumbs = Array<Action<TThemeType>>()
 
-    addBreadcrumb(crumb: Action<TT>) {
+    addBreadcrumb(crumb: Action<TThemeType>) {
         this._breadcrumbs.push(crumb)
     }
 
@@ -360,7 +365,7 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
         })
     }
 
-    protected renderActions(parent: PartTag, level: ActionLevel, options?: RenderActionOptions<TT>) {
+    protected renderActions(parent: PartTag, level: ActionLevel, options?: RenderActionOptions<TThemeType>) {
         parent.div(`.${level}-actions`, actions => {
             this.app.theme.renderActions(actions, this.getActions(level), options)
         })
@@ -373,7 +378,7 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
             const crumbs = Array.from(this._breadcrumbs)
 
             // add a breadcrumb for the page title
-            const titleCrumb: Action<TT> = {
+            const titleCrumb: Action<TThemeType> = {
                 title: this._title,
                 icon: this._icon || undefined,
             }
@@ -395,7 +400,11 @@ export abstract class PagePart<T, TT extends ThemeType> extends ContentPart<T, T
 /**
  * Default page part if the router can't find the path.
  */
-export class NotFoundRoute<TT extends ThemeType> extends PagePart<NoState, TT> {
+export class NotFoundRoute<
+    TT extends ThemeType,
+    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TTheme extends Theme<TT>
+> extends PagePart<NoState, TT, TApp, TTheme> {
     async init() {
         this.setTitle("Page Not Found")
     }
@@ -415,7 +424,12 @@ export class NotFoundRoute<TT extends ThemeType> extends PagePart<NoState, TT> {
 /**
  * A part that renders content inside a panel.
  */
-export abstract class PanelPart<T, TT extends ThemeType> extends ContentPart<T, TT> {
+export abstract class PanelPart<
+    TState,
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends ContentPart<TState, TThemeType, TApp, TTheme> {
 
     getLoadingContainer() {
         return this.element?.getElementsByClassName('tt-panel')[0]

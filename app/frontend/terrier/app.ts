@@ -18,13 +18,9 @@ Logger.level = 'info'
  */
 export abstract class TerrierApp<
     TThemeType extends ThemeType,
+    TSelf extends TerrierApp<TThemeType, TSelf, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<
-    {theme: TTheme},
-    TThemeType,
-    TerrierApp<TThemeType, TTheme>,
-    TTheme
-> {
+> extends TerrierPart<{theme: TTheme}, TThemeType, TSelf, TTheme> {
 
     _theme!: TTheme
 
@@ -48,7 +44,7 @@ export abstract class TerrierApp<
     update(root: HTMLElement) {
         log.info(`Update`, root)
         Tooltips.init(root)
-        Lightbox.init(root, this, 'body-content')
+        Lightbox.init<TThemeType, TSelf, TTheme>(root, this as unknown as TSelf, 'body-content')
     }
 
 
@@ -57,7 +53,8 @@ export abstract class TerrierApp<
     makeOverlay<OverlayType extends Part<StateType>, StateType>(
         constructor: { new(p: PartParent, id: string, state: StateType): OverlayType; },
         state: StateType,
-        layer: OverlayLayer): OverlayType {
+        layer: OverlayLayer
+    ): OverlayType {
         return this.overlayPart.makeLayer(constructor, state, layer)
     }
 
@@ -76,9 +73,9 @@ export abstract class TerrierApp<
 
     /// Modals
 
-    showModal<ModalType extends ModalPart<StateType, TThemeType>, StateType>(constructor: { new(p: PartParent, id: string, state: StateType): ModalType; }, state: StateType): ModalType {
+    showModal<ModalType extends ModalPart<StateType, TThemeType, TSelf, TTheme>, StateType>(constructor: { new(p: PartParent, id: string, state: StateType): ModalType; }, state: StateType): ModalType {
         const modalStack =
-            (this.overlayPart.parts.modal as ModalStackPart<TThemeType>)
+            (this.overlayPart.parts.modal as ModalStackPart<TThemeType, TSelf, TTheme, ModalType>)
                 ?? this.makeOverlay(ModalStackPart, {}, 'modal')
         const modal = modalStack.pushModal(constructor, state)
         modalStack.dirty()
