@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import {DdThemeType} from "./dd-theme"
+import DdTheme, {DdThemeType} from "./dd-theme"
 import {TerrierApp} from "../terrier/app"
 import {NotFoundRoute} from "../terrier/parts"
 import {RouterPart} from "tuff-core/routing"
@@ -18,7 +18,7 @@ class ContentRouterPart extends RouterPart {
 }
 
 
-export class App extends TerrierApp<DdThemeType> {
+export class App extends TerrierApp<DdThemeType, DdTheme> {
 
     router!: ContentRouterPart
 

@@ -16,11 +16,19 @@ Logger.level = 'info'
 /**
  * Main application part that renders the entire page.
  */
-export abstract class TerrierApp<TT extends ThemeType> extends TerrierPart<{theme: Theme<TT>}, TT> {
+export abstract class TerrierApp<
+    TThemeType extends ThemeType,
+    TTheme extends Theme<TThemeType>
+> extends TerrierPart<
+    {theme: TTheme},
+    TThemeType,
+    TerrierApp<TThemeType, TTheme>,
+    TTheme
+> {
 
-    _theme!: Theme<TT>
+    _theme!: TTheme
 
-    get theme(): Theme<TT> {
+    get theme(): TTheme {
         return this._theme
     }
 
@@ -68,9 +76,9 @@ export abstract class TerrierApp<TT extends ThemeType> extends TerrierPart<{them
 
     /// Modals
 
-    showModal<ModalType extends ModalPart<StateType, TT>, StateType>(constructor: { new(p: PartParent, id: string, state: StateType): ModalType; }, state: StateType): ModalType {
+    showModal<ModalType extends ModalPart<StateType, TThemeType>, StateType>(constructor: { new(p: PartParent, id: string, state: StateType): ModalType; }, state: StateType): ModalType {
         const modalStack =
-            (this.overlayPart.parts.modal as ModalStackPart<TT>)
+            (this.overlayPart.parts.modal as ModalStackPart<TThemeType>)
                 ?? this.makeOverlay(ModalStackPart, {}, 'modal')
         const modal = modalStack.pushModal(constructor, state)
         modalStack.dirty()

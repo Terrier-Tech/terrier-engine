@@ -2,7 +2,7 @@ import {NoState, PartTag} from 'tuff-core/parts'
 import {Location} from '../gen/models'
 import Db from './db'
 import {Logger} from "tuff-core/logging"
-import {DemoThemeType} from "./demo-theme"
+import DemoTheme, {DemoThemeType} from "./demo-theme"
 import {TerrierApp} from "@terrier/app"
 import DemoParts from "./demo-parts";
 import {PagePart} from "@terrier/parts";
@@ -46,7 +46,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType> {
 
 }
 
-export default class DemoApp extends TerrierApp<DemoThemeType> {
+export default class DemoApp extends TerrierApp<DemoThemeType, DemoTheme> {
 
     loc?: Location
     page!: DemoPage

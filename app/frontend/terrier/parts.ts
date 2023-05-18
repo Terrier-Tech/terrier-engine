@@ -26,13 +26,18 @@ export type ActionLevel = keyof PanelActions<any>
 /**
  * Base class for ALL parts in a Terrier application.
  */
-export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
+export abstract class TerrierPart<
+    TState,
+    TThemeType extends ThemeType,
+    TApp extends TerrierApp<TThemeType, TTheme>,
+    TTheme extends Theme<TThemeType>
+> extends Part<TState> {
 
-    get app(): TerrierApp<TT> {
-        return this.root as TerrierApp<TT> // this should always be true
+    get app(): TApp {
+        return this.root as TApp // this should always be true
     }
 
-    get theme(): Theme<TT> {
+    get theme(): TTheme {
         return this.app.theme
     }
 
@@ -101,7 +106,7 @@ export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
      * @param message the message text
      * @param options
      */
-    showToast(message: string, options: ToastOptions<TT>) {
+    showToast(message: string, options: ToastOptions<TThemeType>) {
         Toasts.show(message, options, this.theme)
     }
 
@@ -115,17 +120,18 @@ export abstract class TerrierPart<T, TT extends ThemeType> extends Part<T> {
 /**
  * Base class for all Parts that render some main content, like pages, panels, and modals.
  */
-export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T, TT> {
+export abstract class ContentPart<TState, TThemeType extends ThemeType> extends TerrierPart<
+    TState,
+    TThemeType,
+    TerrierApp<TThemeType, Theme<TThemeType>>,
+    Theme<TThemeType>
+> {
 
     /**
      * All ContentParts must implement this to render their actual content.
      * @param parent
      */
     abstract renderContent(parent: PartTag): void
-
-    get app(): TerrierApp<TT> {
-        return this.root as TerrierApp<TT> // this should always be true
-    }
 
 
     protected _title = ''
@@ -138,9 +144,9 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
         this._title = title
     }
 
-    protected _icon: TT['icons'] | null = null
+    protected _icon: TThemeType['icons'] | null = null
 
-    setIcon(icon: TT['icons']) {
+    setIcon(icon: TThemeType['icons']) {
         this._icon = icon
     }
 
@@ -155,12 +161,12 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
 
     // stored actions can be either an action object or a reference to a named action
     actions = {
-        primary: Array<Action<TT> | string>(),
-        secondary: Array<Action<TT> | string>(),
-        tertiary: Array<Action<TT> | string>()
+        primary: Array<Action<TThemeType> | string>(),
+        secondary: Array<Action<TThemeType> | string>(),
+        tertiary: Array<Action<TThemeType> | string>()
     }
 
-    namedActions: Record<string, { action: Action<TT>, level: ActionLevel }> = {}
+    namedActions: Record<string, { action: Action<TThemeType>, level: ActionLevel }> = {}
 
     /**
      * Add an action to the part, or replace a named action if it already exists.
@@ -168,7 +174,7 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
      * @param level whether it's a primary, secondary, or tertiary action
      * @param name a name to be given to this action, so it can be accessed later
      */
-    addAction(action: Action<TT>, level: ActionLevel = 'primary', name?: string) {
+    addAction(action: Action<TThemeType>, level: ActionLevel = 'primary', name?: string) {
         if (name?.length) {
             if (name in this.namedActions) {
                 const currentLevel = this.namedActions[name].level
@@ -191,7 +197,7 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
      * Returns the action definition for the action with the given name, or undefined if there is no action with that name
      * @param name
      */
-    getNamedAction(name: string): Action<TT> | undefined {
+    getNamedAction(name: string): Action<TThemeType> | undefined {
         return this.namedActions[name].action
     }
 
@@ -222,7 +228,7 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
         this.actions[level] = []
     }
 
-    getAllActions(): PanelActions<TT> {
+    getAllActions(): PanelActions<TThemeType> {
         return {
             primary: this.getActions('primary'),
             secondary: this.getActions('secondary'),
@@ -230,7 +236,7 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
         }
     }
 
-    getActions(level: ActionLevel): Action<TT>[] {
+    getActions(level: ActionLevel): Action<TThemeType>[] {
         return this.actions[level].map(action => {
             return (typeof action === 'string') ? this.namedActions[action].action : action
         })
@@ -247,14 +253,14 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TT>, DropdownStateType>(
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType>, DropdownStateType>(
         constructor: {new(p: PartParent, id: string, state: DropdownStateType): DropdownType;},
         state: DropdownStateType,
         target: EventTarget | null) {
         if (!(target && target instanceof HTMLElement)) {
             throw "Trying to show a dropdown without an element target!"
         }
-        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown') as Dropdown<DropdownStateType, TT>
+        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown') as Dropdown<DropdownStateType, TThemeType>
         dropdown.parentPart = this
         dropdown.anchor(target)
         this.app.lastDropdownTarget = target
@@ -270,7 +276,7 @@ export abstract class ContentPart<T, TT extends ThemeType> extends TerrierPart<T
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TT>, DropdownStateType>(
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType>, DropdownStateType>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {

@@ -2,7 +2,8 @@ import { Logger } from "tuff-core/logging"
 import { untypedKey } from "tuff-core/messages"
 import {ContentPart, TerrierPart} from "./parts"
 import {PartParent, PartTag} from "tuff-core/parts"
-import {ThemeType} from "./theme";
+import Theme, {ThemeType} from "./theme";
+import {TerrierApp} from "./app";
 
 const log = new Logger('Modals')
 
@@ -67,7 +68,7 @@ export abstract class ModalPart<T, TT extends ThemeType> extends ContentPart<T, 
  */
 export const modalPopKey = untypedKey()
 
-export class ModalStackPart<TT extends ThemeType> extends TerrierPart<{}, TT> {
+export class ModalStackPart<TT extends ThemeType> extends TerrierPart<{}, TT, TerrierApp<TT, Theme<TT>>, Theme<TT>> {
 
     displayClass: 'show' | 'hide' = 'show'
 

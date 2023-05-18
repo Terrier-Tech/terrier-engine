@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vitest"
+  },
   "devDependencies": {
     "vite": "^4.3.5",
     "vite-plugin-ruby": "^3.2.2"

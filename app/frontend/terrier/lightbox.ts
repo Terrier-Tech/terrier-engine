@@ -2,6 +2,7 @@ import { Logger } from "tuff-core/logging"
 import { untypedKey } from "tuff-core/messages"
 import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "./app"
+import Theme, {ThemeType} from "./theme";
 
 const log = new Logger('Lightbox')
 
@@ -12,9 +13,10 @@ const log = new Logger('Lightbox')
 /**
  * Initializes a global event listener for image elements contained in the `containerClass`
  * @param root
+ * @param app
  * @param containerClass
  */
-function init(root: HTMLElement, app: TerrierApp<any>, containerClass: string) {
+function init<TT extends ThemeType>(root: HTMLElement, app: TerrierApp<TT, Theme<TT>>, containerClass: string) {
     log.info("Init", root)
     root.addEventListener("click", evt => {
         if (!(evt.target instanceof HTMLElement) || evt.target.tagName != 'IMG') {
@@ -47,13 +49,13 @@ function init(root: HTMLElement, app: TerrierApp<any>, containerClass: string) {
 
 type LightboxState = { src: string }
 
-function showPart(app: TerrierApp<any>, state: LightboxState) {
+function showPart<TT extends ThemeType>(app: TerrierApp<TT, Theme<TT>>, state: LightboxState) {
     app.makeOverlay(LightboxPart, {app,...state}, 'lightbox')
 }
 
 const closeKey = untypedKey()
 
-class LightboxPart extends Part<LightboxState & {app: TerrierApp<any>}> {
+class LightboxPart<TT extends ThemeType> extends Part<LightboxState & {app: TerrierApp<TT, Theme<TT>>}> {
 
     async init() {
         this.onClick(closeKey, _ => {

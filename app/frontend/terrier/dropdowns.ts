@@ -5,7 +5,8 @@ import {PartTag, StatelessPart} from "tuff-core/parts"
 import Overlays from "./overlays"
 import {TerrierPart} from "./parts"
 import Objects from "tuff-core/objects"
-import {Action, ThemeType} from "./theme"
+import Theme, {Action, ThemeType} from "./theme"
+import {TerrierApp} from "./app";
 
 const log = new Logger('Dropdowns')
 
@@ -15,7 +16,7 @@ const clearDropdownKey = untypedKey()
  * Abstract base class for dropdown parts.
  * Subclasses must implement the `renderContent()` method to render the dropdown content.
  */
-export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, TT> {
+export abstract class Dropdown<T, TT extends ThemeType> extends TerrierPart<T, TT, TerrierApp<TT, Theme<TT>>, Theme<TT>> {
 
     parentPart?: StatelessPart
 
