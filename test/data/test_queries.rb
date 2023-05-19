@@ -36,6 +36,7 @@ module TestQueries
         ],
         joins: [
           {
+            model: 'Location',
             belongs_to: 'location',
             join_type: 'inner',
             columns: [
@@ -60,6 +61,7 @@ module TestQueries
             ],
             joins: [
               {
+                model: 'User',
                 belongs_to: 'created_by',
                 join_type: 'left',
                 columns: [
@@ -72,6 +74,7 @@ module TestQueries
             ]
           },
           {
+            model: 'User',
             belongs_to: 'user',
             join_type: 'inner',
             columns: [
@@ -90,6 +93,7 @@ module TestQueries
             ]
           },
           {
+            model: 'Target',
             belongs_to: 'target',
             join_type: 'inner',
             columns: [
@@ -145,6 +149,7 @@ module TestQueries
         ],
         joins: [
           {
+            model: 'Location',
             belongs_to: 'location',
             join_type: 'inner',
             columns: [

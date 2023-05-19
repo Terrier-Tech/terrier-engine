@@ -1,4 +1,4 @@
-import {FromTableRef} from "./tables"
+import {TableRef} from "./tables"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -7,6 +7,6 @@ import {FromTableRef} from "./tables"
 
 export type Query = {
     id: string
-    from: FromTableRef
+    from: TableRef
 }
 

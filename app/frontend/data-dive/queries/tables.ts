@@ -14,13 +14,10 @@ const log = new Logger("Tables")
 ////////////////////////////////////////////////////////////////////////////////
 
 export type TableRef = {
+    model: string
     columns?: ColumnRef[]
     joins?: JoinedTableRef[]
     filters?: Filter[]
-}
-
-export type FromTableRef = TableRef & {
-    model: string
 }
 
 export type JoinedTableRef = TableRef & {
@@ -38,14 +35,16 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
     schema!: SchemaDef
     table!: T
     tableName!: string
+    displayName!: string
     modelDef!: ModelDef
-    joinedEditors: JoinedTableEditor[] = []
 
     editColumnsKey = messages.untypedKey()
 
     async init() {
         this.schema = this.state.schema
         this.table = this.state.table
+        this.modelDef = this.schema.models[this.table.model]
+        this.tableName = inflection.titleize(inflection.tableize(this.table.model))
         this.makeJoinedEditors()
 
         this.onClick(this.editColumnsKey, _ => {
@@ -58,14 +57,10 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
      * Re-generates all editors for the joined tables.
      */
     makeJoinedEditors() {
-        for (const editor of this.joinedEditors) {
-            this.removeChild(editor)
-        }
-        if (this.table.joins?.length) {
-            this.joinedEditors = this.table.joins.map(join => {
-                return this.makePart(JoinedTableEditor, {schema: this.schema, table: join})
-            })
-        }
+        const states = (this.table.joins || []).map(table => {
+            return {schema: this.schema, table}
+        })
+        this.assignCollection('joined', JoinedTableEditor, states)
     }
 
 
@@ -84,11 +79,10 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         if ('join_type' in this.state.table) {
             parent.div('.chicken-foot')
         }
-        parent.div('.joins-column', col => {
-            for (const jte of this.joinedEditors) {
-                col.part(jte)
-            }
-        })
+
+        this.renderCollection(parent, 'joined')
+            .class('joins-column')
+
         parent.div(".tt-panel.table-panel", panel => {
             panel.div('.title', title => {
                 title.i('.glyp-table')
@@ -152,13 +146,11 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
 }
 
-export class FromTableEditor extends TableEditor<FromTableRef> {
+export class FromTableEditor extends TableEditor<TableRef> {
 
     async init() {
         await super.init()
 
-        this.tableName = inflection.titleize(inflection.tableize(this.table.model))
-        this.modelDef = this.schema.models[this.table.model]
     }
 
 }
@@ -168,7 +160,7 @@ export class JoinedTableEditor extends TableEditor<JoinedTableRef> {
     async init() {
         await super.init()
 
-        this.tableName = inflection.titleize(this.table.belongs_to)
+        this.displayName = inflection.titleize(this.table.belongs_to)
     }
 
 }

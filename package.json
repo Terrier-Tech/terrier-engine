@@ -17,7 +17,7 @@
   "dependencies": {
     "dayjs": "^1.11.7",
     "inflection": "^2.0.1",
-    "tuff-core": "^0.25.0"
+    "tuff-core": "^0.26.0"
   },
   "devDependencies": {
     "@types/node": "^18.16.3",

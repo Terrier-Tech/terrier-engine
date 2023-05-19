@@ -2,6 +2,9 @@ import {PartTag} from "tuff-core/parts"
 import {DdModalPart, DdFormPart} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
+import {Logger} from "tuff-core/logging"
+
+const log = new Logger("Columns")
 
 ////////////////////////////////////////////////////////////////////////////////
 // Types
@@ -61,15 +64,9 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
     columnStates: ColumnState[] = []
-    columnEditors: ColumnEditor[] = []
 
     updateColumnEditors() {
-        for (const editor of this.columnEditors) {
-            this.removeChild(editor)
-        }
-        this.columnEditors = this.columnStates.map(colState => {
-            return this.makePart(ColumnEditor, colState)
-        })
+        this.assignCollection('columns', ColumnEditor, this.columnStates)
     }
 
     table!: TableRef
@@ -78,10 +75,10 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         this.table = this.state.tableEditor.table
         this.modelDef = this.state.tableEditor.modelDef
 
-        // store the states of each potential column
+        // initialize the columns states
         const columns: ColumnRef[] = this.state.tableEditor.table.columns || []
         this.columnStates = columns.map(col => {
-            return {schema: this.state.schema, table: this.table, model: this.modelDef, ...col}
+            return {schema: this.state.schema, columnsEditor: this, ...col}
         })
         this.updateColumnEditors()
 
@@ -95,9 +92,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
                 header.div('.name').label({text: "Name"})
                 header.div('.alias').label({text: "Alias"})
             })
-            for (const editor of this.columnEditors) {
-                table.part(editor)
-            }
+            this.renderCollection(parent, 'columns')
         })
     }
 
@@ -105,8 +100,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
 type ColumnState = ColumnRef & {
     schema: SchemaDef
-    table: TableRef
-    model: ModelDef
+    columnsEditor: ColumnsEditorModal
 }
 
 class ColumnEditor extends DdFormPart<ColumnState> {
@@ -117,7 +111,9 @@ class ColumnEditor extends DdFormPart<ColumnState> {
 
     async init() {
         this.schema = this.state.schema
-        this.modelDef = this.state.model
+        this.modelDef = this.state.columnsEditor.modelDef
+        this.columnDef = this.modelDef.columns[this.name]
+        log.info(`Column ${this.state.name} definition:`, this.columnDef)
     }
 
     get parentClasses(): Array<string> {
