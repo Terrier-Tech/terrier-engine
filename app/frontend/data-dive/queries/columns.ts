@@ -3,6 +3,8 @@ import {DdModalPart, DdFormPart} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
 import {Logger} from "tuff-core/logging"
+import {strings} from "tuff-core"
+import {SelectOptions} from "tuff-core/forms"
 
 const log = new Logger("Columns")
 
@@ -109,11 +111,17 @@ class ColumnEditor extends DdFormPart<ColumnState> {
     modelDef!: ModelDef
     columnDef!: ColumnDef
 
+    nameOptions!: SelectOptions
+
     async init() {
         this.schema = this.state.schema
         this.modelDef = this.state.columnsEditor.modelDef
         this.columnDef = this.modelDef.columns[this.name]
         log.info(`Column ${this.state.name} definition:`, this.columnDef)
+
+        this.nameOptions = Object.keys(this.modelDef.columns).sort().map(c => {
+            return {value: c, title: strings.titleize(c)}
+        })
     }
 
     get parentClasses(): Array<string> {
@@ -122,10 +130,10 @@ class ColumnEditor extends DdFormPart<ColumnState> {
 
     render(parent: PartTag): any {
         parent.div('.name', col => {
-            this.textInput(col, "name")
+            this.select(col, "name", this.nameOptions)
         })
         parent.div('.alias', col => {
-            this.textInput(col, "alias")
+            this.textInput(col, "alias", {placeholder: "Alias"})
         })
     }
     

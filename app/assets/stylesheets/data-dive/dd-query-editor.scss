@@ -146,4 +146,8 @@
 
 .dd-column-editor-header, .dd-column-editor {
 	display: flex;
+	gap: var(--tt-gap);
+	> .name, > .alias {
+		flex: 0 0 25%
+	}
 }
