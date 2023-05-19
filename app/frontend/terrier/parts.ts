@@ -469,7 +469,7 @@ export abstract class PanelPart<
 export abstract class ThemedFormPart<
     TState extends FormPartData,
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TTheme>,
+    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends FormPart<TState> {
 
