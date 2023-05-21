@@ -45,6 +45,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         this.table = this.state.table
         this.modelDef = this.schema.models[this.table.model]
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
+        this.displayName = this.tableName
         this.makeJoinedEditors()
 
         this.onClick(this.editColumnsKey, _ => {
@@ -86,7 +87,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         parent.div(".tt-panel.table-panel", panel => {
             panel.div('.title', title => {
                 title.i('.glyp-table')
-                title.div().text(this.tableName)
+                title.div().text(this.displayName)
             })
             this.renderColumns(panel)
             this.renderFilters(panel)
@@ -142,6 +143,11 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
                 line.div().text('Belongs-To')
             })
         })
+    }
+
+    updateColumns(columns: ColumnRef[]) {
+        this.state.table.columns = columns
+        this.dirty()
     }
 
 }

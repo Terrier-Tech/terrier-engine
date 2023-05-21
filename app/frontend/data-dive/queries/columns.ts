@@ -3,8 +3,10 @@ import {DdModalPart, DdFormPart} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
 import {Logger} from "tuff-core/logging"
-import {strings} from "tuff-core"
 import {SelectOptions} from "tuff-core/forms"
+import Forms from "../../terrier/forms"
+import {arrays, messages} from "tuff-core"
+import Objects from "tuff-core/objects";
 
 const log = new Logger("Columns")
 
@@ -42,7 +44,7 @@ export type ColumnRef = {
 
 function render(parent: PartTag, col: ColumnRef) {
     if (col.function?.length) {
-        parent.div('.name').text(`${col.function}(<strong>${col.name}</strong>)`)
+        parent.div('.function').text(`${col.function}(<strong>${col.name}</strong>)`)
     } else {
         parent.div('.name').text(col.name)
     }
@@ -62,10 +64,15 @@ export type ColumnsEditorState = {
     tableEditor: TableEditor<TableRef>
 }
 
+const saveKey = messages.untypedKey()
+const addKey = messages.untypedKey()
+const removeKey = messages.typedKey<{id: string}>()
+
 export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
     columnStates: ColumnState[] = []
+    columnCount = 0
 
     updateColumnEditors() {
         this.assignCollection('columns', ColumnEditor, this.columnStates)
@@ -80,12 +87,33 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         // initialize the columns states
         const columns: ColumnRef[] = this.state.tableEditor.table.columns || []
         this.columnStates = columns.map(col => {
-            return {schema: this.state.schema, columnsEditor: this, ...col}
+            this.columnCount += 1
+            return {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, ...col}
         })
         this.updateColumnEditors()
 
-        this.setTitle(`Columns for ${this.state.tableEditor.tableName}`)
+        this.setTitle(`Columns for ${this.state.tableEditor.displayName}`)
         this.setIcon('glyp-columns')
+
+        this.addAction({
+            title: 'Save',
+            icon: 'glyp-checkmark',
+            click: {key: saveKey}
+        }, 'primary')
+
+        this.addAction({
+            title: 'Add Columns',
+            icon: 'glyp-plus',
+            click: {key: addKey}
+        }, 'secondary')
+
+        this.onClick(saveKey, _ => {
+            this.save()
+        })
+
+        this.onClick(removeKey, m => {
+            this.removeColumn(m.data.id)
+        })
     }
 
     renderContent(parent: PartTag): void {
@@ -93,9 +121,27 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
             table.div('.dd-column-editor-header', header => {
                 header.div('.name').label({text: "Name"})
                 header.div('.alias').label({text: "Alias"})
+                header.div('.function').label({text: "Function"})
+                header.div('.group-by').label({text: "Group By?"})
             })
             this.renderCollection(parent, 'columns')
         })
+    }
+
+    removeColumn(id: string) {
+        const col = arrays.find(this.columnStates, c => c.id == id)
+        if (col) {
+            this.columnStates = arrays.without(this.columnStates, col)
+            this.updateColumnEditors()
+        }
+    }
+
+    save() {
+        const columns = this.columnStates.map(state => {
+            return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
+        })
+        this.state.tableEditor.updateColumns(columns)
+        this.pop()
     }
 
 }
@@ -103,6 +149,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 type ColumnState = ColumnRef & {
     schema: SchemaDef
     columnsEditor: ColumnsEditorModal
+    id: string
 }
 
 class ColumnEditor extends DdFormPart<ColumnState> {
@@ -111,29 +158,42 @@ class ColumnEditor extends DdFormPart<ColumnState> {
     modelDef!: ModelDef
     columnDef!: ColumnDef
 
-    nameOptions!: SelectOptions
+    functionOptions!: SelectOptions
 
     async init() {
         this.schema = this.state.schema
         this.modelDef = this.state.columnsEditor.modelDef
-        this.columnDef = this.modelDef.columns[this.name]
+        this.columnDef = this.modelDef.columns[this.state.name]
         log.info(`Column ${this.state.name} definition:`, this.columnDef)
 
-        this.nameOptions = Object.keys(this.modelDef.columns).sort().map(c => {
-            return {value: c, title: strings.titleize(c)}
-        })
+        let funcs = Array.from<string>(AggFunctions)
+        if (this.columnDef.type == 'date' || this.columnDef.type.includes('time')) {
+            funcs = funcs.concat(Array.from(DateFunctions))
+        }
+        this.functionOptions = Forms.titleizeOptions(funcs, '')
     }
 
     get parentClasses(): Array<string> {
-        return ['dd-column-editor'];
+        return super.parentClasses.concat(['dd-column-editor']);
     }
 
     render(parent: PartTag): any {
         parent.div('.name', col => {
-            this.select(col, "name", this.nameOptions)
+            col.div('.tt-readonly-field', {text: this.state.name})
         })
         parent.div('.alias', col => {
             this.textInput(col, "alias", {placeholder: "Alias"})
+        })
+        parent.div('.function', col => {
+            this.select(col, "function", this.functionOptions)
+        })
+        parent.div('.group-by', col => {
+            this.checkbox(col, "grouped")
+        })
+        parent.div('.actions', actions => {
+            actions.a(a => {
+                a.i('.glyp-close')
+            }).emitClick(removeKey, {id: this.state.id})
         })
     }
     

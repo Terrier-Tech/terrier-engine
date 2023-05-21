@@ -482,4 +482,8 @@ export abstract class ThemedFormPart<
         return this.app.theme
     }
 
+
+    get parentClasses(): Array<string> {
+        return ['tt-form']
+    }
 }

@@ -198,6 +198,10 @@ $color-diff: 0.08;
 			}
 		}
 	}
+	i {
+		display: block;
+		transform: scale(1.25);
+	}
 
 	.title {
 		padding: 8px;

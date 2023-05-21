@@ -1,0 +1,36 @@
+@import "tt-mixins";
+
+
+.tt-form {
+
+	// text-like fields
+	input[type=text], input[type=email], input[type=tel], input[type=search], select {
+		margin: 0;
+		font-size: var(--tt-body-font-size);
+		min-height: var(--tt-field-height);
+		@include tt-rounded-corners;
+		border: 1px solid var(--tt-field-border-color);
+		padding: 0 0.6em;
+	}
+
+	// checkboxes and radio buttons
+	input[type=checkbox], input[type=radio] {
+		margin: 0;
+		transform: scale(1.5);
+		cursor: pointer;
+	}
+}
+
+.tt-readonly-field {
+	margin: 0;
+	font-size: var(--tt-body-font-size);
+	min-height: var(--tt-field-height);
+	@include tt-rounded-corners;
+	border: 1px solid var(--tt-field-border-color);
+	display: flex;
+	align-items: center;
+	padding: 0 0.6em;
+	gap: var(--tt-gap);
+	flex: 1 1 auto;
+	background-color: var(--tt-inactive-background);
+}

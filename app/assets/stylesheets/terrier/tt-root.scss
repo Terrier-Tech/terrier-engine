@@ -14,6 +14,7 @@
 	--tt-secondary-color: #1e6c7b;
 	--tt-panel-background: #fff;
 	--tt-odd-row-background: #f8f8f8;
+	--tt-table-border-color: var(--tt-border-color);
 	--tt-body-color: #333;
 	--tt-white-color: #fff;
 	--tt-shadow-color: rgba(0, 0, 0, 0.15);
@@ -30,4 +31,7 @@
 	--tt-tooltip-background: var(--tt-white-color);
 	--tt-tooltip-foreground: var(--tt-primary-color);
 	--tt-animation-duration: 0.2s;
+	--tt-field-height: 36px;
+	--tt-field-border-color: #bbb;
+	--tt-inactive-background: var(--tt-odd-row-background);
 }

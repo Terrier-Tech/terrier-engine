@@ -2,36 +2,45 @@
 
 #modal-window {
 	background-color: #fff;
-}
-body.with-modal #top-bar {
-	filter: blur(12px);
-}
-.modal-header a.close-modal {
-	line-height: 1;
-	// we don't have icons, so just use a multiplication symbol
-	i.close-x {
-		font-style: normal;
-		font-weight: bold;
-		&::after {
-			content: '×';
+
+	// keep in #modal-window to not interfere with tt-modal
+	.modal-header a.close-modal {
+		line-height: 1;
+		// we don't have icons, so just use a multiplication symbol
+		i.close-x {
+			font-style: normal;
+			font-weight: bold;
+
+			&::after {
+				content: '×';
+			}
+		}
+	}
+
+	// keep in #modal-window to not interfere with tt-modal
+	.modal-content {
+		padding: 1em;
+	}
+
+	// keep in #modal-window to not interfere with tt-modal
+	.modal-actions a {
+		padding: 0.5em 1em;
+		border-radius: 4px;
+		border: 2px solid #333;
+
+		&.primary {
+			color: #00aa00;
+			border-color: #00aa00;
+		}
+
+		&.alert {
+			color: #aa0000;
+			border-color: #aa0000;
 		}
 	}
 }
-.modal-content {
-	padding: 1em;
-}
-.modal-actions a {
-	padding: 0.5em 1em;
-	border-radius: 4px;
-	border: 2px solid #333;
-	&.primary {
-		color: #00aa00;
-		border-color: #00aa00;
-	}
-	&.alert {
-		color: #aa0000;
-		border-color: #aa0000;
-	}
+body.with-modal #top-bar {
+	filter: blur(12px);
 }
 
 #modal-alert {
