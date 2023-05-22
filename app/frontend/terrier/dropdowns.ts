@@ -6,7 +6,7 @@ import Overlays from "./overlays"
 import {TerrierPart} from "./parts"
 import Objects from "tuff-core/objects"
 import Theme, {Action, ThemeType} from "./theme"
-import {TerrierApp} from "./app";
+import {TerrierApp} from "./app"
 
 const log = new Logger('Dropdowns')
 
@@ -17,7 +17,7 @@ const clearDropdownKey = untypedKey()
  * Subclasses must implement the `renderContent()` method to render the dropdown content.
  */
 export abstract class Dropdown<
-    TState,
+    TState extends {},
     TThemeType extends ThemeType,
     TApp extends TerrierApp<TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
@@ -44,7 +44,7 @@ export abstract class Dropdown<
      */
     clear() {
         log.info("Clearing dropdown")
-        this.app.clearOverlay('dropdown')
+        this.app.removeDropdown(this.state)
     }
 
     render(parent: PartTag) {
@@ -101,7 +101,7 @@ export class ActionsDropdown<
         const keys = unique(this.state.map(action => action.click?.key).filter(Objects.notNull))
         for (const key of keys) {
             this.onClick(key, m => {
-                this.app.clearOverlay('dropdown')
+                this.clear()
                 log.info(`Re-emitting ${key.id} message`, m, this.parentPart)
                 if (this.parentPart) {
                     this.parentPart.emit('click', key, m.event, m.data)

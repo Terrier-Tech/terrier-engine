@@ -17,6 +17,11 @@ $phone-breakpoint: 550px; // phone portrait
 	text-overflow: ellipsis;
 }
 
+// uses --tt-pad to pad the element for use with text (i.e. less vertical than horizontal)
+@mixin tt-text-pad {
+	padding: calc(var(--tt-pad) * 0.5) var(--tt-pad);
+}
+
 // override the default to use our custom white color
 @mixin tt-inset-white-text {
 	color: var(--tt-white-color);
@@ -45,10 +50,21 @@ $phone-breakpoint: 550px; // phone portrait
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Slightly 3D backgrounds
+// Backgrounds
 ////////////////////////////////////////////////////////////////////////////////
 
 $color-diff: 0.08;
+
+// makes the background slightly dark when hovering and slightly light when clicking
+@mixin tt-shaded-hover {
+	&:hover {
+		background-color: rgba(#000, $color-diff);
+	}
+	&:active {
+		background-color: rgba(#fff, $color-diff);
+	}
+}
+
 
 @mixin tt-raised-bg($color, $pressable: true, $diff-mult: 1, $disabled: false) {
 	$diff: ($color-diff * $diff-mult);

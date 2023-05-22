@@ -1,12 +1,12 @@
 import {PartTag} from "tuff-core/parts"
-import {DdModalPart, DdFormPart} from "../dd-parts";
+import {DdModalPart, DdFormPart, DdDropdown} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
 import {Logger} from "tuff-core/logging"
 import {SelectOptions} from "tuff-core/forms"
 import Forms from "../../terrier/forms"
 import {arrays, messages} from "tuff-core"
-import Objects from "tuff-core/objects";
+import Objects from "tuff-core/objects"
 
 const log = new Logger("Columns")
 
@@ -68,6 +68,9 @@ const saveKey = messages.untypedKey()
 const addKey = messages.untypedKey()
 const removeKey = messages.typedKey<{id: string}>()
 
+/**
+ * A modal that lets the user edit the columns being referenced for a particular table.
+ */
 export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
@@ -78,6 +81,11 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         this.assignCollection('columns', ColumnEditor, this.columnStates)
     }
 
+    addState(col: ColumnRef) {
+        this.columnCount += 1
+        this.columnStates.push({schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, ...col})
+    }
+
     table!: TableRef
 
     async init () {
@@ -86,10 +94,9 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
         // initialize the columns states
         const columns: ColumnRef[] = this.state.tableEditor.table.columns || []
-        this.columnStates = columns.map(col => {
-            this.columnCount += 1
-            return {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, ...col}
-        })
+        for (const col of columns) {
+            this.addState(col)
+        }
         this.updateColumnEditors()
 
         this.setTitle(`Columns for ${this.state.tableEditor.displayName}`)
@@ -113,6 +120,20 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
         this.onClick(removeKey, m => {
             this.removeColumn(m.data.id)
+        })
+
+        this.onClick(addKey, m => {
+            const onSelected = (columns: string[]) => {
+                log.info(`Adding ${columns.length} columns`, columns)
+                for (const col of columns) {
+                    const colDef = this.modelDef.columns[col]
+                    if (colDef) {
+                        this.addState(colDef)
+                    }
+                }
+                this.updateColumnEditors()
+            }
+            this.toggleDropdown(SelectColumnsDropdown, {modelDef: this.modelDef, callback: onSelected}, m.event.target)
         })
     }
 
@@ -152,6 +173,9 @@ type ColumnState = ColumnRef & {
     id: string
 }
 
+/**
+ * An editor row for an individual column.
+ */
 class ColumnEditor extends DdFormPart<ColumnState> {
 
     schema!: SchemaDef
@@ -197,6 +221,82 @@ class ColumnEditor extends DdFormPart<ColumnState> {
         })
     }
     
+}
+
+
+const checkAllKey = messages.untypedKey()
+const applySelectionKey = messages.untypedKey()
+const checkChangedKey = messages.typedKey<{column: string}>()
+
+type SelectColumnsCallback = (columns: string[]) => any
+
+/**
+ * Shows a dropdown that allows the user to select one or more columns from the given model.
+ */
+class SelectColumnsDropdown extends DdDropdown<{modelDef: ModelDef, callback: SelectColumnsCallback}> {
+
+    checked: Set<string> = new Set()
+    columns!: string[]
+
+    async init() {
+        this.columns = Object.keys(this.state.modelDef.columns).sort()
+
+        this.onClick(checkAllKey, _ => {
+            // toggle them all being checked
+            const trues = Object.values(this.checked).filter(b => b)
+            if (trues.length > this.columns.length / 2) {
+                this.checked = new Set()
+            }
+            else {
+                for (const c of this.columns) {
+                    this.checked.add(c)
+                }
+            }
+            this.dirty()
+        })
+
+        this.onClick(applySelectionKey, _ => {
+            this.state.callback(Array.from(this.checked))
+            this.clear()
+        })
+
+        this.onChange(checkChangedKey, m => {
+            const col = m.data.column
+            log.info(`Column '${col}' checkbox changed to`, m.value)
+            if (m.value == 'on') {
+                this.checked.add(col)
+            }
+            else {
+                this.checked.delete(col)
+            }
+        })
+    }
+
+
+    get parentClasses(): Array<string> {
+        return super.parentClasses.concat(['dd-select-columns-dropdown']);
+    }
+
+    renderContent(parent: PartTag) {
+        parent.a(a => {
+            a.i('.glyp-check_all')
+            a.span({text: "Toggle All"})
+        }).emitClick(checkAllKey)
+
+        for (const col of this.columns) {
+            parent.label(label => {
+                label.input({type: 'checkbox', checked: this.checked.has(col)})
+                    .emitChange(checkChangedKey, {column: col})
+                label.div().text(col)
+            })
+        }
+
+        parent.a(a => {
+            a.i('.glyp-checkmark')
+            a.span({text: "Add Selected"})
+        }).emitClick(applySelectionKey)
+    }
+
 }
 
 

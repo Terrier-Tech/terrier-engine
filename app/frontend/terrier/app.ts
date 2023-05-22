@@ -1,14 +1,14 @@
 import { Logger } from "tuff-core/logging"
-import {Part, PartParent} from "tuff-core/parts"
+import {Part, PartConstructor, PartParent} from "tuff-core/parts"
 import {TerrierPart} from "./parts"
 import Tooltips from "./tooltips"
 import Lightbox from "./lightbox"
+import Theme, {ThemeType} from "./theme"
+import {ModalPart, ModalStackPart} from "./modals"
+import {OverlayLayerType, OverlayPart} from "./overlays"
 
 // @ts-ignore
 import logoUrl from './images/optimized/terrier-hub-logo-light.svg'
-import Theme, {ThemeType} from "./theme"
-import {ModalPart, ModalStackPart} from "./modals"
-import {OverlayLayer, OverlayPart} from "./overlays"
 
 const log = new Logger('App')
 Logger.level = 'info'
@@ -50,21 +50,34 @@ export abstract class TerrierApp<
 
     /// Overlays
 
-    makeOverlay<OverlayType extends Part<StateType>, StateType>(
+    addOverlay<OverlayType extends Part<StateType>, StateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: StateType): OverlayType; },
         state: StateType,
-        layer: OverlayLayer
-    ): OverlayType {
-        return this.overlayPart.makeLayer(constructor, state, layer)
+        type: OverlayLayerType
+    ) {
+        return this.overlayPart.pushLayer(constructor, state, type)
     }
 
-    clearOverlay(layer: OverlayLayer) {
-        this.overlayPart.clearLayer(layer)
-        this.lastDropdownTarget = undefined
+    removeOverlay<StateType extends {}>(state: StateType): boolean {
+        return this.overlayPart.removeLayer(state)
+    }
+
+    popOverlay(type?: OverlayLayerType) {
+        this.overlayPart.popLayer(type)
     }
 
     clearOverlays() {
         this.overlayPart.clearAll()
+    }
+
+    removeDropdown<StateType extends {}>(state: StateType): boolean {
+        this.lastDropdownTarget = undefined
+        return this.overlayPart.removeLayer(state)
+    }
+
+    clearDropdowns() {
+        this.lastDropdownTarget = undefined
+        this.popOverlay('dropdown')
     }
 
 
@@ -73,13 +86,14 @@ export abstract class TerrierApp<
 
     /// Modals
 
-    showModal<ModalType extends ModalPart<StateType, TThemeType, TSelf, TTheme>, StateType>(constructor: { new(p: PartParent, id: string, state: StateType): ModalType; }, state: StateType): ModalType {
-        const modalStack =
-            (this.overlayPart.parts.modal as ModalStackPart<TThemeType, TSelf, TTheme, ModalType>)
-                ?? this.makeOverlay(ModalStackPart, {}, 'modal')
+    showModal<ModalType extends ModalPart<StateType, TThemeType, TSelf, TTheme>, StateType>(
+        constructor: PartConstructor<ModalType, StateType>,
+        state: StateType
+    ): ModalType {
+        const modalStack = this.overlayPart.getOrCreateLayer(ModalStackPart, {}, 'modal')
         const modal = modalStack.pushModal(constructor, state)
         modalStack.dirty()
-        return modal
+        return modal as ModalType
     }
 
 

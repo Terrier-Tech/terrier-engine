@@ -2,7 +2,7 @@ import { Logger } from "tuff-core/logging"
 import { untypedKey } from "tuff-core/messages"
 import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "./app"
-import Theme, {ThemeType} from "./theme";
+import Theme, {ThemeType} from "./theme"
 
 const log = new Logger('Lightbox')
 
@@ -58,7 +58,7 @@ function showPart<
     TApp extends TerrierApp<TT,TApp, TTheme>,
     TTheme extends Theme<TT>
 >(app: TApp, state: LightboxState) {
-    app.makeOverlay(LightboxPart, {app,...state}, 'lightbox')
+    app.addOverlay(LightboxPart, {app,...state}, 'lightbox')
 }
 
 const closeKey = untypedKey()
@@ -91,7 +91,7 @@ class LightboxPart<
     close() {
         this.element?.classList.remove('active')
         setTimeout(_ => {
-            this.state.app.clearOverlay('lightbox')
+            this.state.app.removeOverlay(this.state)
         }, 500)
     }
 }

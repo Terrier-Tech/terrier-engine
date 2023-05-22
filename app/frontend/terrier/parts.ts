@@ -254,21 +254,21 @@ export abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType>(
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
         constructor: {new(p: PartParent, id: string, state: DropdownStateType): DropdownType;},
         state: DropdownStateType,
         target: EventTarget | null) {
         if (!(target && target instanceof HTMLElement)) {
             throw "Trying to show a dropdown without an element target!"
         }
-        const dropdown = this.app.makeOverlay(constructor, state, 'dropdown')
+        const dropdown = this.app.addOverlay(constructor, state, 'dropdown')
         dropdown.parentPart = this
         dropdown.anchor(target)
         this.app.lastDropdownTarget = target
     }
 
-    clearDropdown() {
-        this.app.clearOverlay('dropdown')
+    clearDropdowns() {
+        this.app.clearDropdowns()
     }
 
     /**
@@ -277,12 +277,12 @@ export abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType>(
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {
         if (target && target instanceof HTMLElement && target == this.app.lastDropdownTarget) {
-            this.clearDropdown()
+            this.clearDropdowns()
         } else {
             this.makeDropdown(constructor, state, target)
         }

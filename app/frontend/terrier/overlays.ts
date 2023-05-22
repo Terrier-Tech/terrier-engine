@@ -1,6 +1,7 @@
-import { Part, PartParent, PartTag, StatelessPart, NoState } from "tuff-core/parts"
+import {Part, PartTag, StatelessPart, NoState, PartConstructor} from "tuff-core/parts"
 import { Size, Box, Side } from "tuff-core/box"
 import { Logger } from "tuff-core/logging"
+import {arrays} from "tuff-core";
 
 const log = new Logger('Overlays')
 
@@ -8,66 +9,132 @@ const log = new Logger('Overlays')
 // Part
 ////////////////////////////////////////////////////////////////////////////////
 
-const OverlayLayers = ['modal', 'dropdown', 'lightbox', 'jump'] as const
+const OverlayLayerTypes = ['modal', 'dropdown', 'lightbox', 'jump'] as const
 
 /**
- * Which overlay layer to use for an overlay part.
- * There can only be one part per layer.
+ * The type of overlay for any given layer.
  */
-export type OverlayLayer = typeof OverlayLayers[number]
+export type OverlayLayerType = typeof OverlayLayerTypes[number]
 
 export class OverlayPart extends Part<NoState> {
 
-    parts: {[layer in OverlayLayer]?: StatelessPart} = {}
+    layerStates: OverlayLayerState<any, any>[] = []
 
-    /**
-     * Creates a part at the given layer.
-     * Discards the old part at that layer, if there was one.
-     * @param constructor
-     * @param state
-     * @param layer
-     */
-    makeLayer<PartType extends Part<StateType>, StateType>(
-        constructor: { new(p: PartParent, id: string, state: StateType): PartType; },
-        state: StateType,
-        layer: OverlayLayer
-    ): PartType {
-        const part = this.makePart(constructor, state)
-        this.clearLayer(layer)
-        this.parts[layer] = part
-        return part
+    updateLayers(): StatelessPart[] {
+        return this.assignCollection('layers', OverlayLayer, this.layerStates)
     }
 
     /**
-     * Clear a single overlay layer.
-     * @param layer
+     * Creates a part and pushes it onto the overlay stack.
+     * @param constructor
+     * @param state
+     * @param type
+     * @return the new part
      */
-    clearLayer(layer: OverlayLayer) {
-        const layerPart = this.parts[layer]
-        if (layerPart) {
-            this.removeChild(layerPart)
-            this.parts[layer] = undefined
+    pushLayer<PartType extends Part<StateType>, StateType extends {}>(
+        constructor: PartConstructor<PartType, StateType>,
+        state: StateType,
+        type: OverlayLayerType
+    ): PartType {
+        this.layerStates.push({partClass: constructor, partState: state, type})
+        const parts = this.updateLayers()
+        return (parts[parts.length-1] as OverlayLayer<PartType, StateType>).part as PartType
+    }
+
+    /**
+     * Same as `pushLayer`, except that it will re-use the first existing layer of the given type, if present.
+     * @param constructor
+     * @param state
+     * @param type
+     * @return the new or existing part
+     */
+    getOrCreateLayer<PartType extends Part<StateType>, StateType extends {}>(
+        constructor: PartConstructor<PartType, StateType>,
+        state: StateType,
+        type: OverlayLayerType
+    ): PartType {
+        const layers = this.getCollectionParts('layers')
+        for (const layer of layers) {
+            if (layer.state.type == type) {
+                return (layer as OverlayLayer<PartType, StateType>).part as PartType
+            }
         }
-        this.dirty()
+        const part = this.pushLayer(constructor, state, type)
+        return part as PartType
+    }
+
+    /**
+     * Pops the top layer off the overlay stack.
+     * @return the part that was popped, if there was one.
+     */
+    popLayer(type?: OverlayLayerType): StatelessPart | undefined {
+        const oldParts = this.getCollectionParts('layers')
+        if (type) {
+            for (let i = this.layerStates.length-1; i>=0; i--) {
+                if (this.layerStates[i].type == type) {
+                    const part = oldParts[i]
+                    this.layerStates = arrays.without(this.layerStates, this.layerStates[i])
+                    this.updateLayers()
+                    return part
+                }
+            }
+            return undefined
+        }
+        else {
+            // no type specified, pop the top one
+            this.layerStates = this.layerStates.slice(0, this.layerStates.length - 1)
+            this.updateLayers()
+            return oldParts[oldParts.length - 1]
+        }
+    }
+
+    /**
+     * Removes the layer with the given state from the stack.
+     * @param state
+     * @return true if there was a layer actually removed
+     */
+    removeLayer<StateType extends {}>(state: StateType): boolean {
+        for (const layerState of this.layerStates) {
+            if (layerState.partState == state) {
+                this.layerStates = arrays.without(this.layerStates, layerState)
+                this.updateLayers()
+                return true
+            }
+        }
+        return false
     }
 
     /**
      * Clear all overlay layers.
      */
     clearAll() {
-        for (const layer of OverlayLayers) {
-            this.clearLayer(layer)
-        }
+        this.layerStates = []
     }
 
     render(parent: PartTag) {
-        for (const layer of OverlayLayers) {
-            const part = this.parts[layer]
-            if (part) {
-                parent.div(layer).part(part)
-            }
-        }
+        this.renderCollection(parent, 'layers')
     }
+
+}
+
+type OverlayLayerState<PartType extends Part<StateType>, StateType extends {}> = {
+    partClass: PartConstructor<PartType, StateType>
+    partState: StateType
+    type: OverlayLayerType
+}
+
+class OverlayLayer<PartType extends Part<StateType>, StateType extends {}> extends Part<OverlayLayerState<PartType, StateType>> {
+
+    part!: PartType
+
+    async init() {
+        this.part = this.makePart(this.state.partClass, this.state.partState)
+    }
+
+    render(parent: PartTag) {
+        parent.part(this.part)
+    }
+
 
 }
 

@@ -178,3 +178,23 @@
 		background-color: var(--tt-odd-row-background);
 	}
 }
+
+.dd-select-columns-dropdown {
+	a, label {
+		@include tt-inset-white-text;
+		@include tt-text-pad;
+		@include tt-shaded-hover;
+		@include tt-no-select;
+		display: flex;
+		align-items: center;
+		gap: var(--tt-gap);
+		font-size: var(--tt-body-font-size);
+		input {
+			margin: 0;
+		}
+		> div, span {
+			flex: 1 1 auto;
+		}
+
+	}
+}
