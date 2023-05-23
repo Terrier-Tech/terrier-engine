@@ -19,6 +19,19 @@
 		transform: scale(1.5);
 		cursor: pointer;
 	}
+
+	// all labels are flex
+	label {
+		display: flex;
+		gap: 0.8em;
+		align-items: center;
+		&.caption-size {
+			font-size: var(--tt-caption-font-size)
+		}
+		&.body-size {
+			font-size: var(--tt-body-font-size)
+		}
+	}
 }
 
 .tt-readonly-field {

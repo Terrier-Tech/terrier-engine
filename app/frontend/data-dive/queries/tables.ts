@@ -2,7 +2,7 @@ import {DdContentPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
 import {ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
-import Filters, {Filter} from "./filters"
+import Filters, {Filter, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
 import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
@@ -39,6 +39,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
     modelDef!: ModelDef
 
     editColumnsKey = messages.untypedKey()
+    editFiltersKey = messages.untypedKey()
 
     async init() {
         this.schema = this.state.schema
@@ -51,6 +52,11 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.tableName} Columns`)
             this.app.showModal(ColumnsEditorModal, {schema: this.schema, tableEditor: this as TableEditor<TableRef>})
+        })
+
+        this.onClick(this.editFiltersKey, _ => {
+            log.info(`Edit ${this.tableName} Filters`)
+            this.app.showModal(FiltersEditorModal, {schema: this.schema, tableEditor: this as TableEditor<TableRef>})
         })
     }
 
@@ -136,7 +142,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
             } else {
                 section.div('.line.empty').text('None')
             }
-        })
+        }).emitClick(this.editFiltersKey, {})
     }
 
     renderJoins(parent: PartTag) {
@@ -154,6 +160,11 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
     updateColumns(columns: ColumnRef[]) {
         this.state.table.columns = columns
+        this.dirty()
+    }
+
+    updateFilters(filters: Filter[]) {
+        this.state.table.filters = filters
         this.dirty()
     }
 

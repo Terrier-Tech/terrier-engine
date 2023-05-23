@@ -74,6 +74,7 @@ const removeKey = messages.typedKey<{id: string}>()
 export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
+    table!: TableRef
     columnStates: ColumnState[] = []
     columnCount = 0
 
@@ -86,14 +87,13 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         this.columnStates.push({schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, ...col})
     }
 
-    table!: TableRef
 
     async init () {
         this.table = this.state.tableEditor.table
         this.modelDef = this.state.tableEditor.modelDef
 
         // initialize the columns states
-        const columns: ColumnRef[] = this.state.tableEditor.table.columns || []
+        const columns: ColumnRef[] = this.table.columns || []
         for (const col of columns) {
             this.addState(col)
         }
@@ -103,7 +103,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         this.setIcon('glyp-columns')
 
         this.addAction({
-            title: 'Save',
+            title: 'Apply',
             icon: 'glyp-checkmark',
             click: {key: saveKey}
         }, 'primary')
@@ -145,7 +145,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
                 header.div('.function').label({text: "Function"})
                 header.div('.group-by').label({text: "Group By?"})
             })
-            this.renderCollection(parent, 'columns')
+            this.renderCollection(table, 'columns')
         })
     }
 
@@ -198,10 +198,10 @@ class ColumnEditor extends DdFormPart<ColumnState> {
     }
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-column-editor']);
+        return super.parentClasses.concat(['dd-column-editor'])
     }
 
-    render(parent: PartTag): any {
+    render(parent: PartTag) {
         parent.div('.name', col => {
             col.div('.tt-readonly-field', {text: this.state.name})
         })
@@ -262,8 +262,9 @@ class SelectColumnsDropdown extends DdDropdown<{modelDef: ModelDef, callback: Se
 
         this.onChange(checkChangedKey, m => {
             const col = m.data.column
-            log.info(`Column '${col}' checkbox changed to`, m.value)
-            if (m.value == 'on') {
+            const checked = (m.event.target as HTMLInputElement).checked
+            log.info(`Column '${col}' checkbox changed to`, checked)
+            if (checked) {
                 this.checked.add(col)
             }
             else {

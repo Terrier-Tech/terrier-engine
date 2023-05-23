@@ -1,7 +1,7 @@
+@import "tt-mixins";
 
 // Apply this class to any container where you want
 // sane typography defaults for common elements
-
 .tt-typography {
 	font-size: var(--tt-body-font-size);
 	p, h1, h2, h3, h4, h5 {
@@ -10,4 +10,12 @@
 	p {
 		line-height: 1.4;
 	}
+	label {
+		font-size: var(--tt-label-font-size);
+	}
+}
+
+
+.tt-bubble {
+	@include tt-bubble;
 }

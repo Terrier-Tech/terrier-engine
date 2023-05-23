@@ -256,6 +256,15 @@ $color-diff: 0.08;
 			text-align: left;
 		}
 	}
+	&.primary {
+		background-color: var(--tt-primary-color);
+	}
+	&.secondary {
+		background-color: var(--tt-secondary-color);
+	}
+	&.alert {
+		background-color: var(--tt-alert-color);
+	}
 }
 
 

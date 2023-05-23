@@ -60,6 +60,7 @@
 			@include tt-shaded-hover;
 			@include tt-rounded-corners;
 			@include tt-no-select;
+			cursor: pointer;
 		}
 		section {
 			background-color: #fff;
@@ -171,10 +172,6 @@
 // Column Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-.dd-columns-editor-table {
-
-}
-
 .dd-column-editor-header, .dd-column-editor {
 	display: flex;
 	gap: var(--tt-gap);
@@ -203,7 +200,7 @@
 	}
 }
 
-.dd-column-editor {
+.dd-column-editor, .dd-filter-editor {
 	border-top: 1px solid var(--tt-border-color);
 	&:nth-child(odd) {
 		background-color: var(--tt-odd-row-background);
@@ -227,5 +224,32 @@
 			flex: 1 1 auto;
 		}
 
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Filter Editor
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-filter-editor-header, .dd-filter-editor {
+	display: flex;
+	gap: var(--tt-gap);
+	align-items: center;
+	padding: calc(var(--tt-pad) / 2) var(--tt-pad);
+
+	> div {
+		display: flex;
+		align-items: center;
+	}
+	> .column {
+		flex: 0 0 25%;
+	}
+	> .operator {
+		flex: 0 0 80px;
+		text-align: center;
+		justify-content: center;
+	}
+	> .filter {
+		flex: 1 1 auto;
 	}
 }
