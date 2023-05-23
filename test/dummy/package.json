@@ -8,6 +8,6 @@
     "vite-plugin-ruby": "^3.2.2"
   },
   "dependencies": {
-    "tuff-core": "^0.25.0"
+    "tuff-core": "latest"
   }
 }

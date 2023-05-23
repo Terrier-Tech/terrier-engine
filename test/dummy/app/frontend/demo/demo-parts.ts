@@ -1,11 +1,12 @@
 import {PanelPart} from "@terrier/parts"
 import {NoState, PartTag} from "tuff-core/parts"
-import {ColorName, DemoThemeType} from "./demo-theme"
+import DemoTheme, {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
 import {messages} from "tuff-core"
 import Toasts from "@terrier/toasts";
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
+import DemoApp from "./demo-app";
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
@@ -13,7 +14,7 @@ const dropdownKey = messages.typedKey<{message: string}>()
 
 type DemoAction = Action<DemoThemeType>
 
-class Panel extends PanelPart<NoState, DemoThemeType> {
+class Panel extends PanelPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.setTitle("Panel Header ")
@@ -68,7 +69,7 @@ class Panel extends PanelPart<NoState, DemoThemeType> {
 
 }
 
-class Modal extends ModalPart<NoState, DemoThemeType> {
+class Modal extends ModalPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.setTitle("Modal Header")
