@@ -1,5 +1,7 @@
-import {ContentPart, PagePart, ThemedFormPart} from "../terrier/parts"
 import DdTheme, {DdThemeType} from "./dd-theme"
+import ContentPart from "../terrier/parts/content-part"
+import PagePart from "../terrier/parts/page-part"
+import ThemedFormPart from "../terrier/parts/themed-form-part"
 import {PartTag} from "tuff-core/parts"
 import {ModalPart} from "../terrier/modals"
 import {FormPartData} from "tuff-core/forms"

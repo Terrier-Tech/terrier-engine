@@ -1,9 +1,10 @@
 import { Logger } from "tuff-core/logging"
 import { untypedKey } from "tuff-core/messages"
-import {ContentPart, TerrierPart} from "./parts"
+import TerrierPart from "./parts/terrier-part"
 import {PartConstructor, PartTag} from "tuff-core/parts"
-import Theme, {ThemeType} from "./theme";
-import {TerrierApp} from "./app";
+import Theme, {ThemeType} from "./theme"
+import {TerrierApp} from "./app"
+import ContentPart from "./parts/content-part"
 
 const log = new Logger('Modals')
 

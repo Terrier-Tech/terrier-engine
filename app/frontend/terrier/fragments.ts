@@ -1,7 +1,7 @@
 import {PartTag} from "tuff-core/parts"
 import {AnchorTagAttrs, HtmlParentTag} from "tuff-core/html"
 import Theme, {Action, Packet, ThemeType} from "./theme"
-import {ActionLevel, PanelActions} from "./parts"
+import {ActionLevel, PanelActions} from "./parts/content-part"
 
 /**
  * Base class for Panel and Card fragment builders.
