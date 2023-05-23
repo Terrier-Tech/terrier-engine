@@ -4,12 +4,12 @@ import Db from './db'
 import {Logger} from "tuff-core/logging"
 import DemoTheme, {DemoThemeType} from "./demo-theme"
 import {TerrierApp} from "@terrier/app"
-import DemoParts from "./demo-parts";
-import {PagePart} from "@terrier/parts";
+import DemoParts from "./demo-parts"
+import {PagePart} from "@terrier/parts"
 
 const log = new Logger('DemoApp')
 
-class DemoPage extends PagePart<NoState, DemoThemeType> {
+class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.makePart(DemoParts.Panel, {}, 'panel')
@@ -46,7 +46,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType> {
 
 }
 
-export default class DemoApp extends TerrierApp<DemoThemeType, DemoTheme> {
+export default class DemoApp extends TerrierApp<DemoThemeType, DemoApp, DemoTheme> {
 
     loc?: Location
     page!: DemoPage

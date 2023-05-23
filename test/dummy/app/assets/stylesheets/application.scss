@@ -222,8 +222,17 @@ button {
 
 .tt-page-part {
 	--tt-inset-background: var(--bg-color);
-	gap: 0;
+	.lighting { display: none; }
+
 	> .top-row {
+		color: var(--bg-color);
 		background-color: var(--secondary-color);
+		.breadcrumbs {
+			gap: 8px;
+		}
+		a {
+			color: var(--bg-color);
+			display: flex;
+		}
 	}
 }
