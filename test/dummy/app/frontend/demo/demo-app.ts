@@ -5,13 +5,18 @@ import {Logger} from "tuff-core/logging"
 import DemoTheme, {DemoThemeType} from "./demo-theme"
 import {TerrierApp} from "@terrier/app"
 import DemoParts from "./demo-parts"
-import {PagePart} from "@terrier/parts"
+import PagePart from "@terrier/parts/page-part"
+
 
 const log = new Logger('DemoApp')
 
 class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
+        this.setIcon('glyp-checkmark')
+        this.setTitle("Demo Page")
+        this.addBreadcrumb({ icon: 'glyp-abacus', title: "A Breadcrumb" })
+
         this.makePart(DemoParts.Panel, {}, 'panel')
 
         this.addAction({
@@ -25,11 +30,10 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
         }, "secondary")
 
         this.addAction({
+            icon: 'glyp-open',
             title: "Open Modal",
             click: {key: DemoParts.openModalKey}
         }, "tertiary")
-
-        this.setTitle("Demo Page")
 
         this.onClick(DemoParts.openModalKey, m => {
             log.info("Open Modal", m)

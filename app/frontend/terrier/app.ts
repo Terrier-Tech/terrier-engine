@@ -1,6 +1,6 @@
 import { Logger } from "tuff-core/logging"
 import {Part, PartConstructor, PartParent} from "tuff-core/parts"
-import {TerrierPart} from "./parts"
+import TerrierPart from "./parts/terrier-part"
 import Tooltips from "./tooltips"
 import Lightbox from "./lightbox"
 import Theme, {ThemeType} from "./theme"

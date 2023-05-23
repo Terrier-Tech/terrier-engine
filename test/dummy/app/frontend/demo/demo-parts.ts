@@ -1,4 +1,3 @@
-import {PanelPart} from "@terrier/parts"
 import {NoState, PartTag} from "tuff-core/parts"
 import DemoTheme, {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
@@ -7,6 +6,7 @@ import Toasts from "@terrier/toasts";
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
 import DemoApp from "./demo-app";
+import PanelPart from "@terrier/parts/panel-part"
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
