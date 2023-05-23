@@ -89,9 +89,16 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
                 title.i('.glyp-table')
                 title.div().text(this.displayName)
             })
+
             this.renderColumns(panel)
+
             this.renderFilters(panel)
-            this.renderJoins(panel)
+
+            panel.a('.action', a => {
+                a.i('.glyp-plus')
+                a.div().text("Belongs-To")
+                a.i('.glyp-belongs_to')
+            })
         })
     }
 
@@ -115,7 +122,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
     }
 
     renderFilters(parent: PartTag) {
-        parent.section(section => {
+        parent.section('.filters', section => {
             section.div('.title', title => {
                 title.i(".glyp-filter")
                 title.span({text: "Filters"})

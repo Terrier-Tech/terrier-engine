@@ -14,10 +14,13 @@
 
 .dd-table-editor {
 	--table-editor-width: 240px;
+	--table-panel-border-color: var(--tt-secondary-color);
+	--table-panel-border-size: 2px;
 	--chicken-foot-size: var(--tt-pad);
 	--chicken-foot-width: 2px;
-	--chicken-foot-color: var(--tt-body-color);
+	--chicken-foot-color: var(--table-panel-border-color);
 	--label-opacity: 0.7;
+
 	
 	// icons
 	i {
@@ -37,21 +40,30 @@
 	.table-panel {
 		--pad: calc(var(--tt-pad) / 2);
 		--gap: calc(var(--tt-gap) / 2);
+		background-color: var(--table-panel-border-color);
+		padding: var(--table-panel-border-size);
+		display: flex;
+		flex-direction: column;
+		gap: var(--table-panel-border-size);
 		.title, .line {
 			padding: var(--pad) calc(var(--pad)*1.5);
 			gap: var(--gap);
 			display: flex;
 		}
 		min-width: var(--table-editor-width);
-		gap: 0;
 		z-index: 1;
 		> .title {
 			font-weight: bold;
 			text-align: center;
 			justify-content: center;
+			@include tt-inset-white-text;
+			@include tt-shaded-hover;
+			@include tt-rounded-corners;
+			@include tt-no-select;
 		}
 		section {
-			border-top: 1px solid var(--tt-border-color);
+			background-color: #fff;
+			@include tt-rounded-corners;
 			cursor: pointer;
 			position: relative;
 			z-index: 0;
@@ -61,6 +73,7 @@
 				display: flex;
 				justify-content: center;
 				opacity: var(--label-opacity);
+				border-bottom: 1px solid var(--tt-border-color);
 			}
 			.line {
 				font-size: var(--tt-caption-font-size);
@@ -69,6 +82,9 @@
 				justify-content: space-between;
 				&:nth-child(even) {
 					background-color: var(--tt-odd-row-background);
+					&:last-child {
+						@include tt-bottom-rounded-corners;
+					}
 				}
 				> div {
 					flex: 0 0 auto;
@@ -102,6 +118,21 @@
 			&:active {
 				transform: scale(0.99);
 			}
+			&.filters {
+				flex: 1 1 auto;
+			}
+		}
+		a.action {
+			display: flex;
+			@include tt-inset-white-text;
+			@include tt-shaded-hover;
+			@include tt-rounded-corners;
+			@include tt-no-select;
+			justify-content: center;
+			gap: 0.5em;
+			padding: 0.5em;
+			align-items: center;
+			font-size: var(--tt-caption-font-size);
 		}
 	}
 	
@@ -114,13 +145,13 @@
 	.chicken-foot {
 		content: "";
 		position: absolute;
-		left: calc(-1 * var(--tt-pad));
-		width: calc(2 * var(--tt-pad));
+		left: calc(-1.1 * var(--tt-pad)); // fudge
+		width: calc(2.1 * var(--tt-pad));
 		top: 50%;
 		height: var(--chicken-foot-width);
 		background-color: var(--chicken-foot-color);
 		overflow: visible;
-		opacity: var(--label-opacity);
+		//opacity: var(--label-opacity);
 		&::before {
 			position: absolute;
 			content: "";
