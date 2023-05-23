@@ -151,10 +151,10 @@ export abstract class ContentPart<
         this._icon = icon
     }
 
-    protected _breadcrumbClasses: string[] = []
+    protected _titleClasses: string[] = []
 
-    addBreadcrumbClass(c: string) {
-        this._breadcrumbClasses.push(c)
+    addTitleClass(c: string) {
+        this._titleClasses.push(c)
     }
 
 
@@ -319,16 +319,6 @@ export abstract class PagePart<
         this._breadcrumbs.push(crumb)
     }
 
-
-    /**
-     * Sets both the page title and the last breadcrumb.
-     * @param title
-     */
-    setTitle(title: string) {
-        super.setTitle(title)
-        document.title = `${title} :: Terrier Hub`
-    }
-
     private _titleHref?: string
 
     /**
@@ -385,8 +375,8 @@ export abstract class PagePart<
             if (this._titleHref) {
                 titleCrumb.href = this._titleHref
             }
-            if (this._breadcrumbClasses?.length) {
-                titleCrumb.classes = this._breadcrumbClasses
+            if (this._titleClasses?.length) {
+                titleCrumb.classes = this._titleClasses
             }
             crumbs.push(titleCrumb)
 
