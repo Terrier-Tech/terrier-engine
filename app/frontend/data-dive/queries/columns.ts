@@ -139,7 +139,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
     renderContent(parent: PartTag): void {
         parent.div('.dd-columns-editor-table', table => {
-            table.div('.dd-column-editor-header', header => {
+            table.div('.dd-editor-header', header => {
                 header.div('.name').label({text: "Name"})
                 header.div('.alias').label({text: "Alias"})
                 header.div('.function').label({text: "Function"})
@@ -198,7 +198,7 @@ class ColumnEditor extends DdFormPart<ColumnState> {
     }
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-column-editor'])
+        return super.parentClasses.concat(['dd-editor-row'])
     }
 
     render(parent: PartTag) {

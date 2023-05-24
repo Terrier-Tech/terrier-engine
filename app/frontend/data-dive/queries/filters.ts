@@ -159,7 +159,7 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
 
     renderContent(parent: PartTag) {
         parent.div('.dd-filters-editor-table', table => {
-            table.div('.dd-filter-editor-header', header => {
+            table.div('.dd-editor-header', header => {
                 header.div('.column').label({text: "Column"})
                 header.div('.operator').label({text: "Operator"})
                 header.div('.filter').label({text: "Filter"})
@@ -204,6 +204,10 @@ abstract class FilterEditor<T extends BaseFilter> extends DdFormPart<BaseFilterS
         this.modelDef = this.state.filtersEditor.modelDef
         this.columnDef = this.modelDef.columns[this.state.column]
     }
+
+    get parentClasses(): Array<string> {
+        return super.parentClasses.concat(['dd-editor-row'])
+    }
 }
 
 /**
@@ -240,10 +244,6 @@ class FilterEditorContainer extends Part<FilterState> {
 ////////////////////////////////////////////////////////////////////////////////
 
 class DirectFilterEditor extends FilterEditor<DirectFilter> {
-
-    get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-filter-editor'])
-    }
 
     render(parent: PartTag) {
         parent.div('.column', col => {
@@ -286,10 +286,6 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
             }
             this.state.in = Array.from(this.values)
         })
-    }
-
-    get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-filter-editor'])
     }
 
     render(parent: PartTag) {
