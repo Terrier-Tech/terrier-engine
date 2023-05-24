@@ -18,6 +18,7 @@ module Terrier::ScriptsStreaming
 
     def exec
       response.headers['Content-Type'] = 'text/event-stream'
+      response.headers["Last-Modified"] = Time.now.httpdate
       @script = if params[:id]
                   Script.find params[:id]
                 else
