@@ -3,12 +3,12 @@ import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
 import {DdFormPart, DdModalPart} from "../dd-parts"
-import {messages} from "tuff-core"
+import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
 import inflection from "inflection"
 
-const log = new Logger("Tables")
+const log = new Logger("Filters")
 
 ////////////////////////////////////////////////////////////////////////////////
 // Types
@@ -48,6 +48,8 @@ export type OrFilter = {
 }
 
 export type Filter = DirectFilter | DateRangeFilter | InclusionFilter | OrFilter
+
+type FilterType = Filter['filter_type']
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -119,7 +121,7 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
         this.filterStates.push({
             schema: this.state.schema,
             filtersEditor: this,
-            id: `column-${this.filterCount}`, ...filter
+            id: `filter-${this.filterCount}`, ...filter
         })
     }
 
@@ -153,8 +155,8 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
             this.save()
         })
 
-        this.onClick(removeKey, _ => {
-            // this.removeColumn(m.data.id)
+        this.onClick(removeKey, m => {
+            this.removeFilter(m.data.id)
         })
     }
 
@@ -166,7 +168,17 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
                 header.div('.filter').label({text: "Filter"})
             })
             this.renderCollection(table, 'filters')
+                .class('dd-editor-row-container')
         })
+    }
+
+    removeFilter(id: string) {
+        const filter = arrays.find(this.filterStates, f => f.id == id)
+        if (filter) {
+            log.info(`Removing filter ${id}`, filter)
+            this.filterStates = arrays.without(this.filterStates, filter)
+            this.updateFilterEditors()
+        }
     }
 
 
@@ -191,7 +203,7 @@ type BaseFilterState<T extends BaseFilter> = T & {
     id: string
 }
 
-type FilterState = BaseFilterState<BaseFilter>
+type FilterState = BaseFilterState<Filter>
 
 /**
  * Base class for editors for specific filter types.
@@ -209,6 +221,15 @@ abstract class FilterEditor<T extends BaseFilter> extends DdFormPart<BaseFilterS
     get parentClasses(): Array<string> {
         return super.parentClasses.concat(['dd-editor-row'])
     }
+
+    renderActions(row: PartTag) {
+        row.div('.actions', actions => {
+            actions.a(a => {
+                a.i('.glyp-close')
+                a.span().text(this.state.id)
+            }).emitClick(removeKey, {id: this.state.id})
+        })
+    }
 }
 
 /**
@@ -219,7 +240,14 @@ class FilterEditorContainer extends Part<FilterState> {
     editor?: FilterEditor<any>
 
     async init() {
-        switch (this.state.filter_type) {
+        this.makeEditor(this.state.filter_type)
+    }
+
+    makeEditor(filterType: FilterType) {
+        if (this.editor) {
+            this.removeChild(this.editor)
+        }
+        switch (filterType) {
             case 'direct':
                 this.editor = this.makePart(DirectFilterEditor, this.state as BaseFilterState<DirectFilter>)
                 break
@@ -230,6 +258,19 @@ class FilterEditorContainer extends Part<FilterState> {
                 this.editor = this.makePart(DateRangeFilterEditor, this.state as BaseFilterState<DateRangeFilter>)
                 break
         }
+    }
+
+    /**
+     * This needs to be overridden because the state can be changed by the collection API,
+     * in which case we need a new editor since it's dependent on the filter type.
+     * @param state
+     */
+    assignState(state: FilterState): boolean {
+        const changed = super.assignState(state)
+        if (changed) {
+            this.makeEditor(this.state.filter_type)
+        }
+        return changed
     }
 
     render(parent: PartTag) {
@@ -259,6 +300,7 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
         parent.div('.filter', col => {
             this.textInput(col, 'value', {placeholder: "Value"})
         })
+        this.renderActions(parent)
     }
 
 }
@@ -315,6 +357,7 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
                 col.input({type: 'text', placeholder: "Values"})
             }
         })
+        this.renderActions(parent)
     }
 
 }
@@ -405,6 +448,8 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
                 }
             })
         })
+
+        this.renderActions(parent)
     }
 
 }

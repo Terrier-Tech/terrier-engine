@@ -241,10 +241,14 @@
 
 }
 
-.dd-editor-row {
-	border-top: 1px solid var(--tt-border-color);
-	&:nth-child(odd) {
-		background-color: var(--tt-odd-row-background);
+// make the rows alternate color with a border separating them
+.dd-editor-row-container {
+	border-bottom: 1px solid var(--tt-border-color);
+	> div {
+		border-top: 1px solid var(--tt-border-color);
+		&:nth-child(odd) {
+			background-color: var(--tt-odd-row-background);
+		}
 	}
 }
 

@@ -146,6 +146,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
                 header.div('.group-by').label({text: "Group By?"})
             })
             this.renderCollection(table, 'columns')
+                .class('dd-editor-row-container')
         })
     }
 
