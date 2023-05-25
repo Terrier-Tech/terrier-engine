@@ -1,11 +1,12 @@
 import {Part, PartTag} from "tuff-core/parts"
-import Dates, {DateRange} from "./dates"
+import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
 import {DdFormPart, DdModalPart} from "../dd-parts"
 import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
+import inflection from "inflection"
 
 const log = new Logger("Tables")
 
@@ -225,6 +226,9 @@ class FilterEditorContainer extends Part<FilterState> {
             case 'inclusion':
                 this.editor = this.makePart(InclusionFilterEditor, this.state as BaseFilterState<InclusionFilter>)
                 break
+            case 'date_range':
+                this.editor = this.makePart(DateRangeFilterEditor, this.state as BaseFilterState<DateRangeFilter>)
+                break
         }
     }
 
@@ -310,6 +314,66 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
             else { // no possible values
                 col.input({type: 'text', placeholder: "Values"})
             }
+        })
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Date Range Editor
+////////////////////////////////////////////////////////////////////////////////
+
+const dateRangeRelativeChangedKey = messages.untypedKey()
+const dateRangePeriodChangedKey = messages.typedKey<{period: string}>()
+
+class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
+
+    range!: VirtualDateRange
+
+    async init() {
+        // assume it's a virtual range for the sake of editing it
+        if ('period' in this.state.range) {
+            this.range = this.state.range
+        }
+        else {
+            // make up a new range
+            this.range = {period: 'day', relative: -1}
+        }
+
+        this.onChange(dateRangeRelativeChangedKey, m => {
+            this.range.relative = parseFloat(m.value)
+            this.state.range = this.range
+        })
+
+        this.onChange(dateRangePeriodChangedKey, m => {
+            log.info(`Date range period ${m.data.period} changed to ${m.value}`)
+            this.range.period = m.data.period as VirtualDatePeriod
+            this.state.range = this.range
+        })
+    }
+
+    render(parent: PartTag) {
+        parent.div('.column', col => {
+            col.div('.tt-readonly-field', {text: this.state.column})
+        })
+        parent.div('.operator', col => {
+            col.span().text("")
+        })
+        parent.div('.tt-flex.gap.filter', row => {
+            row.div('.shrink', col => {
+                col.input({type: 'number', value: this.range.relative.toString()})
+                    .emitChange(dateRangeRelativeChangedKey)
+            })
+            row.div('.stretch.tt-flex.wrap', col => {
+                for (const period of Dates.virtualPeriods) {
+                    col.label('.caption-size', label => {
+                        label.input({type: 'radio', name: `${this.id}-period`, value: period, checked: this.range.period==period})
+                            .emitChange(dateRangePeriodChangedKey, {period})
+                        label.span().text(inflection.titleize(period))
+                    })
+                }
+            })
         })
     }
 

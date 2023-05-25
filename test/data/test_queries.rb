@@ -24,8 +24,8 @@ module TestQueries
             filter_type: 'date_range',
             column: 'time',
             range: {
-              min: '2022-01-01',
-              max: '2023-01-01'
+              period: 'year',
+              relative: 0
             }
           },
           {
@@ -142,8 +142,8 @@ module TestQueries
             filter_type: "date_range",
             column: 'time',
             range: {
-              min: "2023-01-01",
-              max: "2024-01-01"
+              period: 'month',
+              relative: -1
             }
           }
         ],

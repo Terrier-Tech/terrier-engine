@@ -33,11 +33,16 @@ export type LiteralDateRange = {
     max: DateLiteral
 }
 
+
+const virtualPeriods = ['day', 'week', 'month', 'year'] as const
+
+export type VirtualDatePeriod = typeof virtualPeriods[number]
+
 /**
  * A date range that's relative to the current date.
  */
 export type VirtualDateRange = {
-    period: 'day' | 'week' | 'month' | 'year'
+    period: VirtualDatePeriod
     relative: number
 }
 
@@ -141,7 +146,8 @@ const Dates = {
     literalFormat,
     display,
     rangeDisplay,
-    materializeVirtualRange
+    materializeVirtualRange,
+    virtualPeriods
 }
 
 export default Dates

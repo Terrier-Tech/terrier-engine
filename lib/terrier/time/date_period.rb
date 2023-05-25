@@ -140,7 +140,8 @@ class DatePeriod
     raise "Invalid period '#{period}', must be one of #{possible_periods.join(', ')}" unless possible_periods.include?(period)
     relative = (range[:relative] || range['relative'] || 0).to_i
 
-    today = Date.parse(today) if today.is_a? String
+    today = Date.parse(today) if today.is_a?(String)
+    today = Date.today if today.nil?
     start_date = (today + relative.send("#{period}s")).send("beginning_of_#{period}")
     end_date = start_date + 1.send(period)
     DatePeriod.new start_date.to_date, end_date.to_date
