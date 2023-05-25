@@ -15,9 +15,9 @@
 .dd-table-editor {
 	--table-editor-width: 240px;
 	--table-panel-border-color: var(--tt-secondary-color);
-	--table-panel-border-size: 2px;
+	--table-panel-border-size: 3px;
 	--chicken-foot-size: var(--tt-pad);
-	--chicken-foot-width: 2px;
+	--chicken-foot-width: var(--table-panel-border-size);
 	--chicken-foot-color: var(--table-panel-border-color);
 	--label-opacity: 0.7;
 
@@ -214,6 +214,29 @@
 	}
 	> .filter {
 		flex: 1 1 auto;
+		&.column {
+			flex-direction: column;
+			gap: calc(var(--tt-gap) / 2);
+		}
+	}
+	a.date-range-preselect {
+		display: block;
+		font-size: var(--tt-caption-font-size);
+		padding: 0.4em 1em;
+		text-align: center;
+		height: 2em;
+		line-height: 1;
+		border: 2px solid transparent;
+		&.current {
+			border-color: var(--primary-color);
+			border-radius: 1em;
+			@include tt-concave-bg(#fff);
+		}
+	}
+
+	// fields
+	input[type=number] {
+		width: 80px;
 	}
 
 }

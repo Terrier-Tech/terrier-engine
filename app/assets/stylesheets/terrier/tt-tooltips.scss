@@ -8,7 +8,7 @@
 	background-color: var(--tt-tooltip-background);
 	@include tt-rounded-corners;
 	@include tt-box-shadow;
-	z-index: 9999;
+	z-index: 10001;
 	max-width: 300px;
 	transform: scale(0);
 	transition: transform ease 0.2s;

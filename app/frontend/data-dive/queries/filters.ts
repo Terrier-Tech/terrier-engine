@@ -297,7 +297,7 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
             col.div('.tt-readonly-field', {text: this.state.column})
         })
         parent.div('.operator', col => {
-            col.span().text("IN")
+            col.span().text("In")
         })
         parent.div('.filter', col => {
             if (this.columnDef?.possible_values?.length) {
@@ -326,6 +326,7 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
 
 const dateRangeRelativeChangedKey = messages.untypedKey()
 const dateRangePeriodChangedKey = messages.typedKey<{period: string}>()
+const dateRangePreselectKey = messages.typedKey<VirtualDateRange>()
 
 class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
 
@@ -339,17 +340,24 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
         else {
             // make up a new range
             this.range = {period: 'day', relative: -1}
+            this.state.range = this.range
         }
 
         this.onChange(dateRangeRelativeChangedKey, m => {
             this.range.relative = parseFloat(m.value)
-            this.state.range = this.range
+            this.dirty()
         })
 
         this.onChange(dateRangePeriodChangedKey, m => {
             log.info(`Date range period ${m.data.period} changed to ${m.value}`)
             this.range.period = m.data.period as VirtualDatePeriod
+            this.dirty()
+        })
+
+        this.onClick(dateRangePreselectKey, m => {
+            this.range = m.data
             this.state.range = this.range
+            this.dirty()
         })
     }
 
@@ -358,19 +366,41 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
             col.div('.tt-readonly-field', {text: this.state.column})
         })
         parent.div('.operator', col => {
-            col.span().text("")
+            col.span().text("Range")
         })
-        parent.div('.tt-flex.gap.filter', row => {
-            row.div('.shrink', col => {
-                col.input({type: 'number', value: this.range.relative.toString()})
-                    .emitChange(dateRangeRelativeChangedKey)
+        parent.div('.filter.column', cell => {
+
+            // the actual inputs
+            cell.div('.tt-flex.gap', row => {
+                row.div('.shrink', col => {
+                    col.input({type: 'number', value: this.range.relative.toString()})
+                        .data({tooltip: "Positive for the future, zero for current, and negative for the past"})
+                        .emitChange(dateRangeRelativeChangedKey)
+                })
+                row.div('.stretch.tt-flex.wrap.gap', col => {
+                    for (const period of Dates.virtualPeriods) {
+                        col.label('.caption-size', label => {
+                            label.input({type: 'radio', name: `${this.id}-period`, value: period, checked: this.range.period==period})
+                                .emitChange(dateRangePeriodChangedKey, {period})
+                            label.span().text(inflection.titleize(period))
+                        })
+                    }
+                })
             })
-            row.div('.stretch.tt-flex.wrap', col => {
+
+            // some common sets
+            cell.div('.tt-flex.gap.wrap', row => {
                 for (const period of Dates.virtualPeriods) {
-                    col.label('.caption-size', label => {
-                        label.input({type: 'radio', name: `${this.id}-period`, value: period, checked: this.range.period==period})
-                            .emitChange(dateRangePeriodChangedKey, {period})
-                        label.span().text(inflection.titleize(period))
+                    row.div('.shrink', col => {
+                        for (let relative = -1; relative < 2; relative++) {
+                            const classes = ['date-range-preselect']
+                            if (period == this.range.period && relative == this.range.relative) {
+                                classes.push('current')
+                            }
+                            col.a().class(...classes)
+                                .text(Dates.rangeDisplay({period, relative}))
+                                .emitClick(dateRangePreselectKey, {period, relative})
+                        }
                     })
                 }
             })

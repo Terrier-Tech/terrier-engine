@@ -4,13 +4,14 @@
 .tt-form {
 
 	// text-like fields
-	input[type=text], input[type=email], input[type=tel], input[type=search], select {
+	input[type=text], input[type=number], input[type=email], input[type=tel], input[type=search], select {
 		margin: 0;
 		font-size: var(--tt-body-font-size);
 		min-height: var(--tt-field-height);
 		@include tt-rounded-corners;
 		border: 1px solid var(--tt-field-border-color);
 		padding: 0 0.6em;
+		width: 100%;
 	}
 
 	// checkboxes and radio buttons
