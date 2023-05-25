@@ -25,7 +25,7 @@ export default abstract class PanelPart<
     render(parent: PartTag) {
         parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
-            if (this._title?.length || this.actions.tertiary.length) {
+            if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
                     header.h2(h2 => {
                         if (this._icon) {

@@ -54,13 +54,13 @@ export default abstract class ContentPart<
     /// Actions
 
     // stored actions can be either an action object or a reference to a named action
-    actions = {
+    private _actions = {
         primary: Array<Action<TThemeType> | string>(),
         secondary: Array<Action<TThemeType> | string>(),
         tertiary: Array<Action<TThemeType> | string>()
     }
 
-    namedActions: Record<string, { action: Action<TThemeType>, level: ActionLevel }> = {}
+    private _namedActions: Record<string, { action: Action<TThemeType>, level: ActionLevel }> = {}
 
     /**
      * Add an action to the part, or replace a named action if it already exists.
@@ -70,20 +70,20 @@ export default abstract class ContentPart<
      */
     addAction(action: Action<TThemeType>, level: ActionLevel = 'primary', name?: string) {
         if (name?.length) {
-            if (name in this.namedActions) {
-                const currentLevel = this.namedActions[name].level
+            if (name in this._namedActions) {
+                const currentLevel = this._namedActions[name].level
                 if (level != currentLevel) {
-                    const index = this.actions[currentLevel].indexOf(name)
-                    this.actions[currentLevel].splice(index, 1)
-                    this.actions[level].push(name)
+                    const index = this._actions[currentLevel].indexOf(name)
+                    this._actions[currentLevel].splice(index, 1)
+                    this._actions[level].push(name)
                 }
-                this.namedActions[name].action = action
+                this._namedActions[name].action = action
             } else {
-                this.namedActions[name] = {action, level}
-                this.actions[level].push(name)
+                this._namedActions[name] = {action, level}
+                this._actions[level].push(name)
             }
         } else {
-            this.actions[level].push(action)
+            this._actions[level].push(action)
         }
     }
 
@@ -92,7 +92,7 @@ export default abstract class ContentPart<
      * @param name
      */
     getNamedAction(name: string): Action<TThemeType> | undefined {
-        return this.namedActions[name].action
+        return this._namedActions[name].action
     }
 
     /**
@@ -100,9 +100,9 @@ export default abstract class ContentPart<
      * @param name
      */
     removeNamedAction(name: string) {
-        if (!(name in this.namedActions)) return
-        const level = this.actions[this.namedActions[name].level]
-        delete this.namedActions[name]
+        if (!(name in this._namedActions)) return
+        const level = this._actions[this._namedActions[name].level]
+        delete this._namedActions[name]
         const actionIndex = level.indexOf(name)
         if (actionIndex >= 0) {
             level.splice(actionIndex, 1)
@@ -114,12 +114,12 @@ export default abstract class ContentPart<
      * @param level whether to clear the primary, secondary, or both sets of actions
      */
     clearActions(level: ActionLevel) {
-        for (const action of this.actions[level]) {
+        for (const action of this._actions[level]) {
             if (typeof action === 'string') {
-                delete this.namedActions[action]
+                delete this._namedActions[action]
             }
         }
-        this.actions[level] = []
+        this._actions[level] = []
     }
 
     getAllActions(): PanelActions<TThemeType> {
@@ -131,9 +131,13 @@ export default abstract class ContentPart<
     }
 
     getActions(level: ActionLevel): Action<TThemeType>[] {
-        return this.actions[level].map(action => {
-            return (typeof action === 'string') ? this.namedActions[action].action : action
+        return this._actions[level].map(action => {
+            return (typeof action === 'string') ? this._namedActions[action].action : action
         })
+    }
+
+    hasActions(level: ActionLevel): boolean {
+        return this._actions[level].length > 0
     }
 
 
