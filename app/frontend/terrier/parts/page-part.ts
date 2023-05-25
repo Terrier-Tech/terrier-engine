@@ -47,7 +47,7 @@ export default abstract class PagePart<
             page.div('.tt-flex.top-row', topRow => {
                 this.renderBreadcrumbs(topRow);
 
-                if (this.actions.tertiary.length) {
+                if (this.hasActions('tertiary')) {
                     this.renderActions(topRow, 'tertiary');
                 }
             })
