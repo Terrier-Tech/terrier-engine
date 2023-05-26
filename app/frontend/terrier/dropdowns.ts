@@ -29,12 +29,20 @@ export abstract class Dropdown<
         return ['tt-dropdown', ...super.parentClasses]
     }
 
+    /**
+     * Override and return true to have the dropdown close when the user clicks anywhere outside of it.
+     */
+    get autoClose(): boolean {
+        return false
+    }
+
     // the computed absolute position of the
     left = 0
     top = 0
 
     async init() {
-        this.onClick(clearDropdownKey, _ => {
+        this.onClick(clearDropdownKey, m => {
+            log.info("Clearing dropdown", m)
             this.clear()
         })
     }
@@ -48,7 +56,11 @@ export abstract class Dropdown<
     }
 
     render(parent: PartTag) {
-        parent.div('.dropdown-content', content => {
+        if (this.autoClose) {
+            parent.div('.tt-dropdown-backdrop')
+                .emitClick(clearDropdownKey)
+        }
+        parent.div('.tt-dropdown-content', content => {
             this.renderContent(content)
         })
     }
@@ -71,7 +83,7 @@ export abstract class Dropdown<
     }
 
     update(_elem: HTMLElement) {
-        const content = _elem.querySelector('.dropdown-content')
+        const content = _elem.querySelector('.tt-dropdown-content')
         if (this.anchorTarget && content) {
             log.info(`Anchoring dropdown`, content, this.anchorTarget)
             Overlays.anchorElement(content as HTMLElement, this.anchorTarget)

@@ -474,7 +474,14 @@ const columnSelectedKey = messages.typedKey<{column: string}>()
 class AddFilterDropdown extends DdDropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
     columns!: string[]
 
+
+    get autoClose(): boolean {
+        return true
+    }
+
     async init() {
+        await super.init()
+
         this.columns = Object.keys(this.state.modelDef.columns).sort()
 
         this.onClick(columnSelectedKey, m => {
