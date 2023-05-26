@@ -50,6 +50,80 @@ $phone-breakpoint: 550px; // phone portrait
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Flex
+////////////////////////////////////////////////////////////////////////////////
+
+// include this in tt-flex-like things to get all the convenient helpers
+@mixin tt-flex-utils {
+
+	&.large-gap {
+		gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-gap {
+		gap: calc(var(--tt-gap) / 2);
+	}
+
+	&.no-gap {
+		gap: 0;
+	}
+
+	&.padded {
+		padding: var(--tt-pad);
+	}
+
+	&.h-padded {
+		padding: 0 var(--tt-pad);
+	}
+
+	&.inline {
+		display: inline-flex;
+	}
+
+	&.column {
+		flex-direction: column;
+	}
+
+	&.wrap {
+		flex-wrap: wrap;
+	}
+
+	&.justify-center {
+		justify-content: center;
+	}
+
+	&.justify-start {
+		justify-content: flex-start;
+	}
+
+	&.justify-end {
+		justify-content: flex-end;
+	}
+
+	&.justify-space-evenly {
+		justify-content: space-evenly;
+	}
+
+	&.justify-space-between {
+		justify-content: space-between;
+	}
+
+	&.align-center {
+		align-items: center;
+	}
+
+	&.align-start {
+		align-items: flex-start;
+	}
+
+	&.align-end {
+		align-items: flex-end;
+	}
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Backgrounds
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -264,6 +338,9 @@ $color-diff: 0.08;
 	}
 	&.alert {
 		background-color: var(--tt-alert-color);
+	}
+	&.pending {
+		background-color: var(--tt-pending-color);
 	}
 }
 

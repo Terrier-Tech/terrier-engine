@@ -53,7 +53,7 @@ class TableRef < QueryModel
     
     # joins
     if @joins.present?
-      @joins = @joins.map { |join| JoinedTableRef.new(@engine, join, self) }
+      @joins = @joins.values.map { |join| JoinedTableRef.new(@engine, join, self) }
       @joins.each do |join|
         join.build_join builder
       end

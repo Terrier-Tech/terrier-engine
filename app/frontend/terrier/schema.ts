@@ -1,4 +1,5 @@
 import Api from "./api"
+import inflection from "inflection";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Schema Definitions
@@ -60,8 +61,34 @@ async function get(): Promise<SchemaDef> {
     return res.schema
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Utilities
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Generated a string used to display a `BelongsToDef` to the user.
+ * If the name differs from the model, the name will be included in parentheses.
+ * @param belongsTo
+ */
+function belongsToDisplay(belongsTo: BelongsToDef): string {
+    if (belongsTo.name != inflection.singularize(inflection.tableize(belongsTo.model))) {
+        // the model is different than the name of the association
+        return `${belongsTo.model} (${belongsTo.name})`
+    }
+    else {
+        return belongsTo.model
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Export
+////////////////////////////////////////////////////////////////////////////////
+
 const Schema = {
-    get
+    get,
+    belongsToDisplay
 }
 
 export default Schema

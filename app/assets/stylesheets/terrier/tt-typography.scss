@@ -13,9 +13,29 @@
 	label {
 		font-size: var(--tt-label-font-size);
 	}
+	h1, h2, h3, h4, h5 {
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
+		i {
+			display: block;
+			line-height: 1;
+			transform: scale(1.25);
+		}
+		@include tt-flex-utils;
+	}
 }
 
 
 .tt-bubble {
 	@include tt-bubble;
+}
+
+.tt-inset-box {
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
+}
+
+.tt-padded {
+	padding: var(--tt-pad);
 }

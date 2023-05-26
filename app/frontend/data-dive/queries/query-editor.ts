@@ -3,7 +3,7 @@ import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {Query} from "./queries"
 import Api from "../../terrier/api"
-import {FromTableEditor} from "./tables"
+import {FromTableView} from "./tables"
 
 
 const testIds = ['joins', 'grouping']
@@ -25,10 +25,10 @@ export type QueryEditorState = {
 
 class QueryEditor extends DdContentPart<QueryEditorState> {
 
-    tableEditor!: FromTableEditor
+    tableEditor!: FromTableView
 
     async init() {
-        this.tableEditor = this.makePart(FromTableEditor, {schema: this.state.schema, table: this.state.query.from})
+        this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, table: this.state.query.from})
     }
 
     renderContent(parent: PartTag): void {

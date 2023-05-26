@@ -12,7 +12,10 @@
 	--tt-border-color: #ddd;
 	--tt-primary-color: #01a7b1;
 	--tt-secondary-color: #1e6c7b;
-	--tt-alert-color: #aa0000;
+	--tt-alert-color: #ed584c;
+	--tt-pending-color: #eeba2b;
+	--tt-success-color: #01b201;
+	--tt-inactive-color: #adadad;
 	--tt-panel-background: #fff;
 	--tt-odd-row-background: #f8f8f8;
 	--tt-table-border-color: var(--tt-border-color);
@@ -27,7 +30,7 @@
 	--tt-scale-push-factor: 0.05;
 	--tt-button-height: 40px;
 	--tt-icon-size: 28px;
-	--tt-inset-background: #f0f0f0;
+	--tt-inset-background: #f8f8f8;
 	--tt-dropdown-color: var(--tt-primary-color);
 	--tt-tooltip-background: var(--tt-white-color);
 	--tt-tooltip-foreground: var(--tt-primary-color);

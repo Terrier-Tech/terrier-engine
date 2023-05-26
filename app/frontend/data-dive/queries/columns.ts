@@ -1,7 +1,7 @@
 import {PartTag} from "tuff-core/parts"
 import {DdModalPart, DdFormPart, DdDropdown} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableEditor, TableRef} from "./tables"
+import {TableView, TableRef} from "./tables"
 import {Logger} from "tuff-core/logging"
 import {SelectOptions} from "tuff-core/forms"
 import Forms from "../../terrier/forms"
@@ -61,7 +61,7 @@ function render(parent: PartTag, col: ColumnRef) {
 
 export type ColumnsEditorState = {
     schema: SchemaDef
-    tableEditor: TableEditor<TableRef>
+    tableView: TableView<TableRef>
 }
 
 const saveKey = messages.untypedKey()
@@ -89,8 +89,8 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
 
 
     async init () {
-        this.table = this.state.tableEditor.table
-        this.modelDef = this.state.tableEditor.modelDef
+        this.table = this.state.tableView.table
+        this.modelDef = this.state.tableView.modelDef
 
         // initialize the columns states
         const columns: ColumnRef[] = this.table.columns || []
@@ -99,7 +99,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         }
         this.updateColumnEditors()
 
-        this.setTitle(`Columns for ${this.state.tableEditor.displayName}`)
+        this.setTitle(`Columns for ${this.state.tableView.displayName}`)
         this.setIcon('glyp-columns')
 
         this.addAction({
@@ -162,7 +162,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
         const columns = this.columnStates.map(state => {
             return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
         })
-        this.state.tableEditor.updateColumns(columns)
+        this.state.tableView.updateColumns(columns)
         this.pop()
     }
 

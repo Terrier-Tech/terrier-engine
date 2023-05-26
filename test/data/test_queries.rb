@@ -34,8 +34,8 @@ module TestQueries
             in: ['active', 'complete']
           }
         ],
-        joins: [
-          {
+        joins: {
+          "location": {
             model: 'Location',
             belongs_to: 'location',
             join_type: 'inner',
@@ -59,8 +59,8 @@ module TestQueries
                 edit_label: 'Zip Code'
               }
             ],
-            joins: [
-              {
+            joins: {
+              "created_by": {
                 model: 'User',
                 belongs_to: 'created_by',
                 join_type: 'left',
@@ -71,9 +71,9 @@ module TestQueries
                   }
                 ]
               }
-            ]
+            }
           },
-          {
+          "user": {
             model: 'User',
             belongs_to: 'user',
             join_type: 'inner',
@@ -92,7 +92,7 @@ module TestQueries
               }
             ]
           },
-          {
+          "target": {
             model: 'Target',
             belongs_to: 'target',
             join_type: 'inner',
@@ -111,7 +111,7 @@ module TestQueries
               }
             ]
           }
-        ]
+        }
       }
     }
   end
@@ -147,8 +147,8 @@ module TestQueries
             }
           }
         ],
-        joins: [
-          {
+        joins: {
+          "location": {
             model: 'Location',
             belongs_to: 'location',
             join_type: 'inner',
@@ -159,7 +159,7 @@ module TestQueries
               }
             ]
           }
-        ]
+        }
       }
     }
   end

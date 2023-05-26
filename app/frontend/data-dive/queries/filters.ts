@@ -1,7 +1,7 @@
 import {Part, PartTag} from "tuff-core/parts"
 import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableEditor, TableRef} from "./tables"
+import {TableView, TableRef} from "./tables"
 import {DdDropdown, DdFormPart, DdModalPart} from "../dd-parts"
 import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
@@ -98,7 +98,7 @@ function render(parent: PartTag, filter: Filter) {
 
 export type FiltersEditorState = {
     schema: SchemaDef
-    tableEditor: TableEditor<TableRef>
+    tableView: TableView<TableRef>
 }
 
 const saveKey = messages.untypedKey()
@@ -126,8 +126,8 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
     }
 
     async init() {
-        this.table = this.state.tableEditor.table
-        this.modelDef = this.state.tableEditor.modelDef
+        this.table = this.state.tableView.table
+        this.modelDef = this.state.tableView.modelDef
 
         // initialize the filter states
         const filters = this.table.filters || []
@@ -136,7 +136,7 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
         }
         this.updateFilterEditors()
 
-        this.setTitle(`Filters for ${this.state.tableEditor.displayName}`)
+        this.setTitle(`Filters for ${this.state.tableView.displayName}`)
         this.setIcon('glyp-filter')
 
         this.addAction({
@@ -195,7 +195,7 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
         const filters = this.filterStates.map(state => {
             return Objects.omit(state, 'schema', 'filtersEditor', 'id') as Filter
         })
-        this.state.tableEditor.updateFilters(filters)
+        this.state.tableView.updateFilters(filters)
         this.pop()
     }
 

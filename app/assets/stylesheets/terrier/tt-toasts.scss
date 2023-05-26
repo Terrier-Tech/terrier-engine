@@ -5,6 +5,7 @@
 	pointer-events: none;
 	top: 0;
 	right: 0;
+	z-index: 10002;
 	max-width: var(--tt-phone-breakpoint);
 
 	.tt-toast {

@@ -8,6 +8,8 @@
 	align-content: flex-start;
 	align-items: center;
 
+	@include tt-flex-utils;
+
 	&.h-gap {
 		row-gap: 0;
 	}
@@ -16,69 +18,6 @@
 		gap: var(--tt-gap);
 	}
 
-	&.large-gap {
-		gap: calc(var(--tt-gap) * 2);
-	}
-
-	&.small-gap {
-		gap: calc(var(--tt-gap) / 2);
-	}
-
-	&.no-gap {
-		gap: 0;
-	}
-
-	&.padded {
-		padding: var(--tt-pad);
-	}
-
-	&.h-padded {
-		padding: 0 var(--tt-pad);
-	}
-
-	&.inline {
-		display: inline-flex;
-	}
-
-	&.column {
-		flex-direction: column;
-	}
-
-	&.wrap {
-		flex-wrap: wrap;
-	}
-
-	&.justify-center {
-		justify-content: center;
-	}
-
-	&.justify-start {
-		justify-content: flex-start;
-	}
-
-	&.justify-end {
-		justify-content: flex-end;
-	}
-
-	&.justify-space-evenly {
-		justify-content: space-evenly;
-	}
-
-	&.justify-space-between {
-		justify-content: space-between;
-	}
-
-	&.align-center {
-		align-items: center;
-	}
-
-	&.align-start {
-		align-items: flex-start;
-	}
-
-	&.align-end {
-		align-items: flex-end;
-	}
 
 	@mixin stretch {
 		flex: 1 1 auto;

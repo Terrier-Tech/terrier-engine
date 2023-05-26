@@ -1,6 +1,6 @@
-import {DdContentPart} from "../dd-parts"
+import {DdActionsDropdown, DdContentPart, DdFormPart, DdModalPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
-import {ModelDef, SchemaDef} from "../../terrier/schema"
+import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters, {Filter, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
@@ -16,7 +16,7 @@ const log = new Logger("Tables")
 export type TableRef = {
     model: string
     columns?: ColumnRef[]
-    joins?: JoinedTableRef[]
+    joins?: Record<string, JoinedTableRef>
     filters?: Filter[]
 }
 
@@ -27,19 +27,23 @@ export type JoinedTableRef = TableRef & {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Editor
+// View
 ////////////////////////////////////////////////////////////////////////////////
 
-export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
+export class TableView<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
 
     schema!: SchemaDef
     table!: T
     tableName!: string
     displayName!: string
     modelDef!: ModelDef
+    parentView?: TableView<any>
 
+    editTableKey = messages.untypedKey()
     editColumnsKey = messages.untypedKey()
     editFiltersKey = messages.untypedKey()
+    newJoinedKey = messages.untypedKey()
+    createJoinedKey = messages.typedKey<{name: string}>()
 
     async init() {
         this.schema = this.state.schema
@@ -47,27 +51,72 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         this.modelDef = this.schema.models[this.table.model]
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
         this.displayName = this.tableName
-        this.makeJoinedEditors()
+        this.updatedJoinedViews()
 
         this.onClick(this.editColumnsKey, _ => {
-            log.info(`Edit ${this.tableName} Columns`)
-            this.app.showModal(ColumnsEditorModal, {schema: this.schema, tableEditor: this as TableEditor<TableRef>})
+            log.info(`Edit ${this.displayName} Columns`)
+            this.app.showModal(ColumnsEditorModal, {schema: this.schema, tableView: this as TableView<TableRef>})
         })
 
         this.onClick(this.editFiltersKey, _ => {
-            log.info(`Edit ${this.tableName} Filters`)
-            this.app.showModal(FiltersEditorModal, {schema: this.schema, tableEditor: this as TableEditor<TableRef>})
+            log.info(`Edit ${this.displayName} Filters`)
+            this.app.showModal(FiltersEditorModal, {schema: this.schema, tableView: this as TableView<TableRef>})
+        })
+
+        this.onClick(this.newJoinedKey, m => {
+            log.info(`Adding join to ${this.displayName}`)
+
+            // only show belongs-tos that aren't already joined
+            const existingJoins = new Set(Object.keys(this.table.joins || []))
+            const actions = Object.values(this.modelDef.belongs_to)
+                .filter(bt => !existingJoins.has(bt.name))
+                .map(bt => {
+                    return {
+                        title: Schema.belongsToDisplay(bt),
+                        click: {key: this.createJoinedKey, data: {name: bt.name}}
+                    }
+                })
+
+            // don't show the dropdown if there are no more belongs-tos left
+            if (actions.length) {
+                this.toggleDropdown(DdActionsDropdown, actions, m.event.target)
+            }
+            else {
+                this.showToast(`No more possible joins for ${this.displayName}`, {color: 'pending'})
+            }
+        })
+
+        this.onClick(this.createJoinedKey, m => {
+            const belongsTo = this.modelDef.belongs_to[m.data.name]
+            if (belongsTo) {
+                log.info(`Creating join for ${this.displayName} to ${belongsTo.name}`, belongsTo)
+                const table: JoinedTableRef = {
+                    model: belongsTo.model,
+                    join_type: 'inner',
+                    belongs_to: belongsTo.name
+                }
+                const callback = (newTable: JoinedTableRef) => {
+                    log.info(`Creating joined table`, newTable)
+                    this.table.joins ||= {}
+                    this.table.joins[newTable.belongs_to] = newTable
+                    this.updatedJoinedViews()
+                }
+                this.app.showModal(JoinedTableEditorModal, {table, belongsTo, callback, parentTable: this.state.table as TableRef})
+            }
         })
     }
 
     /**
-     * Re-generates all editors for the joined tables.
+     * Re-generates all views for the joined tables.
      */
-    makeJoinedEditors() {
-        const states = (this.table.joins || []).map(table => {
+    updatedJoinedViews() {
+        const states = Object.values(this.table.joins || {}).map(table => {
             return {schema: this.schema, table}
         })
-        this.assignCollection('joined', JoinedTableEditor, states)
+        this.assignCollection('joined', JoinedTableView, states)
+        for (const part of this.getCollectionParts('joined')) {
+            (part as JoinedTableView).parentView = this
+        }
     }
 
 
@@ -94,7 +143,7 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
             panel.div('.title', title => {
                 title.i('.glyp-table')
                 title.div().text(this.displayName)
-            })
+            }).emitClick(this.editTableKey)
 
             this.renderColumns(panel)
 
@@ -102,9 +151,9 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
             panel.a('.action', a => {
                 a.i('.glyp-plus')
-                a.div().text("Belongs-To")
+                a.div().text("Join")
                 a.i('.glyp-belongs_to')
-            })
+            }).emitClick(this.newJoinedKey)
         })
     }
 
@@ -145,19 +194,6 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
         }).emitClick(this.editFiltersKey, {})
     }
 
-    renderJoins(parent: PartTag) {
-        parent.section(section => {
-            section.div('.title', title => {
-                title.i(".glyp-belongs_to")
-                title.span({text: "Joins"})
-            })
-            section.div('.line.empty', line => {
-                line.i('.glyp-plus')
-                line.div().text('Belongs-To')
-            })
-        })
-    }
-
     updateColumns(columns: ColumnRef[]) {
         this.state.table.columns = columns
         this.dirty()
@@ -170,21 +206,123 @@ export class TableEditor<T extends TableRef> extends DdContentPart<{ schema: Sch
 
 }
 
-export class FromTableEditor extends TableEditor<TableRef> {
-
-    async init() {
-        await super.init()
-
-    }
+export class FromTableView extends TableView<TableRef> {
 
 }
 
-export class JoinedTableEditor extends TableEditor<JoinedTableRef> {
+export class JoinedTableView extends TableView<JoinedTableRef> {
 
     async init() {
         await super.init()
 
         this.displayName = inflection.titleize(this.table.belongs_to)
+
+        // I don't think it makes much sense to be able edit the root table,
+        // so this is only available down here on the joined tables
+        this.onClick(this.editTableKey, _ => {
+            if (this.parentView) {
+                log.info(`Editing join table ${this.displayName}`)
+                const parentModel = this.parentView.modelDef
+                const belongsTo = parentModel.belongs_to[this.table.belongs_to]
+                const callback = (newTable: JoinedTableRef) => {
+                    log.info(`Updated joined table ${this.displayName}`, newTable)
+                    this.parentView!.table.joins[newTable.belongs_to] = newTable
+                    this.table = newTable
+                    this.parentView?.dirty()
+                }
+                this.app.showModal(JoinedTableEditorModal, {
+                    table: this.table,
+                    belongsTo,
+                    callback,
+                    parentTable: this.parentView?.table
+                })
+            }
+            else {
+                alert(`Parent table was never assigned!`)
+            }
+        })
     }
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Editor
+////////////////////////////////////////////////////////////////////////////////
+
+type JoinedTableEditorState = {
+    table: JoinedTableRef
+    readonly parentTable: TableRef
+    belongsTo: BelongsToDef
+    callback: (tableRef: JoinedTableRef) => any
+}
+
+/**
+ * A form for editing the join type of a joined table.
+ */
+class JoinedTableEditorForm extends DdFormPart<JoinedTableRef> {
+
+    parentTable!: TableRef
+
+    render(parent: PartTag) {
+        const name = inflection.titleize(this.state.belongs_to)
+        const parentName = this.parentTable.model
+
+        parent.div('.tt-padded.tt-inset-box', box => {
+            box.h4('.justify-center', h4 => {
+                h4.i('.glyp-belongs_to')
+                h4.div().text("Join Type")
+            })
+            box.div('.tt-flex.gap.padded', row => {
+                row.div('.stretch', col => {
+                    col.label('.body-size', label => {
+                        this.radio(label, 'join_type', 'inner')
+                        label.div().text(`<strong>Inner</strong>: <em>${parentName}</em> is only included if there's an associated <em>${name}</em>`)
+                    })
+                })
+                row.div('.stretch', col => {
+                    col.label('.body-size', label => {
+                        this.radio(label, 'join_type', 'left')
+                        label.div().text(`<strong>Left</strong>: <em>${parentName}</em> is included even if there's no associated <em>${name}</em>`)
+                    })
+                })
+            })
+        })
+    }
+
+}
+
+/**
+ * A modal for editing the join type of a joined table.
+ */
+class JoinedTableEditorModal extends DdModalPart<JoinedTableEditorState> {
+
+    form!: JoinedTableEditorForm
+    applyKey = messages.untypedKey()
+
+    async init() {
+        this.form = this.makePart(JoinedTableEditorForm, this.state.table)
+        this.form.parentTable = this.state.parentTable
+
+        this.setIcon('glyp-belongs_to')
+        this.setTitle(`Join ${this.state.parentTable.model} &rarr; ${Schema.belongsToDisplay(this.state.belongsTo)}`)
+
+        this.addAction({
+            title: "Apply",
+            icon: 'glyp-checkmark',
+            click: {key: this.applyKey}
+        }, 'primary')
+
+        this.onClick(this.applyKey, async _ => {
+            const table = await this.form.serialize()
+            this.state.callback(table)
+            this.pop()
+        })
+    }
+
+    renderContent(parent: PartTag) {
+        parent.div('.tt-padded').part(this.form)
+    }
+
+}
+
