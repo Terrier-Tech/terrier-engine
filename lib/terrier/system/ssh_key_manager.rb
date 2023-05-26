@@ -31,7 +31,7 @@ class SshKeyManager
     # compute the authorized_keys path
     if @env == 'development'
       dir = Rails.root.join('tmp/ssh').to_s
-      FileUtils.mkdir_p(dir) unless File.exists?(dir)
+      FileUtils.mkdir_p(dir) unless File.exist?(dir)
       file_path = "#{dir}/authorized_keys"
       info "Using dummy authorized_keys path in development: #{file_path}"
     else
@@ -41,7 +41,7 @@ class SshKeyManager
 
     # read existing keys
     existing_keys = []
-    if File.exists? file_path
+    if File.exist? file_path
       existing_keys = File.read(file_path).split("\n").compact.map(&:strip).sort
       info "#{existing_keys.count} existing keys in #{file_path}"
     else

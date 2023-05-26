@@ -7,19 +7,19 @@ require 'sys/proctable'
 app_dir = Dir.pwd
 tmp_dir = "#{app_dir}/tmp"
 sockets_dir = File.join tmp_dir, 'sockets'
-unless File.exists? sockets_dir
+unless File.exist? sockets_dir
   FileUtils.mkdir sockets_dir
 end
 socket_path = "unix://#{sockets_dir}/puma.sock"
 pids_dir = File.join tmp_dir, 'pids'
-unless File.exists? pids_dir
+unless File.exist? pids_dir
   FileUtils.mkdir pids_dir
 end
 pid_path = "#{pids_dir}/puma.pid"
 
 def stop_server(pid_path)
   was_killed = false
-  if File.exists? pid_path
+  if File.exist? pid_path
     pid = File.read pid_path
     pid = pid&.to_i || 0
     if pid > 0
