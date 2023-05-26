@@ -5,9 +5,9 @@
 
 @font-face {
     font-family:     "glyp";
-    src:             url("/assets/glyps.woff?t=20230515194139") format("woff"),
-                     url("/assets/glyps.svg?t=20230515194139") format("svg"),
-                     url("/assets/glyps.ttf?t=20230515194139") format("truetype");
+    src:             url("/assets/glyps.woff?t=20230526134303") format("woff"),
+                     url("/assets/glyps.svg?t=20230526134303") format("svg"),
+                     url("/assets/glyps.ttf?t=20230526134303") format("truetype");
     font-style:      normal;
     font-weight:     normal;
     font-stretch:    normal;
@@ -936,1126 +936,1135 @@
 .glyp-job:before {
     content:         "\e130";
 }
-.glyp-justice:before {
+.glyp-join:before {
     content:         "\e131";
 }
-.glyp-k9_inspection:before {
+.glyp-join_inner:before {
     content:         "\e132";
 }
-.glyp-key:before {
+.glyp-join_left:before {
     content:         "\e133";
 }
-.glyp-label_bottom:before {
+.glyp-justice:before {
     content:         "\e134";
 }
-.glyp-label_left:before {
+.glyp-k9_inspection:before {
     content:         "\e135";
 }
-.glyp-label_right:before {
+.glyp-key:before {
     content:         "\e136";
 }
-.glyp-label_top:before {
+.glyp-label_bottom:before {
     content:         "\e137";
 }
-.glyp-labor:before {
+.glyp-label_left:before {
     content:         "\e138";
 }
-.glyp-landscape:before {
+.glyp-label_right:before {
     content:         "\e139";
 }
-.glyp-landscape_maintenance:before {
+.glyp-label_top:before {
     content:         "\e13a";
 }
-.glyp-laptop:before {
+.glyp-labor:before {
     content:         "\e13b";
 }
-.glyp-lead:before {
+.glyp-landscape:before {
     content:         "\e13c";
 }
-.glyp-lead_listing:before {
+.glyp-landscape_maintenance:before {
     content:         "\e13d";
 }
-.glyp-lead_source:before {
+.glyp-laptop:before {
     content:         "\e13e";
 }
-.glyp-leads_report:before {
+.glyp-lead:before {
     content:         "\e13f";
 }
-.glyp-learning_hub:before {
+.glyp-lead_listing:before {
     content:         "\e140";
 }
-.glyp-ledger:before {
+.glyp-lead_source:before {
     content:         "\e141";
 }
-.glyp-legal:before {
+.glyp-leads_report:before {
     content:         "\e142";
 }
-.glyp-license:before {
+.glyp-learning_hub:before {
     content:         "\e143";
 }
-.glyp-lifetime:before {
+.glyp-ledger:before {
     content:         "\e144";
 }
-.glyp-line_cap_arrow:before {
+.glyp-legal:before {
     content:         "\e145";
 }
-.glyp-line_cap_bar:before {
+.glyp-license:before {
     content:         "\e146";
 }
-.glyp-line_cap_circle:before {
+.glyp-lifetime:before {
     content:         "\e147";
 }
-.glyp-line_cap_none:before {
+.glyp-line_cap_arrow:before {
     content:         "\e148";
 }
-.glyp-line_caps:before {
+.glyp-line_cap_bar:before {
     content:         "\e149";
 }
-.glyp-line_style:before {
+.glyp-line_cap_circle:before {
     content:         "\e14a";
 }
-.glyp-link:before {
+.glyp-line_cap_none:before {
     content:         "\e14b";
 }
-.glyp-location:before {
+.glyp-line_caps:before {
     content:         "\e14c";
 }
-.glyp-location_charge:before {
+.glyp-line_style:before {
     content:         "\e14d";
 }
-.glyp-location_credit:before {
+.glyp-link:before {
     content:         "\e14e";
 }
-.glyp-location_kind:before {
+.glyp-location:before {
     content:         "\e14f";
 }
-.glyp-location_message:before {
+.glyp-location_charge:before {
     content:         "\e150";
 }
-.glyp-location_origin:before {
+.glyp-location_credit:before {
     content:         "\e151";
 }
-.glyp-location_tags:before {
+.glyp-location_kind:before {
     content:         "\e152";
 }
-.glyp-locations:before {
+.glyp-location_message:before {
     content:         "\e153";
 }
-.glyp-locked:before {
+.glyp-location_origin:before {
     content:         "\e154";
 }
-.glyp-lodging:before {
+.glyp-location_tags:before {
     content:         "\e155";
 }
-.glyp-log_in:before {
+.glyp-locations:before {
     content:         "\e156";
 }
-.glyp-log_out:before {
+.glyp-locked:before {
     content:         "\e157";
 }
-.glyp-log_report:before {
+.glyp-lodging:before {
     content:         "\e158";
 }
-.glyp-logbook:before {
+.glyp-log_in:before {
     content:         "\e159";
 }
-.glyp-logbook_documents:before {
+.glyp-log_out:before {
     content:         "\e15a";
 }
-.glyp-lot_number:before {
+.glyp-log_report:before {
     content:         "\e15b";
 }
-.glyp-manager:before {
+.glyp-logbook:before {
     content:         "\e15c";
 }
-.glyp-map:before {
+.glyp-logbook_documents:before {
     content:         "\e15d";
 }
-.glyp-markdown:before {
+.glyp-lot_number:before {
     content:         "\e15e";
 }
-.glyp-market:before {
+.glyp-manager:before {
     content:         "\e15f";
 }
-.glyp-materials:before {
+.glyp-map:before {
     content:         "\e160";
 }
-.glyp-mattress_encasement:before {
+.glyp-markdown:before {
     content:         "\e161";
 }
-.glyp-merge:before {
+.glyp-market:before {
     content:         "\e162";
 }
-.glyp-message_billing:before {
+.glyp-materials:before {
     content:         "\e163";
 }
-.glyp-message_collections:before {
+.glyp-mattress_encasement:before {
     content:         "\e164";
 }
-.glyp-message_complaint:before {
+.glyp-merge:before {
     content:         "\e165";
 }
-.glyp-message_misc:before {
+.glyp-message_billing:before {
     content:         "\e166";
 }
-.glyp-message_technician:before {
+.glyp-message_collections:before {
     content:         "\e167";
 }
-.glyp-messages:before {
+.glyp-message_complaint:before {
     content:         "\e168";
 }
-.glyp-misc:before {
+.glyp-message_misc:before {
     content:         "\e169";
 }
-.glyp-miscellaneous:before {
+.glyp-message_technician:before {
     content:         "\e16a";
 }
-.glyp-move_order:before {
+.glyp-messages:before {
     content:         "\e16b";
 }
-.glyp-mowing:before {
+.glyp-misc:before {
     content:         "\e16c";
 }
-.glyp-multi_housing:before {
+.glyp-miscellaneous:before {
     content:         "\e16d";
 }
-.glyp-mute:before {
+.glyp-move_order:before {
     content:         "\e16e";
 }
-.glyp-navicon:before {
+.glyp-mowing:before {
     content:         "\e16f";
 }
-.glyp-new_location:before {
+.glyp-multi_housing:before {
     content:         "\e170";
 }
-.glyp-no_charge:before {
+.glyp-mute:before {
     content:         "\e171";
 }
-.glyp-no_service:before {
+.glyp-navicon:before {
     content:         "\e172";
 }
-.glyp-note:before {
+.glyp-new_location:before {
     content:         "\e173";
 }
-.glyp-note_access:before {
+.glyp-no_charge:before {
     content:         "\e174";
 }
-.glyp-note_billing:before {
+.glyp-no_service:before {
     content:         "\e175";
 }
-.glyp-note_collection:before {
+.glyp-note:before {
     content:         "\e176";
 }
-.glyp-note_complaint:before {
+.glyp-note_access:before {
     content:         "\e177";
 }
-.glyp-note_directions:before {
+.glyp-note_billing:before {
     content:         "\e178";
 }
-.glyp-note_focused:before {
+.glyp-note_collection:before {
     content:         "\e179";
 }
-.glyp-note_office:before {
+.glyp-note_complaint:before {
     content:         "\e17a";
 }
-.glyp-note_preservice:before {
+.glyp-note_directions:before {
     content:         "\e17b";
 }
-.glyp-note_sales:before {
+.glyp-note_focused:before {
     content:         "\e17c";
 }
-.glyp-note_service:before {
+.glyp-note_office:before {
     content:         "\e17d";
 }
-.glyp-notification:before {
+.glyp-note_preservice:before {
     content:         "\e17e";
 }
-.glyp-number:before {
+.glyp-note_sales:before {
     content:         "\e17f";
 }
-.glyp-office:before {
+.glyp-note_service:before {
     content:         "\e180";
 }
-.glyp-office_government:before {
+.glyp-notification:before {
     content:         "\e181";
 }
-.glyp-office_training:before {
+.glyp-number:before {
     content:         "\e182";
 }
-.glyp-on_demand:before {
+.glyp-office:before {
     content:         "\e183";
 }
-.glyp-on_demand_order:before {
+.glyp-office_government:before {
     content:         "\e184";
 }
-.glyp-open:before {
+.glyp-office_training:before {
     content:         "\e185";
 }
-.glyp-open_invoice:before {
+.glyp-on_demand:before {
     content:         "\e186";
 }
-.glyp-operations:before {
+.glyp-on_demand_order:before {
     content:         "\e187";
 }
-.glyp-options:before {
+.glyp-open:before {
     content:         "\e188";
 }
-.glyp-order_actions:before {
+.glyp-open_invoice:before {
     content:         "\e189";
 }
-.glyp-order_approved:before {
+.glyp-operations:before {
     content:         "\e18a";
 }
-.glyp-order_batch:before {
+.glyp-options:before {
     content:         "\e18b";
 }
-.glyp-order_editor:before {
+.glyp-order_actions:before {
     content:         "\e18c";
 }
-.glyp-order_pending:before {
+.glyp-order_approved:before {
     content:         "\e18d";
 }
-.glyp-order_series:before {
+.glyp-order_batch:before {
     content:         "\e18e";
 }
-.glyp-order_unapproved:before {
+.glyp-order_editor:before {
     content:         "\e18f";
 }
-.glyp-org_structure:before {
+.glyp-order_pending:before {
     content:         "\e190";
 }
-.glyp-org_unit:before {
+.glyp-order_series:before {
     content:         "\e191";
 }
-.glyp-org_unit_settings:before {
+.glyp-order_unapproved:before {
     content:         "\e192";
 }
-.glyp-origin:before {
+.glyp-org_structure:before {
     content:         "\e193";
 }
-.glyp-origin_client:before {
+.glyp-org_unit:before {
     content:         "\e194";
 }
-.glyp-origin_tech:before {
+.glyp-org_unit_settings:before {
     content:         "\e195";
 }
-.glyp-outlook:before {
+.glyp-origin:before {
     content:         "\e196";
 }
-.glyp-overlap:before {
+.glyp-origin_client:before {
     content:         "\e197";
 }
-.glyp-password:before {
+.glyp-origin_tech:before {
     content:         "\e198";
 }
-.glyp-past_due:before {
+.glyp-outlook:before {
     content:         "\e199";
 }
-.glyp-paused:before {
+.glyp-overlap:before {
     content:         "\e19a";
 }
-.glyp-pay_brackets:before {
+.glyp-password:before {
     content:         "\e19b";
 }
-.glyp-payment:before {
+.glyp-past_due:before {
     content:         "\e19c";
 }
-.glyp-payment_ach:before {
+.glyp-paused:before {
     content:         "\e19d";
 }
-.glyp-payment_application_apply:before {
+.glyp-pay_brackets:before {
     content:         "\e19e";
 }
-.glyp-payment_application_correction:before {
+.glyp-payment:before {
     content:         "\e19f";
 }
-.glyp-payment_application_initial:before {
+.glyp-payment_ach:before {
     content:         "\e1a0";
 }
-.glyp-payment_application_refund:before {
+.glyp-payment_application_apply:before {
     content:         "\e1a1";
 }
-.glyp-payment_application_transfer:before {
+.glyp-payment_application_correction:before {
     content:         "\e1a2";
 }
-.glyp-payment_application_unapply:before {
+.glyp-payment_application_initial:before {
     content:         "\e1a3";
 }
-.glyp-payment_application_unapply_all:before {
+.glyp-payment_application_refund:before {
     content:         "\e1a4";
 }
-.glyp-payment_applications:before {
+.glyp-payment_application_transfer:before {
     content:         "\e1a5";
 }
-.glyp-payment_batch:before {
+.glyp-payment_application_unapply:before {
     content:         "\e1a6";
 }
-.glyp-payment_cash:before {
+.glyp-payment_application_unapply_all:before {
     content:         "\e1a7";
 }
-.glyp-payment_check:before {
+.glyp-payment_applications:before {
     content:         "\e1a8";
 }
-.glyp-payment_coupon:before {
+.glyp-payment_batch:before {
     content:         "\e1a9";
 }
-.glyp-payment_credit:before {
+.glyp-payment_cash:before {
     content:         "\e1aa";
 }
-.glyp-payment_discount:before {
+.glyp-payment_check:before {
     content:         "\e1ab";
 }
-.glyp-payment_eft:before {
+.glyp-payment_coupon:before {
     content:         "\e1ac";
 }
-.glyp-payment_finance_charge:before {
+.glyp-payment_credit:before {
     content:         "\e1ad";
 }
-.glyp-payments:before {
+.glyp-payment_discount:before {
     content:         "\e1ae";
 }
-.glyp-payroll:before {
+.glyp-payment_eft:before {
     content:         "\e1af";
 }
-.glyp-pdf:before {
+.glyp-payment_finance_charge:before {
     content:         "\e1b0";
 }
-.glyp-pending:before {
+.glyp-payments:before {
     content:         "\e1b1";
 }
-.glyp-periodic:before {
+.glyp-payroll:before {
     content:         "\e1b2";
 }
-.glyp-periodic_assessment:before {
+.glyp-pdf:before {
     content:         "\e1b3";
 }
-.glyp-permission:before {
+.glyp-pending:before {
     content:         "\e1b4";
 }
-.glyp-pest:before {
+.glyp-periodic:before {
     content:         "\e1b5";
 }
-.glyp-pest_ants:before {
+.glyp-periodic_assessment:before {
     content:         "\e1b6";
 }
-.glyp-pest_bats:before {
+.glyp-permission:before {
     content:         "\e1b7";
 }
-.glyp-pest_bed_bugs:before {
+.glyp-pest:before {
     content:         "\e1b8";
 }
-.glyp-pest_birds:before {
+.glyp-pest_ants:before {
     content:         "\e1b9";
 }
-.glyp-pest_crawling_insects:before {
+.glyp-pest_bats:before {
     content:         "\e1ba";
 }
-.glyp-pest_dermestids:before {
+.glyp-pest_bed_bugs:before {
     content:         "\e1bb";
 }
-.glyp-pest_fall_invaders:before {
+.glyp-pest_birds:before {
     content:         "\e1bc";
 }
-.glyp-pest_flying_insects:before {
+.glyp-pest_crawling_insects:before {
     content:         "\e1bd";
 }
-.glyp-pest_moles:before {
+.glyp-pest_dermestids:before {
     content:         "\e1be";
 }
-.glyp-pest_mosquitoes:before {
+.glyp-pest_fall_invaders:before {
     content:         "\e1bf";
 }
-.glyp-pest_nuisance_animals:before {
+.glyp-pest_flying_insects:before {
     content:         "\e1c0";
 }
-.glyp-pest_ornamental:before {
+.glyp-pest_moles:before {
     content:         "\e1c1";
 }
-.glyp-pest_ornamental_diseases:before {
+.glyp-pest_mosquitoes:before {
     content:         "\e1c2";
 }
-.glyp-pest_roaches:before {
+.glyp-pest_nuisance_animals:before {
     content:         "\e1c3";
 }
-.glyp-pest_rodents:before {
+.glyp-pest_ornamental:before {
     content:         "\e1c4";
 }
-.glyp-pest_scorpions:before {
+.glyp-pest_ornamental_diseases:before {
     content:         "\e1c5";
 }
-.glyp-pest_snakes:before {
+.glyp-pest_roaches:before {
     content:         "\e1c6";
 }
-.glyp-pest_spiders:before {
+.glyp-pest_rodents:before {
     content:         "\e1c7";
 }
-.glyp-pest_stinging_insects:before {
+.glyp-pest_scorpions:before {
     content:         "\e1c8";
 }
-.glyp-pest_stored_product_pests:before {
+.glyp-pest_snakes:before {
     content:         "\e1c9";
 }
-.glyp-pest_ticks_and_fleas:before {
+.glyp-pest_spiders:before {
     content:         "\e1ca";
 }
-.glyp-pest_viruses_and_bacteria:before {
+.glyp-pest_stinging_insects:before {
     content:         "\e1cb";
 }
-.glyp-pest_weeds:before {
+.glyp-pest_stored_product_pests:before {
     content:         "\e1cc";
 }
-.glyp-pest_wood_destroyers:before {
+.glyp-pest_ticks_and_fleas:before {
     content:         "\e1cd";
 }
-.glyp-phone:before {
+.glyp-pest_viruses_and_bacteria:before {
     content:         "\e1ce";
 }
-.glyp-pick_date:before {
+.glyp-pest_weeds:before {
     content:         "\e1cf";
 }
-.glyp-pick_list:before {
+.glyp-pest_wood_destroyers:before {
     content:         "\e1d0";
 }
-.glyp-platform_android:before {
+.glyp-phone:before {
     content:         "\e1d1";
 }
-.glyp-platform_ios:before {
+.glyp-pick_date:before {
     content:         "\e1d2";
 }
-.glyp-platform_macos:before {
+.glyp-pick_list:before {
     content:         "\e1d3";
 }
-.glyp-platform_windows:before {
+.glyp-platform_android:before {
     content:         "\e1d4";
 }
-.glyp-play:before {
+.glyp-platform_ios:before {
     content:         "\e1d5";
 }
-.glyp-plus:before {
+.glyp-platform_macos:before {
     content:         "\e1d6";
 }
-.glyp-plus_filled:before {
+.glyp-platform_windows:before {
     content:         "\e1d7";
 }
-.glyp-portal:before {
+.glyp-play:before {
     content:         "\e1d8";
 }
-.glyp-price_increase:before {
+.glyp-plus:before {
     content:         "\e1d9";
 }
-.glyp-price_increase_alt:before {
+.glyp-plus_filled:before {
     content:         "\e1da";
 }
-.glyp-pricing_table:before {
+.glyp-portal:before {
     content:         "\e1db";
 }
-.glyp-print:before {
+.glyp-price_increase:before {
     content:         "\e1dc";
 }
-.glyp-privacy:before {
+.glyp-price_increase_alt:before {
     content:         "\e1dd";
 }
-.glyp-product_sale:before {
+.glyp-pricing_table:before {
     content:         "\e1de";
 }
-.glyp-production:before {
+.glyp-print:before {
     content:         "\e1df";
 }
-.glyp-professional_consultation:before {
+.glyp-privacy:before {
     content:         "\e1e0";
 }
-.glyp-program:before {
+.glyp-product_sale:before {
     content:         "\e1e1";
 }
-.glyp-program_elements:before {
+.glyp-production:before {
     content:         "\e1e2";
 }
-.glyp-program_initiation:before {
+.glyp-professional_consultation:before {
     content:         "\e1e3";
 }
-.glyp-program_order:before {
+.glyp-program:before {
     content:         "\e1e4";
 }
-.glyp-program_review:before {
+.glyp-program_elements:before {
     content:         "\e1e5";
 }
-.glyp-promo:before {
+.glyp-program_initiation:before {
     content:         "\e1e6";
 }
-.glyp-proposal:before {
+.glyp-program_order:before {
     content:         "\e1e7";
 }
-.glyp-protection:before {
+.glyp-program_review:before {
     content:         "\e1e8";
 }
-.glyp-purchase_order:before {
+.glyp-promo:before {
     content:         "\e1e9";
 }
-.glyp-quality:before {
+.glyp-proposal:before {
     content:         "\e1ea";
 }
-.glyp-radio_checked:before {
+.glyp-protection:before {
     content:         "\e1eb";
 }
-.glyp-radio_empty:before {
+.glyp-purchase_order:before {
     content:         "\e1ec";
 }
-.glyp-reassign:before {
+.glyp-quality:before {
     content:         "\e1ed";
 }
-.glyp-receipt:before {
+.glyp-radio_checked:before {
     content:         "\e1ee";
 }
-.glyp-recent:before {
+.glyp-radio_empty:before {
     content:         "\e1ef";
 }
-.glyp-recommendation:before {
+.glyp-reassign:before {
     content:         "\e1f0";
 }
-.glyp-record_details:before {
+.glyp-receipt:before {
     content:         "\e1f1";
 }
-.glyp-recurring_revenue:before {
+.glyp-recent:before {
     content:         "\e1f2";
 }
-.glyp-redo:before {
+.glyp-recommendation:before {
     content:         "\e1f3";
 }
-.glyp-refresh:before {
+.glyp-record_details:before {
     content:         "\e1f4";
 }
-.glyp-refund:before {
+.glyp-recurring_revenue:before {
     content:         "\e1f5";
 }
-.glyp-region:before {
+.glyp-redo:before {
     content:         "\e1f6";
 }
-.glyp-released:before {
+.glyp-refresh:before {
     content:         "\e1f7";
 }
-.glyp-remove:before {
+.glyp-refund:before {
     content:         "\e1f8";
 }
-.glyp-renewal:before {
+.glyp-region:before {
     content:         "\e1f9";
 }
-.glyp-report:before {
+.glyp-released:before {
     content:         "\e1fa";
 }
-.glyp-required_input:before {
+.glyp-remove:before {
     content:         "\e1fb";
 }
-.glyp-reschedule:before {
+.glyp-renewal:before {
     content:         "\e1fc";
 }
-.glyp-restaurant_bar:before {
+.glyp-report:before {
     content:         "\e1fd";
 }
-.glyp-revenue:before {
+.glyp-required_input:before {
     content:         "\e1fe";
 }
-.glyp-review:before {
+.glyp-reschedule:before {
     content:         "\e1ff";
 }
-.glyp-rfid:before {
+.glyp-restaurant_bar:before {
     content:         "\e200";
 }
-.glyp-ride_along:before {
+.glyp-revenue:before {
     content:         "\e201";
 }
-.glyp-rodent_exclusion:before {
+.glyp-review:before {
     content:         "\e202";
 }
-.glyp-route_change:before {
+.glyp-rfid:before {
     content:         "\e203";
 }
-.glyp-route_optimization:before {
+.glyp-ride_along:before {
     content:         "\e204";
 }
-.glyp-rows:before {
+.glyp-rodent_exclusion:before {
     content:         "\e205";
 }
-.glyp-ruler:before {
+.glyp-route_change:before {
     content:         "\e206";
 }
-.glyp-sales:before {
+.glyp-route_optimization:before {
     content:         "\e207";
 }
-.glyp-sales_contest:before {
+.glyp-rows:before {
     content:         "\e208";
 }
-.glyp-sales_pipeline:before {
+.glyp-ruler:before {
     content:         "\e209";
 }
-.glyp-sales_tax:before {
+.glyp-sales:before {
     content:         "\e20a";
 }
-.glyp-sales_tax_exemption:before {
+.glyp-sales_contest:before {
     content:         "\e20b";
 }
-.glyp-schedule_lock:before {
+.glyp-sales_pipeline:before {
     content:         "\e20c";
 }
-.glyp-schedule_lock_afternoon:before {
+.glyp-sales_tax:before {
     content:         "\e20d";
 }
-.glyp-schedule_lock_day:before {
+.glyp-sales_tax_exemption:before {
     content:         "\e20e";
 }
-.glyp-schedule_lock_exact:before {
+.glyp-schedule_lock:before {
     content:         "\e20f";
 }
-.glyp-schedule_lock_four_hour:before {
+.glyp-schedule_lock_afternoon:before {
     content:         "\e210";
 }
-.glyp-schedule_lock_morning:before {
+.glyp-schedule_lock_day:before {
     content:         "\e211";
 }
-.glyp-schedule_lock_none:before {
+.glyp-schedule_lock_exact:before {
     content:         "\e212";
 }
-.glyp-schedule_lock_two_day:before {
+.glyp-schedule_lock_four_hour:before {
     content:         "\e213";
 }
-.glyp-schedule_lock_two_hour:before {
+.glyp-schedule_lock_morning:before {
     content:         "\e214";
 }
-.glyp-schedule_lock_week:before {
+.glyp-schedule_lock_none:before {
     content:         "\e215";
 }
-.glyp-schedule_tyoe_every:before {
+.glyp-schedule_lock_two_day:before {
     content:         "\e216";
 }
-.glyp-schedule_type_every:before {
+.glyp-schedule_lock_two_hour:before {
     content:         "\e217";
 }
-.glyp-schedule_type_none:before {
+.glyp-schedule_lock_week:before {
     content:         "\e218";
 }
-.glyp-schedule_type_on_demand:before {
+.glyp-schedule_tyoe_every:before {
     content:         "\e219";
 }
-.glyp-schedule_type_schedule:before {
+.glyp-schedule_type_every:before {
     content:         "\e21a";
 }
-.glyp-scheduled:before {
+.glyp-schedule_type_none:before {
     content:         "\e21b";
 }
-.glyp-scheduling:before {
+.glyp-schedule_type_on_demand:before {
     content:         "\e21c";
 }
-.glyp-school_church:before {
+.glyp-schedule_type_schedule:before {
     content:         "\e21d";
 }
-.glyp-script:before {
+.glyp-scheduled:before {
     content:         "\e21e";
 }
-.glyp-search:before {
+.glyp-scheduling:before {
     content:         "\e21f";
 }
-.glyp-seeding:before {
+.glyp-school_church:before {
     content:         "\e220";
 }
-.glyp-segment:before {
+.glyp-script:before {
     content:         "\e221";
 }
-.glyp-sent:before {
+.glyp-search:before {
     content:         "\e222";
 }
-.glyp-sentricon:before {
+.glyp-seeding:before {
     content:         "\e223";
 }
-.glyp-service_agreement:before {
+.glyp-segment:before {
     content:         "\e224";
 }
-.glyp-service_form:before {
+.glyp-sent:before {
     content:         "\e225";
 }
-.glyp-service_miscellaneous:before {
+.glyp-sentricon:before {
     content:         "\e226";
 }
-.glyp-service_reminder:before {
+.glyp-service_agreement:before {
     content:         "\e227";
 }
-.glyp-service_report:before {
+.glyp-service_form:before {
     content:         "\e228";
 }
-.glyp-service_request:before {
+.glyp-service_miscellaneous:before {
     content:         "\e229";
 }
-.glyp-services:before {
+.glyp-service_reminder:before {
     content:         "\e22a";
 }
-.glyp-settings:before {
+.glyp-service_report:before {
     content:         "\e22b";
 }
-.glyp-setup:before {
+.glyp-service_request:before {
     content:         "\e22c";
 }
-.glyp-signature:before {
+.glyp-services:before {
     content:         "\e22d";
 }
-.glyp-simulator:before {
+.glyp-settings:before {
     content:         "\e22e";
 }
-.glyp-site_map:before {
+.glyp-setup:before {
     content:         "\e22f";
 }
-.glyp-site_map_annotation:before {
+.glyp-signature:before {
     content:         "\e230";
 }
-.glyp-site_map_chemical:before {
+.glyp-simulator:before {
     content:         "\e231";
 }
-.glyp-site_map_edit_details:before {
+.glyp-site_map:before {
     content:         "\e232";
 }
-.glyp-site_map_edit_geo:before {
+.glyp-site_map_annotation:before {
     content:         "\e233";
 }
-.glyp-site_map_equipment:before {
+.glyp-site_map_chemical:before {
     content:         "\e234";
 }
-.glyp-site_map_exterior:before {
+.glyp-site_map_edit_details:before {
     content:         "\e235";
 }
-.glyp-site_map_foundation:before {
+.glyp-site_map_edit_geo:before {
     content:         "\e236";
 }
-.glyp-site_map_icon:before {
+.glyp-site_map_equipment:before {
     content:         "\e237";
 }
-.glyp-site_map_interior:before {
+.glyp-site_map_exterior:before {
     content:         "\e238";
 }
-.glyp-site_map_label:before {
+.glyp-site_map_foundation:before {
     content:         "\e239";
 }
-.glyp-site_map_perimeter:before {
+.glyp-site_map_icon:before {
     content:         "\e23a";
 }
-.glyp-site_map_settings_left:before {
+.glyp-site_map_interior:before {
     content:         "\e23b";
 }
-.glyp-site_map_settings_right:before {
+.glyp-site_map_label:before {
     content:         "\e23c";
 }
-.glyp-site_map_template:before {
+.glyp-site_map_perimeter:before {
     content:         "\e23d";
 }
-.glyp-skip:before {
+.glyp-site_map_settings_left:before {
     content:         "\e23e";
 }
-.glyp-smart_traps:before {
+.glyp-site_map_settings_right:before {
     content:         "\e23f";
 }
-.glyp-sms:before {
+.glyp-site_map_template:before {
     content:         "\e240";
 }
-.glyp-snow_removal:before {
+.glyp-skip:before {
     content:         "\e241";
 }
-.glyp-sort:before {
+.glyp-smart_traps:before {
     content:         "\e242";
 }
-.glyp-special:before {
+.glyp-sms:before {
     content:         "\e243";
 }
-.glyp-split:before {
+.glyp-snow_removal:before {
     content:         "\e244";
 }
-.glyp-spp_scorecard:before {
+.glyp-sort:before {
     content:         "\e245";
 }
-.glyp-square_edge:before {
+.glyp-special:before {
     content:         "\e246";
 }
-.glyp-start_sheet:before {
+.glyp-split:before {
     content:         "\e247";
 }
-.glyp-start_time:before {
+.glyp-spp_scorecard:before {
     content:         "\e248";
 }
-.glyp-statement:before {
+.glyp-square_edge:before {
     content:         "\e249";
 }
-.glyp-states:before {
+.glyp-start_sheet:before {
     content:         "\e24a";
 }
-.glyp-sticky:before {
+.glyp-start_time:before {
     content:         "\e24b";
 }
-.glyp-stop_time:before {
+.glyp-statement:before {
     content:         "\e24c";
 }
-.glyp-store_material:before {
+.glyp-states:before {
     content:         "\e24d";
 }
-.glyp-store_order:before {
+.glyp-sticky:before {
     content:         "\e24e";
 }
-.glyp-store_order_back_order:before {
+.glyp-stop_time:before {
     content:         "\e24f";
 }
-.glyp-store_order_cancelled:before {
+.glyp-store_material:before {
     content:         "\e250";
 }
-.glyp-store_order_complete:before {
+.glyp-store_order:before {
     content:         "\e251";
 }
-.glyp-store_order_pending:before {
+.glyp-store_order_back_order:before {
     content:         "\e252";
 }
-.glyp-store_order_pending_return:before {
+.glyp-store_order_cancelled:before {
     content:         "\e253";
 }
-.glyp-store_order_pre_order:before {
+.glyp-store_order_complete:before {
     content:         "\e254";
 }
-.glyp-store_order_returned:before {
+.glyp-store_order_pending:before {
     content:         "\e255";
 }
-.glyp-stores:before {
+.glyp-store_order_pending_return:before {
     content:         "\e256";
 }
-.glyp-styling:before {
+.glyp-store_order_pre_order:before {
     content:         "\e257";
 }
-.glyp-subscribe:before {
+.glyp-store_order_returned:before {
     content:         "\e258";
 }
-.glyp-supplemental:before {
+.glyp-stores:before {
     content:         "\e259";
 }
-.glyp-support:before {
+.glyp-styling:before {
     content:         "\e25a";
 }
-.glyp-sync:before {
+.glyp-subscribe:before {
     content:         "\e25b";
 }
-.glyp-table:before {
+.glyp-supplemental:before {
     content:         "\e25c";
 }
-.glyp-tablet:before {
+.glyp-support:before {
     content:         "\e25d";
 }
-.glyp-tablets:before {
+.glyp-sync:before {
     content:         "\e25e";
 }
-.glyp-tag_manager:before {
+.glyp-table:before {
     content:         "\e25f";
 }
-.glyp-tags:before {
+.glyp-tablet:before {
     content:         "\e260";
 }
-.glyp-task_runs:before {
+.glyp-tablets:before {
     content:         "\e261";
 }
-.glyp-tech_pest_sightings:before {
+.glyp-tag_manager:before {
     content:         "\e262";
 }
-.glyp-technician:before {
+.glyp-tags:before {
     content:         "\e263";
 }
-.glyp-technician_approach:before {
+.glyp-task_runs:before {
     content:         "\e264";
 }
-.glyp-template:before {
+.glyp-tech_pest_sightings:before {
     content:         "\e265";
 }
-.glyp-termite_fumigation:before {
+.glyp-technician:before {
     content:         "\e266";
 }
-.glyp-terrier:before {
+.glyp-technician_approach:before {
     content:         "\e267";
 }
-.glyp-territory:before {
+.glyp-template:before {
     content:         "\e268";
 }
-.glyp-text:before {
+.glyp-termite_fumigation:before {
     content:         "\e269";
 }
-.glyp-thermometer:before {
+.glyp-terrier:before {
     content:         "\e26a";
 }
-.glyp-third_party_billing:before {
+.glyp-territory:before {
     content:         "\e26b";
 }
-.glyp-ticket_type:before {
+.glyp-text:before {
     content:         "\e26c";
 }
-.glyp-tickets:before {
+.glyp-thermometer:before {
     content:         "\e26d";
 }
-.glyp-tidy:before {
+.glyp-third_party_billing:before {
     content:         "\e26e";
 }
-.glyp-time:before {
+.glyp-ticket_type:before {
     content:         "\e26f";
 }
-.glyp-time_entry:before {
+.glyp-tickets:before {
     content:         "\e270";
 }
-.glyp-timeline:before {
+.glyp-tidy:before {
     content:         "\e271";
 }
-.glyp-toolbox:before {
+.glyp-time:before {
     content:         "\e272";
 }
-.glyp-tqi:before {
+.glyp-time_entry:before {
     content:         "\e273";
 }
-.glyp-tracker:before {
+.glyp-timeline:before {
     content:         "\e274";
 }
-.glyp-tracking:before {
+.glyp-toolbox:before {
     content:         "\e275";
 }
-.glyp-training_course:before {
+.glyp-tqi:before {
     content:         "\e276";
 }
-.glyp-treatment_split:before {
+.glyp-tracker:before {
     content:         "\e277";
 }
-.glyp-trends:before {
+.glyp-tracking:before {
     content:         "\e278";
 }
-.glyp-trip_charge:before {
+.glyp-training_course:before {
     content:         "\e279";
 }
-.glyp-ui_type:before {
+.glyp-treatment_split:before {
     content:         "\e27a";
 }
-.glyp-unchecked:before {
+.glyp-trends:before {
     content:         "\e27b";
 }
-.glyp-undo:before {
+.glyp-trip_charge:before {
     content:         "\e27c";
 }
-.glyp-unit_sweep:before {
+.glyp-ui_type:before {
     content:         "\e27d";
 }
-.glyp-unit_tag:before {
+.glyp-unchecked:before {
     content:         "\e27e";
 }
-.glyp-university:before {
+.glyp-undo:before {
     content:         "\e27f";
 }
-.glyp-unlocked:before {
+.glyp-unit_sweep:before {
     content:         "\e280";
 }
-.glyp-unscheduled:before {
+.glyp-unit_tag:before {
     content:         "\e281";
 }
-.glyp-update_check_positions:before {
+.glyp-university:before {
     content:         "\e282";
 }
-.glyp-upload:before {
+.glyp-unlocked:before {
     content:         "\e283";
 }
-.glyp-user:before {
+.glyp-unscheduled:before {
     content:         "\e284";
 }
-.glyp-user_credit:before {
+.glyp-update_check_positions:before {
     content:         "\e285";
 }
-.glyp-user_tags:before {
+.glyp-upload:before {
     content:         "\e286";
 }
-.glyp-users:before {
+.glyp-user:before {
     content:         "\e287";
 }
-.glyp-utility:before {
+.glyp-user_credit:before {
     content:         "\e288";
 }
-.glyp-vacation:before {
+.glyp-user_tags:before {
     content:         "\e289";
 }
-.glyp-vacuum:before {
+.glyp-users:before {
     content:         "\e28a";
 }
-.glyp-variant:before {
+.glyp-utility:before {
     content:         "\e28b";
 }
-.glyp-vendor:before {
+.glyp-vacation:before {
     content:         "\e28c";
 }
-.glyp-versions:before {
+.glyp-vacuum:before {
     content:         "\e28d";
 }
-.glyp-video:before {
+.glyp-variant:before {
     content:         "\e28e";
 }
-.glyp-visible:before {
+.glyp-vendor:before {
     content:         "\e28f";
 }
-.glyp-warehouse:before {
+.glyp-versions:before {
     content:         "\e290";
 }
-.glyp-wdo:before {
+.glyp-video:before {
     content:         "\e291";
 }
-.glyp-web_dusting:before {
+.glyp-visible:before {
     content:         "\e292";
 }
-.glyp-website:before {
+.glyp-warehouse:before {
     content:         "\e293";
 }
-.glyp-wildlife:before {
+.glyp-wdo:before {
     content:         "\e294";
 }
-.glyp-wildlife_exclusion:before {
+.glyp-web_dusting:before {
     content:         "\e295";
 }
-.glyp-winter_check:before {
+.glyp-website:before {
     content:         "\e296";
 }
-.glyp-wizard:before {
+.glyp-wildlife:before {
     content:         "\e297";
 }
-.glyp-work:before {
+.glyp-wildlife_exclusion:before {
     content:         "\e298";
 }
-.glyp-work_class:before {
+.glyp-winter_check:before {
     content:         "\e299";
 }
-.glyp-work_code:before {
+.glyp-wizard:before {
     content:         "\e29a";
 }
-.glyp-work_order:before {
+.glyp-work:before {
     content:         "\e29b";
 }
-.glyp-work_production:before {
+.glyp-work_class:before {
     content:         "\e29c";
 }
-.glyp-work_progress:before {
+.glyp-work_code:before {
     content:         "\e29d";
 }
-.glyp-work_yield:before {
+.glyp-work_order:before {
     content:         "\e29e";
 }
-.glyp-year:before {
+.glyp-work_production:before {
     content:         "\e29f";
 }
-.glyp-yield:before {
+.glyp-work_progress:before {
     content:         "\e2a0";
 }
-.glyp-zip_code:before {
+.glyp-work_yield:before {
     content:         "\e2a1";
 }
-.glyp-zone_adjacent:before {
+.glyp-year:before {
     content:         "\e2a2";
 }
-.glyp-zone_check:before {
+.glyp-yield:before {
     content:         "\e2a3";
 }
-.glyp-zone_production:before {
+.glyp-zip_code:before {
     content:         "\e2a4";
 }
-.glyp-zone_remote:before {
+.glyp-zone_adjacent:before {
     content:         "\e2a5";
 }
-.glyp-zoom_fit:before {
+.glyp-zone_check:before {
     content:         "\e2a6";
+}
+.glyp-zone_production:before {
+    content:         "\e2a7";
+}
+.glyp-zone_remote:before {
+    content:         "\e2a8";
+}
+.glyp-zoom_fit:before {
+    content:         "\e2a9";
 }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>join</title>
+    <g id="join" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M42,4 C44.209139,4 46,5.790861 46,8 L46,42 C46,44.209139 44.209139,46 42,46 L8,46 C5.790861,46 4,44.209139 4,42 L4,8 C4,5.790861 5.790861,4 8,4 L42,4 Z M42,8 L8,8 L8,42 L42,42 L42,8 Z M56,18 C58.209139,18 60,19.790861 60,22 L60,56 C60,58.209139 58.209139,60 56,60 L22,60 C19.790861,60 18,58.209139 18,56 L18,22 C18,19.790861 19.790861,18 22,18 L56,18 Z M56,22 L22,22 L22,56 L56,56 L56,22 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

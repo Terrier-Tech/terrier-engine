@@ -143,6 +143,10 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
             panel.div('.title', title => {
                 title.i('.glyp-table')
                 title.div().text(this.displayName)
+                const t = this.table as any
+                if ('join_type' in t) {
+                    title.i(`.glyp-join_${t.join_type}`)
+                }
             }).emitClick(this.editTableKey)
 
             this.renderColumns(panel)
@@ -270,18 +274,20 @@ class JoinedTableEditorForm extends DdFormPart<JoinedTableRef> {
 
         parent.div('.tt-padded.tt-inset-box', box => {
             box.h4('.justify-center', h4 => {
-                h4.i('.glyp-belongs_to')
+                h4.i('.glyp-join')
                 h4.div().text("Join Type")
             })
             box.div('.tt-flex.gap.padded', row => {
                 row.div('.stretch', col => {
                     col.label('.body-size', label => {
+                        label.i('.glyp-join_inner')
                         this.radio(label, 'join_type', 'inner')
                         label.div().text(`<strong>Inner</strong>: <em>${parentName}</em> is only included if there's an associated <em>${name}</em>`)
                     })
                 })
                 row.div('.stretch', col => {
                     col.label('.body-size', label => {
+                        label.i('.glyp-join_left')
                         this.radio(label, 'join_type', 'left')
                         label.div().text(`<strong>Left</strong>: <em>${parentName}</em> is included even if there's no associated <em>${name}</em>`)
                     })
