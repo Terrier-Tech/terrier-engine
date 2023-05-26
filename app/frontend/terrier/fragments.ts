@@ -102,15 +102,16 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
  * Render the primary and secondary actions to the bottom of a panel
  * @param panel the .panel container
  * @param actions the actions
+ * @param theme the theme with which to render actions
  */
 function panelActions<TT extends ThemeType>(panel: PartTag, actions: PanelActions<TT>, theme: Theme<TT>) {
     if (actions.primary.length || actions.secondary.length) {
         panel.div('.panel-actions', actionsContainer => {
             actionsContainer.div('.secondary-actions', secondaryContainer => {
-                theme.renderActions(secondaryContainer, actions.secondary, {iconColor: 'white', defaultClass: 'link'})
+                theme.renderActions(secondaryContainer, actions.secondary, {iconColor: 'white', defaultClass: 'secondary'})
             })
             actionsContainer.div('.primary-actions', primaryContainer => {
-                theme.renderActions(primaryContainer, actions.primary, {iconColor: 'white'})
+                theme.renderActions(primaryContainer, actions.primary, {iconColor: 'white', defaultClass: 'primary'})
             })
         })
     }
