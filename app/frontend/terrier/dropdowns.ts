@@ -103,6 +103,10 @@ export class ActionsDropdown<
 > extends Dropdown<Array<Action<TThemeType>>, TThemeType, TApp, TTheme> {
 
 
+    get autoClose(): boolean {
+        return true
+    }
+
     get parentClasses(): Array<string> {
         return ['tt-actions-dropdown', ...super.parentClasses]
     }
