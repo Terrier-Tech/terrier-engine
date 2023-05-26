@@ -225,6 +225,10 @@ class ColumnEditor extends DdFormPart<ColumnState> {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Add Column Dropdown
+////////////////////////////////////////////////////////////////////////////////
+
 const checkAllKey = messages.untypedKey()
 const applySelectionKey = messages.untypedKey()
 const checkChangedKey = messages.typedKey<{column: string}>()

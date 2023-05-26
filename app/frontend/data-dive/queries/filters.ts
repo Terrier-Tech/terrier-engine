@@ -2,7 +2,7 @@ import {Part, PartTag} from "tuff-core/parts"
 import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableEditor, TableRef} from "./tables"
-import {DdFormPart, DdModalPart} from "../dd-parts"
+import {DdDropdown, DdFormPart, DdModalPart} from "../dd-parts"
 import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
@@ -158,6 +158,15 @@ export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
         this.onClick(removeKey, m => {
             this.removeFilter(m.data.id)
         })
+
+        this.onClick(addKey, m => {
+            const onSelected = (filter: Filter) => {
+                log.info(`Adding ${filter.filter_type} filter`, filter)
+                this.addState(filter)
+                this.updateFilterEditors()
+            }
+            this.toggleDropdown(AddFilterDropdown, {modelDef: this.modelDef, callback: onSelected}, m.event.target)
+        })
     }
 
     renderContent(parent: PartTag) {
@@ -226,7 +235,6 @@ abstract class FilterEditor<T extends BaseFilter> extends DdFormPart<BaseFilterS
         row.div('.actions', actions => {
             actions.a(a => {
                 a.i('.glyp-close')
-                a.span().text(this.state.id)
             }).emitClick(removeKey, {id: this.state.id})
         })
     }
@@ -450,6 +458,61 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
         })
 
         this.renderActions(parent)
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Add Filter Dropdown
+////////////////////////////////////////////////////////////////////////////////
+
+type AddFilterCallback = (filter: Filter) => any
+
+const columnSelectedKey = messages.typedKey<{column: string}>()
+
+class AddFilterDropdown extends DdDropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
+    columns!: string[]
+
+    async init() {
+        this.columns = Object.keys(this.state.modelDef.columns).sort()
+
+        this.onClick(columnSelectedKey, m => {
+            const column = m.data.column
+            const colDef = this.state.modelDef.columns[column]
+            if (colDef) {
+                this.clear()
+                switch (colDef.type) {
+                    case 'enum':
+                        const vals = colDef.possible_values || []
+                        return this.state.callback({filter_type: 'inclusion', column, in: vals})
+                    case 'date':
+                    case 'datetime':
+                        return this.state.callback({filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
+                    default:
+                        return this.state.callback({filter_type: 'direct', column, operator: 'eq', value: ''})
+                }
+            }
+            else {
+                this.showToast(`Invalid column ${column}`, {color: "alert"})
+            }
+
+        })
+    }
+
+    get parentClasses(): Array<string> {
+        return super.parentClasses.concat(['dd-select-columns-dropdown']);
+    }
+
+    renderContent(parent: PartTag) {
+        parent.div('.header', header => {
+            header.i(".glyp-columns")
+            header.span().text("Select a Column")
+        })
+        for (const column of this.columns) {
+            parent.a({text: column})
+                .emitClick(columnSelectedKey, {column})
+        }
     }
 
 }

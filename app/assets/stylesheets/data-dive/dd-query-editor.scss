@@ -253,10 +253,9 @@
 }
 
 .dd-select-columns-dropdown {
-	a, label {
+	a, label, .header {
 		@include tt-inset-white-text;
 		@include tt-text-pad;
-		@include tt-shaded-hover;
 		@include tt-no-select;
 		display: flex;
 		align-items: center;
@@ -268,6 +267,13 @@
 		> div, span {
 			flex: 1 1 auto;
 		}
+	}
 
+	a, label {
+		@include tt-shaded-hover;
+	}
+
+	.header {
+		border-bottom: 1px solid rgba(#fff, 0.5);
 	}
 }
