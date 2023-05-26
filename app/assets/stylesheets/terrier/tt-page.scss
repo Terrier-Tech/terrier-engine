@@ -13,8 +13,11 @@
 			flex: 0 0 auto;
 		}
 	}
-	.page-main {
-
+	.full-width-page {
+		width: 100%;
+		.page-content {
+			width: 100%;
+		}
 	}
 	.page-actions {
 		display: flex;
