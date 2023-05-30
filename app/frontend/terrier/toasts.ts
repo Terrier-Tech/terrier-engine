@@ -23,7 +23,7 @@ function show<TT extends ThemeType>(message: string, options: ToastOptions<TT>, 
     if (!container) {
         log.debug(`Creating toasts container`)
         container = createElement('div', (div) => {
-            div.sel('#tt-toasts.flex.column.padded')
+            div.sel('#tt-toasts.tt-flex.column.padded')
         })
         document.body.appendChild(container)
     }
