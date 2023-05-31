@@ -85,7 +85,7 @@ class BaseGenerator
 
   # ensures that the directory exists and is empty
   def clear_directory(dir)
-    info "Clearing directory #{dir.gray}"
+    info "Clearing directory #{dir.yellow}"
     Dir.mkdir dir unless File.exist? dir
     FileUtils.rm_rf Dir.glob("#{dir}/*")
   end
