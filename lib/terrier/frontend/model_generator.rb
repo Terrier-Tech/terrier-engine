@@ -140,7 +140,7 @@ class ModelGenerator < BaseGenerator
         else
           'object'
         end
-      elsif @has_shrine && model_class.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
+      elsif @has_shrine && model_class&.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
         'Attachment | { path: string }'
       else
         'object'
