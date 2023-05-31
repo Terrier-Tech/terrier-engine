@@ -33,7 +33,9 @@ export default abstract class PanelPart<
                         }
                         h2.div('.title', {text: this._title || 'Call setTitle()'})
                     })
-                    this.theme.renderActions(header, this.getActions('tertiary'))
+                    header.div('.tertiary-actions', actions => {
+                        this.theme.renderActions(actions, this.getActions('tertiary'))
+                    })
                 })
             }
             panel.div('.panel-content', content => {
