@@ -16,7 +16,6 @@ namespace :glyps do
     css_path = 'app/assets/stylesheets/terrier/glyps.css'
     html_path = 'test/dummy/app/views/icons/glyps.html'
     config['font'] = {
-      'svg' => 'app/assets/fonts/glyps.svg',
       'ttf' => 'app/assets/fonts/glyps.ttf',
       'woff' => 'app/assets/fonts/glyps.woff',
       'css' => css_path,
@@ -67,14 +66,18 @@ namespace :glyps do
     # generate the font files
     logged_exec "Generating fonts", "npx glyphs2font glyps.yaml"
 
-    # clean up some nasty relative paths in the css file
-    puts "Cleaning up CSS file..."
-    css = File.read css_path
-    css.gsub! '../../fonts/', '/assets/'
-    %w(woff svg ttf).each do |format|
-      css.gsub! ".#{format}\"", ".#{format}?t=#{timestamp}\""
+    # rename the css to an scss file in order to use the font-path helper
+    scss_path = css_path.gsub '.css', '.scss'
+    puts "Moving #{css_path.bold} to #{scss_path.bold}..."
+    FileUtils.mv css_path, scss_path
+
+    # replace the relative font paths with the font-path helper
+    puts "Replacing relative font paths with #{'font-path'.blue} in #{scss_path.bold}..."
+    scss = File.read scss_path
+    %w(woff ttf).each do |format|
+      scss.gsub! "\"../../fonts/glyps.#{format}\"", "font-path('glyps.#{format}')"
     end
-    File.write css_path, css
+    File.write scss_path, scss
 
     # leave only the .sample of the html file, wrapped in a identifiable div
     html = File.read html_path

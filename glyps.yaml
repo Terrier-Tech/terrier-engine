@@ -1,6 +1,5 @@
 ---
 font:
-  svg: app/assets/fonts/glyps.svg
   ttf: app/assets/fonts/glyps.ttf
   woff: app/assets/fonts/glyps.woff
   css: app/assets/stylesheets/terrier/glyps.css

@@ -5,9 +5,8 @@
 
 @font-face {
     font-family:     "glyp";
-    src:             url("/assets/glyps.woff?t=20230526134303") format("woff"),
-                     url("/assets/glyps.svg?t=20230526134303") format("svg"),
-                     url("/assets/glyps.ttf?t=20230526134303") format("truetype");
+    src:             url(font-path('glyps.woff')) format("woff"),
+                     url(font-path('glyps.ttf')) format("truetype");
     font-style:      normal;
     font-weight:     normal;
     font-stretch:    normal;
