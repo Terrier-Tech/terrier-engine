@@ -179,7 +179,7 @@ class ModelGenerator < BaseGenerator
     when :json, :jsonb
       'object'
     else
-      'string'
+      type
     end
   end
 

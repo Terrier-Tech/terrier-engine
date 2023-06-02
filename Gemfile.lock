@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.1.0)
+    terrier-engine (4.1.1)
       amazing_print
       colorize
       dotenv-rails
