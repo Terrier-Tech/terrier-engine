@@ -116,7 +116,7 @@ namespace :glyps do
 
     # generate the _glyps.scss, glyps.rb, and _glyps.coffee definitions files that lets us reference specific glyps directly in styles, ruby, and coffeescript
     %w[
-      app/assets/stylesheets/terrier/_glyps.scss
+      app/assets/stylesheets/terrier/glyps-meta.scss
       app/assets/javascripts/terrier/_glyps.coffee
       lib/terrier/icons/glyps.rb
       app/frontend/terrier/glyps.ts
