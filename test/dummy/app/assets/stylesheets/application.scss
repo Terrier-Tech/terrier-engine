@@ -22,25 +22,16 @@
 
 $bar-height: 50px;
 
-:root {
-	--bg-color: #f6f2ef;
-	--primary-color: #d69338;
-	--secondary-color: #3c637a;
-	--link-color: #376177;
-	--alert-color: #ed584c;
-	--fg-color: #333;
-}
-
 body {
-    background-color: var(--bg-color);
+    background-color: var(--tt-page-background);
     font-family: Helvetica, Arial, sans-serif;
     font-size: 16px;
-	color: var(--fg-color);
-    padding-top: $bar-height;
+	color: var(--tt-body-color);
+	padding: 0;
 	margin: 0;
 }
 a {
-    color: var(--link-color);
+    color: var(--tt-link-color);
     cursor: pointer;
     text-decoration: none;
 }
@@ -92,13 +83,11 @@ a.demo-link {
 
 
 #top-bar {
-    position: fixed;
+    position: sticky;
+	top: 0;
 	z-index: 100;
-    top: 0;
-    left: 0;
-    right: 0;
     height: $bar-height;
-    background-color: var(--primary-color);
+    background-color: var(--tt-primary-color);
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -176,7 +165,7 @@ input[type=text], input[type=email], input[type=date], select, textarea {
     width: 100%;
     font-size: 16px;
     &.error {
-        border: 2px solid var(--alert-color);
+        border: 2px solid var(--tt-alert-color);
     }
 }
 .readonly-field {
@@ -201,7 +190,7 @@ button {
     padding: 6px 12px;
 }
 .error-explanation {
-    background-color: var(--alert-color);
+    background-color: var(--tt-alert-color);
     color: #fff;
     font-weight: bold;
     padding: 8px;
@@ -221,17 +210,17 @@ button {
 ////////////////////////////////////////////////////////////////////////////////
 
 .tt-page-part {
-	--tt-inset-background: var(--bg-color);
+	--tt-inset-background: var(--tt-page-background);
 	.lighting { display: none; }
 
 	> .top-row {
-		color: var(--bg-color);
-		background-color: var(--secondary-color);
+		color: var(--tt-page-background);
+		background-color: var(--tt-secondary-color);
 		.breadcrumbs {
 			gap: 8px;
 		}
 		a {
-			color: var(--bg-color);
+			color: var(--tt-page-background);
 			display: flex;
 		}
 	}

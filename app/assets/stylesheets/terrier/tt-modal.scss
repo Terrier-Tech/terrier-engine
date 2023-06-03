@@ -69,9 +69,12 @@
 	}
 
 	.modal-header {
+		h2, i {
+			font-size: var(--tt-modal-header-font-size);
+		}
 		i {
 			display: block;
-			transform: scale(1.25);
+			transform: scale(1.2);
 		}
 		h2 {
 			flex: 1 1 auto;

@@ -10,8 +10,9 @@
 	--tt-label-font-size: 12px;
 	--tt-border-radius: 6px;
 	--tt-border-color: #ddd;
-	--tt-primary-color: #01a7b1;
+	--tt-primary-color: #d69338;
 	--tt-secondary-color: #1e6c7b;
+	--tt-link-color: var(--tt-secondary-color);
 	--tt-alert-color: #ed584c;
 	--tt-pending-color: #eeba2b;
 	--tt-success-color: #01b201;
@@ -20,6 +21,7 @@
 	--tt-odd-row-background: #f8f8f8;
 	--tt-table-border-color: var(--tt-border-color);
 	--tt-body-color: #333;
+	--tt-page-background: #f6f2ef;
 	--tt-white-color: #fff;
 	--tt-shadow-color: rgba(0, 0, 0, 0.15);
 	--tt-shadow-spread: 6px;
@@ -38,4 +40,6 @@
 	--tt-field-height: 36px;
 	--tt-field-border-color: #bbb;
 	--tt-inactive-background: var(--tt-odd-row-background);
+
+	--tt-modal-header-font-size: 24px;
 }
