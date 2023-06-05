@@ -129,7 +129,7 @@ module TestQueries
             alias: 'month'
           },
           {
-            name: '*',
+            name: 'id',
             function: 'count'
           },
           {
@@ -156,6 +156,25 @@ module TestQueries
               {
                 name: 'id',
                 grouped: true
+              },
+              {
+                name: 'number',
+                alias: 'location_number'
+              }
+            ]
+          },
+          "user": {
+            model: 'User',
+            belongs_to: 'user',
+            join_type: 'inner',
+            columns: [
+              {
+                name: 'id',
+                grouped: true
+              },
+              {
+                name: 'first_name',
+                alias: 'user_name'
               }
             ]
           }

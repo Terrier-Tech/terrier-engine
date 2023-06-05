@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>grouped</title>
+    <g id="grouped" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M50,4 C55.5228475,4 60,8.4771525 60,14 L60,30 C60,33.2712911 58.4292243,36.175708 56.0007673,38.000156 C58.4292243,39.824292 60,42.7287089 60,46 L60,50 C60,55.5228475 55.5228475,60 50,60 L14,60 C8.4771525,60 4,55.5228475 4,50 L4,46 C4,42.7287089 5.57077573,39.824292 7.99923272,37.999844 C5.57077573,36.175708 4,33.2712911 4,30 L4,14 C4,8.4771525 8.4771525,4 14,4 L50,4 Z M50,40 L14,40 C10.6862915,40 8,42.6862915 8,46 L8,50 C8,53.3137085 10.6862915,56 14,56 L50,56 C53.3137085,56 56,53.3137085 56,50 L56,46 C56,42.6862915 53.3137085,40 50,40 Z M50,8 L14,8 C10.6862915,8 8,10.6862915 8,14 L8,30 C8,33.3137085 10.6862915,36 14,36 L50,36 C53.3137085,36 56,33.3137085 56,30 L56,14 C56,10.6862915 53.3137085,8 50,8 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <circle id="Oval-Copy-3" fill="#000000" cx="16" cy="16" r="4"></circle>
+        <circle id="Oval-Copy-4" fill="#000000" cx="32" cy="16" r="4"></circle>
+        <circle id="Oval-Copy-5" fill="#000000" cx="48" cy="16" r="4"></circle>
+        <circle id="Oval-Copy-8" fill="#000000" cx="16" cy="28" r="4"></circle>
+        <circle id="Oval-Copy-7" fill="#000000" cx="32" cy="28" r="4"></circle>
+        <circle id="Oval-Copy-6" fill="#000000" cx="48" cy="28" r="4"></circle>
+        <circle id="Oval-Copy-11" fill="#000000" cx="16" cy="48" r="4"></circle>
+        <circle id="Oval-Copy-10" fill="#000000" cx="32" cy="48" r="4"></circle>
+        <circle id="Oval-Copy-9" fill="#000000" cx="48" cy="48" r="4"></circle>
+    </g>
+</svg>

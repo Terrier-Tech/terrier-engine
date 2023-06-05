@@ -24,7 +24,7 @@ class QueryEngineTest < ActiveSupport::TestCase
     engine = QueryEngine.new(query)
     builder = engine.to_sql_builder
 
-    assert_equal ["date_trunc('month',work_order.time)", "work_order.status", "location.id"], builder.group_bys
+    assert_equal %w[date_trunc('month',work_order.time) work_order.status location.id u.id], builder.group_bys
   end
 
 end
