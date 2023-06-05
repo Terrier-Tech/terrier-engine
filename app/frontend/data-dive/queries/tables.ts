@@ -141,12 +141,14 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
 
         parent.div(".tt-panel.table-panel", panel => {
             panel.div('.title', title => {
-                title.i('.glyp-table')
-                title.div().text(this.displayName)
                 const t = this.table as any
                 if ('join_type' in t) {
                     title.i(`.glyp-join_${t.join_type}`)
                 }
+                else { // it's the main table
+                    title.i('.glyp-table')
+                }
+                title.div().text(this.displayName)
             }).emitClick(this.editTableKey)
 
             this.renderColumns(panel)
@@ -310,8 +312,8 @@ class JoinedTableEditorModal extends DdModalPart<JoinedTableEditorState> {
         this.form = this.makePart(JoinedTableEditorForm, this.state.table)
         this.form.parentTable = this.state.parentTable
 
-        this.setIcon('glyp-belongs_to')
-        this.setTitle(`Join ${this.state.parentTable.model} &rarr; ${Schema.belongsToDisplay(this.state.belongsTo)}`)
+        this.setIcon('glyp-join')
+        this.setTitle(`Join ${this.state.parentTable.model} <i class='glyp-belongs_to'></i> ${Schema.belongsToDisplay(this.state.belongsTo)}`)
 
         this.addAction({
             title: "Apply",
