@@ -1,0 +1,31 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sketch-hq/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "icon": "icon.png",
+  "commands": [
+    {
+      "name": "Arrange",
+      "identifier": "com.clypboard.glyps.arrange",
+      "script": "__arrange.js"
+    },
+    {
+      "name": "Import",
+      "identifier": "com.clypboard.glyps.import",
+      "script": "__import.js"
+    }
+  ],
+  "menu": {
+    "title": "Glyps",
+    "items": [
+      "com.clypboard.glyps.arrange",
+      "com.clypboard.glyps.import"
+    ]
+  },
+  "version": "0.1.0",
+  "description": "",
+  "name": "sketch-glyps",
+  "identifier": "sketch-glyps",
+  "disableCocoaScriptPreprocessor": true,
+  "appcast": "https://raw.githubusercontent.com//master/.appcast.xml",
+  "author": "Andy Selvig",
+  "authorEmail": "ajselvig@gmail.com"
+}

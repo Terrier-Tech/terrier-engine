@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sketch-hq/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "icon": "icon.png",
+  "commands": [
+    {
+      "name": "Arrange",
+      "identifier": "com.clypboard.glyps.arrange",
+      "script": "./arrange.js"
+    },
+    {
+      "name": "Import",
+      "identifier": "com.clypboard.glyps.import",
+      "script": "./import.js"
+    }
+  ],
+  "menu": {
+    "title": "Glyps",
+    "items": [
+      "com.clypboard.glyps.arrange",
+      "com.clypboard.glyps.import"
+    ]
+  }
+}
