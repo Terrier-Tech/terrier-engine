@@ -43,6 +43,9 @@ export type ColumnRef = {
 ////////////////////////////////////////////////////////////////////////////////
 
 function render(parent: PartTag, col: ColumnRef) {
+    if (col.grouped) {
+        parent.i('.glyp-grouped')
+    }
     if (col.function?.length) {
         parent.div('.function').text(`${col.function}(<strong>${col.name}</strong>)`)
     } else {

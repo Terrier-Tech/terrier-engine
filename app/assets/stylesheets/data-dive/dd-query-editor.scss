@@ -87,11 +87,14 @@
 						@include tt-bottom-rounded-corners;
 					}
 				}
-				> div {
+				> div, > i {
 					flex: 0 0 auto;
 				}
 				.alias {
 					text-align: right;
+				}
+				.column, .name, .alias, .value {
+					flex: 1 1 auto;
 				}
 				.column, .name {
 					font-weight: bold;
@@ -101,6 +104,7 @@
 				}
 				.value, .in {
 					color: var(--tt-secondary-color);
+					text-align: right;
 				}
 				&.empty {
 					text-align: center;
