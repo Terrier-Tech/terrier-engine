@@ -29,13 +29,32 @@ const DateFunctions = ['year', 'month', 'day'] as const
 
 export type DateFunction = typeof DateFunctions[number]
 
+export type Function = AggFunction | DateFunction
 
+/**
+ * @param fun a function name
+ * @return the type of function
+ */
+function functionType(fun: Function): 'aggregate' | 'time' | undefined {
+    if (AggFunctions.includes(fun as AggFunction)) {
+        return 'aggregate'
+    }
+    else if (DateFunctions.includes(fun as DateFunction)) {
+        return 'time'
+    }
+    return undefined
+}
+
+/**
+ * A reference to a single column, possibly grouped or with a function applied
+ */
 export type ColumnRef = {
     name: string
     alias?: string
     grouped?: boolean
     function?: AggFunction | DateFunction
 }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,6 +66,7 @@ function render(parent: PartTag, col: ColumnRef) {
         parent.i('.glyp-grouped')
     }
     if (col.function?.length) {
+        parent.i(`.glyp-function`)
         parent.div('.function').text(`${col.function}(<strong>${col.name}</strong>)`)
     } else {
         parent.div('.name').text(col.name)
@@ -314,7 +334,8 @@ class SelectColumnsDropdown extends DdDropdown<{modelDef: ModelDef, callback: Se
 ////////////////////////////////////////////////////////////////////////////////
 
 const Columns = {
-    render
+    render,
+    functionType
 }
 
 export default Columns
