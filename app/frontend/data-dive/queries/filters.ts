@@ -21,7 +21,7 @@ type BaseFilter = {
     edit_label?: string
 }
 
-export const DirectOperators = ['eq', 'ne', 'ilike'] as const
+export const DirectOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte'] as const
 export type DirectOperator = typeof DirectOperators[number]
 
 export type DirectFilter = BaseFilter & {
@@ -56,16 +56,24 @@ type FilterType = Filter['filter_type']
 // Rendering
 ////////////////////////////////////////////////////////////////////////////////
 
-function operatorDisplay(operator: DirectFilter['operator']): string {
-    switch (operator) {
-        case "eq":
+function operatorDisplay(op: DirectOperator): string {
+    switch (op) {
+        case 'eq':
             return '='
         case 'ne':
-            return '!='
+            return '≠'
         case 'ilike':
-            return 'like'
+            return '~'
+        case 'lt':
+            return '<'
+        case 'lte':
+            return '≤'
+        case 'gt':
+            return '>'
+        case 'gte':
+            return '≥'
         default:
-            return operator
+            return '?'
     }
 }
 
@@ -303,7 +311,10 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
             col.div('.tt-readonly-field', {text: this.state.column})
         })
         parent.div('.operator', col => {
-            col.span().text("=")
+            const operatorOptions = DirectOperators.map(op => {
+                return {title: operatorDisplay(op), value: op}
+            })
+            this.select(col, 'operator', operatorOptions)
         })
         parent.div('.filter', col => {
             this.textInput(col, 'value', {placeholder: "Value"})
@@ -530,7 +541,8 @@ class AddFilterDropdown extends DdDropdown<{modelDef: ModelDef, callback: AddFil
 ////////////////////////////////////////////////////////////////////////////////
 
 const Filters = {
-    render
+    render,
+    operatorDisplay
 }
 
 export default Filters
