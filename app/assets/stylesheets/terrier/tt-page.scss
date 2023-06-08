@@ -1,18 +1,39 @@
 @import "tt-mixins";
 
+.tt-toolbar {
+	display: flex;
+	align-items: center;
+	height: var(--tt-toolbar-height);
+	font-size: var(--tt-toolbar-font-size);
+	padding: 0 var(--tt-pad);
+	gap: var(--tt-gap);
+	> div {
+		flex: 0 0 auto;
+	}
+	a {
+		display: flex;
+		gap: 0.5em;
+		align-items: center;
+	}
+	.page-title {
+		flex: 1 1 auto;
+		min-width: 0;
+	}
+	h1.breadcrumbs {
+		display: flex;
+		flex: 1 1 auto;
+		font-size: var(--tt-toolbar-font-size);
+		gap: var(--tt-gap);
+	}
+	.tertiary-actions {
+		flex: 0 0 auto;
+	}
+}
+
 .tt-page-part {
 	display: flex;
 	flex-direction: column;
 	gap: var(--tt-gap);
-	.top-row {
-		h1.breadcrumbs {
-			display: flex;
-			flex: 1 1 auto;
-		}
-		.tertiary-actions {
-			flex: 0 0 auto;
-		}
-	}
 	.full-width-page {
 		width: 100%;
 		.page-content {

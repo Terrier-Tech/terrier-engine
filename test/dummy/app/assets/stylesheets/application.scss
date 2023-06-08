@@ -213,7 +213,7 @@ button {
 	--tt-inset-background: var(--tt-page-background);
 	.lighting { display: none; }
 
-	> .top-row {
+	> .tt-toolbar {
 		color: var(--tt-page-background);
 		background-color: var(--tt-secondary-color);
 		.breadcrumbs {

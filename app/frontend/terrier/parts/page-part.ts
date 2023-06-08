@@ -14,26 +14,26 @@ const log = new Logger("Terrier PagePart")
  */
 export type ContentWidth = "normal" | "wide"
 
-/// Top row fields
+/// Toolbar fields
 
-type BaseFieldDef = { name: string } & ToprowFieldDefOptions
+type BaseFieldDef = { name: string } & ToolbarFieldDefOptions
 
-type ToprowFieldDefOptions = {
+type ToolbarFieldDefOptions = {
     onChangeKey?: UntypedKey,
     onInputKey?: UntypedKey,
     defaultValue?: string,
     tooltip?: string
 }
 
-type ToprowSelectDef = { type: 'select', options: SelectOptions } & BaseFieldDef
+type ToolbarSelectDef = { type: 'select', options: SelectOptions } & BaseFieldDef
 
 type ValuedInputType = 'text' | 'color' | 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'time' | 'url' | 'week'
-type ToprowValuedInputDef = { type: ValuedInputType } & BaseFieldDef
+type ToolbarValuedInputDef = { type: ValuedInputType } & BaseFieldDef
 
 /**
- * Defines a field to be rendered in the page's top row
+ * Defines a field to be rendered in the page's toolbar
  */
-type ToprowFieldDef = ToprowSelectDef | ToprowValuedInputDef
+type ToolbarFieldDef = ToolbarSelectDef | ToolbarValuedInputDef
 
 /**
  * A part that renders content to a full page.
@@ -70,13 +70,13 @@ export default abstract class PagePart<
         this._titleHref = href
     }
 
-    /// Top Bar Fields
+    /// Toolbar Fields
 
-    private _toprowFieldsOrder: string[] = []
-    private _toprowFields: Record<string, ToprowFieldDef> = {}
+    private _toolbarFieldsOrder: string[] = []
+    private _toolbarFields: Record<string, ToolbarFieldDef> = {}
 
-    protected get hasToprowFields() {
-        return this._toprowFieldsOrder.length > 0
+    protected get hasToolbarFields() {
+        return this._toolbarFieldsOrder.length > 0
     }
 
     /**
@@ -85,8 +85,8 @@ export default abstract class PagePart<
      * @param selectOptions an array of select options
      * @param opts
      */
-    addToprowSelect(name: string, selectOptions: SelectOptions, opts?: ToprowFieldDefOptions) {
-        this.addToprowFieldDef({ type: 'select', name, options: selectOptions, ...opts })
+    addToolbarSelect(name: string, selectOptions: SelectOptions, opts?: ToolbarFieldDefOptions) {
+        this.addToolbarFieldDef({ type: 'select', name, options: selectOptions, ...opts })
     }
 
     /**
@@ -95,32 +95,29 @@ export default abstract class PagePart<
      * @param type the type attribute of the input field
      * @param opts
      */
-    addToprowInput(name: string, type: ValuedInputType, opts?: ToprowFieldDefOptions) {
-        this.addToprowFieldDef({ type, name, ...opts })
+    addToolbarInput(name: string, type: ValuedInputType, opts?: ToolbarFieldDefOptions) {
+        this.addToolbarFieldDef({ type, name, ...opts })
     }
 
-    private addToprowFieldDef(def: ToprowFieldDef) {
-        this._toprowFieldsOrder.push(def.name)
-        this._toprowFields[def.name] = def
+    private addToolbarFieldDef(def: ToolbarFieldDef) {
+        this._toolbarFieldsOrder.push(def.name)
+        this._toolbarFields[def.name] = def
     }
 
     /// Rendering
 
-    protected get topRowClasses() : string[] {
+    protected get toolbarClasses() : string[] {
         return []
     }
 
     render(parent: PartTag) {
         parent.div(`.tt-page-part.content-width-${this.mainContentWidth}`, page => {
-            page.div('.tt-flex.top-row', topRow => {
-                topRow.class(...this.topRowClasses)
-                topRow.div('.page-title', col => this.renderBreadcrumbs(col));
-                topRow.div('.page-top-actions', col => {
-                    this.renderCustomToprow(col)
-                    if (this.hasToprowFields) this.renderToprowFields(col);
-                    if (this.hasActions('tertiary')) this.renderActions(col, 'tertiary');
-                });
-
+            page.div('.tt-toolbar', toolbar => {
+                toolbar.class(...this.toolbarClasses)
+                toolbar.div('.page-title', col => this.renderBreadcrumbs(col))
+                this.renderCustomToolbar(toolbar)
+                if (this.hasToolbarFields) this.renderToolbarFields(toolbar)
+                if (this.hasActions('tertiary')) this.renderActions(toolbar, 'tertiary')
             })
 
             page.div('.lighting')
@@ -165,14 +162,14 @@ export default abstract class PagePart<
         })
     }
 
-    protected renderCustomToprow(_parent: PartTag): void {
+    protected renderCustomToolbar(_parent: PartTag): void {
 
     }
 
-    protected renderToprowFields(parent: PartTag) {
+    protected renderToolbarFields(parent: PartTag) {
         parent.div('.fields.tt-flex.align-center.small-gap', fields => {
-            for (const name of this._toprowFieldsOrder) {
-                const def = this._toprowFields[name]
+            for (const name of this._toolbarFieldsOrder) {
+                const def = this._toolbarFields[name]
                 if (!def) {
                     log.warn(`No select def with name ${name} could be found!`)
                     continue;

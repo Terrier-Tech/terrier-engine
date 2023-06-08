@@ -43,7 +43,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
     }
 
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.column.gap', col => {
+        parent.div('.tt-flex.column.gap.padded', col => {
             col.part(this.namedChild('panel')!)
         })
     }
@@ -71,7 +71,7 @@ export default class DemoApp extends TerrierApp<DemoThemeType, DemoApp, DemoThem
         this.dirty()
     }
 
-    render(parent: PartTag) {
+    render(parent: PartTag): any {
         parent.div('.tt-demo.tt-typography', container => {
             container.part(this.page)
         })

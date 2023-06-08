@@ -20,9 +20,12 @@ $demo-colors: (
 .tt-demo {
 	--demo-border-color: #ccc;
 	--demo-border-radius: 6px;
-	width: 1100px;
-	max-width: 92%;
-	margin: 0 auto;
+
+	.tt-page-part {
+		.tt-toolbar {
+
+		}
+	}
 
 	.annotated {
 		position: relative;
