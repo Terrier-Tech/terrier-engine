@@ -18,6 +18,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
         this.addBreadcrumb({ icon: 'glyp-abacus', title: "A Breadcrumb" })
 
         this.makePart(DemoParts.Panel, {}, 'panel')
+        this.makePart(DemoParts.HorizontalTabs, {}, 'horizontal-tabs')
 
         this.addAction({
             title: "Primary",
@@ -45,6 +46,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.column.gap.padded', col => {
             col.part(this.namedChild('panel')!)
+            col.part(this.namedChild('horizontal-tabs')!)
         })
     }
 

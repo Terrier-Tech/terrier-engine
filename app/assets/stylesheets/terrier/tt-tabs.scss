@@ -1,0 +1,49 @@
+@import "tt-mixins";
+
+.tt-tab-container {
+	.tt-tab-list {
+		gap: calc(var(--tt-gap) / 2);
+
+		a.tab {
+			@include tt-top-rounded-corners;
+			display: flex;
+			@include tt-no-select;
+			gap: 0.5em;
+			align-items: center;
+			padding: 0.5em 1em;
+			background-color: var(--tt-panel-background);
+			//@include tt-scale-push;
+			//margin-bottom: -$border-radius; // render tabs "under" the tab content
+			i {
+				display: block;
+				transform: scale(1.2);
+			}
+			@include tt-box-shadow;
+
+			&:not(.active) {
+				//box-shadow: // outer shadow and large mild inner shadow
+				//		0 2px 4px var(--tt-shadow-color),
+				//		inset 0 -48px 48px -42px rgba($shadow-color, $dark-shadow-opacity);
+				//
+				//&:hover:not(.disabled) {
+				//	box-shadow: // inner shadow lighter on hover
+				//			0 2px 4px var(--tt-shadow-color),
+				//			inset 0 -42px 48px -42px rgba($shadow-color, .08);
+				//}
+			}
+
+			&.active {
+				cursor: default;
+			}
+
+			&.disabled {
+				cursor: not-allowed;
+				opacity: 70%;
+				//box-shadow: // larger, more pronounced inner shadow
+				//		0 2px 4px var(--tt-shadow-color),
+				//		inset 0 -48px 64px -50px rgba($shadow-color, 0.5);
+			}
+
+		}
+	}
+}

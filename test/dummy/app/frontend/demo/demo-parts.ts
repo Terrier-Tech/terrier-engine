@@ -1,4 +1,4 @@
-import {NoState, PartTag} from "tuff-core/parts"
+import {NoState, Part, PartTag} from "tuff-core/parts"
 import DemoTheme, {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
 import {messages} from "tuff-core"
@@ -7,6 +7,7 @@ import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
 import DemoApp from "./demo-app";
 import PanelPart from "@terrier/parts/panel-part"
+import TabContainerPart from "@terrier/tabs"
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
@@ -95,9 +96,41 @@ class Modal extends ModalPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 }
 
 
+class DummyTab extends Part<{ title: string, content: string }> {
+
+
+    get parentClasses(): Array<string> {
+        return ['tt-flex', 'gap', 'column']
+    }
+
+    render(parent: PartTag) {
+        parent.h2({text: this.state.title})
+        parent.p({text: this.state.content})
+    }
+}
+
+class HorizontalTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme> {
+    async init() {
+        this.upsertTab(
+            {key: 'one', title: "Tab One", icon: 'glyp-active'},
+            DummyTab, {title: "Tab One", content: "This is the first tab."}
+        )
+        this.upsertTab(
+            {key: 'two', title: "Tab Two", icon: 'glyp-complete'},
+            DummyTab, {title: "Tab Two", content: "This is the second tab."}
+        )
+        this.upsertTab(
+            {key: 'three', title: "Tab Three", icon: 'glyp-pending'},
+            DummyTab, {title: "Tab Three", content: "This is the third tab."}
+        )
+    }
+}
+
+
 const DemoParts = {
     Panel,
     Modal,
+    HorizontalTabs,
     openModalKey
 }
 
