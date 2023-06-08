@@ -18,7 +18,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
         this.addBreadcrumb({ icon: 'glyp-abacus', title: "A Breadcrumb" })
 
         this.makePart(DemoParts.Panel, {}, 'panel')
-        this.makePart(DemoParts.HorizontalTabs, {}, 'horizontal-tabs')
+        this.makePart(DemoParts.DemoTabs, {side: 'top'}, 'tabs')
 
         this.addAction({
             title: "Primary",
@@ -46,7 +46,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.column.gap.padded', col => {
             col.part(this.namedChild('panel')!)
-            col.part(this.namedChild('horizontal-tabs')!)
+            col.part(this.namedChild('tabs')!)
         })
     }
 
@@ -74,7 +74,7 @@ export default class DemoApp extends TerrierApp<DemoThemeType, DemoApp, DemoThem
     }
 
     render(parent: PartTag): any {
-        parent.div('.tt-demo.tt-typography', container => {
+        parent.div('.tt-demo.tt-typography.tt-form', container => {
             container.part(this.page)
         })
         parent.part(this.overlayPart)

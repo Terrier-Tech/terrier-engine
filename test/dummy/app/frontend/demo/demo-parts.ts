@@ -1,13 +1,13 @@
 import {NoState, Part, PartTag} from "tuff-core/parts"
 import DemoTheme, {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
-import {messages} from "tuff-core"
+import {messages, strings} from "tuff-core"
 import Toasts from "@terrier/toasts";
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
 import DemoApp from "./demo-app";
 import PanelPart from "@terrier/parts/panel-part"
-import TabContainerPart from "@terrier/tabs"
+import Tabs, { TabContainerPart } from "@terrier/tabs"
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
@@ -96,7 +96,7 @@ class Modal extends ModalPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 }
 
 
-class DummyTab extends Part<{ title: string, content: string }> {
+class DummyTab extends Part<{container: DemoTabs, title: string, content: string }> {
 
 
     get parentClasses(): Array<string> {
@@ -105,23 +105,38 @@ class DummyTab extends Part<{ title: string, content: string }> {
 
     render(parent: PartTag) {
         parent.h2({text: this.state.title})
-        parent.p({text: this.state.content})
+        for (const text of this.state.content.split("\n")) {
+            parent.p({text})
+        }
+        parent.div('.tt-flex', row => {
+            row.div().text("Tab Side:")
+            for (const side of Tabs.Sides) {
+                row.label(label => {
+                    const checked = this.state.container.state.side == side
+                    label.input({type: 'radio', name: 'tab-side', value: side, checked})
+                        .emitChange(this.state.container.changeSideKey, {side})
+                    label.span().text(strings.titleize(side))
+                })
+            }
+        })
     }
 }
 
-class HorizontalTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme> {
+class DemoTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme> {
     async init() {
+        await super.init()
         this.upsertTab(
             {key: 'one', title: "Tab One", icon: 'glyp-active'},
-            DummyTab, {title: "Tab One", content: "This is the first tab."}
+            DummyTab, {container: this, title: "Tab One", content: "This is the first tab."}
         )
         this.upsertTab(
             {key: 'two', title: "Tab Two", icon: 'glyp-complete'},
-            DummyTab, {title: "Tab Two", content: "This is the second tab."}
+            DummyTab, {
+                container: this, title: "Tab Two", content: "This is the second tab.\nIt takes up more space than the first one!"}
         )
         this.upsertTab(
-            {key: 'three', title: "Tab Three", icon: 'glyp-pending'},
-            DummyTab, {title: "Tab Three", content: "This is the third tab."}
+            {key: 'three', title: "Tab Three", icon: 'glyp-pending', state: "disabled"},
+            DummyTab, {container: this, title: "Tab Three", content: "This is the third tab."}
         )
     }
 }
@@ -130,7 +145,7 @@ class HorizontalTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme>
 const DemoParts = {
     Panel,
     Modal,
-    HorizontalTabs,
+    DemoTabs,
     openModalKey
 }
 

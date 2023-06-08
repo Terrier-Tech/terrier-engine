@@ -1,16 +1,17 @@
 @import "tt-mixins";
 
 .tt-tab-container {
+	display: flex;
+
 	.tt-tab-list {
-		gap: calc(var(--tt-gap) / 2);
+		flex: 0 0 auto;
 
 		a.tab {
-			@include tt-top-rounded-corners;
 			display: flex;
 			@include tt-no-select;
-			gap: 0.5em;
 			align-items: center;
 			padding: 0.5em 1em;
+			gap: 0.5em;
 			background-color: var(--tt-panel-background);
 			//@include tt-scale-push;
 			//margin-bottom: -$border-radius; // render tabs "under" the tab content
@@ -18,18 +19,18 @@
 				display: block;
 				transform: scale(1.2);
 			}
-			@include tt-box-shadow;
+			//@include tt-box-shadow;
 
 			&:not(.active) {
-				//box-shadow: // outer shadow and large mild inner shadow
-				//		0 2px 4px var(--tt-shadow-color),
-				//		inset 0 -48px 48px -42px rgba($shadow-color, $dark-shadow-opacity);
-				//
-				//&:hover:not(.disabled) {
-				//	box-shadow: // inner shadow lighter on hover
-				//			0 2px 4px var(--tt-shadow-color),
-				//			inset 0 -42px 48px -42px rgba($shadow-color, .08);
-				//}
+				// slightly darker when it's not active
+				filter: brightness(0.9);
+				&:hover:not(.disabled) {
+					// lighter on hover
+					filter: brightness(0.95);
+				}
+				&:active:not(.disabled) {
+					filter: brightness(1);
+				}
 			}
 
 			&.active {
@@ -38,12 +39,53 @@
 
 			&.disabled {
 				cursor: not-allowed;
-				opacity: 70%;
-				//box-shadow: // larger, more pronounced inner shadow
-				//		0 2px 4px var(--tt-shadow-color),
-				//		inset 0 -48px 64px -50px rgba($shadow-color, 0.5);
+				opacity: 50%;
 			}
 
 		}
+	}
+
+	&.top, &.bottom {
+		.tt-tab-list {
+			flex-direction: row;
+		}
+	}
+	&.top {
+		flex-direction: column;
+		a.tab {
+			@include tt-top-rounded-corners;
+		}
+	}
+	&.bottom {
+		flex-direction: column-reverse;
+		a.tab {
+			@include tt-bottom-rounded-corners;
+		}
+	}
+
+	&.left, &.right {
+		.tt-tab-list {
+			flex-direction: column;
+		}
+	}
+	&.left {
+		flex-direction: row;
+		a.tab {
+			@include tt-left-rounded-corners;
+		}
+	}
+	&.right {
+		flex-direction: row-reverse;
+		a.tab {
+			@include tt-right-rounded-corners;
+		}
+	}
+
+	.tt-tab-content {
+		flex: 1 1 auto;
+		min-height: 0;
+		min-width: 0;
+		padding: var(--tt-pad);
+		background-color: var(--tt-panel-background);
 	}
 }

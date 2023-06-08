@@ -20,29 +20,39 @@ export type TabParams<TT extends ThemeType> = {
 /**
  * Properties required to render a tab
  */
-export type TabDefinition<TT extends ThemeType> = {
-    key: string,
-    title: string,
-    icon?: TT['icons'],
-    state: 'enabled' | 'disabled' | 'hidden',
+export type TabDefinition<TT extends ThemeType> = TabParams<TT> & {
     part: Part<unknown>
 }
 
-export type TabState = {currentTab? : string}
+const Sides = ['top', 'left', 'bottom', 'right'] as const
 
-export default class TabContainerPart<
+export type TabSide = typeof Sides[number]
+
+export type TabContainerState = {
+    side: TabSide
+    currentTab? : string
+}
+
+export class TabContainerPart<
     TThemeType extends ThemeType,
     TApp extends TerrierApp<TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<TabState, TThemeType, TApp, TTheme> {
+> extends TerrierPart<TabContainerState, TThemeType, TApp, TTheme> {
 
     private tabs = {} as Record<string, TabDefinition<TThemeType>>
-    private tabClickKey = typedKey<{ tabKey: string }>()
+    changeTabKey = typedKey<{ tabKey: string }>()
+    changeSideKey = typedKey<{ side: TabSide }>()
 
     async init() {
-        this.onClick(this.tabClickKey, m => {
+        this.onClick(this.changeTabKey, m => {
             log.info(`Clicked on tab ${m.data.tabKey}`)
             this.showTab(m.data.tabKey)
+        })
+
+        this.onChange(this.changeSideKey, m => {
+            log.info(`Change tab side: ${m.data.side}`)
+            this.state.side = m.data.side
+            this.dirty()
         })
     }
 
@@ -90,40 +100,45 @@ export default class TabContainerPart<
         this.dirty()
     }
 
-    get parentClasses(): Array<string> {
-        return ['tt-tab-container']
-    }
-
     render(parent: PartTag) {
         let currentTabKey = this.state.currentTab
         if (!currentTabKey) {
             log.debug("no current tab specified, selecting first enabled tab")
             currentTabKey = Object.values(this.tabs).find(t => t.state == 'enabled')?.key
         }
-        parent.div('.tt-flex.tt-tab-list', tabList => {
-            for (const tab of Object.values(this.tabs)) {
-                if (tab.state == 'hidden') continue
+        parent.div('tt-tab-container', this.state.side, container => {
+            container.div('.tt-flex.tt-tab-list', tabList => {
+                for (const tab of Object.values(this.tabs)) {
+                    if (tab.state == 'hidden') continue
 
-                tabList.a('.tab', a => {
-                    a.class(tab.state)
-                    if (tab.key === currentTabKey) {
-                        a.class('active')
-                    }
-                    if (tab.icon) {
-                        this.theme.renderIcon(a, tab.icon)
-                    }
-                    a.span({text: tab.title})
-                    a.emitClick(this.tabClickKey, {tabKey: tab.key})
+                    tabList.a('.tab', a => {
+                        a.class(tab.state || 'enabled')
+                        if (tab.key === currentTabKey) {
+                            a.class('active')
+                        }
+                        if (tab.icon) {
+                            this.theme.renderIcon(a, tab.icon)
+                        }
+                        a.span({text: tab.title})
+                        a.emitClick(this.changeTabKey, {tabKey: tab.key})
+                    })
+                }
+            })
+
+            if (currentTabKey) {
+                const currentTabPart = this.tabs[currentTabKey].part
+                container.div('.tt-tab-content', panel => {
+                    panel.part(currentTabPart as StatelessPart)
                 })
             }
         })
-
-        if (currentTabKey) {
-            const currentTabPart = this.tabs[currentTabKey].part
-            parent.div('.tt-panel.padded', panel => {
-                panel.part(currentTabPart as StatelessPart)
-            })
-        }
     }
 
 }
+
+const Tabs = {
+    TabContainerPart,
+    Sides
+}
+
+export default Tabs
