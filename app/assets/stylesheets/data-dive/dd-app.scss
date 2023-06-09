@@ -1,6 +1,7 @@
 @import "../terrier/tt-mixins";
 
 #data-dive-app {
+	flex: 1 1 auto;
 	.tt-page-part {
 		gap: 0;
 		.tt-toolbar {

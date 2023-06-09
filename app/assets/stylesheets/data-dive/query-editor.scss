@@ -1,10 +1,29 @@
 @import "../terrier/tt-mixins";
 
+.dd-query-editor {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tt-gap);
+	flex: 1 1 auto;
+	min-height: 0;
+}
+
+
+.dd-query-editor-canvas, .dd-query-sub-editors {
+	background-color: var(--tt-inset-background);
+	@include tt-inset-box-shadow;
+	@include tt-rounded-corners;
+	position: relative;
+}
 
 .dd-query-editor-canvas {
-	background-color: var(--tt-inset-background);
 	overflow: scroll;
-	@include tt-inset-box-shadow;
+	flex: 1 1 auto;
+}
+
+.dd-query-sub-editors {
+	flex: 0 0 auto;
+	padding: var(--tt-pad);
 }
 
 

@@ -5,8 +5,9 @@ import ThemedFormPart from "../terrier/parts/themed-form-part"
 import {PartTag} from "tuff-core/parts"
 import {ModalPart} from "../terrier/modals"
 import {FormPartData} from "tuff-core/forms"
-import {DdApp} from "./app"
 import {ActionsDropdown, Dropdown} from "../terrier/dropdowns"
+import {TabContainerPart} from "../terrier/tabs"
+import DdApp from "./dd-app"
 
 
 export abstract class DdPagePart<T> extends PagePart<T, DdThemeType, DdApp, DdTheme> { }
@@ -30,5 +31,9 @@ export abstract class DdDropdown<T extends {}> extends Dropdown<T, DdThemeType, 
 }
 
 export class DdActionsDropdown extends ActionsDropdown<DdThemeType, DdApp, DdTheme> {
+
+}
+
+export class DdTabContainerPart extends TabContainerPart<DdThemeType, DdApp, DdTheme> {
 
 }

@@ -35,7 +35,7 @@ export type TabContainerState = {
 
 export class TabContainerPart<
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<any, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends TerrierPart<TabContainerState, TThemeType, TApp, TTheme> {
 

@@ -7,6 +7,7 @@ import {TableRef} from "./tables"
 
 export type Query = {
     id: string
+    name: string
     from: TableRef
 }
 

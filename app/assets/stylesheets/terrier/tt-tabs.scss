@@ -5,6 +5,7 @@
 
 	.tt-tab-list {
 		flex: 0 0 auto;
+		gap: var(--tt-border-radius);
 
 		a.tab {
 			display: flex;
@@ -46,37 +47,39 @@
 	}
 
 	&.top, &.bottom {
-		.tt-tab-list {
+		> .tt-tab-list {
+			padding: 0 var(--tt-border-radius);
 			flex-direction: row;
 		}
 	}
 	&.top {
 		flex-direction: column;
-		a.tab {
+		> .tt-tab-list a.tab {
 			@include tt-top-rounded-corners;
 		}
 	}
 	&.bottom {
 		flex-direction: column-reverse;
-		a.tab {
+		> .tt-tab-list a.tab {
 			@include tt-bottom-rounded-corners;
 		}
 	}
 
 	&.left, &.right {
-		.tt-tab-list {
+		> .tt-tab-list {
+			padding: var(--tt-border-radius) 0;
 			flex-direction: column;
 		}
 	}
 	&.left {
 		flex-direction: row;
-		a.tab {
+		> .tt-tab-list a.tab {
 			@include tt-left-rounded-corners;
 		}
 	}
 	&.right {
 		flex-direction: row-reverse;
-		a.tab {
+		> .tt-tab-list a.tab {
 			@include tt-right-rounded-corners;
 		}
 	}
@@ -87,5 +90,6 @@
 		min-width: 0;
 		padding: var(--tt-pad);
 		background-color: var(--tt-panel-background);
+		@include tt-rounded-corners;
 	}
 }

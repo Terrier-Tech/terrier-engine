@@ -17,10 +17,11 @@ Logger.level = 'info'
  * Main application part that renders the entire page.
  */
 export abstract class TerrierApp<
+    TState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TSelf extends TerrierApp<TThemeType, TSelf, TTheme>,
+    TSelf extends TerrierApp<TState, TThemeType, TSelf, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<{theme: TTheme}, TThemeType, TSelf, TTheme> {
+> extends TerrierPart<TState, TThemeType, TSelf, TTheme> {
 
     _theme!: TTheme
 

@@ -16,10 +16,11 @@ html
 		- if @entrypoint.present?
 			= vite_client_tag
 			= vite_typescript_tag @entrypoint
-	body.application
-		#top-bar
-			a.title.glyp-terrier href='/' Terrier Engine
-			- if @title.present?
-				span == '/'
-				a.title == @title
-		#content== yield
+	body
+		#application
+			#top-bar
+				a.title.glyp-terrier href='/' Terrier Engine
+				- if @title.present?
+					span == '/'
+					a.title == @title
+			#content== yield

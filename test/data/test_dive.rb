@@ -1,8 +1,16 @@
-module TestQueries
+module TestDive
+
+  def self.get
+    {
+      name: "Test",
+      queries: [self.joins, self.grouping]
+    }
+  end
 
   def self.joins
     {
       id: 'joins',
+      name: 'Joins',
       from: {
         model: 'WorkOrder',
         columns: [
@@ -119,6 +127,7 @@ module TestQueries
   def self.grouping
     {
       id: 'grouping',
+      name: 'Grouping',
       from: {
         model: 'WorkOrder',
         columns: [

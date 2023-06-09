@@ -1,0 +1,33 @@
+@import "../terrier/tt-mixins";
+
+.dd-dive-editor-page {
+	@include tt-absolute-fill;
+	display: flex;
+	flex-direction: column;
+	.tt-page-part {
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+		.full-width-page {
+			flex: 1 1 auto;
+			position: relative;
+		}
+		.dd-dive-editor {
+			@include tt-absolute-fill;
+			display: flex;
+			flex-direction: column;
+		}
+		.tt-tab-container {
+			flex: 1 1 auto;
+			.tt-tab-content {
+				display: flex;
+				flex-direction: column;
+			}
+			&.top {
+				// kinda hacky but we need the main tab container to fill the window
+				@include tt-absolute-fill;
+				padding-top: var(--tt-border-radius);
+			}
+		}
+	}
+}

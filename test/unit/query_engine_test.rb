@@ -1,15 +1,15 @@
 require 'test_helper'
 require 'terrier/data_dive/query_engine'
-require_relative '../data/test_queries'
+require_relative '../data/test_dive'
 
 class QueryEngineTest < ActiveSupport::TestCase
 
   def setup
-
+    @dive = TestDive.get
   end
 
   test 'joins' do
-    query = TestQueries.joins
+    query = TestDive.joins
     engine = QueryEngine.new(query)
     builder = engine.to_sql_builder
 
@@ -20,7 +20,7 @@ class QueryEngineTest < ActiveSupport::TestCase
   end
 
   test "grouping" do
-    query = TestQueries.grouping
+    query = TestDive.grouping
     engine = QueryEngine.new(query)
     builder = engine.to_sql_builder
 

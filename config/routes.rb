@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     post 'db/model/:model/upsert' => 'db#upsert_model'
 
     get 'data_dive' => 'data_dive#index'
-    get 'data_dive/test_query/:query_id' => 'data_dive#test_query'
+    get 'data_dive/test_dive'
     get 'data_dive/*rel' => 'data_dive#index'
   end
 

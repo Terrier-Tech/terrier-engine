@@ -78,13 +78,21 @@ a.demo-link {
     right: 0;
     bottom: 0;
     z-index: 100;
-    background-color: rgba(#888, 0.2);
+	backdrop-filter: blur(8px);
 }
 
+#application {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: flex;
+	flex-direction: column;
+}
 
 #top-bar {
-    position: sticky;
-	top: 0;
+	flex: 0 0 auto;
 	z-index: 100;
     height: $bar-height;
     background-color: var(--tt-primary-color);
@@ -106,6 +114,14 @@ a.demo-link {
 		color: #fff;
 		font-size: 24px;
 	}
+}
+
+#content {
+	flex: 1 1 auto;
+	overflow-y: scroll;
+	display: flex;
+	flex-direction: column;
+	position: relative;
 }
 
 #main-actions {
