@@ -232,12 +232,26 @@ button {
 	> .tt-toolbar {
 		color: var(--tt-page-background);
 		background-color: var(--tt-secondary-color);
+		align-items: stretch;
 		.breadcrumbs {
 			gap: 8px;
+			align-items: stretch;
+		}
+		.tertiary-actions {
+			display: flex;
+			gap: 1em;
+			align-items: stretch;
 		}
 		a {
 			color: var(--tt-page-background);
 			display: flex;
+			padding: 0 1em;
+			&:hover {
+				background-color: rgba(#000, 0.1);
+			}
+			&:active {
+				background-color: rgba(#000, 0.2);
+			}
 		}
 	}
 }

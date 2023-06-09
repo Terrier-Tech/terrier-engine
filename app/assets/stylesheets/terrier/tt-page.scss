@@ -5,7 +5,6 @@
 	align-items: center;
 	height: var(--tt-toolbar-height);
 	font-size: var(--tt-toolbar-font-size);
-	padding: 0 var(--tt-pad);
 	gap: var(--tt-gap);
 	> div {
 		flex: 0 0 auto;
@@ -14,6 +13,7 @@
 		display: flex;
 		gap: 0.5em;
 		align-items: center;
+		@include tt-no-select;
 	}
 	.page-title {
 		flex: 1 1 auto;
@@ -21,6 +21,8 @@
 	}
 	h1.breadcrumbs {
 		display: flex;
+		margin: 0;
+		padding: 0;
 		flex: 1 1 auto;
 		font-size: var(--tt-toolbar-font-size);
 		gap: var(--tt-gap);

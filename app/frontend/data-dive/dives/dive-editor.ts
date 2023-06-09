@@ -73,6 +73,19 @@ export class DiveEditorPage extends DdPagePart<{}> {
         const schema = await Schema.get()
         const dive = await Dives.get(id)
         this.editor = this.makePart(DiveEditor, {schema, dive})
+
+        this.addBreadcrumb({
+            title: "Dives"
+        })
+        this.addBreadcrumb({
+            title: `Editor: ${dive.name}`
+        })
+
+        this.addAction({
+            title: 'Save',
+            icon: 'glyp-checkmark'
+        }, 'tertiary')
+
         this.dirty()
     }
     

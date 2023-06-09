@@ -41,7 +41,7 @@ type ToolbarFieldDef = ToolbarSelectDef | ToolbarValuedInputDef
 export default abstract class PagePart<
     TState,
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<any, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends ContentPart<TState, TThemeType, TApp, TTheme> {
 
@@ -114,7 +114,7 @@ export default abstract class PagePart<
         parent.div(`.tt-page-part.content-width-${this.mainContentWidth}`, page => {
             page.div('.tt-toolbar', toolbar => {
                 toolbar.class(...this.toolbarClasses)
-                toolbar.div('.page-title', col => this.renderBreadcrumbs(col))
+                this.renderBreadcrumbs(toolbar)
                 this.renderCustomToolbar(toolbar)
                 if (this.hasToolbarFields) this.renderToolbarFields(toolbar)
                 if (this.hasActions('tertiary')) this.renderActions(toolbar, 'tertiary')
