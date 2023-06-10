@@ -8,6 +8,7 @@ import {FormPartData} from "tuff-core/forms"
 import {ActionsDropdown, Dropdown} from "../terrier/dropdowns"
 import {TabContainerPart} from "../terrier/tabs"
 import DdApp from "./dd-app"
+import {Action} from "../terrier/theme"
 
 
 export abstract class DdPagePart<T> extends PagePart<T, DdThemeType, DdApp, DdTheme> { }
@@ -37,3 +38,5 @@ export class DdActionsDropdown extends ActionsDropdown<DdThemeType, DdApp, DdThe
 export class DdTabContainerPart extends TabContainerPart<DdThemeType, DdApp, DdTheme> {
 
 }
+
+export type DdAction = Action<DdThemeType>

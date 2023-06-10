@@ -4,6 +4,7 @@ import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
 import Theme, {ThemeType} from "./theme"
 import {TerrierApp} from "./app"
+import {DdAction} from "../data-dive/dd-parts";
 
 const log = new Logger("Tabs")
 
@@ -100,6 +101,23 @@ export class TabContainerPart<
         this.dirty()
     }
 
+
+    _beforeAction?: DdAction
+
+    setBeforeAction(action: DdAction) {
+        this._beforeAction = action
+        this.dirty()
+    }
+
+    _afterAction?: DdAction
+
+    setAfterAction(action: DdAction) {
+        this._afterAction = action
+        this.dirty()
+    }
+
+
+
     render(parent: PartTag) {
         let currentTabKey = this.state.currentTab
         if (!currentTabKey) {
@@ -108,6 +126,9 @@ export class TabContainerPart<
         }
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
+                if (this._beforeAction) {
+                    this.theme.renderActions(tabList, [this._beforeAction], {defaultClass: 'action'})
+                }
                 for (const tab of Object.values(this.tabs)) {
                     if (tab.state == 'hidden') continue
 
@@ -122,6 +143,10 @@ export class TabContainerPart<
                         a.span({text: tab.title})
                         a.emitClick(this.changeTabKey, {tabKey: tab.key})
                     })
+                }
+                if (this._afterAction) {
+                    tabList.div('.spacer')
+                    this.theme.renderActions(tabList, [this._afterAction], {defaultClass: 'action'})
                 }
             })
 

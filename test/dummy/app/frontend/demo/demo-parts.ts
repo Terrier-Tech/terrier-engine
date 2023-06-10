@@ -138,6 +138,8 @@ class DemoTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme> {
             {key: 'three', title: "Tab Three", icon: 'glyp-pending', state: "disabled"},
             DummyTab, {container: this, title: "Tab Three", content: "This is the third tab."}
         )
+        this.setBeforeAction({title: "Before", icon: 'glyp-info'})
+        this.setAfterAction({title: "After", icon: 'glyp-plus'})
     }
 }
 

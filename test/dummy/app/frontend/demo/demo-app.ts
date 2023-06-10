@@ -52,7 +52,7 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
 }
 
-export default class DemoApp extends TerrierApp<DemoThemeType, DemoApp, DemoTheme> {
+export default class DemoApp extends TerrierApp<{theme: DemoTheme}, DemoThemeType, DemoApp, DemoTheme> {
 
     loc?: Location
     page!: DemoPage

@@ -7,20 +7,39 @@
 		flex: 0 0 auto;
 		gap: var(--tt-border-radius);
 
-		a.tab {
+		a {
 			display: flex;
 			@include tt-no-select;
 			align-items: center;
 			padding: 0.5em 1em;
 			gap: 0.5em;
-			background-color: var(--tt-panel-background);
-			//@include tt-scale-push;
-			//margin-bottom: -$border-radius; // render tabs "under" the tab content
+
 			i {
 				display: block;
 				transform: scale(1.2);
 			}
-			//@include tt-box-shadow;
+		}
+
+		.spacer {
+			flex: 1 1 auto;
+			min-width: 0;
+			min-height: 0;
+		}
+
+		a.action {
+			padding: 0.5em;
+			@include tt-rounded-corners;
+			&:hover {
+				text-decoration: underline;
+				background-color: rgba(#000, 0.05);
+			}
+			&:active {
+				background-color: rgba(#fff, 0.1);
+			}
+		}
+
+		a.tab {
+			background-color: var(--tt-panel-background);
 
 			&:not(.active) {
 				// slightly darker when it's not active
