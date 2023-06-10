@@ -21,6 +21,14 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
     async init() {
         this.tabs = this.makePart(DdTabContainerPart, {side: 'top'})
 
+        this.tabs.setBeforeAction({
+            title: 'Queries:',
+            icon: 'glyp-query'
+        })
+        this.tabs.setAfterAction({
+            icon: 'glyp-plus_outline'
+        })
+
         for (const query of this.state.dive.queries) {
             this.addQuery(query)
         }
@@ -78,7 +86,8 @@ export class DiveEditorPage extends DdPagePart<{}> {
             title: "Dives"
         })
         this.addBreadcrumb({
-            title: `Editor: ${dive.name}`
+            title: dive.name,
+            icon: 'glyp-data_dive'
         })
 
         this.addAction({
