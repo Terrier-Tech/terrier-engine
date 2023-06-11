@@ -146,17 +146,19 @@ export default abstract class PagePart<
             const crumbs = Array.from(this._breadcrumbs)
 
             // add a breadcrumb for the page title
-            const titleCrumb: Action<TThemeType> = {
-                title: this._title,
-                icon: this._icon || undefined,
+            if (this._title?.length) {
+                const titleCrumb: Action<TThemeType> = {
+                    title: this._title,
+                    icon: this._icon || undefined,
+                }
+                if (this._titleHref) {
+                    titleCrumb.href = this._titleHref
+                }
+                if (this._titleClasses?.length) {
+                    titleCrumb.classes = this._titleClasses
+                }
+                crumbs.push(titleCrumb)
             }
-            if (this._titleHref) {
-                titleCrumb.href = this._titleHref
-            }
-            if (this._titleClasses?.length) {
-                titleCrumb.classes = this._titleClasses
-            }
-            crumbs.push(titleCrumb)
 
             this.app.theme.renderActions(h1, crumbs)
         })

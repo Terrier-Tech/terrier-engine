@@ -247,10 +247,37 @@ button {
 			display: flex;
 			padding: 0 1em;
 			&:hover {
-				background-color: rgba(#000, 0.1);
+				filter: brightness(1.08);
 			}
 			&:active {
-				background-color: rgba(#000, 0.2);
+				filter: brightness(0.92);
+			}
+		}
+
+		$crumb-color: #1e6c7b;
+		$crumb-color-dark: darken($crumb-color, 4%);
+		.breadcrumbs {
+			gap: 0;
+			a {
+				position: relative;
+				background: linear-gradient(90deg, $crumb-color, $crumb-color-dark);
+				&::after {
+					content: "";
+					position: absolute;
+					left: 100%;
+					top: 0;
+					width: 0;
+					height: 0;
+					border-top: calc(var(--tt-toolbar-height)*0.5) solid transparent;
+					border-bottom: calc(var(--tt-toolbar-height) * 0.5) solid transparent;
+					border-left: 8px solid $crumb-color-dark;
+				}
+			}
+
+			@for $i from 1 through 5 {
+				a:nth-child(#{$i}) {
+					z-index: 10 - $i;
+				}
 			}
 		}
 	}

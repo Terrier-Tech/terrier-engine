@@ -10,7 +10,7 @@ import Toasts, {ToastOptions} from "../toasts"
 export default abstract class TerrierPart<
     TState,
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<{theme: TTheme}, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends Part<TState> {
 
