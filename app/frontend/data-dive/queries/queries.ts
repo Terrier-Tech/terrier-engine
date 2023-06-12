@@ -8,6 +8,7 @@ import {TableRef} from "./tables"
 export type Query = {
     id: string
     name: string
+    notes: string
     from: TableRef
 }
 

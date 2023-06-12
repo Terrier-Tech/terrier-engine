@@ -4,6 +4,7 @@ import {Query} from "./queries"
 import {FromTableView} from "./tables"
 import {DiveEditorState} from "../dives/dive-editor"
 import {Logger} from "tuff-core/logging"
+import {QueryForm} from "./query-form"
 
 const log = new Logger("QueryEditor")
 
@@ -14,8 +15,14 @@ const log = new Logger("QueryEditor")
 
 class SettingsPart extends DdContentPart<SubEditorState> {
 
+    form!: QueryForm
+
+    async init() {
+        this.form = this.makePart(QueryForm, {query: this.state.query})
+    }
+
     renderContent(parent: PartTag) {
-        parent.div({text: 'Settings'})
+        parent.part(this.form)
     }
 
 
