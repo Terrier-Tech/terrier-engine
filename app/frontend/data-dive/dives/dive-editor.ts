@@ -5,6 +5,7 @@ import Dives, {Dive} from "./dives"
 import {Query} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
+import QueryForm from "../queries/query-form";
 
 const log = new Logger("DiveEditor")
 
@@ -32,6 +33,11 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
         for (const query of this.state.dive.queries) {
             this.addQuery(query)
         }
+
+        this.listenMessage(QueryForm.settingsChangedKey, m => {
+            log.info(`Query settings changed`, m.data)
+            // TODO: rename corresponding tab
+        })
     }
 
     addQuery(query: Query) {
