@@ -1,5 +1,5 @@
 import { Logger } from "tuff-core/logging"
-import { createElement } from "tuff-core/html"
+import Html from "tuff-core/html"
 import Overlays from "./overlays"
 
 const log = new Logger('Tooltips')
@@ -11,7 +11,7 @@ function ensureContainer(): HTMLElement {
     if (container) {
         return container
     }
-    container = createElement('div', div => {
+    container = Html.createElement('div', div => {
         div.sel('#tooltip')
     })
     document.body.appendChild(container)

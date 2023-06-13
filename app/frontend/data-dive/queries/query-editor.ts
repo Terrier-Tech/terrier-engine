@@ -1,13 +1,22 @@
 import {DdContentPart, DdTabContainerPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
-import {Query} from "./queries"
-import {FromTableView} from "./tables"
+import Queries, {Query, QueryValidation} from "./queries"
+import Tables, {FromTableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
 import {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
+import {messages} from "tuff-core"
+import Html from "tuff-core/html"
 
 const log = new Logger("QueryEditor")
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Keys
+////////////////////////////////////////////////////////////////////////////////
+
+const validationKey = messages.typedKey<QueryValidation>()
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +45,28 @@ class SettingsPart extends DdContentPart<SubEditorState> {
 
 class SqlPart extends DdContentPart<SubEditorState> {
 
+    validation?: QueryValidation
+
+    setValidation(validation: QueryValidation) {
+        this.validation = validation
+        this.dirty()
+    }
+
     renderContent(parent: PartTag) {
-        parent.div({text: 'SQL'})
+        parent.div('.dd-sql-output.tt-flex.gap', row => {
+            if (this.validation) {
+                const validation = this.validation
+                if (validation.status == 'success' && validation.sql) {
+                    row.div('.sql.stretch').pre().text(validation.sql)
+                }
+                else {
+                    row.div('.alert.tt-bubble').text(Html.escape(validation.message))
+                }
+            }
+            else {
+                row.div({text: 'SQL Goes Here'})
+            }
+        })
     }
 
 
@@ -101,6 +130,13 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
             PreviewPart, {editor: this, query})
 
         this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, table: this.state.query.from})
+
+        this.listenMessage(Tables.updatedKey, m => {
+            log.info(`Table ${m.data.model} updated`, m.data)
+            this.validate()
+        })
+
+        await this.validate()
     }
 
 
@@ -116,6 +152,15 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
     updateSettings(settings: QuerySettings) {
         log.info("Updating settings", settings)
         Object.assign(this.state.query, settings)
+        this.dirty()
+    }
+
+    async validate() {
+        const res = await Queries.validate(this.state.query)
+        log.info(`Query validated`, res)
+        this.emitMessage(validationKey, res)
+        this.sqlPart.setValidation(res)
+        this.tabs.showTab('sql')
         this.dirty()
     }
 

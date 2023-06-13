@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
     get 'data_dive' => 'data_dive#index'
     get 'data_dive/test_dive'
+    post 'data_dive/validate_query'
     get 'data_dive/*rel' => 'data_dive#index'
   end
 

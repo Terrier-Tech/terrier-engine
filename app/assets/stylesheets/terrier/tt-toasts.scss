@@ -21,5 +21,20 @@
 		&.show {
 			transform: translate(0);
 		}
+		&.success {
+			background-color: var(--tt-success-color);
+		}
+		&.primary {
+			background-color: var(--tt-primary-color);
+		}
+		&.secondary {
+			background-color: var(--tt-secondary-color);
+		}
+		&.alert {
+			background-color: var(--tt-alert-color);
+		}
+		&.pending {
+			background-color: var(--tt-pending-color);
+		}
 	}
 }

@@ -59,4 +59,5 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.autoload_paths << Rails.root.join("lib/terrier/frontend")
+  config.autoload_paths << Rails.root.join("lib/terrier/data_dive")
 end

@@ -1,6 +1,6 @@
-import { createElement } from "tuff-core/html"
 import Time from "tuff-core/time"
 import Theme, {ThemeType} from "./theme";
+import Html from "tuff-core/html";
 
 
 
@@ -19,7 +19,7 @@ function getOverlay(container: Element): HTMLDivElement | null {
 }
 
 function createOverlay<TT extends ThemeType>(theme: Theme<TT>): HTMLDivElement {
-    return createElement('div', div => {
+    return Html.createElement('div', div => {
         div.class(overlayClass)
         const loaderSrc = theme.getLoaderSrc()
         if (loaderSrc?.length) {

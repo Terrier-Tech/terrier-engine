@@ -84,6 +84,7 @@ export class TabContainerPart<
         const existingTab = this.tabs[tab.key]
         if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
         Object.assign(existingTab, tab)
+        this.dirty()
     }
 
     /**

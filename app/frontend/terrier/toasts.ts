@@ -1,5 +1,5 @@
 import { Logger } from "tuff-core/logging"
-import { createElement } from "tuff-core/html"
+import Html from "tuff-core/html"
 import Theme, {ThemeType} from "./theme"
 
 const log = new Logger('Toasts')
@@ -22,14 +22,14 @@ function show<TT extends ThemeType>(message: string, options: ToastOptions<TT>, 
     let container = document.getElementById('tt-toasts')
     if (!container) {
         log.debug(`Creating toasts container`)
-        container = createElement('div', (div) => {
+        container = Html.createElement('div', (div) => {
             div.sel('#tt-toasts.tt-flex.column.padded')
         })
         document.body.appendChild(container)
     }
 
     // create the toast element
-    const toast = createElement('div', (parent) => {
+    const toast = Html.createElement('div', (parent) => {
         parent.class('tt-toast')
         parent.class(options.color)
         if (options?.icon) {

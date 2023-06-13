@@ -40,6 +40,15 @@ end
 TRUTHY_STRINGS = %w[true t on 1]
 FALSY_STRINGS = %w[false f off 0]
 
+ANSI_CODE_CLASSES = {
+  1 => 'bold',
+  3 => 'italic',
+  32 => 'green',
+  33 => 'yellow',
+  34 => 'blue',
+  36 => 'cyan'
+}
+
 class String
 
   def uncapitalize
@@ -94,6 +103,16 @@ class String
   # returns the string with anything between parentheses
   def without_parens
     self.gsub(/\([\w\s]+\)/, '').strip
+  end
+
+  # converts a string containing terminal colors codes to an HTML string with .code-* spans
+  def terminal_to_html
+    self.gsub("\e[0m", '</span>')
+             .gsub(/\e\[([\d;]+)m/) do
+      codes = $1.split(';')
+      classes = codes.map { |code| ANSI_CODE_CLASSES[code.to_i] }.compact.map { |c| "code-#{c}" }
+      "<span class='#{classes.join(' ')}'>"
+    end
   end
 
 end

@@ -27,6 +27,12 @@ export type JoinedTableRef = TableRef & {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Keys
+////////////////////////////////////////////////////////////////////////////////
+
+const updatedKey = messages.typedKey<TableRef>()
+
+////////////////////////////////////////////////////////////////////////////////
 // View
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -200,13 +206,22 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
         }).emitClick(this.editFiltersKey, {})
     }
 
+    /**
+     * Let everyone know that the table was updated.
+     */
+    sendUpdateMessage() {
+        this.emitMessage(updatedKey, this.state.table)
+    }
+
     updateColumns(columns: ColumnRef[]) {
         this.state.table.columns = columns
+        this.sendUpdateMessage()
         this.dirty()
     }
 
     updateFilters(filters: Filter[]) {
         this.state.table.filters = filters
+        this.sendUpdateMessage()
         this.dirty()
     }
 
@@ -334,3 +349,13 @@ class JoinedTableEditorModal extends DdModalPart<JoinedTableEditorState> {
 
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Export
+////////////////////////////////////////////////////////////////////////////////
+
+const Tables = {
+    updatedKey
+}
+
+export default Tables

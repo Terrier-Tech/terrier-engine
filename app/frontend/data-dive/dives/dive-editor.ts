@@ -35,8 +35,9 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
         }
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {
-            log.info(`Query settings changed`, m.data)
-            // TODO: rename corresponding tab
+            const query = m.data
+            log.info(`Query settings changed`, query)
+            this.tabs.updateTab({key: query.id, title: query.name})
         })
     }
 

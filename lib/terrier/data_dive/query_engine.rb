@@ -206,6 +206,9 @@ class QueryEngine
   include Loggable
 
   def initialize(query)
+    info "Query is a #{query.class.name}"
+    query = JSON.parse(query) if query.is_a?(String)
+    query = query.to_unsafe_hash if query.is_a?(ActionController::Parameters)
     query = OpenStruct.new(query) if query.is_a?(Hash)
     @query = query
     @alias_counts = {}
