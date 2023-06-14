@@ -27,4 +27,16 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_equal %w[date_trunc('month',work_order.time) work_order.status location.id u.id], builder.group_bys
   end
 
+  test 'validate' do
+    valid_sql = "select count(*) from locations"
+    res = QueryEngine.validate_raw_sql valid_sql
+    assert_nil res[:error]
+
+    invalid_sql = "select count(*), status, time from work_orders group by status"
+    res = QueryEngine.validate_raw_sql invalid_sql
+    assert_not_empty res[:error]
+    puts "Validation error: #{res[:error]}"
+
+  end
+
 end

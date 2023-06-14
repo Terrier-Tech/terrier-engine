@@ -56,12 +56,16 @@ class SqlPart extends DdContentPart<SubEditorState> {
         parent.div('.dd-sql-output.tt-flex.gap', row => {
             if (this.validation) {
                 const validation = this.validation
-                if (validation.status == 'success' && validation.sql) {
-                    row.div('.sql.stretch').pre().text(validation.sql)
-                }
-                else {
-                    row.div('.alert.tt-bubble').text(Html.escape(validation.message))
-                }
+                row.div('.sql.stretch', col => {
+                    if (validation.error_html?.length) {
+                        col.class('alert')
+                        col.pre().text(validation.error_html)
+                    } else if (validation.sql_html) {
+                        col.pre().text(validation.sql_html)
+                    } else {
+                        col.div('.alert.tt-bubble').text(Html.escape(validation.message))
+                    }
+                })
             }
             else {
                 row.div({text: 'SQL Goes Here'})

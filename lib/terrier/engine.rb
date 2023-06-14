@@ -19,5 +19,9 @@ require 'terrier/logging/multi_logger'
 
 module Terrier
   class Engine < ::Rails::Engine
+
+    # reload engine classes automatically in development
+    config.autoload_paths << File.expand_path("../", __FILE__)
+
   end
 end

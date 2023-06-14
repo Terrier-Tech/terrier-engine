@@ -22,12 +22,9 @@ class DataDiveController < ApplicationController
   def validate_query
     query = required_param :query
     engine = QueryEngine.new query
-    sql = engine.to_sql
-    colorized_sql = Niceql::Prettifier.prettify_sql(sql)
-    info "Generated SQL:"
-    info colorized_sql
-    render_api_success query: query, sql: colorized_sql.terminal_to_html
+    res = engine.validate
+    render_api_success res
   rescue => ex
-    render_error ex
+    render_exception ex
   end
 end

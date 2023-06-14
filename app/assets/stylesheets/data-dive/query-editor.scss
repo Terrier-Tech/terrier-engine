@@ -311,12 +311,20 @@
 		overflow: scroll;
 		@include tt-inset-box;
 		@include tt-inset-box-shadow;
+		&.alert {
+			border: 1px solid var(--tt-alert-color);
+		}
+		padding: 1em;
 		pre {
+			margin: 0;
 			.code-yellow {
 				color: var(--tt-primary-color);
 			}
 			.code-cyan {
 				color: var(--tt-secondary-color);
+			}
+			.code-red {
+				color: var(--tt-alert-color);
 			}
 		}
 	}

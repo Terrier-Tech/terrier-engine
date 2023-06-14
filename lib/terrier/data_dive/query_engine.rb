@@ -1,3 +1,4 @@
+require 'niceql'
 
 class QueryModel
   # @param attrs [Hash]
@@ -206,7 +207,6 @@ class QueryEngine
   include Loggable
 
   def initialize(query)
-    info "Query is a #{query.class.name}"
     query = JSON.parse(query) if query.is_a?(String)
     query = query.to_unsafe_hash if query.is_a?(ActionController::Parameters)
     query = OpenStruct.new(query) if query.is_a?(Hash)
@@ -236,6 +236,33 @@ class QueryEngine
     (@alias_counts[prefix] == 0) ? suffix = '' : suffix = @alias_counts[prefix]
     @alias_counts[prefix] += 1
     "#{prefix}#{suffix}"
+  end
+
+
+  def validate
+    sql = self.to_sql
+    colorized_sql = Niceql::Prettifier.prettify_sql(sql)
+    info "Generated SQL:\n#{colorized_sql}"
+    res = {
+      query: @query,
+      sql: sql,
+      sql_html: colorized_sql.terminal_to_html
+    }
+    self.class.validate_raw_sql sql, res
+    res
+  end
+
+  def self.validate_raw_sql(sql, res={})
+    explain = ActiveRecord::Base.connection.explain sql
+    res[:explain] = explain
+    res
+  rescue => ex
+    colorized_error = Niceql::Prettifier.prettify_pg_err ex.message, sql
+    res[:error] = ex.message
+    res[:error] = colorized_error
+    Rails.logger.warn "Error explaining query:\n#{colorized_error}"
+    res[:error_html] = colorized_error.terminal_to_html
+    res
   end
 
 end

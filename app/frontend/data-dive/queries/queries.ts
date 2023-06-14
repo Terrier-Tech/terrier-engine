@@ -22,8 +22,12 @@ export type Query = {
  * Type for the response to a server-side query validation.
  */
 export type QueryValidation = ApiResponse & {
-    sql?: string
     query: Query
+    sql?: string
+    sql_html?: string
+    explain?: string
+    error?: string
+    error_html?: string
 }
 
 /**

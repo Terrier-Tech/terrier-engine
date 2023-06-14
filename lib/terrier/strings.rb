@@ -43,6 +43,7 @@ FALSY_STRINGS = %w[false f off 0]
 ANSI_CODE_CLASSES = {
   1 => 'bold',
   3 => 'italic',
+  31 => 'red',
   32 => 'green',
   33 => 'yellow',
   34 => 'blue',
