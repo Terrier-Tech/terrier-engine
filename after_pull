@@ -1,1 +1,1 @@
-bundle & npm i & git reset --hard
+bundle && npm i && git reset --hard
