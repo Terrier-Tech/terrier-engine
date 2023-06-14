@@ -1,1 +1,1 @@
-bundle ; npm i ; rails db:migrate ; git reset --hard
+bundle & npm i & git reset --hard
