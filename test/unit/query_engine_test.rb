@@ -8,8 +8,8 @@ class QueryEngineTest < ActiveSupport::TestCase
     @dive = TestDive.get
   end
 
-  test 'joins' do
-    query = TestDive.joins
+  test 'order_details' do
+    query = TestDive.order_details
     engine = QueryEngine.new(query)
     builder = engine.to_sql_builder
 
@@ -19,8 +19,8 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_equal ["work_order.time >= '#{start_date}'", "work_order.time < '#{end_date}'", "work_order.status in ('active','complete')", "location.zip = '55122'", "target.name = 'Rodents'"], builder.clauses
   end
 
-  test "grouping" do
-    query = TestDive.grouping
+  test "order_summary" do
+    query = TestDive.order_summary
     engine = QueryEngine.new(query)
     builder = engine.to_sql_builder
 
@@ -35,7 +35,6 @@ class QueryEngineTest < ActiveSupport::TestCase
     invalid_sql = "select count(*), status, time from work_orders group by status"
     res = QueryEngine.validate_raw_sql invalid_sql
     assert_not_empty res[:error]
-    puts "Validation error: #{res[:error]}"
 
   end
 

@@ -3,14 +3,14 @@ module TestDive
   def self.get
     {
       name: "Test",
-      queries: [self.joins, self.grouping]
+      queries: [self.order_summary, self.order_details]
     }
   end
 
-  def self.joins
+  def self.order_details
     {
-      id: 'joins',
-      name: 'Joins',
+      id: 'order_details',
+      name: 'Order Details',
       from: {
         model: 'WorkOrder',
         columns: [
@@ -124,10 +124,10 @@ module TestDive
     }
   end
 
-  def self.grouping
+  def self.order_summary
     {
-      id: 'grouping',
-      name: 'Grouping',
+      id: 'order_summary',
+      name: 'Order Summary',
       from: {
         model: 'WorkOrder',
         columns: [
