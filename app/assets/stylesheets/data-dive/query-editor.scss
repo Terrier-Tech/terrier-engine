@@ -296,6 +296,17 @@
 		@include tt-shaded-hover;
 	}
 
+	a.add {
+		background-color: var(--tt-primary-color);
+		@include tt-bottom-rounded-corners;
+		&:hover {
+			filter: brightness(1.08);
+		}
+		&:active {
+			filter: brightness(0.92);
+		}
+	}
+
 	.header {
 		border-bottom: 1px solid rgba(#fff, 0.5);
 	}

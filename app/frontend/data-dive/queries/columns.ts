@@ -151,7 +151,7 @@ export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
                 for (const col of columns) {
                     const colDef = this.modelDef.columns[col]
                     if (colDef) {
-                        this.addState(colDef)
+                        this.addState({name: colDef.name})
                     }
                 }
                 this.updateColumnEditors()
@@ -320,7 +320,7 @@ class SelectColumnsDropdown extends DdDropdown<{modelDef: ModelDef, callback: Se
             })
         }
 
-        parent.a(a => {
+        parent.a('.add', a => {
             a.i('.glyp-checkmark')
             a.span({text: "Add Selected"})
         }).emitClick(applySelectionKey)
