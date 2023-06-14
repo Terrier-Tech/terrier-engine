@@ -25,7 +25,7 @@ class BaseGenerator
     if name.start_with? '/'
       template_path = name
       name = File.basename name
-      raise "Could not find template at #{template_path}" unless File.exists?(template_path)
+      raise "Could not find template at #{template_path}" unless File.exist?(template_path)
     else
       template_path = nil
       @template_dirs.each do |dir|
@@ -51,7 +51,7 @@ class BaseGenerator
       raise "Don't know how to handle template #{name}"
     end
     abs_dir = File.dirname abs_path
-    unless File.exists?(abs_dir)
+    unless File.exist?(abs_dir)
       info "Creating output directory #{abs_dir.bold}"
       FileUtils.mkdir_p abs_dir
     end
