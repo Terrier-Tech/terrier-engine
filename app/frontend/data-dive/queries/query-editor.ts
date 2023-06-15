@@ -81,6 +81,7 @@ class SqlPart extends DdContentPart<SubEditorState> {
 // Preview Part
 ////////////////////////////////////////////////////////////////////////////////
 
+
 class PreviewPart extends DdContentPart<SubEditorState> {
 
     result?: QueryResult
@@ -177,6 +178,12 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
             await this.previewPart.updateResult()
         })
 
+        this.onClick(QueryEditor.copyToClipboardKey, async m => {
+            log.info(`Copy value to clipboard: ${m.data.value}`)
+            await navigator.clipboard.writeText(m.data.value)
+            this.showToast(`Copied '${m.data.value}' to clipboard`, {color: 'primary'})
+        })
+
         this.validate().then()
         this.updatePreview().then()
     }
@@ -210,4 +217,5 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
         this.tabs.showTab('preview')
     }
 
+    static readonly copyToClipboardKey = messages.typedKey<{ value: string }>()
 }

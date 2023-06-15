@@ -3,6 +3,7 @@ import api, {ApiResponse} from "../../terrier/api"
 import {PartTag} from "tuff-core/parts"
 import {TableCellTag} from "tuff-core/html"
 import dayjs from "dayjs";
+import QueryEditor from "./query-editor";
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,18 @@ function renderCell(td: TableCellTag, col: QueryResultColumn, val: any): any {
         case 'dollars':
             const dollars = parseFloat(val)
             return td.div('.dollars').text(`\$${dollars}`)
+        case 'string':
+            if (col.name.endsWith('id')) {
+                const id = val.toString()
+                td.a('.id')
+                    .data({tooltip: id})
+                    .text(`...${id.substring(id.length-6)}`)
+                    .emitClick(QueryEditor.copyToClipboardKey, {value: id})
+            }
+            else {
+                td.text(val.toString())
+            }
+            return
         default:
             td.text(val.toString())
     }
@@ -107,8 +120,8 @@ function renderTable(parent: PartTag, rows: QueryResultRow[], columns: QueryResu
         table.thead(thead => {
             thead.tr(tr => {
                 for (const col of columns) {
-                    tr.th(th => {
-                        th.a(col.type).text(col.name)
+                    tr.th(col.type, th => {
+                        th.a().text(col.name)
                     })
                 }
             })

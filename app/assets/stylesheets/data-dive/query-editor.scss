@@ -362,25 +362,20 @@
 table.dd-query-result {
 	border-collapse: collapse;
 	th, td {
-		padding: 0.25em 0.6em;
+		padding: 0.3em 0.6em;
 		font-size: var(--tt-caption-font-size);
 		min-width: 80px; // the table layout is pretty aggressive without this
+		line-height: 1.3;
 	}
 	th {
 		position: sticky;
 		top: 0;
 		background-color: var(--tt-secondary-color);
+		text-align: left;
 		a {
 			@include tt-inset-white-text;
 			font-weight: normal;
 		}
-		//border-left: 1px solid var(--tt-border-color);
-		//border-right: 1px solid var(--tt-border-color);
-		//&::after {
-		//	content: "";
-		//	@include tt-absolute-fill;
-		//	border-bottom: 1px solid var(--tt-border-color);
-		//}
 	}
 	td {
 		border: 1px solid var(--tt-border-color);

@@ -15,6 +15,9 @@ module TestDive
         model: 'WorkOrder',
         columns: [
           {
+            name: 'id'
+          },
+          {
             name: 'time'
           },
           {
