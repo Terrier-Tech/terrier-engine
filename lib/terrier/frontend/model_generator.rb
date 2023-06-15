@@ -119,8 +119,9 @@ class ModelGenerator < BaseGenerator
         reflections: model.reflections,
         enum_fields: enum_fields,
         attachments: attachments,
-        name: model,
-        table_name: model.table_name
+        name: model.name,
+        table_name: model.table_name,
+        metadata: model.respond_to?(:metadata) ? model.metadata : nil
       }
     end
     models

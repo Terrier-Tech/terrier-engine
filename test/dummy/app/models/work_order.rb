@@ -38,6 +38,13 @@ class WorkOrder < ApplicationRecord
 
   cents_field :price
 
+  def self.metadata
+    {
+      description: "Work being performed at a location",
+      common: true
+    }
+  end
+
   # compute the beginning of the month based on time
   # @return [String?] the month in '%Y-%m' format
   def month

@@ -7,10 +7,11 @@ import {messages} from "tuff-core"
 
 const log = new Logger("QueryForm")
 
-export const QuerySettingsColumns: ReadonlyArray<keyof Query> = ['id', 'name', 'notes'] as const
+export const QuerySettingsColumns = ['id', 'name', 'notes'] as const
 export type QuerySettingsColumn = typeof QuerySettingsColumns[number]
 
 export type QuerySettings = Pick<Query, QuerySettingsColumn>
+
 
 export default class QueryForm extends DdContentPart<{ query: QuerySettings }> {
 
@@ -34,7 +35,10 @@ export default class QueryForm extends DdContentPart<{ query: QuerySettings }> {
         parent.div('.tt-flex.gap', row => {
             row.div('.stretch', col => {
                 col.label().text("Name")
-                this.fields.textInput(col, 'name')
+                const nameField = this.fields.textInput(col, 'name')
+                if (!this.state.query.name.length) {
+                    nameField.class('error')
+                }
             })
             row.div('.stretch', col => {
                 col.label().text("Notes")

@@ -12,6 +12,9 @@
 		border: 1px solid var(--tt-field-border-color);
 		padding: 0 0.6em;
 		width: 100%;
+		&.error {
+			border-color: var(--tt-alert-color);
+		}
 	}
 
 	// text area

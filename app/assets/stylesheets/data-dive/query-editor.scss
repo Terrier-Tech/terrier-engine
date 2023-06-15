@@ -394,3 +394,21 @@ table.dd-query-result {
 		background-color: var(--tt-odd-row-background);
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// New Query Form
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-new-query-form {
+	label.model-option {
+		padding-left: 2em;
+		.name {
+			font-weight: bold;
+			font-size: var(--tt-body-font-size);
+		}
+		.description {
+			font-size: var(--tt-caption-font-size);
+		}
+	}
+}

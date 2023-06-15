@@ -1389,7 +1389,7 @@ class SettingsModal
 	init: (@ui) ->
 		new ScheduleRulesEditor @ui.find('.schedule-column')
 
-		@form = @ui.find 'form'
+		@settingsForm = @ui.find 'form'
 		@errorExplanation = @ui.find '.error-explanation'
 		@errorExplanation.hide()
 		@id10tCount = 0

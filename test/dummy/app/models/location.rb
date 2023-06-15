@@ -39,4 +39,11 @@ class Location < ApplicationRecord
   validates :number, presence: true
 
   enum_field :status, %w[onetime contract]
+
+  def self.metadata
+    {
+      description: "A location at which work is performed",
+      common: true
+    }
+  end
 end
