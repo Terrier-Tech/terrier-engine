@@ -2,9 +2,9 @@ import {Logger} from "tuff-core/logging"
 import {typedKey} from "tuff-core/messages"
 import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import Theme, {ThemeType} from "./theme"
+import Theme, {Packet, ThemeType} from "./theme"
 import {TerrierApp} from "./app"
-import {DdAction} from "../data-dive/dd-parts";
+import {DdAction} from "../data-dive/dd-parts"
 
 const log = new Logger("Tabs")
 
@@ -16,6 +16,8 @@ export type TabParams<TT extends ThemeType> = {
     title: string
     icon?: TT['icons']
     state?: 'enabled' | 'disabled' | 'hidden'
+    classes?: string[]
+    click?: Packet
 }
 
 /**
@@ -143,6 +145,9 @@ export class TabContainerPart<
                         }
                         a.span({text: tab.title})
                         a.emitClick(this.changeTabKey, {tabKey: tab.key})
+                        if (tab.click) {
+                            a.emitClick(tab.click.key, tab.click.data || {})
+                        }
                     })
                 }
                 if (this._afterAction) {
@@ -152,9 +157,12 @@ export class TabContainerPart<
             })
 
             if (currentTabKey) {
-                const currentTabPart = this.tabs[currentTabKey].part
+                const currentTab = this.tabs[currentTabKey]
                 container.div('.tt-tab-content', panel => {
-                    panel.part(currentTabPart as StatelessPart)
+                    if (currentTab.classes?.length) {
+                        panel.class(...currentTab.classes)
+                    }
+                    panel.part(currentTab.part as StatelessPart)
                 })
             }
         })

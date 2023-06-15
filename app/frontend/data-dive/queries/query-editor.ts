@@ -85,38 +85,35 @@ class PreviewPart extends DdContentPart<SubEditorState> {
 
     result?: QueryResult
 
-    runKey = messages.untypedKey()
+    async updateResult() {
+        const query = this.state.query
+        log.info(`Generating preview for`, query)
+        this.startLoading()
+        this.result = await Queries.preview(query)
+        this.stopLoading()
+        this.dirty()
+    }
 
     async init() {
-        this.onClick(this.runKey, async _ => {
-            const query = this.state.query
-            log.info(`Generating preview for`, query)
-            this.startLoading()
-            this.result = await Queries.preview(query)
-            this.stopLoading()
-            this.dirty()
-        })
+    }
+
+
+    get parentClasses(): Array<string> {
+        return ['dd-query-preview']
     }
 
     renderContent(parent: PartTag) {
-        parent.div('.dd-query-preview.tt-flex.gap', row => {
-            row.div('.stretch', col => {
-                if (this.result) {
-                    const res = this.result
-                    if (res.rows && res.columns) {
-                        col.text(`${res.rows.length} rows and ${res.columns.length} columns`)
-                    }
-                    else {
-                        col.class('tt-bubble', 'alert').text(res.message)
-                    }
-                }
+        if (this.result) {
+            parent.div('.table-container', col => {
+                Queries.renderPreview(col, this.result!)
             })
-            row.div('.shrink.tt-toolstrip.column', strip => {
-                strip.a('.glyp-play')
-                    .data({tooltip: "Update the query preview"})
-                    .emitClick(this.runKey)
-            })
-        })
+        }
+        else {
+            parent.a('.tt-button.stretch', a => {
+                a.i('.glyp-refresh')
+                a.span('.title').text("Load Preview")
+            }).emitClick(this.state.editor.updatePreviewKey)
+        }
     }
 
 
@@ -145,6 +142,8 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
     sqlPart!: SqlPart
     previewPart!: PreviewPart
 
+    updatePreviewKey = messages.untypedKey()
+
     async init() {
         const query = this.state.query
 
@@ -162,7 +161,8 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
 
         this.sqlPart = this.tabs.upsertTab({key: 'sql', title: 'SQL', icon: 'glyp-code'},
             SqlPart, {editor: this, query})
-        this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table'},
+
+        this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: {key: this.updatePreviewKey}},
             PreviewPart, {editor: this, query})
 
         this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, table: this.state.query.from})
@@ -170,9 +170,15 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
         this.listenMessage(Tables.updatedKey, m => {
             log.info(`Table ${m.data.model} updated`, m.data)
             this.validate()
+            this.updatePreview()
         })
 
-        await this.validate()
+        this.onClick(this.updatePreviewKey, async _ => {
+            await this.previewPart.updateResult()
+        })
+
+        this.validate().then()
+        this.updatePreview().then()
     }
 
 
@@ -196,8 +202,12 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
         log.info(`Query validated`, res)
         this.emitMessage(validationKey, res)
         this.sqlPart.setValidation(res)
-        this.tabs.showTab('sql')
         this.dirty()
+    }
+
+    async updatePreview() {
+        await this.previewPart.updateResult()
+        this.tabs.showTab('preview')
     }
 
 }

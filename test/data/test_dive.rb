@@ -3,7 +3,7 @@ module TestDive
   def self.get
     {
       name: "Test",
-      queries: [self.order_summary, self.order_details]
+      queries: [self.order_details, self.order_summary]
     }
   end
 

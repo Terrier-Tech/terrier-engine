@@ -1,5 +1,8 @@
 import {TableRef} from "./tables"
 import api, {ApiResponse} from "../../terrier/api"
+import {PartTag} from "tuff-core/parts"
+import {TableCellTag} from "tuff-core/html"
+import dayjs from "dayjs";
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +48,7 @@ async function validate(query: Query): Promise<QueryValidation> {
 
 export type QueryResultRow = Record<string, any>
 
-const ColumnTypes = ['string', 'integer', 'float', 'date', 'datetime'] as const
+const ColumnTypes = ['string', 'integer', 'float', 'date', 'time',  'dollars'] as const
 
 export type ColumnType = typeof ColumnTypes[number]
 
@@ -71,6 +74,77 @@ async function preview(query: Query): Promise<QueryResult> {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Preview Rendering
+////////////////////////////////////////////////////////////////////////////////
+
+const DateFormat = 'MM/DD/YY'
+
+const TimeFormat = `h:mm A`
+
+function renderCell(td: TableCellTag, col: QueryResultColumn, val: any): any {
+    td.class(col.type)
+    switch (col.type) {
+        case 'date':
+            const date = dayjs(val.toString())
+            return td.div('.date').text(date.format(DateFormat))
+        case 'time':
+            const time = dayjs(val.toString())
+            td.div('.date').text(time.format(DateFormat))
+            return td.div('.time').text(time.format(TimeFormat))
+        case 'dollars':
+            const dollars = parseFloat(val)
+            return td.div('.dollars').text(`\$${dollars}`)
+        default:
+            td.text(val.toString())
+    }
+    td.text(val.toString())
+}
+
+function renderTable(parent: PartTag, rows: QueryResultRow[], columns: QueryResultColumn[]) {
+    parent.table('.dd-query-result', table => {
+        // header
+        table.thead(thead => {
+            thead.tr(tr => {
+                for (const col of columns) {
+                    tr.th(th => {
+                        th.a(col.type).text(col.name)
+                    })
+                }
+            })
+        })
+
+        // body
+        table.tbody(tbody => {
+            for (const row of rows) {
+                tbody.tr(tr => {
+                    for (const col of columns) {
+                        tr.td(td => {
+                            const val = row[col.name]
+                            if (val) {
+                                renderCell(td, col, val)
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    })
+}
+
+/**
+ * Renders a preview table if the result is successful, otherwise an error bubble.
+ * @param parent
+ * @param result
+ */
+function renderPreview(parent: PartTag, result: QueryResult) {
+    if (result.rows && result.columns) {
+        renderTable(parent, result.rows, result.columns)
+    } else {
+        parent.div('.tt-bubble.alert').text(result.message)
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Export
@@ -78,7 +152,8 @@ async function preview(query: Query): Promise<QueryResult> {
 
 const Queries = {
     validate,
-    preview
+    preview,
+    renderPreview
 }
 
 export default Queries
