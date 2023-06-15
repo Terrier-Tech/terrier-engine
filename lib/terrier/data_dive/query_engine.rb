@@ -216,11 +216,19 @@ class QueryEngine
   end
 
   def execute!(params={})
-
+    builder = self.to_sql_builder params
+    rows = builder.exec
+    {
+      rows: rows,
+      columns: rows.columns
+    }
   end
 
   def to_sql_builder(params={})
-    builder = SqlBuilder.new
+    builder = SqlBuilder.new.as_objects
+    if params[:limit].present?
+      builder.limit params[:limit].to_i
+    end
     @from.build_from builder
     builder
   end

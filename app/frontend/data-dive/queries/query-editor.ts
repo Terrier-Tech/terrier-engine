@@ -1,6 +1,6 @@
 import {DdContentPart, DdTabContainerPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
-import Queries, {Query, QueryValidation} from "./queries"
+import Queries, {Query, QueryResult, QueryValidation} from "./queries"
 import Tables, {FromTableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
@@ -83,8 +83,40 @@ class SqlPart extends DdContentPart<SubEditorState> {
 
 class PreviewPart extends DdContentPart<SubEditorState> {
 
+    result?: QueryResult
+
+    runKey = messages.untypedKey()
+
+    async init() {
+        this.onClick(this.runKey, async _ => {
+            const query = this.state.query
+            log.info(`Generating preview for`, query)
+            this.startLoading()
+            this.result = await Queries.preview(query)
+            this.stopLoading()
+            this.dirty()
+        })
+    }
+
     renderContent(parent: PartTag) {
-        parent.div({text: 'Preview'})
+        parent.div('.dd-query-preview.tt-flex.gap', row => {
+            row.div('.stretch', col => {
+                if (this.result) {
+                    const res = this.result
+                    if (res.rows && res.columns) {
+                        col.text(`${res.rows.length} rows and ${res.columns.length} columns`)
+                    }
+                    else {
+                        col.class('tt-bubble', 'alert').text(res.message)
+                    }
+                }
+            })
+            row.div('.shrink.tt-toolstrip.column', strip => {
+                strip.a('.glyp-play')
+                    .data({tooltip: "Update the query preview"})
+                    .emitClick(this.runKey)
+            })
+        })
     }
 
 

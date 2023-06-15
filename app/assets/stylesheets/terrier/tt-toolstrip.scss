@@ -1,0 +1,19 @@
+@import "tt-mixins";
+
+// a strip of tools (mainly icon-only buttons)
+.tt-toolstrip {
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	&.column {
+		flex-direction: column;
+	}
+	--tt-toolstrip-size: 24px; // override on individual strips to change the sizing
+	a {
+		display: flex;
+		@include tt-scale-push;
+		padding: 0.1em;
+		line-height: 1;
+		font-size: var(--tt-toolstrip-size);
+	}
+}

@@ -1,5 +1,5 @@
 import {TableRef} from "./tables"
-import api, {ApiResponse} from "../../terrier/api";
+import api, {ApiResponse} from "../../terrier/api"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -40,11 +40,45 @@ async function validate(query: Query): Promise<QueryValidation> {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Preview
+////////////////////////////////////////////////////////////////////////////////
+
+export type QueryResultRow = Record<string, any>
+
+const ColumnTypes = ['string', 'integer', 'float', 'date', 'datetime'] as const
+
+export type ColumnType = typeof ColumnTypes[number]
+
+export type QueryResultColumn = {
+    name: string
+    type: ColumnType
+}
+
+/**
+ * Type of the result of running the query on the server.
+ */
+export type QueryResult = ApiResponse & {
+    rows?: QueryResultRow[]
+    columns?: QueryResultColumn[]
+}
+
+/**
+ * Executes the query on the server with a reasonable limit suitable for previewing the results.
+ * @param query
+ */
+async function preview(query: Query): Promise<QueryResult> {
+    return await api.post<QueryResult>("/data_dive/preview_query.json", {query})
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
 
 const Queries = {
-    validate
+    validate,
+    preview
 }
 
 export default Queries

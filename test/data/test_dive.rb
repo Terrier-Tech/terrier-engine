@@ -61,7 +61,7 @@ module TestDive
               {
                 filter_type: 'direct',
                 column: 'zip',
-                operator: 'eq',
+                operator: 'ne',
                 value: '55122',
                 editable: 'required',
                 edit_label: 'Zip Code'

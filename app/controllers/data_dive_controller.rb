@@ -27,4 +27,14 @@ class DataDiveController < ApplicationController
   rescue => ex
     render_exception ex
   end
+
+  # executes the query for a small limit to preview on the client
+  def preview_query
+    query = required_param :query
+    engine = QueryEngine.new query
+    res = engine.execute! limit: 100
+    render_api_success res
+  rescue => ex
+    render_exception ex
+  end
 end

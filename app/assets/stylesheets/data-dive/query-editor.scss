@@ -328,11 +328,14 @@
 		padding: 1em;
 		pre {
 			margin: 0;
+			line-height: 1.3;
+			font-family: monospace;
+			// yes, these colors don't match the ones of the niceql output
 			.code-yellow {
-				color: var(--tt-primary-color);
+				color: var(--tt-secondary-color);
 			}
 			.code-cyan {
-				color: var(--tt-secondary-color);
+				color: var(--tt-primary-color);
 			}
 			.code-red {
 				color: var(--tt-alert-color);
@@ -341,3 +344,11 @@
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// SQL Output
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-query-preview {
+
+}
