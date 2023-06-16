@@ -10,7 +10,7 @@ import PagePart from "@terrier/parts/page-part"
 
 const log = new Logger('DemoApp')
 
-class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
+class DemoPage extends PagePart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.setIcon('glyp-checkmark')
@@ -52,7 +52,8 @@ class DemoPage extends PagePart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
 }
 
-export default class DemoApp extends TerrierApp<{theme: DemoTheme}, DemoThemeType, DemoApp, DemoTheme> {
+export type DemoAppState = { theme: DemoTheme };
+export default class DemoApp extends TerrierApp<DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
 
     loc?: Location
     page!: DemoPage
