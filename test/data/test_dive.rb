@@ -48,16 +48,16 @@ module TestDive
         joins: {
           "location": {
             model: 'Location',
+            prefix: 'location_',
             belongs_to: 'location',
             join_type: 'inner',
             columns: [
               {
-                name: 'number',
-                alias: 'location_number'
+                name: 'number'
               },
               {
                 name: 'display_name',
-                alias: 'location_name'
+                alias: 'name'
               }
             ],
             filters: [

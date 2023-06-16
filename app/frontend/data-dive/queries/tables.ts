@@ -15,6 +15,7 @@ const log = new Logger("Tables")
 
 export type TableRef = {
     model: string
+    prefix?: string
     columns?: ColumnRef[]
     joins?: Record<string, JoinedTableRef>
     filters?: Filter[]

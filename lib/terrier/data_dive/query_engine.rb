@@ -14,7 +14,7 @@ end
 # Base class for references to both from-tables and joined-tables
 class TableRef < QueryModel
   # from the frontend
-  attr_accessor :model, :columns, :joins, :filters
+  attr_accessor :model, :prefix, :columns, :joins, :filters
 
   # used by the runner
   attr_accessor :table_name, :alias, :model_class
@@ -155,8 +155,12 @@ class ColumnRef < QueryModel
     elsif @grouped # grouped but no function
       builder.group_by s
     end
-    if @alias.present?
-      s = "#{s} as #{@alias}"
+    a = @alias.presence
+    if table.prefix.present?
+      a = [table.prefix, a || name].compact.join
+    end
+    if a.present? && a != s
+      s = "#{s} as #{a}"
     end
     s
   end
