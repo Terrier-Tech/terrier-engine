@@ -9,10 +9,11 @@ import Fragments from "../fragments"
  */
 export default abstract class PanelPart<
     TState,
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TThemeType, TApp, TTheme> {
+> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
 
     getLoadingContainer() {
         return this.element?.getElementsByClassName('tt-panel')[0]

@@ -9,13 +9,14 @@ import Toasts, {ToastOptions} from "../toasts"
  */
 export default abstract class TerrierPart<
     TState,
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<{theme: TTheme}, TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
 > extends Part<TState> {
 
     get app(): TApp {
-        return this.root as TApp // this should always be true
+        return this.root as unknown as TApp // this should always be true
     }
 
     get theme(): TTheme {

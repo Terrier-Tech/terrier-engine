@@ -40,10 +40,11 @@ type ToolbarFieldDef = ToolbarSelectDef | ToolbarValuedInputDef
  */
 export default abstract class PagePart<
     TState,
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<any, TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TThemeType, TApp, TTheme> {
+> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
 
     /// Content Width
 
