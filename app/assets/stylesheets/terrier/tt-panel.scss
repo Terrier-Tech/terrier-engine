@@ -14,10 +14,14 @@
 		gap: var(--tt-gap);
 		h1, h2, h3, h4, h5 {
 			margin: 0;
+			font-weight: normal;
 			display: flex;
-			gap: var(--tt-gap);
+			gap: 0.5em;
 			flex: 1 1 auto;
 			min-width: 0;
+			i {
+				transform: scale(1.25);
+			}
 		}
 		a {
 			display: block;

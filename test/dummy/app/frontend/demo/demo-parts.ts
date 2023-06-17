@@ -5,13 +5,17 @@ import {messages, strings} from "tuff-core"
 import Toasts from "@terrier/toasts";
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
-import DemoApp, {DemoAppState} from "./demo-app";
+import DemoApp, {DemoAppState} from "./demo-app"
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
+import {Logger} from "tuff-core/logging"
+
+const log = new Logger("Demo Parts")
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
 const dropdownKey = messages.typedKey<{message: string}>()
+const sheetKey = messages.typedKey<{type: 'confirm'}>()
 
 type DemoAction = Action<DemoThemeType>
 
@@ -33,12 +37,31 @@ class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, Dem
         }, "secondary")
 
         this.addAction({
-            title: "Tertiary",
-            classes: ['active']
+            title: "Confirm Sheet",
+            classes: ['active'],
+            click: {key: sheetKey, data: {type: 'confirm'}}
         }, "tertiary")
 
         this.onClick(toastKey, m => {
             Toasts.show(`${m.data!!.color} toast`, {color: m.data!!.color}, this.theme)
+        })
+
+        this.onClick(sheetKey, m => {
+            log.info(`Showing ${m.data?.type} sheet`)
+            switch (m.data?.type) {
+                case 'confirm':
+                    this.app.showConfirmSheet({
+                        title: "Are you sure?",
+                        icon: 'glyp-help',
+                        body: "Are you sure you want to do a thing?"
+                    }, () => {
+                        this.app.showAlertSheet({
+                            title: "Success!",
+                            icon: 'glyp-complete',
+                            body: "Okay, sounds good!"
+                        })
+                    })
+            }
         })
 
         const dropdownActions: Array<DemoAction> = [

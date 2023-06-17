@@ -9,6 +9,8 @@ import {OverlayLayerType, OverlayPart} from "./overlays"
 
 // @ts-ignore
 import logoUrl from './images/optimized/terrier-hub-logo-light.svg'
+import Sheets, {AlertSheetState, ConfirmSheetState, Sheet} from "./sheets";
+import {messages} from "tuff-core";
 
 const log = new Logger('App')
 Logger.level = 'info'
@@ -95,6 +97,51 @@ export abstract class TerrierApp<
         const modal = modalStack.pushModal(constructor, state)
         modalStack.dirty()
         return modal as ModalType
+    }
+
+
+    /// Sheets
+
+    showConfirmSheet(options: ConfirmSheetState<TThemeType>, callback: () => any) {
+        const key = messages.untypedKey()
+        const state = {...options,
+            primaryActions: [
+                {
+                    title: 'Confirm',
+                    icon: 'glyp-checkmark',
+                    click: {key}
+                }
+            ],
+            secondaryActions: [
+                {
+                    title: 'Cancel',
+                    icon: 'glyp-close',
+                    classes: ['secondary'],
+                    click: {key: Sheets.clearKey}
+                }
+            ]
+        }
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet, state, 'sheet')
+        sheet.onClick(key, _ => {
+            sheet.clear()
+            callback()
+        })
+        sheet.dirty()
+    }
+
+    showAlertSheet(options: AlertSheetState<TThemeType>) {
+        const state = {...options,
+            primaryActions: [
+                {
+                    title: 'Okay',
+                    icon: 'glyp-checkmark',
+                    click: {key: Sheets.clearKey},
+                    classes: ['secondary']
+                }
+            ]
+        }
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet, state, 'sheet')
+        sheet.dirty()
     }
 
 

@@ -247,6 +247,14 @@ $color-diff: 0.08;
 	bottom: 0;
 }
 
+@mixin tt-fixed-fill {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Buttons

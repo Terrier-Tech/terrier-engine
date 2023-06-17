@@ -9,7 +9,7 @@ const log = new Logger('Overlays')
 // Part
 ////////////////////////////////////////////////////////////////////////////////
 
-const OverlayLayerTypes = ['modal', 'dropdown', 'lightbox', 'jump'] as const
+const OverlayLayerTypes = ['modal', 'dropdown', 'lightbox', 'jump', 'sheet'] as const
 
 /**
  * The type of overlay for any given layer.
