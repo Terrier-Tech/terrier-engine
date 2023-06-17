@@ -97,9 +97,14 @@ export class TabContainerPart<
     removeTab(key: string) {
         const tab = this.tabs[key]
         if (tab) {
+            log.info(`Removing tab ${key}`, tab)
             delete this.tabs[key]
             this.removeChild(tab.part)
+            this.state.currentTab = undefined
             this.dirty()
+        }
+        else {
+            log.warn(`No tab ${key} to remove!`)
         }
     }
 
