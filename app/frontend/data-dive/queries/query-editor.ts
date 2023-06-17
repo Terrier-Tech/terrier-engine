@@ -4,7 +4,7 @@ import Queries, {Query, QueryResult, QueryValidation} from "./queries"
 import Tables, {FromTableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
-import {DiveEditorState} from "../dives/dive-editor"
+import DiveEditor, {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
 import {messages} from "tuff-core"
 import Html from "tuff-core/html"
@@ -31,8 +31,19 @@ class SettingsPart extends DdContentPart<SubEditorState> {
         this.form = this.makePart(QueryForm, {query: Objects.slice(this.state.query, ...QuerySettingsColumns)})
     }
 
+
+    get parentClasses(): Array<string> {
+        return ['tt-flex', 'column', 'gap']
+    }
+
     renderContent(parent: PartTag) {
         parent.part(this.form)
+        parent.div('.tt-flex.justify-end', row => {
+            row.a('.alert.tt-flex', a => {
+                a.i('.glyp-delete')
+                a.span({text: "Delete"})
+            }).emitClick(DiveEditor.deleteQueryKey, {id: this.state.query.id})
+        })
     }
 
 

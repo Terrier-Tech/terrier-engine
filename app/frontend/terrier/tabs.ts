@@ -91,6 +91,19 @@ export class TabContainerPart<
     }
 
     /**
+     * Removes the tab with the given key.
+     * @param key
+     */
+    removeTab(key: string) {
+        const tab = this.tabs[key]
+        if (tab) {
+            delete this.tabs[key]
+            this.removeChild(tab.part)
+            this.dirty()
+        }
+    }
+
+    /**
      * Changes this tab container to show the tab with the given key
      * @param tabKey
      */

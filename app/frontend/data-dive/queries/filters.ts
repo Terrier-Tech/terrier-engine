@@ -362,7 +362,7 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
         })
         parent.div('.filter', col => {
             if (this.columnDef?.possible_values?.length) {
-                col.div('.tt-flex.gap.wrap.possible-values', row => {
+                col.div('.tt-flex.gap.wrap.possible-values.align-center', row => {
                     for (const val of this.columnDef!.possible_values!) {
                         row.label('.body-size', label => {
                             label.input({type: 'checkbox', checked: this.values.has(val)})
@@ -433,7 +433,7 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
         parent.div('.filter.column', cell => {
 
             // the actual inputs
-            cell.div('.tt-flex.gap', row => {
+            cell.div('.tt-flex.gap.align-center', row => {
                 row.div('.shrink', col => {
                     col.input({type: 'number', value: this.range.relative.toString()})
                         .data({tooltip: "Positive for the future, zero for current, and negative for the past"})
@@ -451,7 +451,7 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
             })
 
             // some common sets
-            cell.div('.tt-flex.gap.wrap', row => {
+            cell.div('.tt-flex.gap.wrap.align-center', row => {
                 for (const period of Dates.virtualPeriods) {
                     row.div('.shrink', col => {
                         for (let relative = -1; relative < 2; relative++) {

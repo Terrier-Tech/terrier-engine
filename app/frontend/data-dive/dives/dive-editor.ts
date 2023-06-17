@@ -20,7 +20,7 @@ export type DiveEditorState = {
     dive: Dive
 }
 
-class DiveEditor extends DdContentPart<DiveEditorState> {
+export default class DiveEditor extends DdContentPart<DiveEditorState> {
 
     tabs!: DdTabContainerPart
     newQueryKey = messages.untypedKey()
@@ -50,11 +50,23 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
         this.onClick(this.newQueryKey, _ => {
             this.app.showModal(NewQueryModal, {editor: this as DiveEditor, schema: this.state.schema})
         })
+
+        this.onClick(DiveEditor.deleteQueryKey, m => {
+            this.deleteQuery(m.data.id)
+        })
     }
 
     addQuery(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
+    }
+
+    deleteQuery(id: string) {
+        log.info(`Deleting query ${id}`)
+        if (Dives.deleteQuery(this.state.dive, id)) {
+            this.tabs.removeTab(id)
+            this.dirty()
+        }
     }
 
     get parentClasses(): Array<string> {
@@ -64,6 +76,8 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
     renderContent(parent: PartTag) {
         parent.part(this.tabs)
     }
+
+    static readonly deleteQueryKey = messages.typedKey<{ id: string }>()
 
 }
 

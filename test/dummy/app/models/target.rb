@@ -21,4 +21,10 @@ class Target < ApplicationRecord
 
   has_many :work_orders, dependent: :restrict_with_error
 
+  def self.metadata
+    {
+      description: "The target pests of work orders"
+    }
+  end
+
 end
