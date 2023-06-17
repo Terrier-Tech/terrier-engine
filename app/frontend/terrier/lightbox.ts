@@ -17,8 +17,9 @@ const log = new Logger('Lightbox')
  * @param containerClass
  */
 function init<
+    TAppState extends { theme: TTheme },
     TT extends ThemeType,
-    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
     TTheme extends Theme<TT>
 >(root: HTMLElement, app: TApp, containerClass: string) {
     log.info("Init", root)
@@ -54,8 +55,9 @@ function init<
 type LightboxState = { src: string }
 
 function showPart<
+    TAppState extends { theme: TTheme },
     TT extends ThemeType,
-    TApp extends TerrierApp<TT,TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
     TTheme extends Theme<TT>
 >(app: TApp, state: LightboxState) {
     app.addOverlay(LightboxPart, {app,...state}, 'lightbox')
@@ -64,8 +66,9 @@ function showPart<
 const closeKey = untypedKey()
 
 class LightboxPart<
+    TAppState extends { theme: TTheme },
     TT extends ThemeType,
-    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
     TTheme extends Theme<TT>
 > extends Part<LightboxState & {app: TApp}> {
 

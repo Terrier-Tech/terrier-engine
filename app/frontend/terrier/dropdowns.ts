@@ -18,10 +18,11 @@ const clearDropdownKey = untypedKey()
  */
 export abstract class Dropdown<
     TState extends {},
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TThemeType, TApp, TTheme> {
+> extends TerrierPart<TState, TAppState, TThemeType, TApp, TTheme> {
 
     parentPart?: StatelessPart
 
@@ -97,11 +98,11 @@ export abstract class Dropdown<
  * A concrete dropdown part that shows a list of actions.
  */
 export class ActionsDropdown<
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends Dropdown<Array<Action<TThemeType>>, TThemeType, TApp, TTheme> {
-
+> extends Dropdown<Array<Action<TThemeType>>, TAppState, TThemeType, TApp, TTheme> {
 
     get autoClose(): boolean {
         return true

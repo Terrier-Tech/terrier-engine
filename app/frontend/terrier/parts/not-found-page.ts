@@ -10,10 +10,11 @@ const log = new Logger('NotFoundRoute')
  * Default page part if the router can't find the path.
  */
 export default class NotFoundRoute<
+    TAppState extends { theme: TTheme },
     TT extends ThemeType,
-    TApp extends TerrierApp<TT, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
     TTheme extends Theme<TT>
-> extends PagePart<NoState, TT, TApp, TTheme> {
+> extends PagePart<NoState, TAppState, TT, TApp, TTheme> {
     async init() {
         this.setTitle("Page Not Found")
     }

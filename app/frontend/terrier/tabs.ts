@@ -37,10 +37,11 @@ export type TabContainerState = {
 }
 
 export class TabContainerPart<
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<any, TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<TabContainerState, TThemeType, TApp, TTheme> {
+> extends TerrierPart<TabContainerState, TAppState, TThemeType, TApp, TTheme> {
 
     private tabs = {} as Record<string, TabDefinition<TThemeType>>
     changeTabKey = typedKey<{ tabKey: string }>()

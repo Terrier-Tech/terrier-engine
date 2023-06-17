@@ -5,7 +5,7 @@ import {messages, strings} from "tuff-core"
 import Toasts from "@terrier/toasts";
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action} from "@terrier/theme"
-import DemoApp from "./demo-app";
+import DemoApp, {DemoAppState} from "./demo-app";
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
 
@@ -15,7 +15,7 @@ const dropdownKey = messages.typedKey<{message: string}>()
 
 type DemoAction = Action<DemoThemeType>
 
-class Panel extends PanelPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
+class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.setTitle("Panel Header ")
@@ -70,7 +70,7 @@ class Panel extends PanelPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
 
 }
 
-class Modal extends ModalPart<NoState, DemoThemeType, DemoApp, DemoTheme> {
+class Modal extends ModalPart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
 
     async init() {
         this.setTitle("Modal Header")
@@ -122,7 +122,7 @@ class DummyTab extends Part<{container: DemoTabs, title: string, content: string
     }
 }
 
-class DemoTabs extends TabContainerPart<DemoThemeType, DemoApp, DemoTheme> {
+class DemoTabs extends TabContainerPart<DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
     async init() {
         await super.init()
         this.upsertTab(

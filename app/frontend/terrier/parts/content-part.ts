@@ -16,10 +16,11 @@ export type ActionLevel = keyof PanelActions<any>
  */
 export default abstract class ContentPart<
     TState,
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TThemeType, TApp, TTheme> {
+> extends TerrierPart<TState, TAppState, TThemeType, TApp, TTheme> {
 
     /**
      * All ContentParts must implement this to render their actual content.
@@ -151,7 +152,7 @@ export default abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TAppState, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {
@@ -174,7 +175,7 @@ export default abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TAppState, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {

@@ -20,10 +20,11 @@ const log = new Logger('Modals')
  */
 export abstract class ModalPart<
     TState,
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TThemeType, TApp, TTheme> {
+> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
 
 
     get parentClasses(): Array<string> {
@@ -75,11 +76,12 @@ export abstract class ModalPart<
 export const modalPopKey = untypedKey()
 
 export class ModalStackPart<
+    TAppState extends { theme: TTheme },
     TThemeType extends ThemeType,
-    TApp extends TerrierApp<TThemeType, TApp, TTheme>,
+    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
     TTheme extends Theme<TThemeType>,
-    TModal extends ModalPart<any, TThemeType, TApp, TTheme>
-> extends TerrierPart<{}, TThemeType, TApp, TTheme> {
+    TModal extends ModalPart<any, TAppState, TThemeType, TApp, TTheme>
+> extends TerrierPart<{}, TAppState, TThemeType, TApp, TTheme> {
 
     displayClass: 'show' | 'hide' = 'show'
 

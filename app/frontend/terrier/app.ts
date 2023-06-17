@@ -21,7 +21,7 @@ export abstract class TerrierApp<
     TThemeType extends ThemeType,
     TSelf extends TerrierApp<TState, TThemeType, TSelf, TTheme>,
     TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TThemeType, TSelf, TTheme> {
+> extends TerrierPart<TState, TState, TThemeType, TSelf, TTheme> {
 
     _theme!: TTheme
 
@@ -45,7 +45,7 @@ export abstract class TerrierApp<
     update(root: HTMLElement) {
         log.info(`Update`, root)
         Tooltips.init(root)
-        Lightbox.init<TThemeType, TSelf, TTheme>(root, this as unknown as TSelf, 'body-content')
+        Lightbox.init<TState, TThemeType, TSelf, TTheme>(root, this as unknown as TSelf, 'body-content')
     }
 
 
@@ -87,7 +87,7 @@ export abstract class TerrierApp<
 
     /// Modals
 
-    showModal<ModalType extends ModalPart<StateType, TThemeType, TSelf, TTheme>, StateType>(
+    showModal<ModalType extends ModalPart<StateType, TState, TThemeType, TSelf, TTheme>, StateType>(
         constructor: PartConstructor<ModalType, StateType>,
         state: StateType
     ): ModalType {
