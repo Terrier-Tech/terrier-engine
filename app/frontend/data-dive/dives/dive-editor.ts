@@ -52,7 +52,9 @@ export default class DiveEditor extends DdContentPart<DiveEditorState> {
         })
 
         this.onClick(DiveEditor.deleteQueryKey, m => {
-            this.deleteQuery(m.data.id)
+            this.app.confirm({title: "Delete Query", icon: 'glyp-delete', body: "Are you sure you want to delete this query?"}, () => {
+                this.deleteQuery(m.data.id)
+            })
         })
     }
 

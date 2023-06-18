@@ -38,6 +38,7 @@ class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, Dem
 
         this.addAction({
             title: "Confirm Sheet",
+            icon: 'glyp-help',
             classes: ['active'],
             click: {key: sheetKey, data: {type: 'confirm'}}
         }, "tertiary")
@@ -50,12 +51,12 @@ class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, Dem
             log.info(`Showing ${m.data?.type} sheet`)
             switch (m.data?.type) {
                 case 'confirm':
-                    this.app.showConfirmSheet({
+                    this.app.confirm({
                         title: "Are you sure?",
                         icon: 'glyp-help',
                         body: "Are you sure you want to do a thing?"
                     }, () => {
-                        this.app.showAlertSheet({
+                        this.app.alert({
                             title: "Success!",
                             icon: 'glyp-complete',
                             body: "Okay, sounds good!"

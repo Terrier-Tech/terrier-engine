@@ -102,7 +102,12 @@ export abstract class TerrierApp<
 
     /// Sheets
 
-    showConfirmSheet(options: ConfirmSheetState<TThemeType>, callback: () => any) {
+    /**
+     * Shows a confirm sheet to the user, asking them a question
+     * @param options
+     * @param callback gets called if the user hits "Confirm"
+     */
+    confirm(options: ConfirmSheetState<TThemeType>, callback: () => any) {
         const key = messages.untypedKey()
         const state = {...options,
             primaryActions: [
@@ -129,7 +134,11 @@ export abstract class TerrierApp<
         sheet.dirty()
     }
 
-    showAlertSheet(options: AlertSheetState<TThemeType>) {
+    /**
+     * Shows an alert sheet to the user with a message (but no choices).
+     * @param options
+     */
+    alert(options: AlertSheetState<TThemeType>) {
         const state = {...options,
             primaryActions: [
                 {
