@@ -175,6 +175,9 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
             section.div('.title', title => {
                 title.i(".glyp-columns")
                 title.span({text: "Columns"})
+                if (this.table.prefix?.length) {
+                    title.span('.prefix').text(`${this.table.prefix}*`)
+                }
             })
             if (this.table.columns?.length) {
                 for (const col of this.table.columns) {
@@ -214,8 +217,9 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
         this.emitMessage(updatedKey, this.state.table)
     }
 
-    updateColumns(columns: ColumnRef[]) {
+    updateColumns(columns: ColumnRef[], prefix?: string) {
         this.state.table.columns = columns
+        this.state.table.prefix = prefix
         this.sendUpdateMessage()
         this.dirty()
     }

@@ -94,6 +94,9 @@
 				justify-content: center;
 				opacity: var(--label-opacity);
 				border-bottom: 1px solid var(--tt-border-color);
+				.prefix {
+					font-weight: bold;
+				}
 			}
 			.line {
 				font-size: var(--tt-caption-font-size);
