@@ -30,7 +30,7 @@ export default class DiveEditor extends DdContentPart<DiveEditorState> {
 
         this.tabs.setBeforeAction({
             title: 'Queries:',
-            icon: 'glyp-query'
+            icon: 'glyp-data_dive_query'
         })
         this.tabs.setAfterAction({
             icon: 'glyp-plus_outline',
@@ -117,7 +117,8 @@ export class DiveEditorPage extends DdPagePart<{}> {
         this.editor = this.makePart(DiveEditor, {schema, dive})
 
         this.addBreadcrumb({
-            title: "Dives"
+            title: "Dives",
+            icon: 'glyp-data_dives'
         })
         this.addBreadcrumb({
             title: dive.name,
@@ -154,7 +155,7 @@ class NewQueryModal extends DdModalPart<NewQueryState> {
     async init() {
         this.settingsForm = this.makePart(QueryForm, {query: {id: 'new', name: '', notes: ''}})
 
-        this.setIcon('glyp-query')
+        this.setIcon('glyp-data_dive_query')
         this.setTitle("New Query")
 
         this.addAction({
