@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-step_develop</title>
+    <g id="icon-step_develop" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" x="5" y="7" width="22" height="14"></rect>
+        <rect id="Rectangle" fill="#000000" x="14" y="21" width="4" height="3"></rect>
+        <rect id="Rectangle" fill="#000000" x="12" y="24" width="8" height="2" rx="1"></rect>
+        <polyline id="Path-29" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="11 17 8 14 11 11"></polyline>
+        <polyline id="Path-29-Copy" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="translate(22.500000, 14.000000) scale(-1, 1) translate(-22.500000, -14.000000) " points="24 17 21 14 24 11"></polyline>
+        <line x1="14" y1="18" x2="18" y2="10" id="Path-30" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+    </g>
+</svg>

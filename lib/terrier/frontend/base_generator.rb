@@ -79,8 +79,8 @@ class BaseGenerator
   def optimize_svgs(in_dir, out_dir)
     info "Optimizing images in #{in_dir.green} and storing them in #{out_dir.blue}"
     clear_directory out_dir
-    svgo_path = Rails.root.join('node_modules/svgo/bin/svgo')
-    system "#{svgo_path} -f #{in_dir} --config #{Rails.root.join('lib/assets/svgo-config.js')} -o #{out_dir}", exception: true
+    svgo_path = Terrier::Engine.root.join('node_modules/svgo/bin/svgo')
+    system "#{svgo_path} -f #{in_dir} --config #{Terrier::Engine.root.join('lib/terrier/icons/svgo-config.cjs')} -o #{out_dir}", exception: true
   end
 
   # ensures that the directory exists and is empty

@@ -1,6 +1,7 @@
 import {PartTag} from "tuff-core/parts"
 import {messages} from "tuff-core"
 import {GlypName} from "./glyps"
+import HubIcons, {HubIconName} from "./gen/hub-icons"
 
 export interface ThemeType {
     readonly icons: string
@@ -8,7 +9,7 @@ export interface ThemeType {
 }
 
 
-export type IconName = GlypName
+export type IconName = GlypName | HubIconName
 
 const ColorNames = [
     'link', 'primary', 'secondary', 'active', 'pending', 'success', 'alert', 'white', 'inactive'
@@ -50,11 +51,16 @@ export type RenderActionOptions = {
 export default class Theme {
     
     renderIcon(parent: PartTag, icon: IconName, color?: ColorName | null): void {
-        const classes: string[] = [icon]
-        if (color?.length) {
-            classes.push(color)
+        if (HubIcons.Names.includes(icon as HubIconName)) {
+            HubIcons.renderIcon(parent, icon as HubIconName, color)
         }
-        parent.i().class(...classes)
+        else { // a regular font icon
+            const classes: string[] = [icon]
+            if (color?.length) {
+                classes.push(color)
+            }
+            parent.i().class(...classes)
+        }
     }
 
     renderCloseIcon(parent: PartTag, color?: ColorName | null): void {

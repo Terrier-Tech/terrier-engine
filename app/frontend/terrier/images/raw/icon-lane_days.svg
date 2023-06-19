@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-lane_days</title>
+    <g id="icon-lane_days" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" x="5" y="7" width="22" height="18"></rect>
+        <path d="M22,4 C22.5522847,4 23,4.44771525 23,5 L23,6 L26,6 C27.1045695,6 28,6.8954305 28,8 L28,24 C28,25.1045695 27.1045695,26 26,26 L6,26 C4.8954305,26 4,25.1045695 4,24 L4,8 C4,6.8954305 4.8954305,6 6,6 L9,6 L9,5 C9,4.44771525 9.44771525,4 10,4 C10.5522847,4 11,4.44771525 11,5 L11,6 L21,6 L21,5 C21,4.44771525 21.4477153,4 22,4 Z M9,8 L6,8 L6,24 L26,24 L26,8 L23,8 L23,9 C23,9.55228475 22.5522847,10 22,10 C21.4477153,10 21,9.55228475 21,9 L21,8 L11,8 L11,9 C11,9.55228475 10.5522847,10 10,10 C9.44771525,10 9,9.55228475 9,9 L9,8 Z" id="Combined-Shape" fill="#000000"></path>
+        <rect id="Rectangle" fill="#000000" x="9" y="12" width="4" height="4" rx="1"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="14" y="12" width="4" height="4" rx="1"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="19" y="12" width="4" height="4" rx="1"></rect>
+    </g>
+</svg>

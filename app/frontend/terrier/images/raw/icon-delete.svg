@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-delete</title>
+    <g id="icon-delete" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Path-2" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="10 27 9 9 23 9 22 27"></polygon>
+        <path d="M19,4 C19.5128358,4 19.9355072,4.38604019 19.9932723,4.88337887 L20,5 L20,7 L24,7 C24.5522847,7 25,7.44771525 25,8 C25,8.55228475 24.5522847,9 24,9 L23.948,9 L22.9984604,27.05547 C22.9711234,27.5475354 22.5912602,27.9401812 22.1121983,27.993763 L22,28 L10,28 C9.50717584,28 9.09406353,27.6425017 9.01399073,27.1671496 L9.00153965,27.05547 L8.051,9 L8,9 C7.44771525,9 7,8.55228475 7,8 C7,7.44771525 7.44771525,7 8,7 L12,7 L12,5 C12,4.48716416 12.3860402,4.06449284 12.8833789,4.00672773 L13,4 L19,4 Z M21.946,9 L10.053,9 L10.946,26 L21.053,26 L21.946,9 Z M18,6 L14,6 L14,7 L18,7 L18,6 Z" id="Rectangle-2" fill="#000000"></path>
+        <line x1="16" y1="12" x2="16" y2="23" id="Path-39" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+        <line x1="12.5" y1="12" x2="13" y2="23" id="Path-39-Copy-2" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+        <line x1="19.5" y1="12" x2="19" y2="23" id="Path-39-Copy" stroke="#000000" stroke-width="2" stroke-linecap="round"></line>
+    </g>
+</svg>
