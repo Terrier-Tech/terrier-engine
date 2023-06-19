@@ -1,9 +1,9 @@
-import {DdContentPart} from "../dd-parts"
 import {Query} from "./queries"
 import {PartTag} from "tuff-core/parts"
 import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
 import {messages} from "tuff-core"
+import ContentPart from "../../terrier/parts/content-part";
 
 const log = new Logger("QueryForm")
 
@@ -12,7 +12,7 @@ export type QuerySettingsColumn = typeof QuerySettingsColumns[number]
 
 export type QuerySettings = Pick<Query, QuerySettingsColumn>
 
-export default class QueryForm extends DdContentPart<{ query: QuerySettings }> {
+export default class QueryForm extends ContentPart<{ query: QuerySettings }> {
 
     fields!: FormFields<QuerySettings>
 

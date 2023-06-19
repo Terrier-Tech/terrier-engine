@@ -1,12 +1,11 @@
-import { Logger } from "tuff-core/logging"
-import { untypedKey } from "tuff-core/messages"
-import { unique } from "tuff-core/arrays"
+import {Logger} from "tuff-core/logging"
+import {untypedKey} from "tuff-core/messages"
+import {unique} from "tuff-core/arrays"
 import {PartTag, StatelessPart} from "tuff-core/parts"
 import Overlays from "./overlays"
 import TerrierPart from "./parts/terrier-part"
 import Objects from "tuff-core/objects"
-import Theme, {Action, ThemeType} from "./theme"
-import {TerrierApp} from "./app"
+import {Action} from "./theme"
 
 const log = new Logger('Dropdowns')
 
@@ -16,13 +15,7 @@ const clearDropdownKey = untypedKey()
  * Abstract base class for dropdown parts.
  * Subclasses must implement the `renderContent()` method to render the dropdown content.
  */
-export abstract class Dropdown<
-    TState extends {},
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export abstract class Dropdown<TState> extends TerrierPart<TState> {
 
     parentPart?: StatelessPart
 
@@ -97,12 +90,7 @@ export abstract class Dropdown<
 /**
  * A concrete dropdown part that shows a list of actions.
  */
-export class ActionsDropdown<
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends Dropdown<Array<Action<TThemeType>>, TAppState, TThemeType, TApp, TTheme> {
+export class ActionsDropdown extends Dropdown<Array<Action>> {
 
     get autoClose(): boolean {
         return true

@@ -1,4 +1,3 @@
-import {DdContentPart, DdTabContainerPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
 import Queries, {Query, QueryValidation} from "./queries"
 import Tables, {FromTableView} from "./tables"
@@ -8,6 +7,8 @@ import {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
 import {messages} from "tuff-core"
 import Html from "tuff-core/html"
+import ContentPart from "../../terrier/parts/content-part";
+import {TabContainerPart} from "../../terrier/tabs";
 
 const log = new Logger("QueryEditor")
 
@@ -23,7 +24,7 @@ const validationKey = messages.typedKey<QueryValidation>()
 // Settings Part
 ////////////////////////////////////////////////////////////////////////////////
 
-class SettingsPart extends DdContentPart<SubEditorState> {
+class SettingsPart extends ContentPart<SubEditorState> {
 
     form!: QueryForm
 
@@ -43,7 +44,7 @@ class SettingsPart extends DdContentPart<SubEditorState> {
 // SQL Part
 ////////////////////////////////////////////////////////////////////////////////
 
-class SqlPart extends DdContentPart<SubEditorState> {
+class SqlPart extends ContentPart<SubEditorState> {
 
     validation?: QueryValidation
 
@@ -81,7 +82,7 @@ class SqlPart extends DdContentPart<SubEditorState> {
 // Preview Part
 ////////////////////////////////////////////////////////////////////////////////
 
-class PreviewPart extends DdContentPart<SubEditorState> {
+class PreviewPart extends ContentPart<SubEditorState> {
 
     renderContent(parent: PartTag) {
         parent.div({text: 'Preview'})
@@ -105,10 +106,10 @@ type SubEditorState = {
     query: Query
 }
 
-export default class QueryEditor extends DdContentPart<QueryEditorState> {
+export default class QueryEditor extends ContentPart<QueryEditorState> {
 
     tableEditor!: FromTableView
-    tabs!: DdTabContainerPart
+    tabs!: TabContainerPart
     settingsPart!: SettingsPart
     sqlPart!: SqlPart
     previewPart!: PreviewPart
@@ -118,7 +119,7 @@ export default class QueryEditor extends DdContentPart<QueryEditorState> {
 
         log.info("Initializing query editor", query)
 
-        this.tabs = this.makePart(DdTabContainerPart, {side: 'left'})
+        this.tabs = this.makePart(TabContainerPart, {side: 'left'})
         this.settingsPart = this.tabs.upsertTab({key: 'settings', title: 'Settings', icon: 'glyp-settings'},
             SettingsPart, {editor: this, query})
 

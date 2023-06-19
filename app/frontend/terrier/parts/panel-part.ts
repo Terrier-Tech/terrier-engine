@@ -1,5 +1,3 @@
-import Theme, {ThemeType} from "../theme"
-import {TerrierApp} from "../app"
 import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
@@ -7,13 +5,7 @@ import Fragments from "../fragments"
 /**
  * A part that renders content inside a panel.
  */
-export default abstract class PanelPart<
-    TState,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export default abstract class PanelPart<TState> extends ContentPart<TState> {
 
     getLoadingContainer() {
         return this.element?.getElementsByClassName('tt-panel')[0]

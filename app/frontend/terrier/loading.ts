@@ -1,7 +1,6 @@
 import Time from "tuff-core/time"
-import Theme, {ThemeType} from "./theme";
-import Html from "tuff-core/html";
-
+import Theme from "./theme"
+import Html from "tuff-core/html"
 
 
 const overlayClass = 'loading-overlay'
@@ -18,7 +17,7 @@ function getOverlay(container: Element): HTMLDivElement | null {
     return null
 }
 
-function createOverlay<TT extends ThemeType>(theme: Theme<TT>): HTMLDivElement {
+function createOverlay(theme: Theme): HTMLDivElement {
     return Html.createElement('div', div => {
         div.class(overlayClass)
         const loaderSrc = theme.getLoaderSrc()
@@ -32,7 +31,7 @@ function createOverlay<TT extends ThemeType>(theme: Theme<TT>): HTMLDivElement {
  * Creates and shows a loading overlay in the given container.
  * @param container
  */
-function showOverlay<TT extends ThemeType>(container: Element, theme: Theme<TT>) {
+function showOverlay(container: Element, theme: Theme) {
     const existingOverlay = getOverlay(container)
     if (existingOverlay) {
         return

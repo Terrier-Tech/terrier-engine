@@ -1,9 +1,7 @@
-import { Logger } from "tuff-core/logging"
-import { untypedKey } from "tuff-core/messages"
+import {Logger} from "tuff-core/logging"
+import {untypedKey} from "tuff-core/messages"
 import TerrierPart from "./parts/terrier-part"
 import {PartConstructor, PartTag} from "tuff-core/parts"
-import Theme, {ThemeType} from "./theme"
-import {TerrierApp} from "./app"
 import ContentPart from "./parts/content-part"
 
 const log = new Logger('Modals')
@@ -18,13 +16,7 @@ const log = new Logger('Modals')
  * Since it extends ContentPart, all of the same title/action methods
  * available for pages can be used in modals as well.
  */
-export abstract class ModalPart<
-    TState,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export abstract class ModalPart<TState> extends ContentPart<TState> {
 
 
     get parentClasses(): Array<string> {
@@ -75,13 +67,7 @@ export abstract class ModalPart<
  */
 export const modalPopKey = untypedKey()
 
-export class ModalStackPart<
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>,
-    TModal extends ModalPart<any, TAppState, TThemeType, TApp, TTheme>
-> extends TerrierPart<{}, TAppState, TThemeType, TApp, TTheme> {
+export class ModalStackPart extends TerrierPart<{}> {
 
     displayClass: 'show' | 'hide' = 'show'
 
@@ -90,7 +76,7 @@ export class ModalStackPart<
         this.listenMessage(modalPopKey, _ => this.pop())
     }
 
-    modals: TModal[] = []
+    modals: ModalPart<any>[] = []
 
     /**
      * Pops the last modal off the stack and removes itself if it's empty.
@@ -127,7 +113,7 @@ export class ModalStackPart<
      * @param constructor the modal class
      * @param state the modal's state
      */
-    pushModal<StateType>(constructor: PartConstructor<TModal, StateType>, state: StateType): TModal {
+    pushModal<StateType>(constructor: PartConstructor<ModalPart<StateType>, StateType>, state: StateType): ModalPart<StateType> {
         log.info(`Making modal`, constructor.name)
         const modal = this.makePart(constructor, state)
         this.modals.push(modal)

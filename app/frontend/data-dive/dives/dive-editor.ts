@@ -1,11 +1,13 @@
-import {DdContentPart, DdPagePart, DdTabContainerPart} from "../dd-parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
 import Dives, {Dive} from "./dives"
 import {Query} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
-import QueryForm from "../queries/query-form";
+import QueryForm from "../queries/query-form"
+import ContentPart from "../../terrier/parts/content-part"
+import {TabContainerPart} from "../../terrier/tabs"
+import PagePart from "../../terrier/parts/page-part";
 
 const log = new Logger("DiveEditor")
 
@@ -15,12 +17,12 @@ export type DiveEditorState = {
     dive: Dive
 }
 
-class DiveEditor extends DdContentPart<DiveEditorState> {
+class DiveEditor extends ContentPart<DiveEditorState> {
 
-    tabs!: DdTabContainerPart
+    tabs!: TabContainerPart
 
     async init() {
-        this.tabs = this.makePart(DdTabContainerPart, {side: 'top'})
+        this.tabs = this.makePart(TabContainerPart, {side: 'top'})
 
         this.tabs.setBeforeAction({
             title: 'Queries:',
@@ -57,7 +59,7 @@ class DiveEditor extends DdContentPart<DiveEditorState> {
 }
 
 
-export class DiveEditorPage extends DdPagePart<{}> {
+export class DiveEditorPage extends PagePart<{}> {
 
     editor?: DiveEditor
 

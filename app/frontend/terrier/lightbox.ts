@@ -1,8 +1,7 @@
-import { Logger } from "tuff-core/logging"
-import { untypedKey } from "tuff-core/messages"
+import {Logger} from "tuff-core/logging"
+import {untypedKey} from "tuff-core/messages"
 import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "./app"
-import Theme, {ThemeType} from "./theme"
 
 const log = new Logger('Lightbox')
 
@@ -16,12 +15,7 @@ const log = new Logger('Lightbox')
  * @param app
  * @param containerClass
  */
-function init<
-    TAppState extends { theme: TTheme },
-    TT extends ThemeType,
-    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
-    TTheme extends Theme<TT>
->(root: HTMLElement, app: TApp, containerClass: string) {
+function init(root: HTMLElement, app: TerrierApp<any>, containerClass: string) {
     log.info("Init", root)
     root.addEventListener("click", evt => {
         if (!(evt.target instanceof HTMLElement) || evt.target.tagName != 'IMG') {
@@ -42,7 +36,7 @@ function init<
 
         const src = elem.src
         log.info(`Clicked on lightbox image ${src}`, evt, elem)
-        showPart(app, {src})
+        showPart(app, {src, app})
 
     }, {capture: true})
 }
@@ -52,25 +46,15 @@ function init<
 // Part
 ////////////////////////////////////////////////////////////////////////////////
 
-type LightboxState = { src: string }
+type LightboxState = { src: string, app: TerrierApp<any> }
 
-function showPart<
-    TAppState extends { theme: TTheme },
-    TT extends ThemeType,
-    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
-    TTheme extends Theme<TT>
->(app: TApp, state: LightboxState) {
-    app.addOverlay(LightboxPart, {app,...state}, 'lightbox')
+function showPart(app: TerrierApp<any>, state: LightboxState) {
+    app.addOverlay(LightboxPart, state, 'lightbox')
 }
 
 const closeKey = untypedKey()
 
-class LightboxPart<
-    TAppState extends { theme: TTheme },
-    TT extends ThemeType,
-    TApp extends TerrierApp<TAppState, TT, TApp, TTheme>,
-    TTheme extends Theme<TT>
-> extends Part<LightboxState & {app: TApp}> {
+class LightboxPart extends Part<LightboxState> {
 
     async init() {
         this.onClick(closeKey, _ => {

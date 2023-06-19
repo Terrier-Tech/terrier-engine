@@ -2,11 +2,13 @@ import {Part, PartTag} from "tuff-core/parts"
 import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableView, TableRef} from "./tables"
-import {DdDropdown, DdFormPart, DdModalPart} from "../dd-parts"
 import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
 import inflection from "inflection"
+import {ModalPart} from "../../terrier/modals";
+import TerrierFormPart from "../../terrier/parts/terrier-form-part";
+import {Dropdown} from "../../terrier/dropdowns";
 
 const log = new Logger("Filters")
 
@@ -113,7 +115,7 @@ const saveKey = messages.untypedKey()
 const addKey = messages.untypedKey()
 const removeKey = messages.typedKey<{ id: string }>()
 
-export class FiltersEditorModal extends DdModalPart<FiltersEditorState> {
+export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 
     modelDef!: ModelDef
     table!: TableRef
@@ -225,7 +227,7 @@ type FilterState = BaseFilterState<Filter>
 /**
  * Base class for editors for specific filter types.
  */
-abstract class FilterEditor<T extends BaseFilter> extends DdFormPart<BaseFilterState<T>> {
+abstract class FilterEditor<T extends BaseFilter> extends TerrierFormPart<BaseFilterState<T>> {
 
     modelDef!: ModelDef
     columnDef?: ColumnDef
@@ -482,7 +484,7 @@ type AddFilterCallback = (filter: Filter) => any
 
 const columnSelectedKey = messages.typedKey<{column: string}>()
 
-class AddFilterDropdown extends DdDropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
+class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
     columns!: string[]
 
 

@@ -1,5 +1,4 @@
-import Theme, {Action, RenderActionOptions, ThemeType} from "../theme"
-import {TerrierApp} from "../app"
+import {Action, RenderActionOptions} from "../theme"
 import ContentPart, {ActionLevel} from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import {optionsForSelect, SelectOptions} from "tuff-core/forms"
@@ -38,13 +37,7 @@ type ToolbarFieldDef = ToolbarSelectDef | ToolbarValuedInputDef
 /**
  * A part that renders content to a full page.
  */
-export default abstract class PagePart<
-    TState,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends ContentPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export default abstract class PagePart<TState> extends ContentPart<TState> {
 
     /// Content Width
 
@@ -55,9 +48,9 @@ export default abstract class PagePart<
 
     /// Breadcrumbs
 
-    private _breadcrumbs = Array<Action<TThemeType>>()
+    private _breadcrumbs = Array<Action>()
 
-    addBreadcrumb(crumb: Action<TThemeType>) {
+    addBreadcrumb(crumb: Action) {
         this._breadcrumbs.push(crumb)
     }
 
@@ -134,7 +127,7 @@ export default abstract class PagePart<
         })
     }
 
-    protected renderActions(parent: PartTag, level: ActionLevel, options?: RenderActionOptions<TThemeType>) {
+    protected renderActions(parent: PartTag, level: ActionLevel, options?: RenderActionOptions) {
         parent.div(`.${level}-actions`, actions => {
             this.app.theme.renderActions(actions, this.getActions(level), options)
         })
@@ -148,7 +141,7 @@ export default abstract class PagePart<
 
             // add a breadcrumb for the page title
             if (this._title?.length) {
-                const titleCrumb: Action<TThemeType> = {
+                const titleCrumb: Action = {
                     title: this._title,
                     icon: this._icon || undefined,
                 }
