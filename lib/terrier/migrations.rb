@@ -2,6 +2,14 @@
 
 module MyColumnMethods
 
+  # rails assumes foreign keys are bigints
+  def references(other, options={})
+    options[:foreign_key] = true unless options.has_key?(:foreign_key)
+    options[:type] = :uuid
+    options[:index] = true unless options.has_key?(:index)
+    super other, **options
+  end
+
   def references_uuid(other, options={})
     options[:type] = :uuid
     options[:index] ||= true
@@ -59,13 +67,15 @@ class ActiveRecord::Migration
     type = options[:type].presence || :text
     add_column from_table, column, type
     if !options.has_key?(:index) || options[:index]
-      add_index from_table, column
+      args = {}
+      args[:name] = options[:index] if options[:index]
+      add_index from_table, column, **args
     end
     add_foreign_key from_table, to_table, column: column
   end
 
-  def add_indexed_column(table, name, type)
-    add_column table, name, type
+  def add_indexed_column(table, name, type, options = {})
+    add_column table, name, type, **options
     add_index table, name
   end
 

@@ -25,6 +25,14 @@ module Terrier::Model
 
   module ClassMethods
 
+    # allow specifying a custom base class for models
+    @base_class = ActiveRecord::Base
+
+    class << self
+      attr_reader :base_class
+    end
+
+
     ## Fields
 
     # creates a string array field and the associated string getter and setter
