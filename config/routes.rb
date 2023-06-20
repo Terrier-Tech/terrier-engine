@@ -25,9 +25,10 @@ Rails.application.routes.draw do
 
     get 'data_dive' => 'data_dive#index'
     get 'data_dive/test_dive'
+    get 'data_dive/list'
     post 'data_dive/validate_query'
     post 'data_dive/preview_query'
-    get 'data_dive/*rel' => 'data_dive#index'
+    get 'data_dive/editor'
   end
 
 end

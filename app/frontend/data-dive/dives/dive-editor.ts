@@ -122,7 +122,8 @@ export class DiveEditorPage extends PagePart<{}> {
 
         this.addBreadcrumb({
             title: "Dives",
-            icon: 'glyp-data_dives'
+            icon: 'glyp-data_dives',
+            href: "/data_dive"
         })
         this.addBreadcrumb({
             title: dive.name,

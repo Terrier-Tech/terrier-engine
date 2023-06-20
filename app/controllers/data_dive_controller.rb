@@ -10,7 +10,20 @@ class DataDiveController < ApplicationController
 
   def index
     @title = "Data Dive"
+    @entrypoint = 'dd-dive-list'
+  end
+
+  def editor
+    @title = "Data Dive Editor"
     @entrypoint = 'dd-dive-editor'
+  end
+
+  # get all dives associated with the current user
+  def list
+    user = _terrier_change_user
+    dives = DdDive.where(_state: 0)
+                  .where("owner_id = ? OR visibility = 'public'", user.id)
+    render_api_success dives: dives, user: user
   end
 
   def test_dive
