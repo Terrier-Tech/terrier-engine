@@ -24,5 +24,11 @@ class DdDiveRun < ApplicationRecord
 
   belongs_to :dd_dive
 
+  enum_field :status, %w[running success error]
+
+  json_field :input_data
+  json_field :output_data
+
+  include SpreadsheetUploader::Attachment(:output_file)
 
 end

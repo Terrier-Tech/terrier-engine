@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'niceql'
   s.add_dependency 'shrine'
   s.add_dependency 'marcel'
+  s.add_dependency 'kramdown'
 
   s.add_development_dependency 'pg'
   s.add_development_dependency 'sassc', '>= 2.4.0'

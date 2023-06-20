@@ -4,7 +4,8 @@ class DataDives < ActiveRecord::Migration[7.0]
     create_model :dd_dive_groups do |t|
       t.text :name, null: false
       t.text :icon
-      t.text :description
+      t.text :description_raw
+      t.text :description_html
       t.integer :sort_order
       t.text :group_types, array: true, null: false, default: []
     end
@@ -16,7 +17,8 @@ class DataDives < ActiveRecord::Migration[7.0]
       t.text :description_raw
       t.text :description_html
       t.text :visibility, null: false
-      t.jsonb :data
+      t.integer :sort_order
+      t.jsonb :query_data
     end
 
     create_model :dd_dive_runs do |t|

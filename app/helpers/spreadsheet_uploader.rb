@@ -3,6 +3,6 @@ class SpreadsheetUploader < Shrine
 
   Attacher.validate do
     validate_size 1..10 * 1024 * 1024 # MB
-    validate_mime_type %w[application/vnd.android.package-archive application/octet-stream application/zip]
+    validate_mime_type %w[text/csv application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet]
   end
 end

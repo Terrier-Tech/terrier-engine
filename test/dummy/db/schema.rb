@@ -46,7 +46,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_19_124820) do
     t.text "updated_by_name"
     t.text "name", null: false
     t.text "icon"
-    t.text "description"
+    t.text "description_raw"
+    t.text "description_html"
     t.integer "sort_order"
     t.text "group_types", default: [], null: false, array: true
     t.index ["_state"], name: "index_dd_dive_groups_on__state"
@@ -91,7 +92,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_19_124820) do
     t.text "description_raw"
     t.text "description_html"
     t.text "visibility", null: false
-    t.jsonb "data"
+    t.integer "sort_order"
+    t.jsonb "query_data"
     t.index ["_state"], name: "index_dd_dives_on__state"
     t.index ["created_by_id"], name: "index_dd_dives_on_created_by_id"
     t.index ["dd_dive_group_id"], name: "index_dd_dives_on_dd_dive_group_id"
@@ -294,7 +296,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_19_124820) do
   add_foreign_key "contacts", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "created_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "updated_by_id"
-  add_foreign_key "dd_dive_runs", "dd_dives", column: "dd_dive_id"
+  add_foreign_key "dd_dive_runs", "dd_dives"
   add_foreign_key "dd_dive_runs", "users", column: "created_by_id"
   add_foreign_key "dd_dive_runs", "users", column: "updated_by_id"
   add_foreign_key "dd_dives", "dd_dive_groups"

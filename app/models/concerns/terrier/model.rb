@@ -1,3 +1,5 @@
+require 'kramdown'
+
 class ValidationError < StandardError
 
   attr_reader :errors
@@ -401,6 +403,24 @@ module Terrier::Model
         record.errors
       else
         { base: [ex.message] }
+      end
+    end
+
+
+    ## Markdown
+
+    def markdown_field(name)
+      self.before_validation -> do
+        raw = self.send("#{name}_raw")
+        if raw
+
+          # replace multiple equals or dashes with something better so it doesn't turn into a header
+          raw = raw.gsub /^=+$/, '<hr>'
+          raw = raw.gsub /^-+$/, '<hr>'
+
+          rendered = Kramdown::Document.new(raw, parse_block_html: true).to_html
+          self.send("#{name}_html=", rendered)
+        end
       end
     end
 
