@@ -1,6 +1,6 @@
 import {Query} from "../queries/queries"
 import Api from "../../terrier/api"
-import {arrays} from "tuff-core";
+import {arrays} from "tuff-core"
 
 
 export type Dive = {

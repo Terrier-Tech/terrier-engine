@@ -2,12 +2,12 @@ import TerrierPart from "../../terrier/parts/terrier-part"
 import {Dive} from "./dives"
 import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
-import {messages} from "tuff-core";
-import {PartTag} from "tuff-core/parts";
+import {messages} from "tuff-core"
+import {PartTag} from "tuff-core/parts"
 
 const log = new Logger("DiveForm")
 
-export const DiveSettingsColumns = ['id', 'name', 'description_raw'] as const
+export const DiveSettingsColumns = ['name', 'description_raw'] as const
 export type DiveSettingsColumn = typeof DiveSettingsColumns[number]
 
 export type DiveSettings = Pick<Dive, DiveSettingsColumn>
@@ -41,5 +41,9 @@ export default class DiveForm extends TerrierPart<{dive: DiveSettings}> {
                 this.fields.textArea(col, 'description_raw')
             })
         })
+    }
+
+    async serialize(): Promise<DiveSettings> {
+        return await this.fields.serialize()
     }
 }

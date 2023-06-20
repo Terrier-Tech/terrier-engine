@@ -4,8 +4,8 @@ import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {ModalPart} from "../../terrier/modals"
 import {QueryModelPicker} from "../queries/queries"
-import {messages} from "tuff-core";
-import DiveForm from "./dive-form";
+import {messages} from "tuff-core"
+import DiveForm from "./dive-form"
 
 const log = new Logger("DiveList")
 
@@ -62,7 +62,7 @@ class NewDiveModal extends ModalPart<NewDiveState> {
     createKey = messages.untypedKey()
 
     async init() {
-        this.settingsForm = this.makePart(DiveForm, {dive: {id: '', name: '', description_raw: ''}})
+        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: ''}})
         this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
 
         this.setTitle("New Dive")
@@ -74,8 +74,20 @@ class NewDiveModal extends ModalPart<NewDiveState> {
             click: {key: this.createKey}
         })
 
-        this.onClick(this.createKey, _ => {
-
+        this.onClick(this.createKey, async _ => {
+            const settings = await this.settingsForm.serialize()
+            const model = this.modelPicker.model
+            if (!settings.name?.length) {
+                this.showToast("Please enter a query name", {color: 'alert'})
+                this.dirty()
+                return
+            }
+            if (!model) {
+                this.showToast("Please select a model", {color: 'alert'})
+                return
+            }
+            log.info(`Creating new dive!`, settings)
+            this.pop()
         })
     }
 
