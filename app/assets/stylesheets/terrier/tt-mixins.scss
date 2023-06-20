@@ -183,6 +183,9 @@ $color-diff: 0.08;
 @mixin tt-inset-box {
 	@include tt-rounded-corners;
 	background-color: var(--tt-inset-background);
+	&.padded {
+		padding: var(--tt-pad);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

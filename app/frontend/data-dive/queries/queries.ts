@@ -2,8 +2,14 @@ import {TableRef} from "./tables"
 import api, {ApiResponse} from "../../terrier/api"
 import {PartTag} from "tuff-core/parts"
 import {TableCellTag} from "tuff-core/html"
-import dayjs from "dayjs";
-import QueryEditor from "./query-editor";
+import dayjs from "dayjs"
+import QueryEditor from "./query-editor"
+import TerrierPart from "../../terrier/parts/terrier-part"
+import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
+import {messages} from "tuff-core"
+import {Logger} from "tuff-core/logging";
+
+const log = new Logger("Queries")
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,6 +161,85 @@ function renderPreview(parent: PartTag, result: QueryResult) {
         renderTable(parent, result.rows, result.columns)
     } else {
         parent.div('.tt-bubble.alert').text(result.message)
+    }
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Model Picker
+////////////////////////////////////////////////////////////////////////////////
+
+export type QueryModelPickerState = {
+    schema: SchemaDef
+}
+
+/**
+ * Presents a bunch of radio buttons to select the model for a query.
+ */
+export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
+
+    pickedKey = messages.typedKey<{ model: string }>()
+    model?: ModelDef
+
+    async init() {
+
+        this.onChange(this.pickedKey, m => {
+            log.info(`Picked model ${m.data.model}`)
+            this.model = this.state.schema.models[m.data.model]
+        })
+    }
+
+
+    get parentClasses(): Array<string> {
+        return ['dd-query-model-picker', 'padded', 'tt-inset-box', 'tt-flex', 'column', 'gap']
+    }
+
+    renderModelOption(parent: PartTag, model: ModelDef) {
+        parent.label('.model-option', label => {
+            label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
+                .emitChange(this.pickedKey, {model: model.name})
+            label.div(col => {
+                col.div('.name').text(model.name)
+                if (model.metadata?.description) {
+                    col.div('.description').text(model.metadata.description)
+                }
+            })
+        })
+    }
+
+    render(parent: PartTag): any {
+        parent.h2('.centered', h2 => {
+            h2.i('.glyp-database')
+            h2.span().text("Select a Model")
+        })
+        parent.p('.caption').text("The model forms the basis of the query. Other models can be joined into the query but they will all flow from the one selected below.")
+        parent.div('.tt-flex.gap.collapsible', row => {
+            row.div('.stretch.tt-flex.column.gap', col => {
+                const commonModels = Schema.commonModels(this.state.schema)
+                if (commonModels.length) {
+                    col.h3(h3 => {
+                        h3.i('.glyp-refresh')
+                        h3.span().text("Common Models")
+                    })
+                    for (const model of commonModels) {
+                        this.renderModelOption(col, model)
+                    }
+                }
+            })
+
+            row.div('.stretch.tt-flex.column.gap', col => {
+                const uncommonModels = Schema.uncommonModels(this.state.schema)
+                if (uncommonModels.length) {
+                    col.h3(h3 => {
+                        h3.i('.glyp-pending')
+                        h3.span().text("Other Models")
+                    })
+                    for (const model of uncommonModels) {
+                        this.renderModelOption(col, model)
+                    }
+                }
+            })
+        })
     }
 }
 

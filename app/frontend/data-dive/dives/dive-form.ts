@@ -1,0 +1,45 @@
+import TerrierPart from "../../terrier/parts/terrier-part"
+import {Dive} from "./dives"
+import {FormFields} from "tuff-core/forms"
+import {Logger} from "tuff-core/logging"
+import {messages} from "tuff-core";
+import {PartTag} from "tuff-core/parts";
+
+const log = new Logger("DiveForm")
+
+export const DiveSettingsColumns = ['id', 'name', 'description_raw'] as const
+export type DiveSettingsColumn = typeof DiveSettingsColumns[number]
+
+export type DiveSettings = Pick<Dive, DiveSettingsColumn>
+
+export default class DiveForm extends TerrierPart<{dive: DiveSettings}> {
+
+    fields!: FormFields<DiveSettings>
+
+    async init() {
+        this.fields = new FormFields<DiveSettings>(this, this.state.dive)
+        this.listen('datachanged', this.fields.dataChangedKey, m => {
+            log.info(`Query fields changed`, m.data)
+            Object.assign(this.state.dive, m.data)
+            this.emitMessage(DiveForm.settingsChangedKey, m.data)
+        }, {attach: 'passive'})
+    }
+
+    static readonly settingsChangedKey = messages.typedKey<DiveSettings>()
+
+    render(parent: PartTag): any {
+        parent.div('.tt-flex.gap', row => {
+            row.div('.stretch', col => {
+                col.label().text("Name")
+                const nameField = this.fields.textInput(col, 'name')
+                if (!this.state.dive.name.length) {
+                    nameField.class('error')
+                }
+            })
+            row.div('.stretch', col => {
+                col.label().text("Description")
+                this.fields.textArea(col, 'description_raw')
+            })
+        })
+    }
+}

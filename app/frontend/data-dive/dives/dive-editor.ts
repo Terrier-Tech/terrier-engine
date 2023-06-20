@@ -1,8 +1,8 @@
 
-import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
+import Schema, {SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
 import Dives, {Dive} from "./dives"
-import {Query} from "../queries/queries"
+import {Query, QueryModelPicker} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
@@ -65,6 +65,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     addQuery(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
+        this.tabs.showTab(query.id)
     }
 
     deleteQuery(id: string) {
@@ -154,11 +155,11 @@ class NewQueryModal extends ModalPart<NewQueryState> {
 
     addKey = messages.untypedKey()
     settingsForm!: QueryForm
-    model?: ModelDef
-    modelPickedKey = messages.typedKey<{model: string}>()
+    modelPicker!: QueryModelPicker
 
     async init() {
         this.settingsForm = this.makePart(QueryForm, {query: {id: 'new', name: '', notes: ''}})
+        this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
 
         this.setIcon('glyp-data_dive_query')
         this.setTitle("New Query")
@@ -173,54 +174,20 @@ class NewQueryModal extends ModalPart<NewQueryState> {
             await this.save()
         })
 
-        this.onChange(this.modelPickedKey, m => {
+        this.onChange(this.modelPicker.pickedKey, m => {
             log.info(`Picked model ${m.data.model}`)
-            this.model = this.state.schema.models[m.data.model]
+            const model = this.state.schema.models[m.data.model]
             if (!this.settingsForm.state.query.name?.length) {
-                this.settingsForm.state.query.name = this.model?.name
+                this.settingsForm.state.query.name = model.name
                 this.settingsForm.dirty()
             }
-        })
-    }
-
-    renderModelOption(parent: PartTag, model: ModelDef) {
-        parent.label('.model-option', label => {
-            label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
-                .emitChange(this.modelPickedKey, {model: model.name})
-            label.div(col => {
-                col.div('.name').text(model.name)
-                if (model.metadata?.description) {
-                    col.div('.description').text(model.metadata.description)
-                }
-            })
         })
     }
 
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.tt-form.padded.column.gap.dd-new-query-form', col => {
             col.part(this.settingsForm)
-
-            const commonModels = Schema.commonModels(this.state.schema)
-            if (commonModels.length) {
-                col.h3(h3 => {
-                    h3.i('.glyp-refresh')
-                    h3.span().text("Common Models")
-                })
-                for (const model of commonModels) {
-                    this.renderModelOption(col, model)
-                }
-            }
-
-            const uncommonModels = Schema.uncommonModels(this.state.schema)
-            if (uncommonModels.length) {
-                col.h3(h3 => {
-                    h3.i('.glyp-pending')
-                    h3.span().text("Other Models")
-                })
-                for (const model of uncommonModels) {
-                    this.renderModelOption(col, model)
-                }
-            }
+            col.part(this.modelPicker)
         })
     }
 
@@ -232,11 +199,13 @@ class NewQueryModal extends ModalPart<NewQueryState> {
             this.dirty()
             return
         }
-        if (!this.model) {
+        const model = this.modelPicker.model
+        if (!model) {
             this.showToast("Please select a model", {color: 'alert'})
             return
         }
-        const query = {...settings, from: {model: this.model.name}}
+        // TODO: a better id
+        const query = {...settings, id: (new Date()).toString(), from: {model: model.name}}
         this.state.editor.addQuery(query)
         this.pop()
     }

@@ -4,7 +4,9 @@ import {arrays} from "tuff-core";
 
 
 export type Dive = {
+    id: string
     name: string
+    description_raw: string
     queries: Query[]
 }
 
