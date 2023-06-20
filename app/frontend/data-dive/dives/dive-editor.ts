@@ -1,16 +1,17 @@
 
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
-import Dives, {Dive} from "./dives"
+import Dives from "./dives"
 import {Query, QueryModelPicker} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
-import {messages} from "tuff-core"
+import {arrays, messages} from "tuff-core"
 import {TabContainerPart} from "../../terrier/tabs"
 import PagePart from "../../terrier/parts/page-part"
 import ContentPart from "../../terrier/parts/content-part"
 import {ModalPart} from "../../terrier/modals"
+import {DdDive} from "../../terrier/gen/models"
 
 const log = new Logger("DiveEditor")
 
@@ -21,13 +22,15 @@ const log = new Logger("DiveEditor")
 
 export type DiveEditorState = {
     schema: SchemaDef
-    dive: Dive
+    dive: DdDive
 }
 
 export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     tabs!: TabContainerPart
     newQueryKey = messages.untypedKey()
+
+    queries = new Array<Query>()
 
     async init() {
         this.tabs = this.makePart(TabContainerPart, {side: 'top'})
@@ -41,7 +44,8 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             click: {key: this.newQueryKey}
         })
 
-        for (const query of this.state.dive.queries) {
+        this.queries = this.state.dive.query_data?.queries || []
+        for (const query of this.queries) {
             this.addQuery(query)
         }
 
@@ -65,12 +69,11 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     addQuery(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
-        this.tabs.showTab(query.id)
     }
 
     deleteQuery(id: string) {
         log.info(`Deleting query ${id}`)
-        if (Dives.deleteQuery(this.state.dive, id)) {
+        if (arrays.deleteIf(this.queries, q => q.id == id) > 0) {
             this.tabs.removeTab(id)
             this.dirty()
         }
@@ -207,6 +210,7 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         // TODO: a better id
         const query = {...settings, id: (new Date()).toString(), from: {model: model.name}}
         this.state.editor.addQuery(query)
+        this.state.editor.tabs.showTab(query.id)
         this.pop()
     }
 

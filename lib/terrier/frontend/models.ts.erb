@@ -9,6 +9,7 @@
 
   export type <%= model_name %> = {
     <% model[:columns].each do |col| -%>
+      <% next if model[:attachments].include?(col.name.to_sym) -%>
       <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
@@ -24,6 +25,7 @@
 
   export type Unpersisted<%= model_name %> = {
     <% model[:columns].each do |col| -%>
+      <% next if model[:attachments].include?(col.name.to_sym) -%>
       <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>

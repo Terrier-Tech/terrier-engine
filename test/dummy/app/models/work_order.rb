@@ -28,6 +28,10 @@
 # +------------+------------+----------+
 class WorkOrder < ApplicationRecord
 
+  def self.exclude_from_frontend?
+    true
+  end
+
   belongs_to :target, optional: true
   belongs_to :invoice, optional: true
 

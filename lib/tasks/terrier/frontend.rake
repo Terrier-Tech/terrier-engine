@@ -3,9 +3,15 @@ require 'terrier/icons/hub_icon_generator'
 
 namespace :frontend do
 
-  desc "Generate model files"
+  desc "Generate model files for the application"
   task gen_models: :environment do
     ModelGenerator.new.run
+  end
+
+  desc "Generate model files for the engine"
+  task gen_engine_models: :environment do
+    typescript_dir = Terrier::Engine.root.join('app/frontend/terrier/gen').to_s
+    ModelGenerator.new(typescript_dir: typescript_dir, imports: {'../../data-dive/queries/queries' => ['Query']}).run
   end
 
   desc "Generates hub icons"

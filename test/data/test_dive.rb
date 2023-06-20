@@ -2,8 +2,9 @@ module TestDive
 
   def self.get
     {
+      id: 'test',
       name: "Test",
-      queries: [self.order_details, self.order_summary]
+      query_data: {queries: [self.order_details, self.order_summary]}
     }
   end
 

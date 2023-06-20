@@ -37,7 +37,9 @@ class DdDive < ApplicationRecord
 
   belongs_to :owner, class_name: 'User', optional: true
 
-  json_field :query_data
+  json_field :query_data, {}, {
+    queries: 'Query[]'
+  }
 
   enum_field :visibility, %w[public private]
 

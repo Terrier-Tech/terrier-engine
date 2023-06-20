@@ -1,8 +1,10 @@
 // This file was automatically generated, DO NOT EDIT IT MANUALLY!
 
+import { Query } from "../../data-dive/queries/queries"
+
 import { OptionalProps } from "tuff-core/types"
 
-export type Contact = {
+export type DdDive = {
     id: string
     created_at: string
     updated_at: string
@@ -12,16 +14,22 @@ export type Contact = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    location_id: string
-    user_id: string
-    contact_type: "customer" | "employee"
+    owner_id?: string
+    dd_dive_group_id?: string
+    name: string
+    description_raw?: string
+    description_html?: string
+    visibility: "public" | "private"
+    sort_order?: number
+    query_data?: { queries: Query[] }
     created_by?: User
     updated_by?: User
-    user?: User
-    location?: Location
+    dd_dive_group?: DdDiveGroup
+    dd_dive_runs?: DdDiveRun[]
+    owner?: User
 }
 
-export type UnpersistedContact = {
+export type UnpersistedDdDive = {
     id?: string
     created_at?: string
     updated_at?: string
@@ -31,20 +39,26 @@ export type UnpersistedContact = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    location_id: string
-    user_id: string
-    contact_type: "customer" | "employee"
+    owner_id?: string
+    dd_dive_group_id?: string
+    name: string
+    description_raw?: string
+    description_html?: string
+    visibility: "public" | "private"
+    sort_order?: number
+    query_data?: { queries: Query[] }
     created_by?: User
     updated_by?: User
-    user?: User
-    location?: Location
+    dd_dive_group?: DdDiveGroup
+    dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_id">[]
+    owner?: User
 }
 
-export const ContactEnumFields = {
-    contact_type: ["customer", "employee"] as const,
+export const DdDiveEnumFields = {
+    visibility: ["public", "private"] as const,
 }
 
-export type Invoice = {
+export type DdDiveGroup = {
     id: string
     created_at: string
     updated_at: string
@@ -54,18 +68,18 @@ export type Invoice = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    date: string
-    status: "pending" | "open" | "paid" | "void"
-    price: number
-    location_id: string
-    lines?: string[]
+    name: string
+    icon?: string
+    description_raw?: string
+    description_html?: string
+    sort_order?: number
+    group_types: string[]
     created_by?: User
     updated_by?: User
-    location?: Location
-    work_orders?: WorkOrder[]
+    dd_dives?: DdDive[]
 }
 
-export type UnpersistedInvoice = {
+export type UnpersistedDdDiveGroup = {
     id?: string
     created_at?: string
     updated_at?: string
@@ -75,22 +89,18 @@ export type UnpersistedInvoice = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    date: string
-    status: "pending" | "open" | "paid" | "void"
-    price: number
-    location_id: string
-    lines?: string[]
+    name: string
+    icon?: string
+    description_raw?: string
+    description_html?: string
+    sort_order?: number
+    group_types: string[]
     created_by?: User
     updated_by?: User
-    location?: Location
-    work_orders?: OptionalProps<UnpersistedWorkOrder, "invoice_id">[]
+    dd_dives?: OptionalProps<UnpersistedDdDive, "dd_dive_group_id">[]
 }
 
-export const InvoiceEnumFields = {
-    status: ["pending", "open", "paid", "void"] as const,
-}
-
-export type Location = {
+export type DdDiveRun = {
     id: string
     created_at: string
     updated_at: string
@@ -100,26 +110,17 @@ export type Location = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    annual_value?: number
-    city?: string
-    state?: string
-    display_name: string
-    number: number
-    tags?: string[]
-    status: "onetime" | "contract"
-    data?: object
-    address1?: string
-    address2?: string
-    zip?: string
-    county?: string
+    dd_dive_id?: string
+    input_data?: object
+    output_data?: object
+    status: "running" | "success" | "error"
     created_by?: User
     updated_by?: User
-    work_orders?: WorkOrder[]
-    invoices?: Invoice[]
-    contacts?: Contact[]
+    dd_dive?: DdDive
+    output_file?: File
 }
 
-export type UnpersistedLocation = {
+export type UnpersistedDdDiveRun = {
     id?: string
     created_at?: string
     updated_at?: string
@@ -129,27 +130,18 @@ export type UnpersistedLocation = {
     extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
-    annual_value?: number
-    city?: string
-    state?: string
-    display_name: string
-    number: number
-    tags?: string[]
-    status: "onetime" | "contract"
-    data?: object
-    address1?: string
-    address2?: string
-    zip?: string
-    county?: string
+    dd_dive_id?: string
+    input_data?: object
+    output_data?: object
+    status: "running" | "success" | "error"
     created_by?: User
     updated_by?: User
-    work_orders?: OptionalProps<UnpersistedWorkOrder, "location_id">[]
-    invoices?: OptionalProps<UnpersistedInvoice, "location_id">[]
-    contacts?: OptionalProps<UnpersistedContact, "location_id">[]
+    dd_dive?: DdDive
+    output_file?: File
 }
 
-export const LocationEnumFields = {
-    status: ["onetime", "contract"] as const,
+export const DdDiveRunEnumFields = {
+    status: ["running", "success", "error"] as const,
 }
 
 export type Script = {
@@ -275,40 +267,6 @@ export const ScriptRunEnumFields = {
     status: ["running", "success", "error", "cancelled", "cleared"] as const,
 }
 
-export type Target = {
-    id: string
-    created_at: string
-    updated_at: string
-    _state: number
-    created_by_id?: string
-    created_by_name: string
-    extern_id?: string
-    updated_by_id?: string
-    updated_by_name?: string
-    name: string
-    description?: string
-    created_by?: User
-    updated_by?: User
-    work_orders?: WorkOrder[]
-}
-
-export type UnpersistedTarget = {
-    id?: string
-    created_at?: string
-    updated_at?: string
-    _state?: number
-    created_by_id?: string
-    created_by_name?: string
-    extern_id?: string
-    updated_by_id?: string
-    updated_by_name?: string
-    name: string
-    description?: string
-    created_by?: User
-    updated_by?: User
-    work_orders?: OptionalProps<UnpersistedWorkOrder, "target_id">[]
-}
-
 export type User = {
     id: string
     created_at: string
@@ -338,8 +296,6 @@ export type User = {
     zip?: string
     created_by?: User
     updated_by?: User
-    work_orders?: WorkOrder[]
-    contacts?: Contact[]
 }
 
 export type UnpersistedUser = {
@@ -371,110 +327,46 @@ export type UnpersistedUser = {
     zip?: string
     created_by?: User
     updated_by?: User
-    work_orders?: OptionalProps<UnpersistedWorkOrder, "user_id">[]
-    contacts?: OptionalProps<UnpersistedContact, "user_id">[]
 }
 
 export const UserEnumFields = {
     role: ["technician", "office", "customer"] as const,
 }
 
-export type WorkOrder = {
-    id: string
-    created_at: string
-    updated_at: string
-    _state: number
-    created_by_id?: string
-    created_by_name: string
-    extern_id?: string
-    updated_by_id?: string
-    updated_by_name?: string
-    time?: string
-    status: "active" | "complete" | "cancelled"
-    price: number
-    location_id: string
-    user_id: string
-    invoice_id?: string
-    target_id?: string
-    notes?: string
-    created_by?: User
-    updated_by?: User
-    target?: Target
-    invoice?: Invoice
-    location?: Location
-    user?: User
-}
-
-export type UnpersistedWorkOrder = {
-    id?: string
-    created_at?: string
-    updated_at?: string
-    _state?: number
-    created_by_id?: string
-    created_by_name?: string
-    extern_id?: string
-    updated_by_id?: string
-    updated_by_name?: string
-    time?: string
-    status: "active" | "complete" | "cancelled"
-    price: number
-    location_id: string
-    user_id: string
-    invoice_id?: string
-    target_id?: string
-    notes?: string
-    created_by?: User
-    updated_by?: User
-    target?: Target
-    invoice?: Invoice
-    location?: Location
-    user?: User
-}
-
-export const WorkOrderEnumFields = {
-    status: ["active", "complete", "cancelled"] as const,
-}
-
 /**
  * Map model names to their types.
  */
 export type PersistedModelTypeMap = {
-    contact: Contact
-    invoice: Invoice
-    location: Location
+    dd_dive: DdDive
+    dd_dive_group: DdDiveGroup
+    dd_dive_run: DdDiveRun
     script: Script
     script_run: ScriptRun
-    target: Target
     user: User
-    work_order: WorkOrder
 }
 
 /**
  * Map model names to their unpersisted types.
  */
 export type UnpersistedModelTypeMap = {
-    contact: UnpersistedContact
-    invoice: UnpersistedInvoice
-    location: UnpersistedLocation
+    dd_dive: UnpersistedDdDive
+    dd_dive_group: UnpersistedDdDiveGroup
+    dd_dive_run: UnpersistedDdDiveRun
     script: UnpersistedScript
     script_run: UnpersistedScriptRun
-    target: UnpersistedTarget
     user: UnpersistedUser
-    work_order: UnpersistedWorkOrder
 }
 
 /**
  * Map model names to their association names.
  */
 export type ModelIncludesMap = {
-    contact: "created_by" | "location" | "updated_by" | "user"
-    invoice: "created_by" | "location" | "updated_by" | "work_orders"
-    location: "contacts" | "created_by" | "invoices" | "updated_by" | "work_orders"
+    dd_dive: "created_by" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
+    dd_dive_group: "created_by" | "dd_dives" | "updated_by"
+    dd_dive_run: "created_by" | "dd_dive" | "updated_by"
     script: "created_by" | "script_runs" | "updated_by"
     script_run: "created_by" | "script" | "updated_by"
-    target: "created_by" | "updated_by" | "work_orders"
     user: "contacts" | "created_by" | "updated_by" | "work_orders"
-    work_order: "created_by" | "invoice" | "location" | "target" | "updated_by" | "user"
 }
 
 /**

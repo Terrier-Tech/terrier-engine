@@ -6,8 +6,8 @@ import dayjs from "dayjs"
 import QueryEditor from "./query-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
-import {messages} from "tuff-core"
-import {Logger} from "tuff-core/logging";
+import {arrays, messages} from "tuff-core"
+import {Logger} from "tuff-core/logging"
 
 const log = new Logger("Queries")
 
@@ -209,19 +209,19 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 
     render(parent: PartTag): any {
         parent.h2('.centered', h2 => {
-            h2.i('.glyp-database')
-            h2.span().text("Select a Model")
+            h2.i('.glyp-table')
+            h2.span().text("Select a Table")
         })
-        parent.p('.caption').text("The model forms the basis of the query. Other models can be joined into the query but they will all flow from the one selected below.")
+        parent.p('.caption').text("The table forms the basis of the query. Other tables can be joined into the query but they will all flow from the one selected below.")
         parent.div('.tt-flex.gap.collapsible', row => {
             row.div('.stretch.tt-flex.column.gap', col => {
                 const commonModels = Schema.commonModels(this.state.schema)
                 if (commonModels.length) {
                     col.h3(h3 => {
                         h3.i('.glyp-refresh')
-                        h3.span().text("Common Models")
+                        h3.span().text("Common Tables")
                     })
-                    for (const model of commonModels) {
+                    for (const model of arrays.sortBy(commonModels, 'name')) {
                         this.renderModelOption(col, model)
                     }
                 }
@@ -232,9 +232,9 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
                 if (uncommonModels.length) {
                     col.h3(h3 => {
                         h3.i('.glyp-pending')
-                        h3.span().text("Other Models")
+                        h3.span().text("Other Tables")
                     })
-                    for (const model of uncommonModels) {
+                    for (const model of arrays.sortBy(uncommonModels, 'name')) {
                         this.renderModelOption(col, model)
                     }
                 }
