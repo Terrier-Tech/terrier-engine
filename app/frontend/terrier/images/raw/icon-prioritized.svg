@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-prioritized</title>
+    <g id="icon-prioritized" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" x="4" y="4" width="20" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="4" y="10.6666667" width="16" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="4" y="17.3333333" width="12" height="4" rx="2"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="4" y="24" width="8" height="4" rx="2"></rect>
+        <path d="M24.6401844,12.7938287 C24.6866475,12.8325479 24.7295021,12.8754025 24.7682213,12.9218655 L27.6331797,16.3598156 C27.9867437,16.7840925 27.9294197,17.4146572 27.5051428,17.7682213 C27.3254278,17.9179838 27.0988949,18 26.8649584,18 L25.9990416,17.9990249 L26,27 C26,27.5522847 25.5522847,28 25,28 L23,28 C22.4477153,28 22,27.5522847 22,27 L21.9990416,17.9990249 L21.1350416,18 C20.5827569,18 20.1350416,17.5522847 20.1350416,17 C20.1350416,16.7660635 20.2170578,16.5395306 20.3668203,16.3598156 L23.2317787,12.9218655 C23.5853428,12.4975886 24.2159075,12.4402646 24.6401844,12.7938287 Z" id="Rectangle-2" fill-opacity="0.25" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

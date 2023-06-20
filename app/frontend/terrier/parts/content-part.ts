@@ -1,32 +1,30 @@
-import Theme, {Action, ThemeType} from "../theme"
-import {TerrierApp} from "../app"
+import {Action, IconName} from "../theme"
 import {PartParent, PartTag} from "tuff-core/parts"
 import {Dropdown} from "../dropdowns"
 import TerrierPart from "./terrier-part"
 
-export type PanelActions<TT extends ThemeType> = {
-    primary: Array<Action<TT>>
-    secondary: Array<Action<TT>>
-    tertiary: Array<Action<TT>>
+export type PanelActions = {
+    primary: Array<Action>
+    secondary: Array<Action>
+    tertiary: Array<Action>
 }
-export type ActionLevel = keyof PanelActions<any>
+export type ActionLevel = keyof PanelActions
 
 /**
  * Base class for all Parts that render some main content, like pages, panels, and modals.
  */
-export default abstract class ContentPart<
-    TState,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export default abstract class ContentPart<TState> extends TerrierPart<TState> {
 
     /**
      * All ContentParts must implement this to render their actual content.
      * @param parent
      */
     abstract renderContent(parent: PartTag): void
+
+
+    render(parent: PartTag) {
+        this.renderContent(parent)
+    }
 
 
     protected _title = ''
@@ -39,9 +37,9 @@ export default abstract class ContentPart<
         this._title = title
     }
 
-    protected _icon: TThemeType['icons'] | null = null
+    protected _icon: IconName | null = null
 
-    setIcon(icon: TThemeType['icons']) {
+    setIcon(icon: IconName) {
         this._icon = icon
     }
 
@@ -56,12 +54,12 @@ export default abstract class ContentPart<
 
     // stored actions can be either an action object or a reference to a named action
     private _actions = {
-        primary: Array<Action<TThemeType> | string>(),
-        secondary: Array<Action<TThemeType> | string>(),
-        tertiary: Array<Action<TThemeType> | string>()
+        primary: Array<Action | string>(),
+        secondary: Array<Action | string>(),
+        tertiary: Array<Action | string>()
     }
 
-    private _namedActions: Record<string, { action: Action<TThemeType>, level: ActionLevel }> = {}
+    private _namedActions: Record<string, { action: Action, level: ActionLevel }> = {}
 
     /**
      * Add an action to the part, or replace a named action if it already exists.
@@ -69,7 +67,7 @@ export default abstract class ContentPart<
      * @param level whether it's a primary, secondary, or tertiary action
      * @param name a name to be given to this action, so it can be accessed later
      */
-    addAction(action: Action<TThemeType>, level: ActionLevel = 'primary', name?: string) {
+    addAction(action: Action, level: ActionLevel = 'primary', name?: string) {
         if (name?.length) {
             if (name in this._namedActions) {
                 const currentLevel = this._namedActions[name].level
@@ -92,7 +90,7 @@ export default abstract class ContentPart<
      * Returns the action definition for the action with the given name, or undefined if there is no action with that name
      * @param name
      */
-    getNamedAction(name: string): Action<TThemeType> | undefined {
+    getNamedAction(name: string): Action | undefined {
         return this._namedActions[name].action
     }
 
@@ -123,7 +121,7 @@ export default abstract class ContentPart<
         this._actions[level] = []
     }
 
-    getAllActions(): PanelActions<TThemeType> {
+    getAllActions(): PanelActions {
         return {
             primary: this.getActions('primary'),
             secondary: this.getActions('secondary'),
@@ -131,7 +129,7 @@ export default abstract class ContentPart<
         }
     }
 
-    getActions(level: ActionLevel): Action<TThemeType>[] {
+    getActions(level: ActionLevel): Action[] {
         return this._actions[level].map(action => {
             return (typeof action === 'string') ? this._namedActions[action].action : action
         })
@@ -152,7 +150,7 @@ export default abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType, TAppState, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
+    makeDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {
@@ -175,7 +173,7 @@ export default abstract class ContentPart<
      * @param state the dropdown's state
      * @param target the target element around which to show the dropdown
      */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType, TAppState, TThemeType, TApp, TTheme>, DropdownStateType extends {}>(
+    toggleDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {

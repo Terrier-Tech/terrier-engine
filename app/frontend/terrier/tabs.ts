@@ -2,19 +2,17 @@ import {Logger} from "tuff-core/logging"
 import {typedKey} from "tuff-core/messages"
 import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import Theme, {Packet, ThemeType} from "./theme"
-import {TerrierApp} from "./app"
-import {DdAction} from "../data-dive/dd-parts"
+import {Action, IconName, Packet} from "./theme"
 
 const log = new Logger("Tabs")
 
 /**
  * Parameters used for initial tab creation
  */
-export type TabParams<TT extends ThemeType> = {
+export type TabParams = {
     key: string
     title: string
-    icon?: TT['icons']
+    icon?: IconName
     state?: 'enabled' | 'disabled' | 'hidden'
     classes?: string[]
     click?: Packet
@@ -23,7 +21,7 @@ export type TabParams<TT extends ThemeType> = {
 /**
  * Properties required to render a tab
  */
-export type TabDefinition<TT extends ThemeType> = TabParams<TT> & {
+export type TabDefinition = TabParams & {
     part: Part<unknown>
 }
 
@@ -36,14 +34,9 @@ export type TabContainerState = {
     currentTab? : string
 }
 
-export class TabContainerPart<
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends TerrierPart<TabContainerState, TAppState, TThemeType, TApp, TTheme> {
+export class TabContainerPart extends TerrierPart<TabContainerState> {
 
-    private tabs = {} as Record<string, TabDefinition<TThemeType>>
+    private tabs = {} as Record<string, TabDefinition>
     changeTabKey = typedKey<{ tabKey: string }>()
     changeSideKey = typedKey<{ side: TabSide }>()
 
@@ -67,7 +60,7 @@ export class TabContainerPart<
      * @param state initial state for the content part
      */
     upsertTab<PartType extends Part<PartStateType>, PartStateType, InferredPartStateType extends PartStateType>(
-        tab: TabParams<TThemeType>,
+        tab: TabParams,
         constructor: { new(p: PartParent, id: string, state: PartStateType): PartType; },
         state: InferredPartStateType
     ): PartType {
@@ -83,7 +76,7 @@ export class TabContainerPart<
      * Updates an existing tab with the given params
      * @param tab
      */
-    updateTab(tab: TabParams<TThemeType>): void {
+    updateTab(tab: TabParams): void {
         const existingTab = this.tabs[tab.key]
         if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
         Object.assign(existingTab, tab)
@@ -124,16 +117,16 @@ export class TabContainerPart<
     }
 
 
-    _beforeAction?: DdAction
+    _beforeAction?: Action
 
-    setBeforeAction(action: DdAction) {
+    setBeforeAction(action: Action) {
         this._beforeAction = action
         this.dirty()
     }
 
-    _afterAction?: DdAction
+    _afterAction?: Action
 
-    setAfterAction(action: DdAction) {
+    setAfterAction(action: Action) {
         this._afterAction = action
         this.dirty()
     }

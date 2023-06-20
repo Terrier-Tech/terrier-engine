@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-origin</title>
+    <g id="icon-origin" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(4.000000, 4.000000)" fill="#000000">
+            <path d="M7,0 C10.8659932,0 14,3.13400675 14,7 C14,10.8659932 10.8659932,14 7,14 C3.13400675,14 0,10.8659932 0,7 C0,3.13400675 3.13400675,0 7,0 Z M7,0.875 C3.61725591,0.875 0.875,3.61725591 0.875,7 C0.875,7.5350323 0.943600881,8.05404201 1.07308082,8.5478798 C1.84546557,4.79847351 4.79847351,1.84546557 8.54871307,1.07248659 C8.05404201,0.943600881 7.5350323,0.875 7,0.875 Z" id="Oval-2"></path>
+            <circle id="Oval" fill-opacity="0.25" fill-rule="nonzero" cx="7" cy="7" r="7"></circle>
+        </g>
+        <polygon id="Path-46" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="16 13 25.5 22.5 28 20 28.0710678 28.0710678 20 28 22.5 25.5 13 16"></polygon>
+    </g>
+</svg>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-pr_closed</title>
+    <g id="icon-pr_closed" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="9" cy="8" r="3"></circle>
+        <circle id="Oval-Copy-2" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="9" cy="24" r="3"></circle>
+        <rect id="Rectangle" fill="#000000" x="8" y="11" width="2" height="10"></rect>
+        <circle id="Oval-Copy-3" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="23" cy="24" r="3"></circle>
+        <rect id="Rectangle-Copy" fill="#000000" x="22" y="12" width="2" height="9" rx="1"></rect>
+        <g id="Group" transform="translate(23.000000, 8.000000) rotate(45.000000) translate(-23.000000, -8.000000) translate(17.000000, 2.000000)" fill="#000000">
+            <path d="M9.53553391,2.46446609 C9.9260582,2.85499039 9.9260582,3.48815536 9.53553391,3.87867966 L3.87867966,9.53553391 C3.48815536,9.9260582 2.85499039,9.9260582 2.46446609,9.53553391 C2.0739418,9.14500961 2.0739418,8.51184464 2.46446609,8.12132034 L8.12132034,2.46446609 C8.51184464,2.0739418 9.14500961,2.0739418 9.53553391,2.46446609 Z" id="Rectangle-Copy-2" transform="translate(6.000000, 6.000000) rotate(-45.000000) translate(-6.000000, -6.000000) "></path>
+            <path d="M9.53553391,9.53553391 C9.14500961,9.9260582 8.51184464,9.9260582 8.12132034,9.53553391 L2.46446609,3.87867966 C2.0739418,3.48815536 2.0739418,2.85499039 2.46446609,2.46446609 C2.85499039,2.0739418 3.48815536,2.0739418 3.87867966,2.46446609 L9.53553391,8.12132034 C9.9260582,8.51184464 9.9260582,9.14500961 9.53553391,9.53553391 Z" id="Rectangle-Copy-3" transform="translate(6.000000, 6.000000) rotate(-45.000000) translate(-6.000000, -6.000000) "></path>
+        </g>
+    </g>
+</svg>

@@ -1,10 +1,21 @@
 import {PartTag} from "tuff-core/parts"
 import {messages} from "tuff-core"
+import {GlypName} from "./glyps"
+import HubIcons, {HubIconName} from "./gen/hub-icons"
 
 export interface ThemeType {
     readonly icons: string
     readonly colors: string
 }
+
+
+export type IconName = GlypName | HubIconName
+
+const ColorNames = [
+    'link', 'primary', 'secondary', 'active', 'pending', 'success', 'alert', 'white', 'inactive'
+] as const
+
+export type ColorName = typeof ColorNames[number]
 
 
 /**
@@ -18,10 +29,10 @@ export type Packet = {
 /**
  * An action that generates a button or link.
  */
-export type Action<TT extends ThemeType> = {
+export type Action = {
     title?: string
     tooltip?: string
-    icon?: TT['icons']
+    icon?: IconName
     href?: string
     classes?: string[]
     click?: Packet
@@ -31,20 +42,38 @@ export type Action<TT extends ThemeType> = {
 /**
  * Options to pass to `render` that control how the actions are displayed.
  */
-export type RenderActionOptions<TT extends ThemeType> = {
-    iconColor?: TT['colors'] | null
-    badgeColor?: TT['colors']
+export type RenderActionOptions = {
+    iconColor?: ColorName | null
+    badgeColor?: ColorName
     defaultClass?: string
 }
 
-export default abstract class Theme<TT extends ThemeType> {
-    abstract renderIcon(parent: PartTag, icon: TT['icons'], color?: TT['colors'] | null): void
+export default class Theme {
+    
+    renderIcon(parent: PartTag, icon: IconName, color?: ColorName | null): void {
+        if (HubIcons.Names.includes(icon as HubIconName)) {
+            HubIcons.renderIcon(parent, icon as HubIconName, color)
+        }
+        else { // a regular font icon
+            const classes: string[] = [icon]
+            if (color?.length) {
+                classes.push(color)
+            }
+            parent.i().class(...classes)
+        }
+    }
 
-    abstract renderCloseIcon(parent: PartTag, color?: TT['colors'] | null): void
+    renderCloseIcon(parent: PartTag, color?: ColorName | null): void {
+        const classes = ['glyp-close', 'close']
+        if (color?.length) {
+            classes.push(color)
+        }
+        parent.i(...classes)
+    }
 
-    abstract colorValue(name: TT['colors']): string
-
-    abstract getLoaderSrc(): string
+    getLoaderSrc(): string {
+        return ""
+    }
 
     /**
      * Renders one ore more `Action`s into a parent tag.
@@ -52,7 +81,7 @@ export default abstract class Theme<TT extends ThemeType> {
      * @param actions the action or actions to render
      * @param options additional rendering options
      */
-    renderActions(parent: PartTag, actions: Action<TT> | Action<TT>[], options?: RenderActionOptions<TT>) {
+    renderActions(parent: PartTag, actions: Action | Action[], options?: RenderActionOptions) {
         if (!Array.isArray(actions)) {
             actions = [actions]
         }

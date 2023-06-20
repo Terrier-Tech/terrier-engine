@@ -1,12 +1,12 @@
-import { Logger } from "tuff-core/logging"
+import {Logger} from "tuff-core/logging"
 import Html from "tuff-core/html"
-import Theme, {ThemeType} from "./theme"
+import Theme, {ColorName, IconName} from "./theme"
 
 const log = new Logger('Toasts')
 
-export type ToastOptions<TT extends ThemeType> = {
-    color: TT['colors']
-    icon?: TT['icons']
+export type ToastOptions = {
+    color: ColorName
+    icon?: IconName
 }
 
 /**
@@ -15,7 +15,7 @@ export type ToastOptions<TT extends ThemeType> = {
  * @param options
  * @param theme the theme used to render the toast
  */
-function show<TT extends ThemeType>(message: string, options: ToastOptions<TT>, theme: Theme<TT>) {
+function show(message: string, options: ToastOptions, theme: Theme) {
     log.info(`Show ${options.color  }: ${message}`)
 
     // ensure the container exists

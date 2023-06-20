@@ -1,12 +1,14 @@
 import {PartTag} from "tuff-core/parts"
-import {DdModalPart, DdFormPart, DdDropdown} from "../dd-parts";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableView, TableRef} from "./tables"
+import {TableRef, TableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import {FormFields, SelectOptions} from "tuff-core/forms"
 import Forms from "../../terrier/forms"
 import {arrays, messages} from "tuff-core"
 import Objects from "tuff-core/objects"
+import {ModalPart} from "../../terrier/modals";
+import TerrierFormPart from "../../terrier/parts/terrier-form-part"
+import {Dropdown} from "../../terrier/dropdowns"
 
 const log = new Logger("Columns")
 
@@ -94,7 +96,7 @@ const removeKey = messages.typedKey<{id: string}>()
 /**
  * A modal that lets the user edit the columns being referenced for a particular table.
  */
-export class ColumnsEditorModal extends DdModalPart<ColumnsEditorState> {
+export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
     table!: TableRef
@@ -212,7 +214,7 @@ type ColumnState = ColumnRef & {
 /**
  * An editor row for an individual column.
  */
-class ColumnEditor extends DdFormPart<ColumnState> {
+class ColumnEditor extends TerrierFormPart<ColumnState> {
 
     schema!: SchemaDef
     modelDef!: ModelDef
@@ -273,7 +275,7 @@ type SelectColumnsCallback = (columns: string[]) => any
 /**
  * Shows a dropdown that allows the user to select one or more columns from the given model.
  */
-class SelectColumnsDropdown extends DdDropdown<{modelDef: ModelDef, callback: SelectColumnsCallback}> {
+class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: SelectColumnsCallback}> {
 
     checked: Set<string> = new Set()
     columns!: string[]

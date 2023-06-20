@@ -93,7 +93,7 @@ export class OverlayPart extends Part<NoState> {
      * @param state
      * @return true if there was a layer actually removed
      */
-    removeLayer<StateType extends {}>(state: StateType): boolean {
+    removeLayer<StateType>(state: StateType): boolean {
         for (const layerState of this.layerStates) {
             if (layerState.partState == state) {
                 this.layerStates = arrays.without(this.layerStates, layerState)

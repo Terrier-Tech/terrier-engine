@@ -1,11 +1,9 @@
 import {NoState, Part, PartTag} from "tuff-core/parts"
-import DemoTheme, {ColorName, DemoThemeType} from "./demo-theme"
 import {ModalPart, modalPopKey} from "@terrier/modals"
 import {messages, strings} from "tuff-core"
-import Toasts from "@terrier/toasts";
+import Toasts from "@terrier/toasts"
 import {ActionsDropdown} from "@terrier/dropdowns"
-import {Action} from "@terrier/theme"
-import DemoApp, {DemoAppState} from "./demo-app"
+import {Action, ColorName} from "@terrier/theme"
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
 import {Logger} from "tuff-core/logging"
@@ -17,9 +15,8 @@ const toastKey = messages.typedKey<{color: ColorName}>()
 const dropdownKey = messages.typedKey<{message: string}>()
 const sheetKey = messages.typedKey<{type: 'confirm'}>()
 
-type DemoAction = Action<DemoThemeType>
 
-class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
+class Panel extends PanelPart<NoState> {
 
     async init() {
         this.setTitle("Panel Header ")
@@ -65,7 +62,7 @@ class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, Dem
             }
         })
 
-        const dropdownActions: Array<DemoAction> = [
+        const dropdownActions: Array<Action> = [
             {title: "Action 1"},
             {title: "Action 2"},
             {title: "Action 3"},
@@ -94,7 +91,7 @@ class Panel extends PanelPart<NoState, DemoAppState, DemoThemeType, DemoApp, Dem
 
 }
 
-class Modal extends ModalPart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
+class Modal extends ModalPart<NoState> {
 
     async init() {
         this.setTitle("Modal Header")
@@ -146,7 +143,7 @@ class DummyTab extends Part<{container: DemoTabs, title: string, content: string
     }
 }
 
-class DemoTabs extends TabContainerPart<DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
+class DemoTabs extends TabContainerPart {
     async init() {
         await super.init()
         this.upsertTab(
@@ -162,8 +159,8 @@ class DemoTabs extends TabContainerPart<DemoAppState, DemoThemeType, DemoApp, De
             {key: 'three', title: "Tab Three", icon: 'glyp-pending', state: "disabled"},
             DummyTab, {container: this, title: "Tab Three", content: "This is the third tab."}
         )
-        this.setBeforeAction({title: "Before", icon: 'glyp-info'})
-        this.setAfterAction({title: "After", icon: 'glyp-plus'})
+        this.setBeforeAction({title: "Before", icon: 'hub-arrow_left'})
+        this.setAfterAction({title: "After", icon: 'hub-arrow_right'})
     }
 }
 

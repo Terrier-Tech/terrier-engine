@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-edit</title>
+    <g id="icon-edit" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M24,12 C25.1045695,12 26,12.8954305 26,14 L26,14 L26,26 C26,27.1045695 25.1045695,28 24,28 L24,28 L6,28 C4.8954305,28 4,27.1045695 4,26 L4,26 L4,14 C4,12.8954305 4.8954305,12 6,12 L6,12 L17,12 L15,14 L6,14 L6,26 L24,26 L24,14 L21,14 L23,12 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M25,13 L25,27 L5,27 L5,13 L16,13 L12,17 L11,21.5 L15,20 L22,13 L25,13 Z" id="Rectangle-2" fill-opacity="0.25" fill="#000000" fill-rule="nonzero"></path>
+        <polygon id="Path-44" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="24 5 12 17 11 21 15 20 27 8"></polygon>
+        <polygon id="Path-44-Copy" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="24 5 12 17 11 21 15 20 27 8"></polygon>
+        <path d="M20,2.41421356 C20.5522847,2.41421356 21,2.86192881 21,3.41421356 L21,3.41421356 L21,20.5857864 C21,20.7410315 20.9638549,20.8941446 20.8944272,21.033 L20.8944272,21.033 L18.8944272,25.033 C18.5259029,25.7700486 17.4740971,25.7700486 17.1055728,25.033 L17.1055728,25.033 L15.1055728,21.033 C15.0361451,20.8941446 15,20.7410315 15,20.5857864 L15,20.5857864 L15,3.41421356 C15,2.86192881 15.4477153,2.41421356 16,2.41421356 L16,2.41421356 Z M19,4.41421356 L17,4.41421356 L17,6.41321356 L19,6.41421356 L19,8.41421356 L17,8.41321356 L17,20.3497864 L18,22.3487864 L19,20.3477864 L19,4.41421356 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero" transform="translate(18.000000, 14.000000) rotate(45.000000) translate(-18.000000, -14.000000) "></path>
+    </g>
+</svg>

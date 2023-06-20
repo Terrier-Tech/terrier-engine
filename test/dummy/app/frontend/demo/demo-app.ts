@@ -2,7 +2,6 @@ import {NoState, PartTag} from 'tuff-core/parts'
 import {Location} from '../gen/models'
 import Db from './db'
 import {Logger} from "tuff-core/logging"
-import DemoTheme, {DemoThemeType} from "./demo-theme"
 import {TerrierApp} from "@terrier/app"
 import DemoParts from "./demo-parts"
 import PagePart from "@terrier/parts/page-part"
@@ -10,7 +9,7 @@ import PagePart from "@terrier/parts/page-part"
 
 const log = new Logger('DemoApp')
 
-class DemoPage extends PagePart<NoState, DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
+class DemoPage extends PagePart<NoState> {
 
     async init() {
         this.setIcon('glyp-checkmark')
@@ -52,8 +51,7 @@ class DemoPage extends PagePart<NoState, DemoAppState, DemoThemeType, DemoApp, D
 
 }
 
-export type DemoAppState = { theme: DemoTheme };
-export default class DemoApp extends TerrierApp<DemoAppState, DemoThemeType, DemoApp, DemoTheme> {
+export default class DemoApp extends TerrierApp<NoState> {
 
     loc?: Location
     page!: DemoPage

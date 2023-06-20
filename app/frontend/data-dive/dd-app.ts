@@ -1,14 +1,11 @@
 import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
-import DdTheme, {DdThemeType} from "./dd-theme"
 import {TerrierApp} from "../terrier/app"
-import Theme from "./dd-theme"
 
 export type DdAppState = {
-    theme: DdTheme
     part: PartConstructor<any, { }>
 }
 
-export default class DdApp extends TerrierApp<DdAppState, DdThemeType, DdApp, DdTheme> {
+export default class DdApp extends TerrierApp<DdAppState> {
 
     part!: StatelessPart
 
@@ -30,8 +27,7 @@ export default class DdApp extends TerrierApp<DdAppState, DdThemeType, DdApp, Dd
     static mountEntrypoint(part: PartConstructor<any, {}>, id: string) {
         const container = document.getElementById(id)
         if (container) {
-            const theme = new Theme()
-            Part.mount(DdApp, container, {theme, part})
+            Part.mount(DdApp, container, {part})
         } else {
             alert(`No entrypoint container '#${id}'!`)
         }

@@ -1,25 +1,19 @@
 import {Part} from "tuff-core/parts"
 import {TerrierApp} from "../app"
 import Loading from "../loading"
-import Theme, {ThemeType} from "../theme"
+import Theme from "../theme"
 import Toasts, {ToastOptions} from "../toasts"
 
 /**
  * Base class for ALL parts in a Terrier application.
  */
-export default abstract class TerrierPart<
-    TState,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends Part<TState> {
+export default abstract class TerrierPart<TState> extends Part<TState> {
 
-    get app(): TApp {
-        return this.root as unknown as TApp // this should always be true
+    get app(): TerrierApp<any> {
+        return this.root as TerrierApp<any>
     }
 
-    get theme(): TTheme {
+    get theme(): Theme {
         return this.app.theme
     }
 
@@ -88,7 +82,7 @@ export default abstract class TerrierPart<
      * @param message the message text
      * @param options
      */
-    showToast(message: string, options: ToastOptions<TThemeType>) {
+    showToast(message: string, options: ToastOptions) {
         Toasts.show(message, options, this.theme)
     }
 

@@ -17,7 +17,7 @@
 # Associations
 # +------------+------------+--------+
 # | Belongs To | created_by | User   |
-# | Has Many   | dd_dives   | DdDife |
+# | Has Many   | dd_dives   | DdDive |
 # | Belongs To | updated_by | User   |
 # +------------+------------+--------+
 class DdDiveGroup < ApplicationRecord

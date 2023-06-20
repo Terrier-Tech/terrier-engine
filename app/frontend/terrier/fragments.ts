@@ -1,14 +1,14 @@
 import {PartTag} from "tuff-core/parts"
 import {AnchorTagAttrs, HtmlParentTag} from "tuff-core/html"
-import Theme, {Action, Packet, ThemeType} from "./theme"
+import Theme, {Action, ColorName, IconName, Packet} from "./theme"
 import {ActionLevel, PanelActions} from "./parts/content-part"
 
 /**
  * Base class for Panel and Card fragment builders.
  */
-abstract class ContentFragment<TT extends ThemeType> {
-    protected constructor(readonly prefix: string, readonly theme: Theme<TT>) {
-
+abstract class ContentFragment {
+    protected constructor(readonly prefix: string, readonly theme: Theme) {
+        
     }
 
 
@@ -29,18 +29,18 @@ abstract class ContentFragment<TT extends ThemeType> {
      * @param t the title
      * @param icon the optional icon
      */
-    title(t: string, icon?: TT['icons']) {
+    title(t: string, icon?: IconName) {
         this._title = t
         this._icon = icon
         return this
     }
 
-    protected _icon?: TT['icons']
+    protected _icon?: IconName
 
     /**
      * @param i the panel icon
      */
-    icon(i: TT['icons']) {
+    icon(i: IconName) {
         this._icon = i
         return this
     }
@@ -58,17 +58,17 @@ abstract class ContentFragment<TT extends ThemeType> {
 }
 
 
-export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
-    constructor(theme: Theme<TT>) {
+export class PanelFragment extends ContentFragment {
+    constructor(theme: Theme) {
         super('tt-panel', theme)
     }
 
     /// Actions
 
     actions = {
-        primary: Array<Action<TT>>(),
-        secondary: Array<Action<TT>>(),
-        tertiary: Array<Action<TT>>()
+        primary: Array<Action>(),
+        secondary: Array<Action>(),
+        tertiary: Array<Action>()
     }
 
     /**
@@ -76,7 +76,7 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
      * @param action the action to add
      * @param level whether it's a primary, secondary, or tertiary action
      */
-    addAction(action: Action<TT>, level: ActionLevel = 'primary') {
+    addAction(action: Action, level: ActionLevel = 'primary') {
         this.actions[level].push(action)
         return this
     }
@@ -116,7 +116,7 @@ export class PanelFragment<TT extends ThemeType> extends ContentFragment<TT> {
  * @param actions the actions
  * @param theme the theme with which to render actions
  */
-function panelActions<TT extends ThemeType>(panel: PartTag, actions: PanelActions<TT>, theme: Theme<TT>) {
+function panelActions(panel: PartTag, actions: PanelActions, theme: Theme) {
     if (actions.primary.length || actions.secondary.length) {
         panel.div('.panel-actions', actionsContainer => {
             for (const level of ['secondary', 'primary'] as const) {
@@ -134,8 +134,8 @@ function panelActions<TT extends ThemeType>(panel: PartTag, actions: PanelAction
 /**
  * Cards are like panels except they don't have any actions and are themselves an anchor.
  */
-class CardFragment<TT extends ThemeType> extends ContentFragment<TT> {
-    constructor(theme: Theme<TT>) {
+class CardFragment extends ContentFragment {
+    constructor(theme: Theme) {
         super('tt-card', theme)
     }
 
@@ -176,15 +176,15 @@ class CardFragment<TT extends ThemeType> extends ContentFragment<TT> {
 }
 
 
-class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
+class LabeledValueFragment extends ContentFragment {
 
-    constructor(theme: Theme<TT>) {
+    constructor(theme: Theme) {
         super('tt-labeled-value', theme)
     }
 
     private _value?: string
-    private _valueIcon?: TT['icons']
-    private _valueIconColor?: TT['colors'] | null
+    private _valueIcon?: IconName
+    private _valueIconColor?: ColorName | null
     private _valueClass?: string[]
 
     private _href?: string
@@ -194,7 +194,7 @@ class LabeledValueFragment<TT extends ThemeType> extends ContentFragment<TT> {
 
     private _tooltip?: string
 
-    value(value: string, icon?: TT['icons'], iconColor?: TT['colors'] | null) {
+    value(value: string, icon?: IconName, iconColor?: ColorName | null) {
         this._value = value
         this._valueIcon = icon
         this._valueIconColor = iconColor
@@ -270,10 +270,10 @@ type ListValueDefinition = {
     tooltip?: string
 }
 
-class LabeledListFragment<TT extends ThemeType> extends ContentFragment<TT> {
+class LabeledListFragment extends ContentFragment {
     private _values?: ListValueDefinition[]
 
-    constructor(theme: Theme<TT>) {
+    constructor(theme: Theme) {
         super('tt-labeled-list', theme)
     }
 
@@ -319,7 +319,7 @@ class LabeledListFragment<TT extends ThemeType> extends ContentFragment<TT> {
  * Creates a new card fragment builder.
  * Make sure to call `render()` in order to render it to a parent tag.
  */
-function card<TT extends ThemeType>(theme: Theme<TT>) {
+function card(theme: Theme) {
     return new CardFragment(theme)
 }
 
@@ -328,7 +328,7 @@ function card<TT extends ThemeType>(theme: Theme<TT>) {
  * Creates a new panel fragment builder.
  * Make sure to call `render()` in order to render it to a parent tag.
  */
-function panel<TT extends ThemeType>(theme: Theme<TT>) {
+function panel(theme: Theme) {
     return new PanelFragment(theme)
 }
 
@@ -336,18 +336,18 @@ function panel<TT extends ThemeType>(theme: Theme<TT>) {
  * Creates a new labeled value fragment builder.
  * Make sure to call `render()` in order to render it to a parent tag.
  */
-function labeledValue<TT extends ThemeType>(theme: Theme<TT>) {
+function labeledValue(theme: Theme) {
     return new LabeledValueFragment(theme)
 }
 
-function labeledList<TT extends ThemeType>(theme: Theme<TT>) {
+function labeledList(theme: Theme) {
     return new LabeledListFragment(theme)
 }
 
 /**
  * Create a new button in the parent.
  */
-function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title?: string, icon?: TT['icons'], iconColor: TT['colors'] | null = null) {
+function button(parent: PartTag, theme: Theme, title?: string, icon?: IconName, iconColor: ColorName | null = null) {
     return parent.a('.tt-button', button => {
         if (icon) theme.renderIcon(button, icon, iconColor)
         if (title?.length) button.div('.title', {text: title})
@@ -358,7 +358,7 @@ function button<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title?:
  * Create a new simple value display in the parent.
  * This is just some text with an optional icon that doesn't have a separate label.
  */
-function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons'], iconColor: TT['colors'] | null = 'link') {
+function simpleValue(parent: PartTag, theme: Theme, title: string, icon?: IconName, iconColor: ColorName | null = 'link') {
     return parent.div('.tt-simple-value.shrink', button => {
         if (icon) theme.renderIcon(button, icon, iconColor)
         button.div('.title', {text: title})
@@ -368,7 +368,7 @@ function simpleValue<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, ti
 /**
  * Helper to create a heading with an optional icon.
  */
-function simpleHeading<TT extends ThemeType>(parent: PartTag, theme: Theme<TT>, title: string, icon?: TT['icons']) {
+function simpleHeading(parent: PartTag, theme: Theme, title: string, icon?: IconName) {
     return parent.h3('.shrink', heading => {
         if (icon) {
             theme.renderIcon(heading, icon, 'link')

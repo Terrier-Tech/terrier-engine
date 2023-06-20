@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-step_test</title>
+    <g id="icon-step_test" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Rectangle" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="7 7 12 7 15.5 5.5 20 7 25 7 25 27 7 27"></polygon>
+        <path d="M24.9,6 C25.5075132,6 26,6.44771525 26,7 L26,7 L26,27 C26,27.5522847 25.5075132,28 24.9,28 L24.9,28 L7.1,28 C6.49248678,28 6,27.5522847 6,27 L6,27 L6,7 C6,6.44771525 6.49248678,6 7.1,6 L7.1,6 L13,6 C12.5050656,6.4949344 12.1953069,7.16179439 12.0658213,7.99999564 L8,8 L8,26 L24,26 L24,8 L19.9341787,7.99999564 C19.8046931,7.16179439 19.4949344,6.4949344 19,6 L19,6 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M16,4 C12.7810486,4 11,5.78104858 11,9 C11,9.55228475 11.4477153,10 12,10 L20,10 C20.5522847,10 21,9.55228475 21,9 C21,5.78104858 19.2189514,4 16,4 Z M16.207355,6.00296477 C17.76587,6.048522 18.608868,6.62134898 18.8909807,7.87607734 L18.915,8 L13.084,8 L13.1090193,7.87607734 C13.4033978,6.56679557 14.3084945,6 16,6 L16.207355,6.00296477 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="16" y="12" width="7" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="16" y="17" width="7" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="16" y="22" width="7" height="2" rx="1"></rect>
+        <polyline id="Path-31" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="10 13.5 11.5 15 13.5 11.5"></polyline>
+        <polyline id="Path-31-Copy" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="10 18.5 11.5 20 13.5 16.5"></polyline>
+    </g>
+</svg>

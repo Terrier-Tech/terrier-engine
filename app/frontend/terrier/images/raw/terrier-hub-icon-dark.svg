@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160px" height="160px" viewBox="0 0 160 160" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>terrier-hub-icon-dark</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="terrier-hub-logo-dark" transform="translate(-8.000000, 0.000000)">
+            <g id="logo-dark" transform="translate(-0.211647, -5.496105)">
+                <g id="nodes-copy-2" transform="translate(82.736261, 85.927648) scale(1, -1) rotate(22.000000) translate(-82.736261, -85.927648) translate(20.842477, 18.258406)">
+                    <circle id="Oval-Copy" fill="#F49891" cx="26" cy="28.3483948" r="12"></circle>
+                    <path d="M36.8363826,33.4270639 L67.8325678,64.5142026 L62.1674322,70.1627633 L31.2035676,39.1080401 C31.6429261,38.3275807 32.4686749,37.3274277 33.6808141,36.1075811 C34.8929533,34.8877345 35.9448094,33.9942287 36.8363826,33.4270639 Z" id="Path" fill="#1E6C7B" fill-rule="nonzero"></path>
+                    <circle id="Oval-Copy-4" fill="#EEBA2B" cx="102" cy="86.3384829" r="11"></circle>
+                    <path d="M66.8904181,63.8133844 L95.9572535,79.6403023 C96.219395,80.3833911 95.9730535,81.4368366 95.2182289,82.8006389 C94.4634044,84.1644413 93.7094829,84.9498054 92.9564645,85.1567313 L63.1095819,70.8635815 L66.8904181,63.8133844 Z" id="Path" fill="#1E6C7B" fill-rule="nonzero"></path>
+                    <circle id="hub-cirlce" fill="#01A7B1" cx="64" cy="67.3384829" r="22"></circle>
+                    <path d="M65.311244,89.2308961 L60.9801191,122.985659 L53.0627703,121.838668 L57.3604767,88.2916396 C58.487274,88.0605922 59.8639255,88.0604814 61.4904311,88.2913073 C63.1169368,88.5221332 64.3905411,88.8353294 65.311244,89.2308961 Z" id="Path" fill="#1E6C7B" fill-rule="nonzero"></path>
+                    <path d="M47.0221639,70.6811736 C48.3098742,71.3903879 49.2659015,72.5176483 49.8902458,74.0629548 C50.5145902,75.6082612 50.6384987,76.919207 50.2619714,77.9957923 L17.4009829,94.7368663 L12.6627491,83.7135121 L47.0221639,70.6811736 Z" id="Path" fill="#1E6C7B" fill-rule="nonzero"></path>
+                    <circle id="Oval-Copy-5" fill="#F49891" cx="57" cy="122.338483" r="13"></circle>
+                    <circle id="Oval-Copy-3" fill="#EEBA2B" cx="15" cy="89.3384829" r="15"></circle>
+                    <path d="M101.792916,15.3023009 L110.505416,21.5728309 L77.5845599,57.445543 C76.2879468,57.5285431 75.0856011,57.1015774 73.977523,56.1646457 C72.8694448,55.2277141 72.035484,53.932888 71.4756405,52.2801675 L101.792916,15.3023009 Z" id="Path" fill="#1E6C7B" fill-rule="nonzero"></path>
+                    <circle id="Oval-Copy-2" fill="#ED584C" cx="106.787568" cy="17" r="17"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

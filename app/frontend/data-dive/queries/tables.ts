@@ -1,4 +1,3 @@
-import {DdActionsDropdown, DdContentPart, DdFormPart, DdModalPart} from "../dd-parts"
 import {PartTag} from "tuff-core/parts"
 import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
@@ -6,6 +5,10 @@ import Filters, {Filter, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
 import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
+import ContentPart from "../../terrier/parts/content-part"
+import {ActionsDropdown} from "../../terrier/dropdowns";
+import {ModalPart} from "../../terrier/modals";
+import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 
 const log = new Logger("Tables")
 
@@ -37,7 +40,7 @@ const updatedKey = messages.typedKey<TableRef>()
 // View
 ////////////////////////////////////////////////////////////////////////////////
 
-export class TableView<T extends TableRef> extends DdContentPart<{ schema: SchemaDef, table: T }> {
+export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaDef, table: T }> {
 
     schema!: SchemaDef
     table!: T
@@ -86,7 +89,7 @@ export class TableView<T extends TableRef> extends DdContentPart<{ schema: Schem
 
             // don't show the dropdown if there are no more belongs-tos left
             if (actions.length) {
-                this.toggleDropdown(DdActionsDropdown, actions, m.event.target)
+                this.toggleDropdown(ActionsDropdown, actions, m.event.target)
             }
             else {
                 this.showToast(`No more possible joins for ${this.displayName}`, {color: 'pending'})
@@ -286,7 +289,7 @@ type JoinedTableEditorState = {
 /**
  * A form for editing the join type of a joined table.
  */
-class JoinedTableEditorForm extends DdFormPart<JoinedTableRef> {
+class JoinedTableEditorForm extends TerrierFormPart<JoinedTableRef> {
 
     parentTable!: TableRef
 
@@ -323,7 +326,7 @@ class JoinedTableEditorForm extends DdFormPart<JoinedTableRef> {
 /**
  * A modal for editing the join type of a joined table.
  */
-class JoinedTableEditorModal extends DdModalPart<JoinedTableEditorState> {
+class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
 
     form!: JoinedTableEditorForm
     applyKey = messages.untypedKey()

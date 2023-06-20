@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-pr_open</title>
+    <g id="icon-pr_open" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="9" cy="8" r="3"></circle>
+        <circle id="Oval-Copy" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="23" cy="24" r="3"></circle>
+        <circle id="Oval-Copy-2" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="9" cy="24" r="3"></circle>
+        <rect id="Rectangle" fill="#000000" x="8" y="11" width="2" height="10"></rect>
+        <path d="M23,21 C23,17.6666667 23,14.6666667 23,12 C23,9.33333333 21.6666667,8 19,8" id="Path-95" stroke="#000000" stroke-width="2"></path>
+        <path d="M19,4.20710678 L19,11.7928932 C19,12.0690356 18.7761424,12.2928932 18.5,12.2928932 C18.3673918,12.2928932 18.2402148,12.2402148 18.1464466,12.1464466 L14.3535534,8.35355339 C14.1582912,8.15829124 14.1582912,7.84170876 14.3535534,7.64644661 L18.1464466,3.85355339 C18.3417088,3.65829124 18.6582912,3.65829124 18.8535534,3.85355339 C18.9473216,3.94732158 19,4.07449854 19,4.20710678 Z" id="Path-96" fill="#000000"></path>
+    </g>
+</svg>

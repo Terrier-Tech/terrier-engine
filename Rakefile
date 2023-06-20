@@ -23,6 +23,7 @@ load 'rails/tasks/statistics.rake'
 load 'lib/tasks/npm.rake'
 load 'lib/tasks/glyps.rake'
 load 'lib/tasks/terrier/db.rake'
+load 'lib/tasks/terrier/frontend.rake'
 
 require 'bundler/gem_tasks'
 

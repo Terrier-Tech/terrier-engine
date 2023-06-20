@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-step_deploy</title>
+    <g id="icon-step_deploy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(15.617009, 16.617009) rotate(45.000000) translate(-15.617009, -16.617009) translate(7.617009, 1.117009)" fill="#000000">
+            <polyline id="Path-33" stroke="#000000" stroke-width="2" fill-opacity="0.25" stroke-linejoin="round" points="3.2 15 -6.04741194e-14 17.5714286 -6.04741194e-14 21 4 20.1428571"></polyline>
+            <polyline id="Path-33-Copy" stroke="#000000" stroke-width="2" fill-opacity="0.25" stroke-linejoin="round" transform="translate(14.000000, 18.000000) scale(-1, 1) translate(-14.000000, -18.000000) " points="15.2 15 12 17.5714286 12 21 16 20.1428571"></polyline>
+            <polyline id="Path-33-Copy-3" stroke="#000000" stroke-width="2" fill-opacity="0.25" stroke-linejoin="round" points="3.2 15 -6.04741194e-14 17.5714286 -6.04741194e-14 21 4 20.1428571"></polyline>
+            <polyline id="Path-33-Copy-2" stroke="#000000" stroke-width="2" fill-opacity="0.25" stroke-linejoin="round" transform="translate(14.000000, 18.000000) scale(-1, 1) translate(-14.000000, -18.000000) " points="15.2 15 12 17.5714286 12 21 16 20.1428571"></polyline>
+            <path d="M8,-2.5464721e-15 C2,5.33333333 1,12.6666667 5,22 L11,22 C15,12.6666667 14,5.33333333 8,-2.5464721e-15 Z" id="Path-32" stroke="#000000" stroke-width="2" fill-opacity="0.25" stroke-linejoin="round"></path>
+            <circle id="Oval" cx="8" cy="10" r="2"></circle>
+            <path d="M7,24 L9,24 C10.3333333,26.3333333 10,28.6666667 8,31 C6,28.6666667 5.66666667,26.3333333 7,24 Z" id="Path-34"></path>
+        </g>
+    </g>
+</svg>

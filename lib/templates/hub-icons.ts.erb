@@ -1,0 +1,53 @@
+// noinspection JSAnnotator,ES6UnusedImports,TypeScriptCheckImport,TypeScriptValidateTypes,TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+
+import {ColorName} from "../theme"
+import {PartTag} from "tuff-core/parts"
+import {DivTag} from "tuff-core/html"
+
+<% icon_defs.each do |file_name, icon_def| -%>
+// @ts-ignore
+import <%= icon_def[:var_name] %>Raw from '../images/icons/<%= file_name %>.svg?raw'
+// @ts-ignore
+import <%= icon_def[:var_name] %>Src from '../images/icons/<%= file_name %>.svg'
+<% end -%>
+
+export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
+<% icon_names.each do |name| -%>
+    "hub-<%= name %>": {
+        raw: <%= icon_defs[name][:var_name] %>Raw,
+        src: <%= icon_defs[name][:var_name] %>Src,
+    },
+<% end -%>
+}
+
+const Names = [
+    <%= icon_names.map{|name| "'hub-#{name}'"}.join(', ') %>
+] as const
+
+export type HubIconName = typeof Names[number]
+
+const ReactionNames = [
+    <%= reaction_icon_names.map{|name| "'hub-#{name}'"}.join(', ') %>
+] as const
+
+export type ReactionIconName = typeof ReactionNames[number]
+
+/**
+ * Renders the icon with the given name into the given parent tag with the given color.
+ * @param parent the tag into which to render this icon
+ * @param name the name of the icon to render
+ * @param color the theme color to use for this icon. Default is 'link'. If null, uses the surrounding text color.
+ */
+function renderIcon(parent: PartTag, name: HubIconName, color: ColorName | null = 'link'): DivTag {
+    const icon = parent.div({ classes: ['icon', 'shrink'], text: IconDefs[name].raw })
+    if (color) icon.class(color)
+    return icon
+}
+
+const HubIcons = {
+    Names,
+    ReactionNames,
+    renderIcon
+}
+
+export default HubIcons

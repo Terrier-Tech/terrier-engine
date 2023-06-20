@@ -1,4 +1,4 @@
-import {DdContentPart, DdModalPart, DdPagePart, DdTabContainerPart} from "../dd-parts"
+
 import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
 import Dives, {Dive} from "./dives"
@@ -7,6 +7,10 @@ import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
 import {messages} from "tuff-core"
+import {TabContainerPart} from "../../terrier/tabs"
+import PagePart from "../../terrier/parts/page-part"
+import ContentPart from "../../terrier/parts/content-part"
+import {ModalPart} from "../../terrier/modals"
 
 const log = new Logger("DiveEditor")
 
@@ -20,13 +24,13 @@ export type DiveEditorState = {
     dive: Dive
 }
 
-export default class DiveEditor extends DdContentPart<DiveEditorState> {
+export default class DiveEditor extends ContentPart<DiveEditorState> {
 
-    tabs!: DdTabContainerPart
+    tabs!: TabContainerPart
     newQueryKey = messages.untypedKey()
 
     async init() {
-        this.tabs = this.makePart(DdTabContainerPart, {side: 'top'})
+        this.tabs = this.makePart(TabContainerPart, {side: 'top'})
 
         this.tabs.setBeforeAction({
             title: 'Queries:',
@@ -84,7 +88,7 @@ export default class DiveEditor extends DdContentPart<DiveEditorState> {
 }
 
 
-export class DiveEditorPage extends DdPagePart<{}> {
+export class DiveEditorPage extends PagePart<{}> {
 
     editor?: DiveEditor
 
@@ -145,7 +149,7 @@ type NewQueryState = {
     schema: SchemaDef
 }
 
-class NewQueryModal extends DdModalPart<NewQueryState> {
+class NewQueryModal extends ModalPart<NewQueryState> {
 
     addKey = messages.untypedKey()
     settingsForm!: QueryForm

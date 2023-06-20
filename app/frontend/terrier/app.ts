@@ -3,7 +3,7 @@ import {Part, PartConstructor, PartParent} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
 import Tooltips from "./tooltips"
 import Lightbox from "./lightbox"
-import Theme, {ThemeType} from "./theme"
+import Theme from "./theme"
 import {ModalPart, ModalStackPart} from "./modals"
 import {OverlayLayerType, OverlayPart} from "./overlays"
 
@@ -18,23 +18,18 @@ Logger.level = 'info'
 /**
  * Main application part that renders the entire page.
  */
-export abstract class TerrierApp<
-    TState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TSelf extends TerrierApp<TState, TThemeType, TSelf, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TState, TThemeType, TSelf, TTheme> {
+export abstract class TerrierApp<TState> extends TerrierPart<TState> {
 
-    _theme!: TTheme
-
-    get theme(): TTheme {
+    _theme!: Theme
+    
+    get theme(): Theme {
         return this._theme
     }
 
     overlayPart!: OverlayPart
 
     async init() {
-        this._theme = this.state.theme
+        this._theme = new Theme()
         this.overlayPart = this.makePart(OverlayPart, {})
         log.info("Initialized")
     }
@@ -47,7 +42,7 @@ export abstract class TerrierApp<
     update(root: HTMLElement) {
         log.info(`Update`, root)
         Tooltips.init(root)
-        Lightbox.init<TState, TThemeType, TSelf, TTheme>(root, this as unknown as TSelf, 'body-content')
+        Lightbox.init(root, this, 'body-content')
     }
 
 
@@ -73,7 +68,7 @@ export abstract class TerrierApp<
         this.overlayPart.clearAll()
     }
 
-    removeDropdown<StateType extends {}>(state: StateType): boolean {
+    removeDropdown<StateType>(state: StateType): boolean {
         this.lastDropdownTarget = undefined
         return this.overlayPart.removeLayer(state)
     }
@@ -89,7 +84,7 @@ export abstract class TerrierApp<
 
     /// Modals
 
-    showModal<ModalType extends ModalPart<StateType, TState, TThemeType, TSelf, TTheme>, StateType>(
+    showModal<ModalType extends ModalPart<StateType>, StateType>(
         constructor: PartConstructor<ModalType, StateType>,
         state: StateType
     ): ModalType {

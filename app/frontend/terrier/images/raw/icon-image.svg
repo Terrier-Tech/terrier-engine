@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-image</title>
+    <g id="icon-image" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" x="5" y="7" width="22" height="18"></rect>
+        <polygon id="Path-41" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" points="5 22 9 17.5 12 20.5 19 13.5 27 21.5 27 25 5 25"></polygon>
+        <path d="M27.1071429,6 C27.6002542,6 28,6.41040565 28,6.91666667 L28,6.91666667 L28,25.0833333 C28,25.5895944 27.6002542,26 27.1071429,26 L27.1071429,26 L4.89285714,26 C4.39974576,26 4,25.5895944 4,25.0833333 L4,25.0833333 L4,6.91666667 C4,6.41040565 4.39974576,6 4.89285714,6 L4.89285714,6 Z M19.2358071,14.5674884 L11.9403215,21.8267099 L9.20451441,19.1049479 L6,22.292 L6,24 L26,24 L26,22.199 L19.2358071,14.5674884 Z M26,8 L6,8 L6,19.726 L9.20451441,16.5374595 L11.9403215,19.2592215 L19.2358071,12 L26,19.499 L26,8 Z M10,10 C11.1045695,10 12,10.8954305 12,12 C12,13.1045695 11.1045695,14 10,14 C8.8954305,14 8,13.1045695 8,12 C8,10.8954305 8.8954305,10 10,10 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>
