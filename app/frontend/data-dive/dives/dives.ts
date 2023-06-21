@@ -1,6 +1,5 @@
-
 import Api from "../../terrier/api"
-import {DdDive} from "../../terrier/gen/models"
+import {DdDive} from "../gen/models"
 
 
 async function get(id: string): Promise<DdDive> {

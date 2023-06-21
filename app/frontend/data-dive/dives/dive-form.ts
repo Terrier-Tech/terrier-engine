@@ -3,7 +3,7 @@ import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
 import {messages} from "tuff-core"
 import {PartTag} from "tuff-core/parts"
-import {DdDive} from "../../terrier/gen/models"
+import {DdDive} from "../gen/models"
 
 const log = new Logger("DiveForm")
 

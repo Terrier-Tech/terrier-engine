@@ -198,12 +198,20 @@ class ModelGenerator < BaseGenerator
   # @return [String] the typescript type of the given reflection
   def compute_ref_type(ref)
     t = ref.options[:class_name].presence || ref.name.to_s.classify
-
+    begin
+      if t.constantize.exclude_from_frontend?
+        return nil
+      end
+    end
     if @type_map[t]
-      @type_map[t]
+      t = @type_map[t]
     else
       t
     end
+    if ref.class == ActiveRecord::Reflection::HasManyReflection
+      t = "#{t}[]"
+    end
+    t
   end
 
 end

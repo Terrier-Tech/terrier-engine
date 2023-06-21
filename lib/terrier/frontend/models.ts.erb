@@ -14,8 +14,7 @@
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
       <% ref_type = compute_ref_type(ref) -%>
-      <% next if ref_type.constantize.exclude_from_frontend? -%>
-      <% ref_type += '[]' if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
+      <% next unless ref_type -%>
       <%= ref_name %> ? : <%= ref_type %>
     <% end -%>
     <% model[:attachments].each do |attachment| -%>
@@ -30,10 +29,10 @@
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
       <% ref_type = compute_ref_type(ref) -%>
-      <% next if ref_type.constantize.exclude_from_frontend? -%>
-      <% if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
+      <% next unless ref_type -%>
+      <% if ref_type.include?('[]') -%>
         <% fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id" -%>
-        <% ref_type = "OptionalProps<Unpersisted#{ref_type},'#{fk}'>[]" -%>
+        <% ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]" -%>
       <% end -%>
       <%= ref_name %>?: <%= ref_type %>
     <% end -%>

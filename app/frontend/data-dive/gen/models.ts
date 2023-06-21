@@ -2,6 +2,8 @@
 
 import { Query } from "../queries/queries"
 
+import { DdUser } from "../dd-user"
+
 import { OptionalProps } from "tuff-core/types"
 
 export type DdDive = {
@@ -22,11 +24,11 @@ export type DdDive = {
     visibility: "public" | "private"
     sort_order?: number
     query_data?: { queries: Query[] }
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
     dd_dive_runs?: DdDiveRun[]
-    owner?: User
+    owner?: DdUser
 }
 
 export type UnpersistedDdDive = {
@@ -47,11 +49,11 @@ export type UnpersistedDdDive = {
     visibility: "public" | "private"
     sort_order?: number
     query_data?: { queries: Query[] }
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
     dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_id">[]
-    owner?: User
+    owner?: DdUser
 }
 
 export const DdDiveEnumFields = {
@@ -74,8 +76,8 @@ export type DdDiveGroup = {
     description_html?: string
     sort_order?: number
     group_types: string[]
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dives?: DdDive[]
 }
 
@@ -95,8 +97,8 @@ export type UnpersistedDdDiveGroup = {
     description_html?: string
     sort_order?: number
     group_types: string[]
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dives?: OptionalProps<UnpersistedDdDive, "dd_dive_group_id">[]
 }
 
@@ -114,8 +116,8 @@ export type DdDiveRun = {
     input_data?: object
     output_data?: object
     status: "running" | "success" | "error"
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dive?: DdDive
     output_file?: File
 }
@@ -134,8 +136,8 @@ export type UnpersistedDdDiveRun = {
     input_data?: object
     output_data?: object
     status: "running" | "success" | "error"
-    created_by?: User
-    updated_by?: User
+    created_by?: DdUser
+    updated_by?: DdUser
     dd_dive?: DdDive
     output_file?: File
 }

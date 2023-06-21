@@ -13,7 +13,7 @@ namespace :frontend do
     typescript_dir = Terrier::Engine.root.join('app/frontend/data-dive/gen').to_s
     ModelGenerator.new(
       typescript_dir: typescript_dir,
-      imports: {'../queries/queries' => ['Query']},
+      imports: {'../queries/queries' => ['Query'], '../dd-user' => ['DdUser']},
       prefix: 'Dd',
       type_map: {'User' => 'DdUser'}
     ).run

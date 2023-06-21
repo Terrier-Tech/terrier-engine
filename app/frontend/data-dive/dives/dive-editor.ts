@@ -11,7 +11,7 @@ import {TabContainerPart} from "../../terrier/tabs"
 import PagePart from "../../terrier/parts/page-part"
 import ContentPart from "../../terrier/parts/content-part"
 import {ModalPart} from "../../terrier/modals"
-import {DdDive} from "../../terrier/gen/models"
+import {DdDive} from "../gen/models"
 
 const log = new Logger("DiveEditor")
 
