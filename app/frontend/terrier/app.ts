@@ -9,7 +9,7 @@ import {OverlayLayerType, OverlayPart} from "./overlays"
 
 // @ts-ignore
 import logoUrl from './images/optimized/terrier-hub-logo-light.svg'
-import Sheets, {AlertSheetState, ConfirmSheetState, Sheet} from "./sheets";
+import Sheets, {AlertSheetState, ConfirmSheetState, Sheet, SheetState} from "./sheets";
 import {messages} from "tuff-core";
 
 const log = new Logger('App')
@@ -102,7 +102,7 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
      * @param options
      * @param callback gets called if the user hits "Confirm"
      */
-    confirm(options: ConfirmSheetState<TThemeType>, callback: () => any) {
+    confirm(options: ConfirmSheetState, callback: () => any) {
         const key = messages.untypedKey()
         const state = {...options,
             primaryActions: [
@@ -120,8 +120,8 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
                     click: {key: Sheets.clearKey}
                 }
             ]
-        }
-        const sheet = this.overlayPart.getOrCreateLayer(Sheet, state, 'sheet')
+        } as SheetState
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet<SheetState>, state, 'sheet')
         sheet.onClick(key, _ => {
             sheet.clear()
             callback()
@@ -133,7 +133,7 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
      * Shows an alert sheet to the user with a message (but no choices).
      * @param options
      */
-    alert(options: AlertSheetState<TThemeType>) {
+    alert(options: AlertSheetState) {
         const state = {...options,
             primaryActions: [
                 {
@@ -143,8 +143,8 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
                     classes: ['secondary']
                 }
             ]
-        }
-        const sheet = this.overlayPart.getOrCreateLayer(Sheet, state, 'sheet')
+        } as SheetState
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet<SheetState>, state, 'sheet')
         sheet.dirty()
     }
 

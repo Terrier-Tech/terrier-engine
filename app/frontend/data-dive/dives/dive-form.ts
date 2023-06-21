@@ -1,16 +1,16 @@
 import TerrierPart from "../../terrier/parts/terrier-part"
-import {Dive} from "./dives"
 import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
 import {messages} from "tuff-core"
 import {PartTag} from "tuff-core/parts"
+import {DdDive} from "../../terrier/gen/models"
 
 const log = new Logger("DiveForm")
 
 export const DiveSettingsColumns = ['name', 'description_raw'] as const
 export type DiveSettingsColumn = typeof DiveSettingsColumns[number]
 
-export type DiveSettings = Pick<Dive, DiveSettingsColumn>
+export type DiveSettings = Pick<DdDive, DiveSettingsColumn>
 
 export default class DiveForm extends TerrierPart<{dive: DiveSettings}> {
 

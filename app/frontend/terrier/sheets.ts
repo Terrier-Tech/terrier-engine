@@ -1,5 +1,4 @@
-import Theme, {Action, ThemeType} from "./theme"
-import {TerrierApp} from "./app"
+import {Action, IconName} from "./theme"
 import TerrierPart from "./parts/terrier-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "./fragments"
@@ -13,23 +12,17 @@ const log = new Logger('Sheets')
 // Parts
 ////////////////////////////////////////////////////////////////////////////////
 
-export type SheetState<TThemeType extends ThemeType> = {
+export type SheetState = {
     title: string
-    icon: TThemeType['icons']
+    icon: IconName
     body: string
-    primaryActions?: Action<TThemeType>[]
-    secondaryActions?: Action<TThemeType>[]
+    primaryActions?: Action[]
+    secondaryActions?: Action[]
 }
 
 const clearKey = messages.untypedKey()
 
-export class Sheet<
-    TState extends SheetState<TThemeType>,
-    TAppState extends { theme: TTheme },
-    TThemeType extends ThemeType,
-    TApp extends TerrierApp<TAppState, TThemeType, TApp, TTheme>,
-    TTheme extends Theme<TThemeType>
-> extends TerrierPart<TState, TAppState, TThemeType, TApp, TTheme> {
+export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
 
     /**
      * Removes itself from the DOM.
@@ -88,12 +81,12 @@ export class Sheet<
 /**
  * State type for a sheet that asks the user to confirm a choice.
  */
-export type ConfirmSheetState<TThemeType extends ThemeType> = Pick<SheetState<TThemeType>, 'title' | 'body' | 'icon'>
+export type ConfirmSheetState = Pick<SheetState, 'title' | 'body' | 'icon'>
 
 /**
  * State type for a sheet that tells the user something with no options.
  */
-export type AlertSheetState<TThemeType extends ThemeType> = Pick<SheetState<TThemeType>, 'title' | 'body' | 'icon'>
+export type AlertSheetState = Pick<SheetState, 'title' | 'body' | 'icon'>
 
 
 ////////////////////////////////////////////////////////////////////////////////
