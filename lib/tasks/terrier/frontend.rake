@@ -8,10 +8,15 @@ namespace :frontend do
     ModelGenerator.new.run
   end
 
-  desc "Generate model files for the engine"
-  task gen_engine_models: :environment do
-    typescript_dir = Terrier::Engine.root.join('app/frontend/terrier/gen').to_s
-    ModelGenerator.new(typescript_dir: typescript_dir, imports: {'../../data-dive/queries/queries' => ['Query']}).run
+  desc "Generate model files for data-dive"
+  task gen_dd_models: :environment do
+    typescript_dir = Terrier::Engine.root.join('app/frontend/data-dive/gen').to_s
+    ModelGenerator.new(
+      typescript_dir: typescript_dir,
+      imports: {'../queries/queries' => ['Query']},
+      prefix: 'Dd',
+      type_map: {'User' => 'DdUser'}
+    ).run
   end
 
   desc "Generates hub icons"

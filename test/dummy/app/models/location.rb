@@ -31,10 +31,6 @@
 # +------------+-------------+-----------+
 class Location < ApplicationRecord
 
-  def self.exclude_from_frontend?
-    true
-  end
-
   has_many :work_orders, dependent: :restrict_with_error
   has_many :invoices, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error

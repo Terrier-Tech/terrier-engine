@@ -4,24 +4,35 @@ require 'terrier/frontend/base_generator'
 class ModelGenerator < BaseGenerator
 
   # @param options [Hash] a hash of options for generating the model
-  # @option options [Hash<String,Array<String>>] :imports A hash of import paths to a list of symbols
+  # @option options [Hash<String,Array<String>>] :imports a hash of import paths to a list of symbols
+  # @option options [Hash<String,String>] :type_map a hash of type names to map to other names
+  # @option options [String] :prefix a model name prefix used to filter out the included models
   def initialize(options={})
     super
     @has_shrine = defined?(Shrine)
 
     @imports = options[:imports] || {}
+    @prefix = options[:prefix].presence
+    @type_map = options[:type_map] || {}
 
     # add the default imports
     @imports['tuff-core/types'] ||= []
     @imports['tuff-core/types'] << 'OptionalProps'
   end
 
+  def each_model
+    ApplicationRecord.descendants.each do |model|
+      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+      next if @prefix && !model.name.start_with?(@prefix) # filter by prefix
+      yield model
+    end
+  end
+
   def run
     # load all model metadata
     Rails.application.eager_load!
     models = {}
-    ApplicationRecord.descendants.each do |model|
-      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+    each_model do |model|
       enum_fields = {}
       model.validators.each do |v|
         if v.options[:in].present? && v.attributes.length == 1
@@ -105,8 +116,7 @@ class ModelGenerator < BaseGenerator
   def load_models
     Rails.application.eager_load!
     models = {}
-    ApplicationRecord.descendants.each do |model|
-      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+    each_model do |model|
       enum_fields = {}
       model.validators.each do |v|
         if v.options[:in].present? && v.attributes.length == 1
@@ -181,6 +191,18 @@ class ModelGenerator < BaseGenerator
       'object'
     else
       type
+    end
+  end
+
+  # @param ref [ActiveRecord::Reflection] a HasMany or BelongsTo reflection
+  # @return [String] the typescript type of the given reflection
+  def compute_ref_type(ref)
+    t = ref.options[:class_name].presence || ref.name.to_s.classify
+
+    if @type_map[t]
+      @type_map[t]
+    else
+      t
     end
   end
 

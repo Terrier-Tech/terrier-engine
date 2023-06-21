@@ -19,10 +19,6 @@
 # +------------+-------------+-----------+
 class Target < ApplicationRecord
 
-  def self.exclude_from_frontend?
-    true
-  end
-
   has_many :work_orders, dependent: :restrict_with_error
 
   def self.metadata

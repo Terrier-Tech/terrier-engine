@@ -23,10 +23,6 @@
 # +------------+-------------+-----------+
 class Invoice < ApplicationRecord
 
-  def self.exclude_from_frontend?
-    true
-  end
-
   belongs_to :location
 
   has_many :work_orders, dependent: :restrict_with_error

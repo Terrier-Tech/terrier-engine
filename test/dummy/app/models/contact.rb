@@ -21,10 +21,6 @@
 # +------------+------------+----------+
 class Contact < ApplicationRecord
 
-  def self.exclude_from_frontend?
-    true
-  end
-
   belongs_to :user
   belongs_to :location
 

@@ -13,7 +13,7 @@
       <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify -%>
+      <% ref_type = compute_ref_type(ref) -%>
       <% next if ref_type.constantize.exclude_from_frontend? -%>
       <% ref_type += '[]' if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
       <%= ref_name %> ? : <%= ref_type %>
@@ -29,7 +29,7 @@
       <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify -%>
+      <% ref_type = compute_ref_type(ref) -%>
       <% next if ref_type.constantize.exclude_from_frontend? -%>
       <% if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
         <% fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id" -%>
