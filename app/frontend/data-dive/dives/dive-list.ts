@@ -6,6 +6,8 @@ import {ModalPart} from "../../terrier/modals"
 import {QueryModelPicker} from "../queries/queries"
 import {messages} from "tuff-core"
 import DiveForm from "./dive-form"
+import {DdDive} from "../gen/models";
+import Db from "../../../../test/dummy/app/frontend/demo/db";
 
 const log = new Logger("DiveList")
 
@@ -87,6 +89,8 @@ class NewDiveModal extends ModalPart<NewDiveState> {
                 return
             }
             log.info(`Creating new dive!`, settings)
+            const dive: DdDive = {...settings}
+            await Db.insert('dd_dive', )
             this.pop()
         })
     }
