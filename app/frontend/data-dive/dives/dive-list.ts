@@ -7,9 +7,10 @@ import {Query, QueryModelPicker} from "../queries/queries"
 import {messages} from "tuff-core"
 import DiveForm from "./dive-form"
 import {UnpersistedDdDive} from "../gen/models"
-import Db from "../dd-db";
+import Db from "../dd-db"
 import Ids from "../../terrier/ids"
 import Turbolinks from "turbolinks"
+import Dives, {DiveListResult} from "./dives"
 
 const log = new Logger("DiveList")
 
@@ -21,14 +22,13 @@ const log = new Logger("DiveList")
 export class DiveListPage extends PagePart<{}> {
 
     newKey = messages.untypedKey()
+    result!: DiveListResult
 
     async init() {
         this.setTitle("Data Dive")
         this.setIcon('glyp-data_dives')
 
         const schema = await Schema.get()
-
-        log.info("Loading data dive list")
 
         this.addAction({
             title: "New Dive",
@@ -41,11 +41,19 @@ export class DiveListPage extends PagePart<{}> {
             this.app.showModal(NewDiveModal, {schema})
         })
 
+        this.result = await Dives.list()
+
+        log.info("Loading data dive list", this.result)
+
+
         this.dirty()
     }
 
     renderContent(parent: PartTag): void {
-        parent.div().text("Dive List")
+
+        for (const dive of this.result.dives) {
+            parent.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`}).text(dive.name)
+        }
     }
 
 }
