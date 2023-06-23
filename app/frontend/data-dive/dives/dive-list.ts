@@ -3,11 +3,13 @@ import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {ModalPart} from "../../terrier/modals"
-import {QueryModelPicker} from "../queries/queries"
+import {Query, QueryModelPicker} from "../queries/queries"
 import {messages} from "tuff-core"
 import DiveForm from "./dive-form"
-import {DdDive} from "../gen/models";
-import Db from "../../../../test/dummy/app/frontend/demo/db";
+import {UnpersistedDdDive} from "../gen/models"
+import Db from "../dd-db";
+import Ids from "../../terrier/ids"
+import Turbolinks from "turbolinks"
 
 const log = new Logger("DiveList")
 
@@ -64,7 +66,7 @@ class NewDiveModal extends ModalPart<NewDiveState> {
     createKey = messages.untypedKey()
 
     async init() {
-        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: ''}})
+        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: '', visibility: 'public'}})
         this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
 
         this.setTitle("New Dive")
@@ -88,10 +90,25 @@ class NewDiveModal extends ModalPart<NewDiveState> {
                 this.showToast("Please select a model", {color: 'alert'})
                 return
             }
+            const query: Query = {
+                id: Ids.makeUuid(),
+                name: settings.name,
+                notes: '',
+                from: {model: model.name}
+            }
             log.info(`Creating new dive!`, settings)
-            const dive: DdDive = {...settings}
-            await Db.insert('dd_dive', )
-            this.pop()
+            const dive: UnpersistedDdDive = {...settings, query_data: {
+                    queries: [query]
+                }}
+            const res = await Db().insert('dd_dive', dive)
+            if (res.status == 'success') {
+                this.app.successToast(`Created Dive ${dive.name}`)
+                this.pop()
+                Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
+            }
+            else {
+                this.app.alertToast(res.message)
+            }
         })
     }
 

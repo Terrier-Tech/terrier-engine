@@ -12,6 +12,7 @@ import PagePart from "../../terrier/parts/page-part"
 import ContentPart from "../../terrier/parts/content-part"
 import {ModalPart} from "../../terrier/modals"
 import {DdDive} from "../gen/models"
+import Ids from "../../terrier/ids"
 
 const log = new Logger("DiveEditor")
 
@@ -207,8 +208,7 @@ class NewQueryModal extends ModalPart<NewQueryState> {
             this.showToast("Please select a model", {color: 'alert'})
             return
         }
-        // TODO: a better id
-        const query = {...settings, id: (new Date()).toString(), from: {model: model.name}}
+        const query = {...settings, id: Ids.makeUuid(), from: {model: model.name}}
         this.state.editor.addQuery(query)
         this.state.editor.tabs.showTab(query.id)
         this.pop()
