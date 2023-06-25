@@ -93,36 +93,15 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 }
 
 
-export class DiveEditorPage extends PagePart<{}> {
+export class DiveEditorPage extends PagePart<{id: string}> {
 
-    editor?: DiveEditor
+    editor!: DiveEditor
 
-    get parentClasses(): Array<string> {
-        return ['dd-dive-editor-page']
-    }
+    async init() {
+        log.info(`Loading dive ${this.state.id}`)
 
-    renderContent(parent: PartTag) {
-        if (this.editor) {
-            parent.part(this.editor)
-        }
-    }
-
-
-    load() {
-        super.load()
-
-        if (!this.editor) {
-            const id = this.context.queryParams.get('id')
-            if (id?.length) {
-                this.loadDive(id).then()
-            }
-        }
-    }
-
-    async loadDive(id: string) {
-        log.info(`Loading dive ${id}`)
         const schema = await Schema.get()
-        const dive = await Dives.get(id)
+        const dive = await Dives.get(this.state.id)
         this.editor = this.makePart(DiveEditor, {schema, dive})
 
         this.addBreadcrumb({
@@ -142,6 +121,15 @@ export class DiveEditorPage extends PagePart<{}> {
 
         this.dirty()
     }
+
+    get parentClasses(): Array<string> {
+        return ['dd-dive-editor-page']
+    }
+
+    renderContent(parent: PartTag) {
+        parent.part(this.editor)
+    }
+
     
 }
 

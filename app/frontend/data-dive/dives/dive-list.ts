@@ -9,7 +9,7 @@ import DiveForm from "./dive-form"
 import {UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
 import Ids from "../../terrier/ids"
-import Turbolinks from "turbolinks"
+// import Turbolinks from "turbolinks"
 import Dives, {DiveListResult} from "./dives"
 
 const log = new Logger("DiveList")
@@ -112,7 +112,7 @@ class NewDiveModal extends ModalPart<NewDiveState> {
             if (res.status == 'success') {
                 this.app.successToast(`Created Dive ${dive.name}`)
                 this.pop()
-                Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
+                // Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
             }
             else {
                 this.app.alertToast(res.message)

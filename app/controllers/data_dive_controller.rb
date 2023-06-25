@@ -8,14 +8,9 @@ class DataDiveController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
-  def index
+  def entrypoint
     @title = "Data Dive"
-    @entrypoint = 'dd-dive-list'
-  end
-
-  def editor
-    @title = "Data Dive Editor"
-    @entrypoint = 'dd-dive-editor'
+    @entrypoint = 'data-dive'
   end
 
   # get all dives associated with the current user
