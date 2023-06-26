@@ -1,5 +1,5 @@
 import Api from "../../terrier/api"
-import {DdDive} from "../gen/models"
+import {DdDive, DdDiveGroup} from "../gen/models"
 import Db from "../dd-db"
 import {DdUser} from "../dd-user"
 
@@ -24,6 +24,7 @@ async function get(id: string): Promise<DdDive> {
 
 export type DiveListResult = {
     dives: DdDive[]
+    groups: DdDiveGroup[]
     user: DdUser
 }
 

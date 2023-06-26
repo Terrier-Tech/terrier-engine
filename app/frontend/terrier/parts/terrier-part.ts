@@ -1,8 +1,9 @@
-import {Part} from "tuff-core/parts"
+import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "../app"
 import Loading from "../loading"
 import Theme, {IconName} from "../theme"
 import Toasts, {ToastOptions} from "../toasts"
+import {DbErrors} from "../db-client"
 
 /**
  * Base class for ALL parts in a Terrier application.
@@ -72,6 +73,19 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
                 this.stopLoading()
             }
         }
+    }
+
+
+    /// Errors
+
+    renderErrorBubble(parent: PartTag, errors: DbErrors<any>) {
+        parent.ul('.tt-bubble.alert', bubble => {
+            bubble.ul(ul => {
+                for (const kv of Object.entries(errors)) {
+                    ul.li().text(`${kv[0]} ${kv[1]}`)
+                }
+            })
+        })
     }
 
 

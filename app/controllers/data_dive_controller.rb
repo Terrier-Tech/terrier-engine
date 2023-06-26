@@ -8,6 +8,8 @@ class DataDiveController < ApplicationController
 
   skip_before_action :verify_authenticity_token
 
+  # all pages use the same entrypoint action on the server,
+  # the routing is done on the client side
   def entrypoint
     @title = "Data Dive"
     @entrypoint = 'data-dive'
@@ -18,7 +20,12 @@ class DataDiveController < ApplicationController
     user = _terrier_change_user
     dives = DdDive.where(_state: 0)
                   .where("owner_id = ? OR visibility = 'public'", user.id)
-    render_api_success dives: dives, user: user
+                  .order(name: :asc)
+
+    groups = DdDiveGroup.where(_state: 0)
+                        .order(name: :asc)
+
+    render_api_success dives: dives, user: user, groups: groups
   end
 
   def test_dive

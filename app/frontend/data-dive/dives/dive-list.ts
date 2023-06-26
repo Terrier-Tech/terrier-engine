@@ -4,13 +4,14 @@ import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {ModalPart} from "../../terrier/modals"
 import {Query, QueryModelPicker} from "../queries/queries"
-import {messages} from "tuff-core"
+import {arrays, messages} from "tuff-core"
 import DiveForm from "./dive-form"
 import {UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
 import Ids from "../../terrier/ids"
-// import Turbolinks from "turbolinks"
+import Turbolinks from "turbolinks"
 import Dives, {DiveListResult} from "./dives"
+import {GroupEditorModal} from "./group-editor"
 
 const log = new Logger("DiveList")
 
@@ -21,24 +22,25 @@ const log = new Logger("DiveList")
 
 export class DiveListPage extends PagePart<{}> {
 
-    newKey = messages.untypedKey()
+    newGroupKey = messages.untypedKey()
     result!: DiveListResult
+    schema!: SchemaDef
 
     async init() {
         this.setTitle("Data Dive")
         this.setIcon('glyp-data_dives')
 
-        const schema = await Schema.get()
+        this.schema = await Schema.get()
 
         this.addAction({
-            title: "New Dive",
+            title: "New Group",
             icon: 'glyp-plus_outline',
-            click: {key: this.newKey}
+            click: {key: this.newGroupKey}
         }, 'tertiary')
 
-        this.onClick(this.newKey, _ => {
-            log.info("Showing new dive model")
-            this.app.showModal(NewDiveModal, {schema})
+        this.onClick(this.newGroupKey, _ => {
+            log.info("Showing new dive group model")
+            this.app.showModal(GroupEditorModal, {group_id: '', callback: _ => this.dirty()})
         })
 
         this.result = await Dives.list()
@@ -51,9 +53,25 @@ export class DiveListPage extends PagePart<{}> {
 
     renderContent(parent: PartTag): void {
 
-        for (const dive of this.result.dives) {
-            parent.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`}).text(dive.name)
-        }
+        const groupedDives = arrays.groupBy(this.result.dives, 'dd_dive_group_id')
+
+        parent.div('.dd-group-grid', grid => {
+            for (const group of this.result.groups) {
+                grid.div('.group', groupView => {
+                    groupView.div('.name').text(group.name)
+                    for (const dive of (groupedDives[group.id] || [])) {
+                        parent.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`}).text(dive.name)
+                    }
+
+                })
+            }
+
+            // ungrouped dives
+            const ungrouped = this.result.dives.filter(d => !d.dd_dive_group_id)
+            for (const dive of ungrouped) {
+                parent.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`}).text(dive.name)
+            }
+        })
     }
 
 }
@@ -112,7 +130,7 @@ class NewDiveModal extends ModalPart<NewDiveState> {
             if (res.status == 'success') {
                 this.app.successToast(`Created Dive ${dive.name}`)
                 this.pop()
-                // Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
+                Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
             }
             else {
                 this.app.alertToast(res.message)
