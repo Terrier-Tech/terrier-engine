@@ -91,6 +91,7 @@ export class GroupEditorModal extends ModalPart<GroupModalState> {
         if (res.status == 'success') {
             this.state.callback(res.record)
             this.successToast(`Saved group ${res.record?.name}`)
+            this.pop()
         }
         else {
             this.alertToast(`Error saving group: ${res.message}`)
