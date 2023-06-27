@@ -92,7 +92,7 @@ export class DiveListPage extends PagePart<{}> {
     renderGroupPanel(parent: PartTag, group: DdDiveGroup, dives: DdDive[]) {
         Fragments.panel(this.theme)
             .title(group.name)
-            .icon((group.icon || 'glyp-grouped') as IconName)
+            .icon((group.icon || 'glyp-data_dives') as IconName)
             .classes('group', 'padded')
             .content(content => {
                 content.class('tt-list')

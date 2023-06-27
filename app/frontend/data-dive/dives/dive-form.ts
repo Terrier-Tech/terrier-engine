@@ -1,18 +1,18 @@
 import TerrierPart from "../../terrier/parts/terrier-part"
-import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
 import {messages} from "tuff-core"
 import {PartTag} from "tuff-core/parts"
 import {DdDive, DdDiveEnumFields, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
 import inflection from "inflection"
-import {SchemaDef} from "../../terrier/schema";
-import {ModalPart} from "../../terrier/modals";
-import {Query, QueryModelPicker} from "../queries/queries";
-import Ids from "../../terrier/ids";
-import Db from "../dd-db";
-import {routes} from "../dd-routes";
-import Nav from "tuff-core/nav";
-import {DbErrors} from "../../terrier/db-client";
+import {SchemaDef} from "../../terrier/schema"
+import {ModalPart} from "../../terrier/modals"
+import {Query, QueryModelPicker} from "../queries/queries"
+import Ids from "../../terrier/ids"
+import Db from "../dd-db"
+import {routes} from "../dd-routes"
+import Nav from "tuff-core/nav"
+import {DbErrors} from "../../terrier/db-client"
+import {TerrierFormFields} from "../../terrier/forms";
 
 const log = new Logger("DiveForm")
 
@@ -24,12 +24,12 @@ export type DiveSettings = Pick<DdDive, DiveSettingsColumn>
 /**
  * A form for editing the basic properties of a dive.
  */
-export default class DiveForm extends TerrierPart<{dive: DiveSettings, groups: DdDiveGroup[]}> {
+class DiveForm extends TerrierPart<{dive: DiveSettings, groups: DdDiveGroup[]}> {
 
-    fields!: FormFields<DiveSettings>
+    fields!: TerrierFormFields<DiveSettings>
 
     async init() {
-        this.fields = new FormFields<DiveSettings>(this, this.state.dive)
+        this.fields = new TerrierFormFields<DiveSettings>(this, this.state.dive)
         this.listen('datachanged', this.fields.dataChangedKey, m => {
             log.info(`Query fields changed`, m.data)
             Object.assign(this.state.dive, m.data)
@@ -45,14 +45,12 @@ export default class DiveForm extends TerrierPart<{dive: DiveSettings, groups: D
     }
 
     render(parent: PartTag): any {
+        this.fields.renderErrorBubble(parent)
         parent.div('.tt-flex.gap.collapsible', row => {
             // name
             row.div('.tt-compound-field', field => {
                 field.label().text("Name")
-                const nameField = this.fields.textInput(field, 'name')
-                if (!this.state.dive.name.length) {
-                    nameField.class('error')
-                }
+                this.fields.textInput(field, 'name')
             })
 
             // group
@@ -83,6 +81,15 @@ export default class DiveForm extends TerrierPart<{dive: DiveSettings, groups: D
         })
     }
 
+    /**
+     * Sets the errors on the fields and re-renders the form.
+     * @param errors
+     */
+    setErrors(errors: DbErrors<UnpersistedDdDive>) {
+        this.fields.errors = errors
+        this.dirty()
+    }
+
     async serialize(): Promise<DiveSettings> {
         return await this.fields.serialize()
     }
@@ -105,7 +112,6 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
     modelPicker!: QueryModelPicker
     saveKey = messages.untypedKey()
     isNew = true
-    errors?: DbErrors<UnpersistedDdDive>
 
     async init() {
         this.isNew = !this.state.dive.id?.length
@@ -130,70 +136,63 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
         })
 
         this.onClick(this.saveKey, async _ => {
-            const dive = {...this.state.dive}
-
-            // settings
-            const settings = await this.settingsForm.serialize()
-            Object.assign(dive, settings)
-            if (!settings.name?.length) {
-                this.showToast("Please enter a dive name", {color: 'alert'})
-                this.dirty()
-                return
-            }
-
-            // model (for new dives only)
-            if (this.isNew) {
-                const model = this.modelPicker.model
-                if (!model) {
-                    this.showToast("Please select a model", {color: 'alert'})
-                    return
-                }
-                const query: Query = {
-                    id: Ids.makeUuid(),
-                    name: settings.name,
-                    notes: '',
-                    from: {model: model.name}
-                }
-                dive.query_data = {queries: [query]}
-                log.info(`Creating new dive ${dive.name}!`, dive)
-            }
-            else {
-                log.info(`Updating existing dive ${dive.name}`, dive)
-            }
-
-            // upsert
-            const res = await Db().upsert('dd_dive', dive)
-            log.info(`Dive upsert response ${res.status}`, res)
-            if (res.status == 'success') {
-                this.pop()
-
-                // if it's a new dive, go straight to the editor
-                if (this.isNew) {
-                    this.app.successToast(`Created Dive ${dive.name}`)
-                    Nav.visit(routes.editor.path({id: res.record!.id}))
-                }
-                else {
-                    // otherwise just reload the list
-                    this.app.successToast(`Updated Dive ${dive.name}`)
-                    Nav.visit(routes.list.path({}))
-                }
-            } else {
-                this.app.alertToast(res.message)
-                this.errors = res.errors
-            }
+            this.save()
         })
     }
 
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.tt-form.padded.column.gap.dd-new-dive-form', col => {
-            if (this.errors) {
-                this.renderErrorBubble(col, this.errors)
-            }
             col.part(this.settingsForm)
             if (this.isNew) {
                 col.part(this.modelPicker)
             }
         })
+    }
+
+    async save() {
+        const dive = {...this.state.dive}
+
+        // settings
+        const settings = await this.settingsForm.serialize()
+        Object.assign(dive, settings)
+
+        // model (for new dives only)
+        if (this.isNew) {
+            const model = this.modelPicker.model
+            if (!model) {
+                this.showToast("Please select a model", {color: 'alert'})
+                return
+            }
+            const query: Query = {
+                id: Ids.makeUuid(),
+                name: settings.name,
+                notes: '',
+                from: {model: model.name}
+            }
+            dive.query_data = {queries: [query]}
+            log.info(`Creating new dive ${dive.name}!`, dive)
+        } else {
+            log.info(`Updating existing dive ${dive.name}`, dive)
+        }
+
+        // upsert
+        const res = await Db().upsert('dd_dive', dive)
+        log.info(`Dive upsert response ${res.status}`, res)
+        if (res.status == 'success') {
+            this.pop()
+
+            // if it's a new dive, go straight to the editor
+            if (this.isNew) {
+                this.app.successToast(`Created Dive ${dive.name}`)
+                Nav.visit(routes.editor.path({id: res.record!.id}))
+            } else {
+                // otherwise just reload the list
+                this.app.successToast(`Updated Dive ${dive.name}`)
+                Nav.visit(routes.list.path({}))
+            }
+        } else {
+            this.settingsForm.setErrors(res.errors)
+        }
     }
 
 }
