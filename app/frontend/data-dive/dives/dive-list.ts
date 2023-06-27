@@ -3,13 +3,13 @@ import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {arrays, messages} from "tuff-core"
-import {DdDive, DdDiveGroup} from "../gen/models"
+import {DdDive, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
 import Dives, {DiveListResult} from "./dives"
 import {GroupEditorModal} from "./group-editor"
 import Fragments from "../../terrier/fragments"
 import {IconName} from "../../terrier/theme"
 import {routes} from "../dd-routes"
-import {DiveSettingsModal} from "./dive-form";
+import {DiveSettingsModal} from "./dive-form"
 
 const log = new Logger("DiveList")
 
@@ -22,8 +22,11 @@ export class DiveListPage extends PagePart<{}> {
 
     newGroupKey = messages.untypedKey()
     newDiveKey = messages.typedKey<{group_id: string}>()
+    editDiveKey = messages.typedKey<{id: string}>()
+
     result!: DiveListResult
     schema!: SchemaDef
+    diveMap: Record<string,DdDive> = {}
 
     async init() {
         this.setTitle("Data Dive")
@@ -54,12 +57,24 @@ export class DiveListPage extends PagePart<{}> {
             this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, groups: this.result.groups})
         })
 
+        this.onClick(this.editDiveKey, m => {
+            const dive = this.diveMap[m.data.id] as UnpersistedDdDive
+            if (dive) {
+                log.info(`Editing settings for dive: ${dive.name}`)
+                this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, groups: this.result.groups})
+            }
+            else {
+                log.warn(`No dive with id ${m.data.id}`)
+            }
+        })
+
         await this.reload()
     }
 
     async reload() {
         this.result = await Dives.list()
         log.info("Loading data dive list", this.result)
+        this.diveMap = arrays.indexBy(this.result.dives, 'id')
         this.dirty()
     }
 
@@ -71,24 +86,18 @@ export class DiveListPage extends PagePart<{}> {
             for (const group of this.result.groups) {
                 this.renderGroupPanel(grid, group, groupedDives[group.id] || [])
             }
-
-            // ungrouped dives
-            const ungrouped = this.result.dives.filter(d => !d.dd_dive_group_id)
-            for (const dive of ungrouped) {
-                parent.a('.dive.tt-flex.gap', {href: routes.editor.path({id: dive.id})}).text(dive.name)
-            }
         })
     }
 
     renderGroupPanel(parent: PartTag, group: DdDiveGroup, dives: DdDive[]) {
         Fragments.panel(this.theme)
             .title(group.name)
-            .icon((group.icon || 'glyp-help') as IconName)
+            .icon((group.icon || 'glyp-grouped') as IconName)
             .classes('group', 'padded')
             .content(content => {
+                content.class('tt-list')
                 for (const dive of arrays.sortBy(dives, 'name')) {
-                    content.a('.dive.tt-flex.gap', {href: routes.editor.path({id: dive.id})})
-                        .text(dive.name)
+                    this.renderDiveRow(content, dive)
                 }
             })
             .addAction({
@@ -97,6 +106,19 @@ export class DiveListPage extends PagePart<{}> {
                 click: {key: this.newDiveKey, data: {group_id: group.id}}
             }, 'secondary')
             .render(parent)
+    }
+
+    renderDiveRow(parent: PartTag, dive: DdDive) {
+        parent.div('.dive', row => {
+            row.a({href: routes.editor.path({id: dive.id})}, a => {
+                a.i('.glyp-data_dive')
+                a.span().text(dive.name)
+            }).data({tooltip: "Open Editor"})
+            row.a('.icon-only', a => {
+                a.i('.glyp-settings')
+            }).data({tooltip: "Dive Settings"})
+              .emitClick(this.editDiveKey, {id: dive.id})
+        })
     }
 
 }

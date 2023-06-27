@@ -1,4 +1,3 @@
-
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
 import Dives from "./dives"
@@ -13,6 +12,7 @@ import ContentPart from "../../terrier/parts/content-part"
 import {ModalPart} from "../../terrier/modals"
 import {DdDive} from "../gen/models"
 import Ids from "../../terrier/ids"
+import Db from "../dd-db"
 
 const log = new Logger("DiveEditor")
 
@@ -29,6 +29,7 @@ export type DiveEditorState = {
 export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     tabs!: TabContainerPart
+
     newQueryKey = messages.untypedKey()
 
     queries = new Array<Query>()
@@ -90,12 +91,19 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     static readonly deleteQueryKey = messages.typedKey<{ id: string }>()
 
+    async serialize(): Promise<DdDive> {
+        const queries = this.queries
+        return {...this.state.dive, query_data: {queries}}
+    }
+
 }
 
 
 export class DiveEditorPage extends PagePart<{id: string}> {
 
     editor!: DiveEditor
+
+    saveKey = messages.untypedKey()
 
     async init() {
         log.info(`Loading dive ${this.state.id}`)
@@ -116,8 +124,11 @@ export class DiveEditorPage extends PagePart<{id: string}> {
 
         this.addAction({
             title: 'Save',
-            icon: 'glyp-checkmark'
+            icon: 'glyp-checkmark',
+            click: {key: this.saveKey}
         }, 'tertiary')
+
+        this.onClick(this.saveKey, _ => this.save())
 
         this.dirty()
     }
@@ -128,6 +139,18 @@ export class DiveEditorPage extends PagePart<{id: string}> {
 
     renderContent(parent: PartTag) {
         parent.part(this.editor)
+    }
+
+    async save() {
+        const dive = await this.editor.serialize()
+        log.info(`Saving dive ${dive.name}`, dive)
+        const res = await Db().upsert('dd_dive', dive)
+        if (res.status == 'success') {
+            this.successToast(`Saved Dive!`)
+        }
+        else {
+            this.alertToast(res.message)
+        }
     }
 
     

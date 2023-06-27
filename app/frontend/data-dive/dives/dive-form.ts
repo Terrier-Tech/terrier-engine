@@ -165,10 +165,18 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
             const res = await Db().upsert('dd_dive', dive)
             log.info(`Dive upsert response ${res.status}`, res)
             if (res.status == 'success') {
-                this.app.successToast(`Created Dive ${dive.name}`)
                 this.pop()
-                const path = routes.editor.path({id: res.record!.id})
-                Nav.visit(path)
+
+                // if it's a new dive, go straight to the editor
+                if (this.isNew) {
+                    this.app.successToast(`Created Dive ${dive.name}`)
+                    Nav.visit(routes.editor.path({id: res.record!.id}))
+                }
+                else {
+                    // otherwise just reload the list
+                    this.app.successToast(`Updated Dive ${dive.name}`)
+                    Nav.visit(routes.list.path({}))
+                }
             } else {
                 this.app.alertToast(res.message)
                 this.errors = res.errors
