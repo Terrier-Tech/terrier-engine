@@ -2,19 +2,14 @@ import {Logger} from "tuff-core/logging"
 import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
-import {ModalPart} from "../../terrier/modals"
-import {Query, QueryModelPicker} from "../queries/queries"
 import {arrays, messages} from "tuff-core"
-import DiveForm from "./dive-form"
-import {DdDive, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
-import Db from "../dd-db"
-import Ids from "../../terrier/ids"
+import {DdDive, DdDiveGroup} from "../gen/models"
 import Dives, {DiveListResult} from "./dives"
 import {GroupEditorModal} from "./group-editor"
 import Fragments from "../../terrier/fragments"
 import {IconName} from "../../terrier/theme"
-import Nav from "tuff-core/nav"
 import {routes} from "../dd-routes"
+import {DiveSettingsModal} from "./dive-form";
 
 const log = new Logger("DiveList")
 
@@ -44,19 +39,27 @@ export class DiveListPage extends PagePart<{}> {
 
         this.onClick(this.newGroupKey, _ => {
             log.info("Showing new dive group model")
-            this.app.showModal(GroupEditorModal, {group_id: '', callback: _ => this.dirty()})
+            this.app.showModal(GroupEditorModal, {group_id: '', callback: _ => this.reload()})
         })
 
         this.onClick(this.newDiveKey, m => {
             const groupId = m.data.group_id
             log.info(`Showing new dive modal for group ${groupId}`)
-            this.app.showModal(NewDiveModal, {schema: this.schema, group_id: groupId, groups: this.result.groups})
+            const dive = {
+                name: '',
+                description_raw: '',
+                visibility: 'public',
+                dd_dive_group_id: groupId
+            } as const
+            this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, groups: this.result.groups})
         })
 
+        await this.reload()
+    }
+
+    async reload() {
         this.result = await Dives.list()
-
         log.info("Loading data dive list", this.result)
-
         this.dirty()
     }
 
@@ -94,82 +97,6 @@ export class DiveListPage extends PagePart<{}> {
                 click: {key: this.newDiveKey, data: {group_id: group.id}}
             }, 'secondary')
             .render(parent)
-    }
-
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// New Dive Modal
-////////////////////////////////////////////////////////////////////////////////
-
-type NewDiveState = {
-    schema: SchemaDef
-    group_id: string
-    groups: DdDiveGroup[]
-}
-
-class NewDiveModal extends ModalPart<NewDiveState> {
-
-    settingsForm!: DiveForm
-    modelPicker!: QueryModelPicker
-    createKey = messages.untypedKey()
-
-    async init() {
-        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: '', visibility: 'public', dd_dive_group_id: this.state.group_id}, groups: this.state.groups})
-        this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
-
-        this.setTitle("New Dive")
-        this.setIcon('glyp-data_dive')
-
-        this.addAction({
-            title: "Create",
-            icon: 'glyp-checkmark',
-            click: {key: this.createKey}
-        })
-
-        this.onClick(this.createKey, async _ => {
-            const settings = await this.settingsForm.serialize()
-            const model = this.modelPicker.model
-            if (!settings.name?.length) {
-                this.showToast("Please enter a query name", {color: 'alert'})
-                this.dirty()
-                return
-            }
-            if (!model) {
-                this.showToast("Please select a model", {color: 'alert'})
-                return
-            }
-            const query: Query = {
-                id: Ids.makeUuid(),
-                name: settings.name,
-                notes: '',
-                from: {model: model.name}
-            }
-            log.info(`Creating new dive!`, settings)
-            const dive: UnpersistedDdDive = {...settings, query_data: {
-                    queries: [query]
-                }}
-            const res = await Db().insert('dd_dive', dive)
-            log.info(`New dive response ${res.status}`, res)
-            if (res.status == 'success') {
-                this.app.successToast(`Created Dive ${dive.name}`)
-                this.pop()
-                const path = routes.editor.path({id: res.record!.id})
-                log.info(`Redirecting to ${path}`)
-                Nav.visit(path)
-            }
-            else {
-                this.app.alertToast(res.message)
-            }
-        })
-    }
-
-    renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.tt-form.padded.column.gap.dd-new-dive-form', col => {
-            col.part(this.settingsForm)
-            col.part(this.modelPicker)
-        })
     }
 
 }
