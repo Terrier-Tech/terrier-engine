@@ -3,7 +3,9 @@ import {TerrierApp} from "../terrier/app"
 import {RouterPart} from "tuff-core/routing"
 import {routes} from "./dd-routes"
 import {DiveListPage} from "./dives/dive-list"
+import {Logger} from "tuff-core/logging"
 
+Logger.level = 'debug'
 
 class ContentRouterPart extends RouterPart {
     get defaultPart() {

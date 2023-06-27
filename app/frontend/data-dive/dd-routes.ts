@@ -6,5 +6,5 @@ import {DiveEditorPage} from "./dives/dive-editor"
 
 export const routes = {
     list: partRoute(DiveListPage, '/data_dive/list', {}),
-    editor: partRoute(DiveEditorPage, '/data_dive/editor', {id: stringParser})
+    editor: partRoute(DiveEditorPage, '/data_dive/editor/:id', {id: stringParser})
 }

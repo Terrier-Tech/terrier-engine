@@ -9,11 +9,12 @@ import DiveForm from "./dive-form"
 import {DdDive, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
 import Ids from "../../terrier/ids"
-import Turbolinks from "turbolinks"
 import Dives, {DiveListResult} from "./dives"
 import {GroupEditorModal} from "./group-editor"
-import Fragments from "../../terrier/fragments";
-import {IconName} from "../../terrier/theme";
+import Fragments from "../../terrier/fragments"
+import {IconName} from "../../terrier/theme"
+import Nav from "tuff-core/nav"
+import {routes} from "../dd-routes"
 
 const log = new Logger("DiveList")
 
@@ -49,13 +50,12 @@ export class DiveListPage extends PagePart<{}> {
         this.onClick(this.newDiveKey, m => {
             const groupId = m.data.group_id
             log.info(`Showing new dive modal for group ${groupId}`)
-            this.app.showModal(NewDiveModal, {schema: this.schema, group_id: groupId})
+            this.app.showModal(NewDiveModal, {schema: this.schema, group_id: groupId, groups: this.result.groups})
         })
 
         this.result = await Dives.list()
 
         log.info("Loading data dive list", this.result)
-
 
         this.dirty()
     }
@@ -72,7 +72,7 @@ export class DiveListPage extends PagePart<{}> {
             // ungrouped dives
             const ungrouped = this.result.dives.filter(d => !d.dd_dive_group_id)
             for (const dive of ungrouped) {
-                parent.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`}).text(dive.name)
+                parent.a('.dive.tt-flex.gap', {href: routes.editor.path({id: dive.id})}).text(dive.name)
             }
         })
     }
@@ -84,7 +84,7 @@ export class DiveListPage extends PagePart<{}> {
             .classes('group', 'padded')
             .content(content => {
                 for (const dive of arrays.sortBy(dives, 'name')) {
-                    content.a('.dive.tt-flex.gap', {href: `/data_dive/editor?id=${dive.id}`})
+                    content.a('.dive.tt-flex.gap', {href: routes.editor.path({id: dive.id})})
                         .text(dive.name)
                 }
             })
@@ -106,6 +106,7 @@ export class DiveListPage extends PagePart<{}> {
 type NewDiveState = {
     schema: SchemaDef
     group_id: string
+    groups: DdDiveGroup[]
 }
 
 class NewDiveModal extends ModalPart<NewDiveState> {
@@ -115,7 +116,7 @@ class NewDiveModal extends ModalPart<NewDiveState> {
     createKey = messages.untypedKey()
 
     async init() {
-        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: '', visibility: 'public'}})
+        this.settingsForm = this.makePart(DiveForm, {dive: {name: '', description_raw: '', visibility: 'public', dd_dive_group_id: this.state.group_id}, groups: this.state.groups})
         this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
 
         this.setTitle("New Dive")
@@ -150,10 +151,13 @@ class NewDiveModal extends ModalPart<NewDiveState> {
                     queries: [query]
                 }}
             const res = await Db().insert('dd_dive', dive)
+            log.info(`New dive response ${res.status}`, res)
             if (res.status == 'success') {
                 this.app.successToast(`Created Dive ${dive.name}`)
                 this.pop()
-                Turbolinks.visit(`/data_dive/editor?id=${res.record?.id}`)
+                const path = routes.editor.path({id: res.record!.id})
+                log.info(`Redirecting to ${path}`)
+                Nav.visit(path)
             }
             else {
                 this.app.alertToast(res.message)
