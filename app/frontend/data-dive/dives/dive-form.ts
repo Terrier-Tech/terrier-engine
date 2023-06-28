@@ -2,7 +2,7 @@ import TerrierPart from "../../terrier/parts/terrier-part"
 import {Logger} from "tuff-core/logging"
 import {messages} from "tuff-core"
 import {PartTag} from "tuff-core/parts"
-import {DdDive, DdDiveEnumFields, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
+import {DdDive, DdDiveEnumFields, UnpersistedDdDive} from "../gen/models"
 import inflection from "inflection"
 import {SchemaDef} from "../../terrier/schema"
 import {ModalPart} from "../../terrier/modals"
@@ -13,6 +13,7 @@ import {routes} from "../dd-routes"
 import Nav from "tuff-core/nav"
 import {DbErrors} from "../../terrier/db-client"
 import {TerrierFormFields} from "../../terrier/forms";
+import DdSession from "../dd-session";
 
 const log = new Logger("DiveForm")
 
@@ -24,7 +25,7 @@ export type DiveSettings = Pick<DdDive, DiveSettingsColumn>
 /**
  * A form for editing the basic properties of a dive.
  */
-class DiveForm extends TerrierPart<{dive: DiveSettings, groups: DdDiveGroup[]}> {
+class DiveForm extends TerrierPart<{dive: DiveSettings, session: DdSession}> {
 
     fields!: TerrierFormFields<DiveSettings>
 
@@ -56,10 +57,7 @@ class DiveForm extends TerrierPart<{dive: DiveSettings, groups: DdDiveGroup[]}> 
             // group
             row.div('.tt-compound-field.shrink', field => {
                 field.label().text("Group")
-                const groupOptions = this.state.groups.map(g => {
-                    return {title: g.name, value: g.id}
-                })
-                this.fields.select(field, 'dd_dive_group_id', groupOptions)
+                this.fields.select(field, 'dd_dive_group_id', this.state.session.groupOptions())
             })
         })
 
@@ -102,7 +100,7 @@ class DiveForm extends TerrierPart<{dive: DiveSettings, groups: DdDiveGroup[]}> 
 
 type DiveSettingsState = {
     schema: SchemaDef
-    groups: DdDiveGroup[]
+    session: DdSession
     dive: UnpersistedDdDive
 }
 
@@ -117,7 +115,7 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
         this.isNew = !this.state.dive.id?.length
 
         this.settingsForm = this.makePart(DiveForm, {
-            dive: this.state.dive, groups: this.state.groups
+            dive: this.state.dive, session: this.state.session
         })
         this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
 

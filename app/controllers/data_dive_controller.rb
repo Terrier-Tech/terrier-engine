@@ -20,8 +20,10 @@ class DataDiveController < ApplicationController
     user = _terrier_change_user
     raise "Must be logged in!" unless user
     user = user.attributes.slice *%w[first_name last_name name id role]
-    info "Session user: #{user.inspect}"
-    render_api_success user: user
+
+    groups = DdDiveGroup.where(_state: 0)
+                        .order(name: :asc)
+    render_api_success user: user, groupMap: groups.index_by(&:id)
   end
 
   # get all dives associated with the current user
@@ -31,10 +33,7 @@ class DataDiveController < ApplicationController
                   .where("owner_id = ? OR visibility = 'public'", user.id)
                   .order(name: :asc)
 
-    groups = DdDiveGroup.where(_state: 0)
-                        .order(name: :asc)
-
-    render_api_success dives: dives, user: user, groups: groups
+    render_api_success dives: dives, user: user
   end
 
   def test_dive

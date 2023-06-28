@@ -61,14 +61,16 @@
 			flex: 1 1 auto;
 			a {
 				background-color: var(--tt-inset-background);
+				@include tt-inset-text;
 				flex: 1 1 auto;
 				display: flex;
 				justify-content: center;
 				align-items: center;
 				gap: 0.5em;
+				font-weight: bold;
 				padding: var(--tt-pad);
 				i {
-					transform: scale(1.25);
+					transform: scale(1.2);
 				}
 				&.primary {
 					color: var(--tt-primary-color);

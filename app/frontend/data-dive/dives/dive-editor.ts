@@ -13,6 +13,7 @@ import {ModalPart} from "../../terrier/modals"
 import {DdDive} from "../gen/models"
 import Ids from "../../terrier/ids"
 import Db from "../dd-db"
+import DdSession from "../dd-session"
 
 const log = new Logger("DiveEditor")
 
@@ -102,6 +103,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 export class DiveEditorPage extends PagePart<{id: string}> {
 
     editor!: DiveEditor
+    session!: DdSession
 
     saveKey = messages.untypedKey()
 
@@ -109,6 +111,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         log.info(`Loading dive ${this.state.id}`)
 
         const schema = await Schema.get()
+        this.session = await DdSession.get()
         const dive = await Dives.get(this.state.id)
         this.editor = this.makePart(DiveEditor, {schema, dive})
 

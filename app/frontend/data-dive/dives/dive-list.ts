@@ -10,6 +10,7 @@ import Fragments from "../../terrier/fragments"
 import {IconName} from "../../terrier/theme"
 import {routes} from "../dd-routes"
 import {DiveSettingsModal} from "./dive-form"
+import DdSession from "../dd-session"
 
 const log = new Logger("DiveList")
 
@@ -25,6 +26,7 @@ export class DiveListPage extends PagePart<{}> {
     newDiveKey = messages.typedKey<{group_id: string}>()
     editDiveKey = messages.typedKey<{id: string}>()
 
+    session!: DdSession
     result!: DiveListResult
     schema!: SchemaDef
     groupMap: Record<string, DdDiveGroup> = {}
@@ -35,6 +37,7 @@ export class DiveListPage extends PagePart<{}> {
         this.setIcon('glyp-data_dives')
 
         this.schema = await Schema.get()
+        this.session = await DdSession.get()
 
         this.addAction({
             title: "New Group",
@@ -68,14 +71,14 @@ export class DiveListPage extends PagePart<{}> {
                 visibility: 'public',
                 dd_dive_group_id: groupId
             } as const
-            this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, groups: this.result.groups})
+            this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, session: this.session})
         })
 
         this.onClick(this.editDiveKey, m => {
             const dive = this.diveMap[m.data.id] as UnpersistedDdDive
             if (dive) {
                 log.info(`Editing settings for dive: ${dive.name}`)
-                this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, groups: this.result.groups})
+                this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, session: this.session})
             }
             else {
                 log.warn(`No dive with id ${m.data.id}`)
@@ -88,7 +91,7 @@ export class DiveListPage extends PagePart<{}> {
     async reload() {
         this.result = await Dives.list()
         log.info("Loading data dive list", this.result)
-        this.groupMap = arrays.indexBy(this.result.groups, 'id')
+        this.groupMap = this.session.data.groupMap
         this.diveMap = arrays.indexBy(this.result.dives, 'id')
         this.dirty()
     }
@@ -98,7 +101,8 @@ export class DiveListPage extends PagePart<{}> {
         const groupedDives = arrays.groupBy(this.result.dives, 'dd_dive_group_id')
 
         parent.div('.dd-group-grid', grid => {
-            for (const group of this.result.groups) {
+            const groups = arrays.sortBy(Object.values(this.groupMap), 'name')
+            for (const group of groups) {
                 this.renderGroupPanel(grid, group, groupedDives[group.id] || [])
             }
         })

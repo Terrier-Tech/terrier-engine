@@ -22,6 +22,11 @@ $phone-breakpoint: 550px; // phone portrait
 	padding: calc(var(--tt-pad) * 0.5) var(--tt-pad);
 }
 
+// text that's inset but not white
+@mixin tt-inset-text {
+	text-shadow: 0 1px 0 #fff;
+}
+
 // override the default to use our custom white color
 @mixin tt-inset-white-text {
 	color: var(--tt-white-color);
