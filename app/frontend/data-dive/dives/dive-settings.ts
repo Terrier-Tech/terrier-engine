@@ -12,8 +12,9 @@ import Db from "../dd-db"
 import {routes} from "../dd-routes"
 import Nav from "tuff-core/nav"
 import {DbErrors} from "../../terrier/db-client"
-import {TerrierFormFields} from "../../terrier/forms";
-import DdSession from "../dd-session";
+import {TerrierFormFields} from "../../terrier/forms"
+import DdSession from "../dd-session"
+import Dives from "./dives";
 
 const log = new Logger("DiveForm")
 
@@ -109,6 +110,7 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
     settingsForm!: DiveForm
     modelPicker!: QueryModelPicker
     saveKey = messages.untypedKey()
+    deleteKey = messages.untypedKey()
     isNew = true
 
     async init() {
@@ -133,8 +135,23 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
             click: {key: this.saveKey}
         })
 
+        if (!this.isNew && Dives.canDelete(this.state.dive, this.state.session.user)) {
+            this.addAction({
+                title: 'Delete',
+                icon: 'glyp-delete',
+                classes: ['alert'],
+                click: {key: this.deleteKey}
+            }, 'secondary')
+        }
+
         this.onClick(this.saveKey, async _ => {
-            this.save()
+            await this.save()
+        })
+
+        this.onClick(this.deleteKey, async _ => {
+            this.app.confirm({title: 'Delete this dive?', body: "Are you sure you want to delete this dive?", icon: 'glyp-delete'}, () => {
+                this.delete()
+            })
         })
     }
 
@@ -188,6 +205,19 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
                 this.app.successToast(`Updated Dive ${dive.name}`)
                 Nav.visit(routes.list.path({}))
             }
+        } else {
+            this.settingsForm.setErrors(res.errors)
+        }
+    }
+
+    async delete() {
+        const dive = {...this.state.dive}
+        dive._state = 2
+        const res = await Db().upsert('dd_dive', dive)
+        if (res.status == 'success') {
+            this.pop()
+            this.successToast(`Deleted dive ${dive.name}`)
+            Nav.visit(routes.list.path({}))
         } else {
             this.settingsForm.setErrors(res.errors)
         }

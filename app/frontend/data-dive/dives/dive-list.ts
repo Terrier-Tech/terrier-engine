@@ -9,7 +9,7 @@ import {GroupEditorModal} from "./group-editor"
 import Fragments from "../../terrier/fragments"
 import {IconName} from "../../terrier/theme"
 import {routes} from "../dd-routes"
-import {DiveSettingsModal} from "./dive-form"
+import {DiveSettingsModal} from "./dive-settings"
 import DdSession from "../dd-session"
 
 const log = new Logger("DiveList")
@@ -69,6 +69,7 @@ export class DiveListPage extends PagePart<{}> {
                 name: '',
                 description_raw: '',
                 visibility: 'public',
+                owner_id: this.session.user.id,
                 dd_dive_group_id: groupId
             } as const
             this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, session: this.session})

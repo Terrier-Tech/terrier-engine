@@ -18,6 +18,10 @@ export default class DdSession {
     constructor(readonly data: DdSessionData) {
     }
 
+    get user(): DdUser {
+        return this.data.user
+    }
+
     groupsInOrder(): DdDiveGroup[] {
         return arrays.sortBy(Object.values(this.data.groupMap), 'name')
     }

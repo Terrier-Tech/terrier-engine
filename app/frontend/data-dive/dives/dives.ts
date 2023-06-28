@@ -1,6 +1,21 @@
 import Api from "../../terrier/api"
-import {DdDive} from "../gen/models"
+import {DdDive, UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
+import {DdUser} from "../dd-user"
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Permissions
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Only supers can delete other peoples' dives.
+ * @param dive
+ * @param user
+ */
+function canDelete(dive: UnpersistedDdDive, user: DdUser): boolean {
+    return dive.owner_id == user.id || user.role == 'super'
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +50,8 @@ async function list(): Promise<DiveListResult> {
 
 const Dives = {
     list,
-    get
+    get,
+    canDelete
 }
 
 export default Dives
