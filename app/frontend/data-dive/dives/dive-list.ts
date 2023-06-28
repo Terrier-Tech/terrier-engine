@@ -108,7 +108,7 @@ export class DiveListPage extends PagePart<{}> {
         Fragments.panel(this.theme)
             .title(group.name)
             .icon((group.icon || 'glyp-data_dives') as IconName)
-            .classes('group', 'padded')
+            .classes('group')
             .content(content => {
                 content.class('tt-list')
                 for (const dive of arrays.sortBy(dives, 'name')) {

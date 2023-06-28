@@ -47,8 +47,8 @@ export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
         const panel = Fragments.panel(this.theme)
             .title(this.state.title)
             .icon(this.state.icon)
-            .classes('padded')
             .content(panel => {
+                panel.class('padded')
                 panel.div('.body').text(this.state.body)
             })
         for (const action of this.state.primaryActions || []) {
