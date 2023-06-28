@@ -24,6 +24,7 @@ Rails.application.routes.draw do
     post 'db/model/:model/upsert' => 'db#upsert_model'
 
     get 'data_dive/list'
+    get 'data_dive/user_session'
     get 'data_dive/test_dive'
     post 'data_dive/validate_query'
     post 'data_dive/preview_query'

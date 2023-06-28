@@ -15,6 +15,15 @@ class DataDiveController < ApplicationController
     @entrypoint = 'data-dive'
   end
 
+  # authentication and option data for the session
+  def user_session
+    user = _terrier_change_user
+    raise "Must be logged in!" unless user
+    user = user.attributes.slice *%w[first_name last_name name id role]
+    info "Session user: #{user.inspect}"
+    render_api_success user: user
+  end
+
   # get all dives associated with the current user
   def list
     user = _terrier_change_user

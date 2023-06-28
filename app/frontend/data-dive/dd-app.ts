@@ -4,6 +4,7 @@ import {RouterPart} from "tuff-core/routing"
 import {routes} from "./dd-routes"
 import {DiveListPage} from "./dives/dive-list"
 import {Logger} from "tuff-core/logging"
+import DdSession from "./dd-session"
 
 Logger.level = 'debug'
 
@@ -21,10 +22,14 @@ class ContentRouterPart extends RouterPart {
 export default class DdApp extends TerrierApp<NoState> {
 
     contentPart!: ContentRouterPart
+    session!: DdSession
 
     async init() {
         await super.init()
         this.contentPart = this.makePart(ContentRouterPart, {})
+
+        this.session = await DdSession.get()
+
         this.dirty()
     }
 
