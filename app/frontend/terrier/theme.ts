@@ -101,6 +101,9 @@ export default class Theme {
                 if (action.title?.length) {
                     a.div('.title', {text: action.title})
                 }
+                else {
+                    a.class('icon-only')
+                }
                 if (action.href?.length) {
                     a.attrs({href: action.href})
                 }

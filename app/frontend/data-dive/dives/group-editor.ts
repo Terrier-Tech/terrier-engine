@@ -52,7 +52,7 @@ class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
 }
 
 
-export type GroupModalState = { group_id: string, callback: (group: DdDiveGroup) => any }
+export type GroupModalState = { group: UnpersistedDdDiveGroup, callback: (group: DdDiveGroup) => any }
 
 export class GroupEditorModal extends ModalPart<GroupModalState> {
 
@@ -60,9 +60,7 @@ export class GroupEditorModal extends ModalPart<GroupModalState> {
     saveKey = messages.untypedKey()
 
     async init() {
-        const group: UnpersistedDdDiveGroup = this.state.group_id?.length
-            ? await Db().find('dd_dive_group', this.state.group_id)
-            : {name: '', group_types: []}
+        const group = this.state.group
         this.form = this.makePart(GroupForm, {group})
 
         this.setTitle(group.id?.length ? "Edit Group" : "New Group")

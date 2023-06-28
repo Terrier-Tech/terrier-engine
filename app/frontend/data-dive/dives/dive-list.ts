@@ -3,7 +3,7 @@ import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {arrays, messages} from "tuff-core"
-import {DdDive, DdDiveGroup, UnpersistedDdDive} from "../gen/models"
+import {DdDive, DdDiveGroup, UnpersistedDdDive, UnpersistedDdDiveGroup} from "../gen/models"
 import Dives, {DiveListResult} from "./dives"
 import {GroupEditorModal} from "./group-editor"
 import Fragments from "../../terrier/fragments"
@@ -21,11 +21,13 @@ const log = new Logger("DiveList")
 export class DiveListPage extends PagePart<{}> {
 
     newGroupKey = messages.untypedKey()
+    editGroupKey = messages.typedKey<{id: string}>()
     newDiveKey = messages.typedKey<{group_id: string}>()
     editDiveKey = messages.typedKey<{id: string}>()
 
     result!: DiveListResult
     schema!: SchemaDef
+    groupMap: Record<string, DdDiveGroup> = {}
     diveMap: Record<string,DdDive> = {}
 
     async init() {
@@ -42,7 +44,19 @@ export class DiveListPage extends PagePart<{}> {
 
         this.onClick(this.newGroupKey, _ => {
             log.info("Showing new dive group model")
-            this.app.showModal(GroupEditorModal, {group_id: '', callback: _ => this.reload()})
+            const newGroup = {name: '', group_types: []}
+            this.app.showModal(GroupEditorModal, {group: newGroup, callback: _ => this.reload()})
+        })
+
+        this.onClick(this.editGroupKey, m => {
+            log.info(`Edit group ${m.data.id}`)
+            const group = this.groupMap[m.data.id]
+            if (group) {
+                this.app.showModal(GroupEditorModal, {group: group as UnpersistedDdDiveGroup, callback: _ => this.reload()})
+            }
+            else {
+                this.alertToast(`No group with id ${m.data.id}`)
+            }
         })
 
         this.onClick(this.newDiveKey, m => {
@@ -74,6 +88,7 @@ export class DiveListPage extends PagePart<{}> {
     async reload() {
         this.result = await Dives.list()
         log.info("Loading data dive list", this.result)
+        this.groupMap = arrays.indexBy(this.result.groups, 'id')
         this.diveMap = arrays.indexBy(this.result.dives, 'id')
         this.dirty()
     }
@@ -105,6 +120,10 @@ export class DiveListPage extends PagePart<{}> {
                 icon: 'glyp-data_dive',
                 click: {key: this.newDiveKey, data: {group_id: group.id}}
             }, 'secondary')
+            .addAction({
+                icon: 'glyp-settings',
+                click: {key: this.editGroupKey, data: {id: group.id}}
+            }, 'tertiary')
             .render(parent)
     }
 
