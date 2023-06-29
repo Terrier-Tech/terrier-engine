@@ -202,6 +202,9 @@ class StreamingModal extends ModalPart<NoState> {
                 this.latestFoo = evt
                 this.dirty()
             })
+            .onLog(evt => {
+                log.info(`${evt.level} log event: ${evt.message}`)
+            })
     }
 
     renderContent(parent: PartTag): void {

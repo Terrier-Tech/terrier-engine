@@ -17,7 +17,7 @@ class ResponseStreamer
     begin
       yield self
       # tell the client to close, otherwise the EventSource will keep re-sending the request
-      write 'close'
+      write '_close'
     rescue => ex
       error ex.message, ex.backtrace
       Rails.logger.warn "Error executing progressive: #{ex.message}"
@@ -43,12 +43,11 @@ class ResponseStreamer
     end
     backtrace = backtrace.filter_backtrace
     body = {
-      status: 'error',
       message: message,
       prefix: @prefix,
       backtrace: backtrace
     }
-    write 'error', body
+    write '_error', body
     write_output "ERROR #{@prefix} :: #{message}"
     backtrace.each do |line|
       write_output line
@@ -57,12 +56,11 @@ class ResponseStreamer
 
   def log(level, message)
     body = {
-      type: 'log',
       level: level,
       prefix: @prefix,
       message: message
     }
-    write 'log', body
+    write '_log', body
     write_output "#{level.upcase} #{@prefix} :: #{message}"
   end
 
