@@ -24,6 +24,7 @@ export type DdDive = {
     visibility: "public" | "private"
     sort_order?: number
     query_data?: { queries: Query[] }
+    dive_types: string[]
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
@@ -49,6 +50,7 @@ export type UnpersistedDdDive = {
     visibility: "public" | "private"
     sort_order?: number
     query_data?: { queries: Query[] }
+    dive_types: string[]
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
@@ -115,7 +117,8 @@ export type DdDiveRun = {
     dd_dive_id?: string
     input_data?: object
     output_data?: object
-    status: "running" | "success" | "error"
+    output_file_data?: Attachment | { path: string }
+    status: "initial" | "running" | "success" | "error"
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive
@@ -135,7 +138,8 @@ export type UnpersistedDdDiveRun = {
     dd_dive_id?: string
     input_data?: object
     output_data?: object
-    status: "running" | "success" | "error"
+    output_file_data?: Attachment | { path: string }
+    status: "initial" | "running" | "success" | "error"
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive
@@ -143,7 +147,7 @@ export type UnpersistedDdDiveRun = {
 }
 
 export const DdDiveRunEnumFields = {
-    status: ["running", "success", "error"] as const,
+    status: ["initial", "running", "success", "error"] as const,
 }
 
 /**

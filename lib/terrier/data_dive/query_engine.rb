@@ -210,6 +210,8 @@ end
 class QueryEngine
   include Loggable
 
+  attr_reader :query
+
   def initialize(query)
     query = JSON.parse(query) if query.is_a?(String)
     query = query.to_unsafe_hash if query.is_a?(ActionController::Parameters)

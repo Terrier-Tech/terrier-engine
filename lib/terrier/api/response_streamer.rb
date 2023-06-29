@@ -37,18 +37,15 @@ class ResponseStreamer
     @sse.write body, event: type
   end
 
-  def error(message, backtrace = [])
-    if message.respond_to? :backtrace
-      backtrace = message.backtrace
-    end
-    backtrace = backtrace.filter_backtrace
+  def error(exception)
+    backtrace = exception.backtrace.filter_backtrace
     body = {
-      message: message,
+      message: exception.message,
       prefix: @prefix,
       backtrace: backtrace
     }
     write '_error', body
-    write_output "ERROR #{@prefix} :: #{message}"
+    write_output "ERROR #{@prefix} :: #{exception.message}"
     backtrace.each do |line|
       write_output line
     end

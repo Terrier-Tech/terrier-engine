@@ -68,7 +68,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_19_124820) do
     t.uuid "dd_dive_id"
     t.jsonb "input_data"
     t.jsonb "output_data"
-    t.jsonb "output_file"
+    t.jsonb "output_file_data"
     t.text "status", null: false
     t.index ["_state"], name: "index_dd_dive_runs_on__state"
     t.index ["created_by_id"], name: "index_dd_dive_runs_on_created_by_id"
@@ -94,6 +94,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_19_124820) do
     t.text "visibility", null: false
     t.integer "sort_order"
     t.jsonb "query_data"
+    t.text "dive_types", default: [], null: false, array: true
     t.index ["_state"], name: "index_dd_dives_on__state"
     t.index ["created_by_id"], name: "index_dd_dives_on_created_by_id"
     t.index ["dd_dive_group_id"], name: "index_dd_dives_on_dd_dive_group_id"

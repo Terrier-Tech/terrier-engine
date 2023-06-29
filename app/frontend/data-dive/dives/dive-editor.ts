@@ -14,6 +14,7 @@ import {DdDive} from "../gen/models"
 import Ids from "../../terrier/ids"
 import Db from "../dd-db"
 import DdSession from "../dd-session"
+import {DiveRunModal} from "./dive-runs";
 
 const log = new Logger("DiveEditor")
 
@@ -106,6 +107,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
     session!: DdSession
 
     saveKey = messages.untypedKey()
+    runKey = messages.untypedKey()
 
     async init() {
         log.info(`Loading dive ${this.state.id}`)
@@ -131,7 +133,15 @@ export class DiveEditorPage extends PagePart<{id: string}> {
             click: {key: this.saveKey}
         }, 'tertiary')
 
+        this.addAction({
+            title: 'Run',
+            icon: 'glyp-play',
+            click: {key: this.runKey}
+        }, 'tertiary')
+
         this.onClick(this.saveKey, _ => this.save())
+
+        this.onClick(this.runKey, _ => this.run())
 
         this.dirty()
     }
@@ -156,7 +166,10 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         }
     }
 
-    
+    async run() {
+        const dive = await this.editor.serialize()
+        this.app.showModal(DiveRunModal, {dive})
+    }
 }
 
 

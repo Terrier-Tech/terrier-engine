@@ -1,5 +1,6 @@
 require_relative '../../test/data/test_dive'
 require 'terrier/data_dive/query_engine'
+require 'terrier/data_dive/dive_engine'
 require 'niceql'
 
 
@@ -59,5 +60,14 @@ class DataDiveController < ApplicationController
     render_api_success res
   rescue => ex
     render_exception ex
+  end
+
+  def stream_run
+    run = DdDiveRun.find required_param(:run_id)
+    dive = run.dd_dive
+    stream_response do |stream|
+      engine = DiveEngine.new dive
+      engine.stream_run! stream, run, params
+    end
   end
 end

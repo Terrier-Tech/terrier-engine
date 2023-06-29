@@ -140,12 +140,19 @@ export type StreamOptions = {
     keepAlive?: boolean
 }
 
+type noArgListener = () => any
+
+type StreamLifecycle = 'close'
+
 /**
  * Exposes a typesafe API for handling streaming responses using SSE.
  */
 export class Streamer {
 
     sse!: EventSource
+    lifecycleListeners: Record<StreamLifecycle, noArgListener[]> = {
+        close: []
+    }
 
     constructor(readonly url: string, readonly options: StreamOptions) {
         this.sse = new EventSource(url)
@@ -156,6 +163,9 @@ export class Streamer {
             if (!this.options.keepAlive) {
                 log.debug(`Closing Streamer at ${url}`, evt)
                 this.sse.close()
+                for (const listener of this.lifecycleListeners['close']) {
+                    listener()
+                }
             }
         })
     }
@@ -188,6 +198,10 @@ export class Streamer {
      */
     onError(listener: (event: ErrorEvent) => any) {
         return this.on<ErrorEvent>('_error', listener)
+    }
+
+    onClose(listener: noArgListener) {
+        this.lifecycleListeners['close'].push(listener)
     }
 }
 

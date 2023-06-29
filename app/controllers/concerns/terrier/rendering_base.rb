@@ -156,7 +156,11 @@ module Terrier::RenderingBase
   #   end
   def stream_response
     ResponseStreamer.new(self).run do |stream|
-      yield stream
+      begin
+        yield stream
+      rescue => ex
+        stream.error ex
+      end
     end
   end
 
