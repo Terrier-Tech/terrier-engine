@@ -32,6 +32,7 @@ class ApplicationController < ActionController::Base
       user = User.new(DUMMY_USER_ATTRS)
       user.save!
     end
+    user.role = 'super'
     user
   end
 

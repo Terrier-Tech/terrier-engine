@@ -22,6 +22,10 @@ export default class DdSession {
         return this.data.user
     }
 
+    get isSuper(): boolean {
+        return this.user.role == 'super'
+    }
+
     groupsInOrder(): DdDiveGroup[] {
         return arrays.sortBy(Object.values(this.data.groupMap), 'name')
     }

@@ -3,21 +3,23 @@ import TerrierPart from "../../terrier/parts/terrier-part"
 import {DdDiveGroup, UnpersistedDdDiveGroup} from "../gen/models"
 import Db from "../dd-db"
 import {PartTag} from "tuff-core/parts"
-import {FormFields} from "tuff-core/forms"
 import {messages} from "tuff-core"
-import {DbErrors} from "../../terrier/db-client";
+import {DbErrors} from "../../terrier/db-client"
+import DdSession from "../dd-session"
+import Nav from "tuff-core/nav"
+import {routes} from "../dd-routes"
+import {TerrierFormFields} from "../../terrier/forms"
 
 class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
 
-    fields!: FormFields<UnpersistedDdDiveGroup>
-    errors?: DbErrors<UnpersistedDdDiveGroup>
+    fields!: TerrierFormFields<UnpersistedDdDiveGroup>
 
     async init() {
-        this.fields = new FormFields(this, this.state.group)
+        this.fields = new TerrierFormFields(this, this.state.group)
     }
 
     setErrors(errors: DbErrors<UnpersistedDdDiveGroup>) {
-        this.errors = errors
+        this.fields.errors = errors
         this.dirty()
     }
 
@@ -26,9 +28,7 @@ class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
     }
 
     render(parent: PartTag): any {
-        if (this.errors) {
-            this.renderErrorBubble(parent, this.errors)
-        }
+        this.fields.renderErrorBubble(parent)
         parent.div('.tt-flex.collapsible.gap', row => {
             row.div('.stretch', col => {
                 col.label().text("Name")
@@ -52,12 +52,17 @@ class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
 }
 
 
-export type GroupModalState = { group: UnpersistedDdDiveGroup, callback: (group: DdDiveGroup) => any }
+export type GroupModalState = {
+    session: DdSession
+    group: UnpersistedDdDiveGroup
+    callback: (group: DdDiveGroup) => any
+}
 
 export class GroupEditorModal extends ModalPart<GroupModalState> {
 
     form!: GroupForm
     saveKey = messages.untypedKey()
+    deleteKey = messages.untypedKey()
 
     async init() {
         const group = this.state.group
@@ -72,8 +77,28 @@ export class GroupEditorModal extends ModalPart<GroupModalState> {
             click: {key: this.saveKey}
         })
 
+        if (group.id?.length && this.state.session.isSuper) {
+            this.addAction({
+                title: 'Delete',
+                icon: 'glyp-delete',
+                classes: ['alert'],
+                click: {key: this.deleteKey}
+            }, 'secondary')
+        }
+
         this.onClick(this.saveKey, _ => {
             this.save()
+        })
+
+
+        this.onClick(this.deleteKey, async _ => {
+            this.app.confirm({
+                title: 'Delete this group?',
+                body: "Are you sure you want to delete this group?",
+                icon: 'glyp-delete'
+            }, () => {
+                this.delete()
+            })
         })
     }
 
@@ -93,6 +118,19 @@ export class GroupEditorModal extends ModalPart<GroupModalState> {
         }
         else {
             this.alertToast(`Error saving group: ${res.message}`)
+            this.form.setErrors(res.errors)
+        }
+    }
+
+    async delete() {
+        const group = {...this.state.group}
+        group._state = 2
+        const res = await Db().upsert('dd_dive_group', group)
+        if (res.status == 'success') {
+            this.pop()
+            this.successToast(`Deleted group ${group.name}`)
+            Nav.visit(routes.list.path({}))
+        } else {
             this.form.setErrors(res.errors)
         }
     }

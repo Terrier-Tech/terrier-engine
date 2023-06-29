@@ -1,7 +1,7 @@
 import Api from "../../terrier/api"
 import {DdDive, UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
-import {DdUser} from "../dd-user"
+import DdSession from "../dd-session"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -11,10 +11,10 @@ import {DdUser} from "../dd-user"
 /**
  * Only supers can delete other peoples' dives.
  * @param dive
- * @param user
+ * @param session
  */
-function canDelete(dive: UnpersistedDdDive, user: DdUser): boolean {
-    return dive.owner_id == user.id || user.role == 'super'
+function canDelete(dive: UnpersistedDdDive, session: DdSession): boolean {
+    return dive.owner_id == session.user.id || session.isSuper
 }
 
 

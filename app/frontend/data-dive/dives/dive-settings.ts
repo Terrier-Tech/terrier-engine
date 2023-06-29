@@ -135,7 +135,7 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
             click: {key: this.saveKey}
         })
 
-        if (!this.isNew && Dives.canDelete(this.state.dive, this.state.session.user)) {
+        if (!this.isNew && Dives.canDelete(this.state.dive, this.state.session)) {
             this.addAction({
                 title: 'Delete',
                 icon: 'glyp-delete',

@@ -48,14 +48,21 @@ export class DiveListPage extends PagePart<{}> {
         this.onClick(this.newGroupKey, _ => {
             log.info("Showing new dive group model")
             const newGroup = {name: '', group_types: []}
-            this.app.showModal(GroupEditorModal, {group: newGroup, callback: _ => this.reload()})
+            this.app.showModal(GroupEditorModal, {session: this.session,
+                group: newGroup,
+                callback: _ => this.reload()
+            })
         })
 
         this.onClick(this.editGroupKey, m => {
             log.info(`Edit group ${m.data.id}`)
             const group = this.groupMap[m.data.id]
             if (group) {
-                this.app.showModal(GroupEditorModal, {group: group as UnpersistedDdDiveGroup, callback: _ => this.reload()})
+                this.app.showModal(GroupEditorModal, {
+                    session: this.session,
+                    group: group as UnpersistedDdDiveGroup,
+                    callback: _ => this.reload()
+                })
             }
             else {
                 this.alertToast(`No group with id ${m.data.id}`)
@@ -90,6 +97,7 @@ export class DiveListPage extends PagePart<{}> {
     }
 
     async reload() {
+        this.session = await DdSession.get()
         this.result = await Dives.list()
         log.info("Loading data dive list", this.result)
         this.groupMap = this.session.data.groupMap
