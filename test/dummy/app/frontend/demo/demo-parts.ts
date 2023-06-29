@@ -7,12 +7,14 @@ import {Action, ColorName} from "@terrier/theme"
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
 import {Logger} from "tuff-core/logging"
+import Api from "@terrier/api";
 
 const log = new Logger("Demo Parts")
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
 const dropdownKey = messages.typedKey<{message: string}>()
+const streamingKey = messages.untypedKey()
 const sheetKey = messages.typedKey<{type: 'confirm'}>()
 
 
@@ -22,9 +24,16 @@ class Panel extends PanelPart<NoState> {
         this.setTitle("Panel Header ")
 
         this.addAction({
+            title: 'Streaming',
+            icon: 'glyp-download',
+            click: {key: streamingKey}
+        })
+
+        this.addAction({
             title: "Dropdown",
+            icon: 'glyp-click',
             click: {key: dropdownKey, data: {message: "Simple Dropdown"}}
-        }, "primary")
+        }, "secondary")
 
         this.addAction({
             title: "Toast",
@@ -76,6 +85,10 @@ class Panel extends PanelPart<NoState> {
         ]
         this.onClick(dropdownKey, m => {
             this.toggleDropdown(ActionsDropdown, dropdownActions, m.event.target)
+        })
+
+        this.onClick(streamingKey, _ => {
+            this.app.showModal(StreamingModal, {})
         })
     }
 
@@ -168,6 +181,43 @@ class DemoTabs extends TabContainerPart {
         this.setBeforeAction({title: "Before", icon: 'hub-arrow_left'})
         this.setAfterAction({title: "After", icon: 'hub-arrow_right'})
     }
+}
+
+
+type FooEvent = {
+    foo: string
+    time: string
+}
+
+class StreamingModal extends ModalPart<NoState> {
+
+    latestFoo?: FooEvent
+
+    async init() {
+        this.setTitle("Streaming")
+        this.setIcon('glyp-download')
+
+        Api.stream("/frontend/streaming")
+            .on<FooEvent>('foo', evt => {
+                this.latestFoo = evt
+                this.dirty()
+            })
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.column.padded.gap', col => {
+            col.h3('.text-center', h3 => {
+                if (this.latestFoo) {
+                    const foo = this.latestFoo
+                    h3.text(`foo <strong>${foo.foo}</strong> at ${foo.time}`)
+                }
+                else {
+                    h3.text("Waiting for response...")
+                }
+            })
+        })
+    }
+
 }
 
 

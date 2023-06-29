@@ -8,8 +8,10 @@ class FrontendController < ApplicationController
 
   def streaming
     ResponseStreamer.new(self).run do |stream|
-      100.times do |i|
+      20.times do |i|
         stream.info "Step #{i}"
+        stream.write 'foo', {foo: i, time: Time.now}
+        sleep 0.1
       end
     end
   end

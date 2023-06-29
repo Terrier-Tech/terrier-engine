@@ -4,6 +4,11 @@ import { QueryParams } from "tuff-core/urls"
 const log = new Logger('Api')
 log.level = 'debug'
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Basic Requests
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * All API responses containing these fields.
  */
@@ -104,9 +109,61 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Event Streams
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Exposes a typesafe API for handling streaming responses using SSE.
+ */
+export class Streamer {
+
+    sse!: EventSource
+
+    constructor(readonly url: string) {
+        this.sse = new EventSource(url)
+
+        // this is a special event sent by the ResponseStreamer on the server
+        // to tell us that the request is done
+        this.sse.addEventListener('close', evt => {
+            log.debug(`Closing Streamer at ${url}`, evt)
+            this.sse.close()
+        })
+    }
+
+    /**
+     * Register a listener for events of the given type.
+     * @param type
+     * @param listener
+     */
+    on<T>(type: string, listener: (event: T) => any) {
+        this.sse.addEventListener(type, event => {
+            const data = JSON.parse(event.data) as T
+            log.debug(`${type} event`, data)
+            listener(data)
+        })
+        return this
+    }
+}
+
+/**
+ * Creates a streaming response for the given endpoint.
+ * @param url
+ * @return a `Streamer` on which you attach event handlers
+ */
+function stream(url: string): Streamer {
+    return new Streamer(url)
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Export
+////////////////////////////////////////////////////////////////////////////////
+
 const Api = {
     safeGet,
     safePost,
-    post
+    post,
+    stream
 }
 export default Api

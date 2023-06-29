@@ -8,17 +8,16 @@ class ResponseStreamer
   def initialize(controller)
     @controller = controller
     @prefix = controller.class.name.gsub 'Controller', ''
-    @stream = controller.response.stream
+    @sse = ActionController::Live::SSE.new(controller.response.stream)
     controller.response.headers['Content-Type'] = 'text/event-stream'
     controller.response.headers["Last-Modified"] = Time.now.httpdate
   end
 
   def run
     begin
-      @stream.write '['
       yield self
-      send_response
-      @stream.write ']'
+      # tell the client to close, otherwise the EventSource will keep re-sending the request
+      write 'close'
     rescue => ex
       error ex.message, ex.backtrace
       Rails.logger.warn "Error executing progressive: #{ex.message}"
@@ -26,20 +25,16 @@ class ResponseStreamer
         Rails.logger.warn line
       end
     ensure
-      @stream.close if @stream
+      @sse.close
       close_output_file
     end
   end
 
-  def update(prog, message = '')
-    body = {
-      status: 'update',
-      prefix: @prefix,
-      progress: prog,
-      message: message
-    }
-    @stream.write(body.to_json + ',')
-    write_output "UPDATE #{prog} #{@prefix} :: #{message}"
+  # write the raw body to the stream
+  # @param type [String] is used on the frontend to distinguish different event types
+  # @param body [Hash] a has containing arbitrary data
+  def write(type, body={})
+    @sse.write body, event: type
   end
 
   def error(message, backtrace = [])
@@ -53,7 +48,7 @@ class ResponseStreamer
       prefix: @prefix,
       backtrace: backtrace
     }
-    @stream.write(body.to_json + ',')
+    write 'error', body
     write_output "ERROR #{@prefix} :: #{message}"
     backtrace.each do |line|
       write_output line
@@ -62,12 +57,12 @@ class ResponseStreamer
 
   def log(level, message)
     body = {
-      status: 'log',
+      type: 'log',
       level: level,
       prefix: @prefix,
       message: message
     }
-    @stream.write(body.to_json + ',')
+    write 'log', body
     write_output "#{level.upcase} #{@prefix} :: #{message}"
   end
 
@@ -85,11 +80,6 @@ class ResponseStreamer
 
   def success(message)
     log 'success', message
-  end
-
-  # send raw HTML that will be rendered to the custom area (upper left corner)
-  def custom(output)
-    log 'custom', output
   end
 
   # tells the runner to write all of its output to a file as it runs
@@ -113,23 +103,6 @@ class ResponseStreamer
   def write_output(raw)
     return unless @out_file
     @out_file.puts raw
-  end
-
-  def send_response
-    render_options = {
-      formats: [:js],
-      layout: false
-    }
-    @template ||= @controller.params[:template]
-    if @template.present?
-      render_options[:template] = @template
-    end
-    response_s = @controller.render_to_string render_options
-    body = {
-      status: 'done',
-      body: response_s
-    }
-    @stream.write(body.to_json)
   end
 
 end
