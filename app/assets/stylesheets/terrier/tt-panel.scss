@@ -26,12 +26,25 @@
 				transform: scale(1.25);
 			}
 		}
+		.tertiary-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--tt-gap);
+		}
 		a {
 			display: block;
 			text-align: center;
 			@include tt-scale-push;
-			&.icon-only {
+			// actions with text have a small label with larger icon
+			.title {
+				font-size: var(--tt-label-font-size);
+			}
+			i {
 				font-size: 150%;
+			}
+			// actions with only an icon have a larger icon
+			&.icon-only {
+				font-size: 125%;
 			}
 		}
 	}

@@ -34,6 +34,12 @@ class Panel extends PanelPart<NoState> {
         }, "secondary")
 
         this.addAction({
+            icon: 'glyp-camera',
+            classes: ['active'],
+            tooltip: "Icon-Only"
+        }, "tertiary")
+
+        this.addAction({
             title: "Confirm Sheet",
             icon: 'glyp-help',
             classes: ['active'],
@@ -74,11 +80,11 @@ class Panel extends PanelPart<NoState> {
     }
 
     protected get panelClasses(): string[] {
-        return ['padded']
+        return []
     }
 
     renderContent(parent: PartTag) {
-        parent.div('.tt-flex.tablet-collapsible', row => {
+        parent.div('.tt-flex.tablet-collapsible.padded', row => {
             row.div('.stretch', col => {
                 col.p({text: "Stretch Column"})
                     .data({tooltip: "This is a tooltip"})
