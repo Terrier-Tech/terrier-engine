@@ -7,7 +7,7 @@ class FrontendController < ApplicationController
   end
 
   def streaming
-    ResponseStreamer.new(self).run do |stream|
+    stream_response do |stream|
       20.times do |i|
         stream.info "Step #{i}"
         stream.write 'foo', {foo: i, time: Time.now}
