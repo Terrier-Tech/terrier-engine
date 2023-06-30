@@ -34,7 +34,7 @@ class DataDiveController < ApplicationController
                   .where("owner_id = ? OR visibility = 'public'", user.id)
                   .order(name: :asc)
 
-    render_api_success dives: dives, user: user
+    render_api_success dives: dives
   end
 
   def test_dive

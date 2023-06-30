@@ -1,9 +1,7 @@
 @import "tt-mixins";
 
 .tt-panel {
-	border-radius: var(--tt-border-radius);
-	background: var(--tt-panel-background);
-	@include tt-box-shadow;
+	@include panel-like;
 	display: flex;
 	flex-direction: column;
 

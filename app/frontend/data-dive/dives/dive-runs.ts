@@ -6,12 +6,19 @@ import Api, {ErrorEvent} from "../../terrier/api"
 import {Query} from "../queries/queries"
 import {DivTag} from "tuff-core/html"
 import {messages} from "tuff-core"
+import {IconName} from "../../terrier/theme";
 
 type RunQueryResult = {
     id: string
     time: string
-    status: 'pending' | 'success' | 'alert'
+    status: 'pending' | 'success' | 'error'
     message?: string
+}
+
+const statusIcons: Record<RunQueryResult['status'], IconName> = {
+    pending: 'glyp-pending',
+    success: 'glyp-complete',
+    error: 'glyp-alert'
 }
 
 export class DiveRunModal extends ModalPart<{dive: DdDive }> {
@@ -64,24 +71,19 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             })
     }
 
+
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.column.gap.padded.dd-dive-run-status', col => {
-            if (this.error) {
-                col.div('.tt-bubble.alert').text(this.error.message)
-                return
-            }
+        parent.div('.tt-flex.collapsible.padded.gap', row => {
+            row.div('.dd-dive-run-queries', col => {
+                if (this.error) {
+                    col.div('.tt-bubble.alert').text(this.error.message)
+                    return
+                }
 
-            if (!this.run) {
-                col.h3('.text-center', h3 => {
-                    h3.i('.glyp-pending')
-                    h3.span().text("Ready to Run!")
-                })
-                return
-            }
-
-            for (const query of this.state.dive.query_data?.queries || []) {
-                this.renderQuery(col, query)
-            }
+                for (const query of this.state.dive.query_data?.queries || []) {
+                    this.renderQuery(col, query)
+                }
+            })
         })
     }
 
@@ -89,10 +91,10 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         const res = this.queryResults[query.id]
         const status = res?.status || 'pending'
 
-        parent.div('.run', status, row => {
-            row.i(`.glyp-${status}`)
-            row.div().text(query.name)
-            if (res?.status == 'alert') {
+        parent.div('.query-run', status, row => {
+            row.i(statusIcons[status])
+            row.div('.name').text(query.name)
+            if (res?.status == 'error') {
                 row.div('.tt-bubble.alert').text(res.message || "Error!")
             }
             else if (res?.message?.length) {

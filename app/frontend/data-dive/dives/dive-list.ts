@@ -72,13 +72,14 @@ export class DiveListPage extends PagePart<{}> {
         this.onClick(this.newDiveKey, m => {
             const groupId = m.data.group_id
             log.info(`Showing new dive modal for group ${groupId}`)
-            const dive = {
+            const dive: UnpersistedDdDive = {
                 name: '',
                 description_raw: '',
                 visibility: 'public',
                 owner_id: this.session.user.id,
-                dd_dive_group_id: groupId
-            } as const
+                dd_dive_group_id: groupId,
+                dive_types: []
+            }
             this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, session: this.session})
         })
 
@@ -143,7 +144,13 @@ export class DiveListPage extends PagePart<{}> {
     renderDiveRow(parent: PartTag, dive: DdDive) {
         parent.div('.dive', row => {
             row.a({href: routes.editor.path({id: dive.id})}, a => {
-                a.i('.glyp-data_dive')
+                if (dive.visibility == 'private') {
+                    a.i('.glyp-privacy')
+                        .data({tooltip: "Private Dive"})
+                }
+                else {
+                    a.i('.glyp-data_dive')
+                }
                 a.span().text(dive.name)
             }).data({tooltip: "Open Editor"})
             row.a('.icon-only', a => {

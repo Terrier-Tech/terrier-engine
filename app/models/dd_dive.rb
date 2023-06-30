@@ -42,6 +42,8 @@ class DdDive < ApplicationRecord
     queries: 'Query[]'
   }
 
+  string_array_field :dive_types
+
   enum_field :visibility, %w[public private]
 
 end
