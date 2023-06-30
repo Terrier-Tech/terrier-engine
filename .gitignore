@@ -8,6 +8,8 @@ test/dummy/yarn-error.log
 test/dummy/storage/
 test/dummy/tmp/
 test/dummy/public/system
+test/dummy/public/tmp
+test/dummy/public/uploads
 test/dummy/test/output
 vite-dev/
 .idea/

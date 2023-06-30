@@ -159,6 +159,7 @@ module Terrier::RenderingBase
       begin
         yield stream
       rescue => ex
+        log_exception ex
         stream.error ex
       end
     end

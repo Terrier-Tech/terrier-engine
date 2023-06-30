@@ -9,6 +9,7 @@ require 'terrier/time/time_overrides'
 require 'terrier/time/date_period'
 
 require 'terrier/io/tabular_io'
+require 'terrier/io/public_temp_file'
 
 require 'terrier/api/extern_api_base'
 require 'terrier/api/clypboard_connect_api'

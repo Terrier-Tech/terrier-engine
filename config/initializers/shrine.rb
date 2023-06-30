@@ -13,3 +13,4 @@ Shrine.plugin :validation
 Shrine.plugin :validation_helpers
 Shrine.plugin :determine_mime_type
 Shrine.plugin :derivatives
+Shrine.plugin :add_metadata

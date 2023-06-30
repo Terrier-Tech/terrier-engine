@@ -248,6 +248,14 @@ $color-diff: 0.08;
 	box-shadow: 0 calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
 }
 
+@mixin tt-hover-box-shadow {
+	box-shadow: 0 calc(var(--tt-shadow-spread) ) calc(var(--tt-shadow-spread)*2) var(--tt-shadow-color);
+}
+
+@mixin tt-active-box-shadow {
+	box-shadow: 0 calc(var(--tt-shadow-spread) / 4 ) calc(var(--tt-shadow-spread)/2) var(--tt-shadow-color);
+}
+
 @mixin tt-inset-box-shadow {
 	box-shadow: inset 0 calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
 }
@@ -371,6 +379,16 @@ $color-diff: 0.08;
 	}
 	&.pending {
 		background-color: var(--tt-pending-color);
+	}
+	line-height: 1.3;
+	.backtrace {
+		overflow-x: scroll;
+		padding: 1em;
+		.line {
+			line-height: 1.4;
+			text-align: left;
+			font-weight: normal;
+		}
 	}
 }
 

@@ -21,10 +21,17 @@ const statusIcons: Record<RunQueryResult['status'], IconName> = {
     error: 'glyp-alert'
 }
 
+type RunFileOutput = {
+    name: string
+    size: number
+    url: string
+}
+
 export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
     run?: DdDiveRun
     error?: ErrorEvent
+    fileOutput?: RunFileOutput
     queryResults: Record<string, RunQueryResult> = {}
 
     startKey = messages.untypedKey()
@@ -65,6 +72,10 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
                 this.queryResults[res.id] = res
                 this.dirty()
             })
+            .on<RunFileOutput>('file_output', res => {
+                this.fileOutput = res
+                this.dirty()
+            })
             .onError(evt => {
                 this.error = evt
                 this.dirty()
@@ -75,13 +86,30 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.collapsible.padded.gap', row => {
             row.div('.dd-dive-run-queries', col => {
+                // error
                 if (this.error) {
-                    col.div('.tt-bubble.alert').text(this.error.message)
+                    col.div('.tt-bubble.alert', bubble => {
+                        const error = this.error!
+                        bubble.div('.message').text(error.message)
+                        if (error.backtrace?.length) {
+                            bubble.div('.backtrace', backtrace => {
+                                for (const line of error.backtrace) {
+                                    backtrace.div('.line').text(line)
+                                }
+                            })
+                        }
+                    })
                     return
                 }
 
+                // queries
                 for (const query of this.state.dive.query_data?.queries || []) {
                     this.renderQuery(col, query)
+                }
+
+                // output
+                if (this.fileOutput) {
+                    this.renderFileOutput(col, this.fileOutput)
                 }
             })
         })
@@ -100,6 +128,14 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             else if (res?.message?.length) {
                 row.div('.details').text(res.message)
             }
+        })
+    }
+
+    renderFileOutput(parent: DivTag, fileOutput: RunFileOutput) {
+        parent.a('.file-output', {href: fileOutput.url}, row => {
+            row.i('.glyp-file_spreadsheet')
+            row.div('.name').text(fileOutput.name)
+            row.div('.details').text("Click to download")
         })
     }
 

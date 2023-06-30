@@ -66,7 +66,7 @@ class DataDiveController < ApplicationController
     run = DdDiveRun.find required_param(:run_id)
     dive = run.dd_dive
     stream_response do |stream|
-      engine = DiveEngine.new dive
+      engine = DiveEngine.new dive, _terrier_change_user
       engine.stream_run! stream, run, params
     end
   end

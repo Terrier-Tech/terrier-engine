@@ -8,7 +8,7 @@
 	padding: var(--tt-pad);
 	@include tt-inset-box;
 	@include tt-inset-box-shadow;
-	.query-run {
+	.query-run, .file-output {
 		@include panel-like;
 		padding: var(--tt-pad);
 		display: flex;
@@ -41,6 +41,14 @@
 		}
 		&.error i {
 			color: var(--tt-alert-color);
+		}
+	}
+	a.file-output {
+		&:hover {
+			@include tt-hover-box-shadow;
+		}
+		&:active {
+			@include tt-active-box-shadow;
 		}
 	}
 }
