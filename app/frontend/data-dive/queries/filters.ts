@@ -1,5 +1,5 @@
 import {Part, PartTag} from "tuff-core/parts"
-import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
+import Dates, {VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableView, TableRef} from "./tables"
 import {arrays, messages} from "tuff-core"
@@ -7,8 +7,10 @@ import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
 import inflection from "inflection"
 import {ModalPart} from "../../terrier/modals";
-import TerrierFormPart from "../../terrier/parts/terrier-form-part";
-import {Dropdown} from "../../terrier/dropdowns";
+import TerrierFormPart from "../../terrier/parts/terrier-form-part"
+import {Dropdown} from "../../terrier/dropdowns"
+import {HtmlParentTag} from "tuff-core/html";
+import dayjs from "dayjs";
 
 const log = new Logger("Filters")
 
@@ -34,7 +36,7 @@ export type DirectFilter = BaseFilter & {
 
 export type DateRangeFilter = BaseFilter & {
     filter_type: 'date_range'
-    range: DateRange
+    range: VirtualDateRange
 }
 
 export type InclusionFilter = BaseFilter & {
@@ -80,7 +82,7 @@ function operatorDisplay(op: DirectOperator): string {
 }
 
 
-function render(parent: PartTag, filter: Filter) {
+function renderStatic(parent: PartTag, filter: Filter) {
     switch (filter.filter_type) {
         case 'direct':
             parent.div('.column').text(filter.column)
@@ -539,12 +541,84 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
+
+export type FilterInput = Filter & {
+    key: string
+    possible_values?: string[]
+}
+
+/**
+ * Computes a string used to identify filters that are "the same".
+ * @param filter
+ */
+function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
+    const key = `${table.model}.${filter.column}`
+    const filterInput: FilterInput = {key,...filter}
+    if (filter.filter_type == 'inclusion') {
+        const modelDef = schema.models[table.model]
+        const columnDef = modelDef.columns[filter.column]
+        filterInput.possible_values = columnDef.possible_values
+    }
+    return filterInput
+}
+
+function renderInput(parent: HtmlParentTag, filter: FilterInput, value: string) {
+    parent.div('.dd-dive-run-input', col => {
+        col.label('.caption-size').text(inflection.titleize(filter.key.split('.').join(' ')))
+        switch (filter.filter_type) {
+            case 'direct':
+                return renderDirectInput(col, filter, value)
+            case 'date_range':
+                return renderDateRangeInput(col, filter, value)
+            case 'inclusion':
+                return renderInclusionInput(col, filter, value)
+            default:
+                col.p().text(`Don't know how to render input for ${filter.filter_type} filter`)
+        }
+    })
+}
+
+function renderDirectInput(parent: HtmlParentTag, filter: DirectFilter & FilterInput, value: string) {
+    parent.div('.tt-compound-field', field => {
+        field.label().text(operatorDisplay(filter.operator))
+        field.input({type: 'text', name: filter.key, value})
+    })
+}
+
+function renderDateRangeInput(parent: HtmlParentTag, filter: DateRangeFilter & FilterInput, value: string) {
+    parent.div('.tt-compound-field', field => {
+        const range = Dates.parsePeriod(value!)
+        field.input({type: 'date', name: `${filter.key}-min`, value: range.min})
+        field.label().text('→')
+        const d = dayjs(range.max)
+        field.input({type: 'date', name: `${filter.key}-max`, value: d.subtract(1, 'day').format(Dates.literalFormat)})
+    })
+}
+
+function renderInclusionInput(parent: HtmlParentTag, filter: InclusionFilter & FilterInput, value: string) {
+    const values = value.split(',')
+    parent.div('.inclusion-radios', container => {
+    for (const possible of filter.possible_values || []) {
+        const checked = values.includes(possible)
+        container.label('.body-size', label => {
+            label.input({type: 'checkbox', name: filter.key, value: possible, checked})
+            label.span().text(inflection.titleize(possible))
+        })
+    }
+    })
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
 
 const Filters = {
-    render,
-    operatorDisplay
+    renderStatic,
+    renderInput,
+    toInput
 }
 
 export default Filters

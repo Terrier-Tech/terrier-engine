@@ -1,13 +1,13 @@
 import {PartTag} from "tuff-core/parts"
 import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
-import Filters, {Filter, FiltersEditorModal} from "./filters"
+import Filters, {Filter, FilterInput, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
 import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import ContentPart from "../../terrier/parts/content-part"
-import {ActionsDropdown} from "../../terrier/dropdowns";
-import {ModalPart} from "../../terrier/modals";
+import {ActionsDropdown} from "../../terrier/dropdowns"
+import {ModalPart} from "../../terrier/modals"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 
 const log = new Logger("Tables")
@@ -35,6 +35,31 @@ export type JoinedTableRef = TableRef & {
 ////////////////////////////////////////////////////////////////////////////////
 
 const updatedKey = messages.typedKey<TableRef>()
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Recursively collects all of the filters for this and all joined tables.
+ * Only keep one (the last one traversed) per table/column combination.
+ * This means that some filters may clobber others, but I think it will yield
+ * the desired result most of the time.
+ * @param table
+ */
+function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record<string, FilterInput>) {
+    for (const f of table.filters || []) {
+        const fi = Filters.toInput(schema, table, f)
+        filters[fi.key] = fi
+    }
+    if (table.joins) {
+        for (const j of Object.values(table.joins)) {
+            computeFilterInputs(schema, j, filters)
+        }
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // View
@@ -204,7 +229,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             if (this.table.filters?.length) {
                 for (const filter of this.table.filters) {
                     section.div('.filter.line', line => {
-                        Filters.render(line, filter)
+                        Filters.renderStatic(line, filter)
                     })
                 }
             } else {
@@ -363,7 +388,8 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
 ////////////////////////////////////////////////////////////////////////////////
 
 const Tables = {
-    updatedKey
+    updatedKey,
+    computeFilterInputs
 }
 
 export default Tables

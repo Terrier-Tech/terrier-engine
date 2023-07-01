@@ -138,6 +138,60 @@ function materializeVirtualRange(range: VirtualDateRange, today?: DateLiteral): 
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Periods
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Parse a period string into a literal date range.
+ * @param period
+ */
+function parsePeriod(period: string): LiteralDateRange {
+    const comps = period.split(':')
+    if (comps.length == 1) {
+        if (period.match(/^\d{4}$/)) {
+            // year
+            const y = parseInt(period)
+            return {
+                min: `${y}-01-01` as DateLiteral,
+                max: `${y+1}-01-01` as DateLiteral
+            }
+        }
+        if (period.match(/^\d{4}-\d{2}$/)) {
+            // month
+            const d = dayjs(`${period}-01`)
+            return {
+                min: d.format(literalFormat) as DateLiteral,
+                max: d.add(1, 'month').format(literalFormat) as DateLiteral
+            }
+        }
+        if (period.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            // day
+            const d = dayjs(period)
+            return {
+                min: d.format(literalFormat) as DateLiteral,
+                max: d.add(1, 'day').format(literalFormat) as DateLiteral
+            }
+        }
+    }
+    else if (comps.length == 2) {
+        return {
+            min: comps[0] as DateLiteral,
+            max: comps[1] as DateLiteral
+        }
+    }
+    throw `Invalid period format ${period}`
+}
+
+/**
+ * Serializes a literal date range into a period string.
+ * @param range
+ */
+function serializePeriod(range: LiteralDateRange): string {
+    return `${range.min}:${range.max}`
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Exports
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -147,7 +201,9 @@ const Dates = {
     display,
     rangeDisplay,
     materializeVirtualRange,
-    virtualPeriods
+    virtualPeriods,
+    parsePeriod,
+    serializePeriod
 }
 
 export default Dates

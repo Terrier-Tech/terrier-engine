@@ -2,6 +2,9 @@ import Api from "../../terrier/api"
 import {DdDive, UnpersistedDdDive} from "../gen/models"
 import Db from "../dd-db"
 import DdSession from "../dd-session"
+import {FilterInput} from "../queries/filters"
+import Tables from "../queries/tables"
+import {SchemaDef} from "../../terrier/schema";
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,6 +47,26 @@ async function list(): Promise<DiveListResult> {
     return await Api.safeGet(`/data_dive/list.json`, {})
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Flatten all the filters from all the queries into a single array.
+ * This approach introduces some limitations but I think it will yield the
+ * desired result most of the time.
+ * @param dive
+ */
+function computeFilterInputs(schema: SchemaDef, dive: DdDive): FilterInput[] {
+    const filters: Record<string, FilterInput> = {}
+    for (const query of dive.query_data?.queries || []) {
+        Tables.computeFilterInputs(schema, query.from, filters)
+    }
+    return Object.values(filters)
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,7 +74,8 @@ async function list(): Promise<DiveListResult> {
 const Dives = {
     list,
     get,
-    canDelete
+    canDelete,
+    computeFilterInputs
 }
 
 export default Dives

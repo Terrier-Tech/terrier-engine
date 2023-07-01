@@ -139,10 +139,12 @@
 				@include tt-bottom-rounded-corners;
 			}
 			&:hover {
-				@include tt-box-shadow;
+				@include tt-hover-box-shadow;
+				transform: scale(1.01);
 				z-index: 1;
 			}
 			&:active {
+				@include tt-active-box-shadow;
 				transform: scale(0.99);
 			}
 			&.filters {

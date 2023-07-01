@@ -1,7 +1,26 @@
 @import "../terrier/tt-mixins";
 
+////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
 
-.dd-dive-run-queries {
+.dd-dive-run-input {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4em;
+	.inclusion-radios {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1em;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Output
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-dive-run-output {
 	display: flex;
 	flex-direction: column;
 	gap: var(--tt-gap);
@@ -30,8 +49,9 @@
 		.details {
 			flex: 1 1 auto;
 			text-align: right;
-			//flex: 0 0 100%;
-			//font-size: var(--tt-caption-font-size);
+			&::before {
+				margin-right: 0.5em;
+			}
 		}
 		&.pending i {
 			color: var(--tt-pending-color);

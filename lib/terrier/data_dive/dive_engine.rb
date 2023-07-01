@@ -19,7 +19,7 @@ class DiveEngine
       begin
         t = Time.now
         p = params.to_unsafe_hash
-        p[:limit] = 100_000
+        p[:limit] = 1_000_000
         query_output = qe.execute! p
         data[qe.query.name] = query_output[:rows]
         dt = Time.now - t

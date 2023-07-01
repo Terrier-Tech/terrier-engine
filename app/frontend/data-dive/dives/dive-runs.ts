@@ -6,7 +6,14 @@ import Api, {ErrorEvent} from "../../terrier/api"
 import {Query} from "../queries/queries"
 import {DivTag} from "tuff-core/html"
 import {messages} from "tuff-core"
-import {IconName} from "../../terrier/theme";
+import {IconName} from "../../terrier/theme"
+import Filters, {FilterInput} from "../queries/filters"
+import Dives from "./dives"
+import Dates from "../queries/dates";
+import {Logger} from "tuff-core/logging";
+import Schema, {SchemaDef} from "../../terrier/schema"
+
+const log = new Logger("DiveRuns")
 
 type RunQueryResult = {
     id: string
@@ -29,7 +36,10 @@ type RunFileOutput = {
 
 export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
+    schema!: SchemaDef
+    filters!: FilterInput[]
     run?: DdDiveRun
+    inputs: Record<string, string> = {}
     error?: ErrorEvent
     fileOutput?: RunFileOutput
     queryResults: Record<string, RunQueryResult> = {}
@@ -40,6 +50,27 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         this.setTitle("Run Dive")
         this.setIcon('glyp-play')
 
+        this.schema = await Schema.get()
+
+        // initialize the inputs
+        this.filters = Dives.computeFilterInputs(this.schema, this.state.dive)
+        for (const filter of this.filters) {
+            switch (filter.filter_type) {
+                case 'date_range':
+                    const range = Dates.materializeVirtualRange(filter.range)
+                    this.inputs[filter.key] = Dates.serializePeriod(range)
+                    break
+                case 'direct':
+                    this.inputs[filter.key] = filter.value
+                    break
+                case 'inclusion':
+                    this.inputs[filter.key] = filter.in.join(',')
+                    break
+                default:
+                    log.warn(`Don't know how to initialize ${filter.filter_type} value`, filter)
+            }
+        }
+
         this.addAction({
             title: "Run",
             icon: 'glyp-play',
@@ -49,6 +80,8 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         this.onClick(this.startKey, _ => {
             this.createRun()
         })
+
+        this.dirty()
     }
 
     async createRun() {
@@ -84,8 +117,17 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
 
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.collapsible.padded.gap', row => {
-            row.div('.dd-dive-run-queries', col => {
+        parent.div('.tt-flex.collapsible.padded.gap.tt-form', row => {
+            // inputs
+            row.div('.tt-flex.column.large-gap.shrink', col => {
+                for (const filter of this.filters) {
+                    const val = this.inputs[filter.key]
+                    Filters.renderInput(col, filter, val)
+                }
+            })
+            
+            // output
+            row.div('.dd-dive-run-output', col => {
                 // error
                 if (this.error) {
                     col.div('.tt-bubble.alert', bubble => {
@@ -135,7 +177,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         parent.a('.file-output', {href: fileOutput.url}, row => {
             row.i('.glyp-file_spreadsheet')
             row.div('.name').text(fileOutput.name)
-            row.div('.details').text("Click to download")
+            row.div('.details.glyp-download').text("Click to download")
         })
     }
 
