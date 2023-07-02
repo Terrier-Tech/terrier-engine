@@ -4,10 +4,14 @@
 // Inputs
 ////////////////////////////////////////////////////////////////////////////////
 
+.dd-dive-run-inputs {
+	gap: 1.5em;
+}
+
 .dd-dive-run-input {
 	display: flex;
 	flex-direction: column;
-	gap: 0.4em;
+	gap: 0.3em;
 	.inclusion-radios {
 		display: flex;
 		flex-wrap: wrap;

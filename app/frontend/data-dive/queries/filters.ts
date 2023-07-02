@@ -1,7 +1,7 @@
 import {Part, PartTag} from "tuff-core/parts"
-import Dates, {VirtualDatePeriod, VirtualDateRange} from "./dates"
+import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableView, TableRef} from "./tables"
+import {TableRef, TableView} from "./tables"
 import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
@@ -9,7 +9,6 @@ import inflection from "inflection"
 import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
-import {HtmlParentTag} from "tuff-core/html";
 import dayjs from "dayjs";
 
 const log = new Logger("Filters")
@@ -546,69 +545,103 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 
 export type FilterInput = Filter & {
     key: string
+    input_value: string
     possible_values?: string[]
 }
 
+const inputChangeKey = messages.typedKey<{key: string}>()
+
 /**
  * Computes a string used to identify filters that are "the same".
+ * @param schema
+ * @param table
  * @param filter
  */
 function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
     const key = `${table.model}.${filter.column}`
-    const filterInput: FilterInput = {key,...filter}
-    if (filter.filter_type == 'inclusion') {
-        const modelDef = schema.models[table.model]
-        const columnDef = modelDef.columns[filter.column]
-        filterInput.possible_values = columnDef.possible_values
+    const filterInput: FilterInput = {key,...filter, input_value: ''}
+    switch (filter.filter_type) {
+        case 'inclusion':
+            const modelDef = schema.models[table.model]
+            const columnDef = modelDef.columns[filter.column]
+            filterInput.possible_values = columnDef.possible_values
+            filterInput.key = `${filterInput.key}#in`
+            break
+        case 'date_range':
+            filterInput.key = `${filterInput.key}#range`
+            break
+        case 'direct':
+            filterInput.key = `${filterInput.key}#${filter.operator}`
+            break
     }
     return filterInput
 }
 
-function renderInput(parent: HtmlParentTag, filter: FilterInput, value: string) {
-    parent.div('.dd-dive-run-input', col => {
-        col.label('.caption-size').text(inflection.titleize(filter.key.split('.').join(' ')))
+/**
+ * Populates a hash of raw field values used to track the value of the filter inputs.
+ * @param filters
+ * @return an object ready to be used in a `FormFields`
+ */
+function populateRawInputData(filters: FilterInput[]): Record<string,string> {
+    const data: Record<string, string> = {}
+    for (const filter of filters) {
         switch (filter.filter_type) {
-            case 'direct':
-                return renderDirectInput(col, filter, value)
             case 'date_range':
-                return renderDateRangeInput(col, filter, value)
+                const range = Dates.materializeVirtualRange(filter.range)
+                data[`${filter.key}-min`] = range.min
+                data[`${filter.key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
+                break
+            case 'direct':
+                data[filter.key] = filter.value
+                break
             case 'inclusion':
-                return renderInclusionInput(col, filter, value)
+                for (const value of filter.in) {
+                    data[`${filter.key}-${value}`] = 'true'
+                }
+                break
             default:
-                col.p().text(`Don't know how to render input for ${filter.filter_type} filter`)
+                log.warn(`Don't know how to get ${filter.filter_type} raw value`, filter)
         }
-    })
-}
-
-function renderDirectInput(parent: HtmlParentTag, filter: DirectFilter & FilterInput, value: string) {
-    parent.div('.tt-compound-field', field => {
-        field.label().text(operatorDisplay(filter.operator))
-        field.input({type: 'text', name: filter.key, value})
-    })
-}
-
-function renderDateRangeInput(parent: HtmlParentTag, filter: DateRangeFilter & FilterInput, value: string) {
-    parent.div('.tt-compound-field', field => {
-        const range = Dates.parsePeriod(value!)
-        field.input({type: 'date', name: `${filter.key}-min`, value: range.min})
-        field.label().text('→')
-        const d = dayjs(range.max)
-        field.input({type: 'date', name: `${filter.key}-max`, value: d.subtract(1, 'day').format(Dates.literalFormat)})
-    })
-}
-
-function renderInclusionInput(parent: HtmlParentTag, filter: InclusionFilter & FilterInput, value: string) {
-    const values = value.split(',')
-    parent.div('.inclusion-radios', container => {
-    for (const possible of filter.possible_values || []) {
-        const checked = values.includes(possible)
-        container.label('.body-size', label => {
-            label.input({type: 'checkbox', name: filter.key, value: possible, checked})
-            label.span().text(inflection.titleize(possible))
-        })
     }
-    })
+    return data
 }
+
+/**
+ * Assign the input_value values for all filters based on the raw filter data that was populated with `populateRawInputData`.
+ * This is necessary since some filter values need more than one form field to represent (like date range and inclusion).
+ * @param filters
+ * @param data
+ */
+function serializeRawInputData(filters: FilterInput[], data: Record<string, string>) {
+    for (const filter of filters) {
+        switch (filter.filter_type) {
+            case 'date_range':
+                const range = {
+                    min: data[`${filter.key}-min`] as DateLiteral,
+                    max: data[`${filter.key}-max`] as DateLiteral
+                }
+                const period = Dates.serializePeriod(range)
+                filter.input_value = period
+                break
+            case 'direct':
+                filter.input_value = data[filter.key]
+                break
+            case 'inclusion':
+                const values: string[] = []
+                for (const value of filter.possible_values || []) {
+                    if (data[`${filter.key}-${value}`]) {
+                        values.push(value)
+                    }
+                }
+                filter.input_value = values.join(',')
+                break
+            default:
+                log.warn(`Don't know how to serialize ${filter.filter_type} raw value`, filter)
+        }
+    }
+}
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -617,8 +650,11 @@ function renderInclusionInput(parent: HtmlParentTag, filter: InclusionFilter & F
 
 const Filters = {
     renderStatic,
-    renderInput,
-    toInput
+    toInput,
+    operatorDisplay,
+    inputChangeKey,
+    populateRawInputData,
+    serializeRawInputData
 }
 
 export default Filters

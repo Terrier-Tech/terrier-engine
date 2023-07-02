@@ -4,14 +4,15 @@ import {DdDive, DdDiveRun, UnpersistedDdDiveRun} from "../gen/models"
 import Db from "../dd-db"
 import Api, {ErrorEvent} from "../../terrier/api"
 import {Query} from "../queries/queries"
-import {DivTag} from "tuff-core/html"
+import {DivTag, HtmlParentTag} from "tuff-core/html"
 import {messages} from "tuff-core"
 import {IconName} from "../../terrier/theme"
-import Filters, {FilterInput} from "../queries/filters"
+import Filters, {DateRangeFilter, DirectFilter, FilterInput, InclusionFilter} from "../queries/filters"
 import Dives from "./dives"
-import Dates from "../queries/dates";
 import {Logger} from "tuff-core/logging";
 import Schema, {SchemaDef} from "../../terrier/schema"
+import {TerrierFormFields} from "../../terrier/forms"
+import inflection from "inflection"
 
 const log = new Logger("DiveRuns")
 
@@ -39,8 +40,8 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     schema!: SchemaDef
     filters!: FilterInput[]
     run?: DdDiveRun
-    inputs: Record<string, string> = {}
     error?: ErrorEvent
+    inputFields!: TerrierFormFields<any>
     fileOutput?: RunFileOutput
     queryResults: Record<string, RunQueryResult> = {}
 
@@ -54,22 +55,14 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
         // initialize the inputs
         this.filters = Dives.computeFilterInputs(this.schema, this.state.dive)
-        for (const filter of this.filters) {
-            switch (filter.filter_type) {
-                case 'date_range':
-                    const range = Dates.materializeVirtualRange(filter.range)
-                    this.inputs[filter.key] = Dates.serializePeriod(range)
-                    break
-                case 'direct':
-                    this.inputs[filter.key] = filter.value
-                    break
-                case 'inclusion':
-                    this.inputs[filter.key] = filter.in.join(',')
-                    break
-                default:
-                    log.warn(`Don't know how to initialize ${filter.filter_type} value`, filter)
-            }
-        }
+        const rawInputs = Filters.populateRawInputData(this.filters)
+        this.inputFields = new TerrierFormFields<any>(this, rawInputs)
+
+        this.onChange(Filters.inputChangeKey, async _ => {
+            const raw = await this.inputFields.serialize()
+            Filters.serializeRawInputData(this.filters, raw)
+            log.info(`Raw and serialized input data`, raw, this.filters)
+        })
 
         this.addAction({
             title: "Run",
@@ -119,10 +112,9 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.collapsible.padded.gap.tt-form', row => {
             // inputs
-            row.div('.tt-flex.column.large-gap.shrink', col => {
+            row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
                 for (const filter of this.filters) {
-                    const val = this.inputs[filter.key]
-                    Filters.renderInput(col, filter, val)
+                    this.renderInput(col, filter)
                 }
             })
             
@@ -178,6 +170,54 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             row.i('.glyp-file_spreadsheet')
             row.div('.name').text(fileOutput.name)
             row.div('.details.glyp-download').text("Click to download")
+        })
+    }
+
+    renderInput(parent: HtmlParentTag, filter: FilterInput) {
+        parent.div('.dd-dive-run-input', col => {
+            // don't show anything after the # and replace periods with spaces
+            const title = inflection.titleize(filter.key.split('#')[0].split('.').join(' '))
+            col.label('.caption-size').text(title)
+            switch (filter.filter_type) {
+                case 'direct':
+                    return this.renderDirectInput(col, filter)
+                case 'date_range':
+                    return this.renderDateRangeInput(col, filter)
+                case 'inclusion':
+                    return this.renderInclusionInput(col, filter)
+                default:
+                    col.p().text(`Don't know how to render input for ${filter.filter_type} filter`)
+            }
+        })
+    }
+
+    renderDirectInput(parent: HtmlParentTag, filter: DirectFilter & FilterInput) {
+        parent.div('.tt-compound-field', field => {
+            field.label().text(Filters.operatorDisplay(filter.operator))
+            this.inputFields.textInput(field, filter.key)
+                .emitChange(Filters.inputChangeKey, {key: filter.key})
+        })
+    }
+
+    renderDateRangeInput(parent: HtmlParentTag, filter: DateRangeFilter & FilterInput) {
+        parent.div('.tt-compound-field', field => {
+            this.inputFields.dateInput(field, `${filter.key}-min`)
+                .emitChange(Filters.inputChangeKey, {key: filter.key})
+            field.label().text('→')
+            this.inputFields.dateInput(field, `${filter.key}-max`)
+                .emitChange(Filters.inputChangeKey, {key: filter.key})
+        })
+    }
+
+    renderInclusionInput(parent: HtmlParentTag, filter: InclusionFilter & FilterInput) {
+        parent.div('.inclusion-radios', container => {
+            for (const possible of filter.possible_values || []) {
+                container.label('.body-size', label => {
+                    this.inputFields.checkbox(label, `${filter.key}-${possible}`)
+                        .emitChange(Filters.inputChangeKey, {key: filter.key})
+                    label.span().text(inflection.titleize(possible))
+                })
+            }
         })
     }
 
