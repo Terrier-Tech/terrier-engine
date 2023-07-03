@@ -544,12 +544,10 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 ////////////////////////////////////////////////////////////////////////////////
 
 export type FilterInput = Filter & {
-    key: string
+    input_key: string
     input_value: string
     possible_values?: string[]
 }
-
-const inputChangeKey = messages.typedKey<{key: string}>()
 
 /**
  * Computes a string used to identify filters that are "the same".
@@ -559,19 +557,19 @@ const inputChangeKey = messages.typedKey<{key: string}>()
  */
 function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
     const key = `${table.model}.${filter.column}`
-    const filterInput: FilterInput = {key,...filter, input_value: ''}
+    const filterInput: FilterInput = {input_key: key,...filter, input_value: ''}
     switch (filter.filter_type) {
         case 'inclusion':
             const modelDef = schema.models[table.model]
             const columnDef = modelDef.columns[filter.column]
             filterInput.possible_values = columnDef.possible_values
-            filterInput.key = `${filterInput.key}#in`
+            filterInput.input_key = `${filterInput.input_key}#in`
             break
         case 'date_range':
-            filterInput.key = `${filterInput.key}#range`
+            filterInput.input_key = `${filterInput.input_key}#range`
             break
         case 'direct':
-            filterInput.key = `${filterInput.key}#${filter.operator}`
+            filterInput.input_key = `${filterInput.input_key}#${filter.operator}`
             break
     }
     return filterInput
@@ -588,15 +586,15 @@ function populateRawInputData(filters: FilterInput[]): Record<string,string> {
         switch (filter.filter_type) {
             case 'date_range':
                 const range = Dates.materializeVirtualRange(filter.range)
-                data[`${filter.key}-min`] = range.min
-                data[`${filter.key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
+                data[`${filter.input_key}-min`] = range.min
+                data[`${filter.input_key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
                 break
             case 'direct':
-                data[filter.key] = filter.value
+                data[filter.input_key] = filter.value
                 break
             case 'inclusion':
                 for (const value of filter.in) {
-                    data[`${filter.key}-${value}`] = 'true'
+                    data[`${filter.input_key}-${value}`] = 'true'
                 }
                 break
             default:
@@ -617,19 +615,19 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
         switch (filter.filter_type) {
             case 'date_range':
                 const range = {
-                    min: data[`${filter.key}-min`] as DateLiteral,
-                    max: data[`${filter.key}-max`] as DateLiteral
+                    min: data[`${filter.input_key}-min`] as DateLiteral,
+                    max: dayjs(data[`${filter.input_key}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
                 }
                 const period = Dates.serializePeriod(range)
                 filter.input_value = period
                 break
             case 'direct':
-                filter.input_value = data[filter.key]
+                filter.input_value = data[filter.input_key]
                 break
             case 'inclusion':
                 const values: string[] = []
                 for (const value of filter.possible_values || []) {
-                    if (data[`${filter.key}-${value}`]) {
+                    if (data[`${filter.input_key}-${value}`]) {
                         values.push(value)
                     }
                 }
@@ -652,7 +650,6 @@ const Filters = {
     renderStatic,
     toInput,
     operatorDisplay,
-    inputChangeKey,
     populateRawInputData,
     serializeRawInputData
 }

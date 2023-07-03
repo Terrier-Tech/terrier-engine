@@ -4,18 +4,25 @@ class DiveEngine
   def initialize(dive, change_user)
     @dive = dive
     @change_user = change_user
-
-    queries = dive.safe_query_data['queries'] || []
-    @query_engines = queries.map do |query|
-      QueryEngine.new query
-    end
   end
 
   def stream_run!(stream, run, params)
     data = {}
 
+    # get the queries from the run
+    input_data = run.safe_input_data
+    queries = input_data['queries'] || []
+
+    # copy the filter input values into the params
+    filters = input_data['filters'] || []
+    filters.each do |filter|
+      info "Using filter input #{filter['input_key']} = #{filter['input_value']}"
+      params[filter['input_key']] = filter['input_value']
+    end
+
     # execute the queries and collect the results
-    @query_engines.each do |qe|
+    queries.each do |query|
+      qe = QueryEngine.new query
       begin
         t = Time.now
         p = params.to_unsafe_hash

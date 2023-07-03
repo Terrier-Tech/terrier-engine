@@ -4,6 +4,8 @@ import { Query } from "../queries/queries"
 
 import { DdUser } from "../dd-user"
 
+import { FilterInput } from "../queries/filters"
+
 import { OptionalProps } from "tuff-core/types"
 
 import { Attachment } from "../../terrier/attachments"
@@ -117,7 +119,7 @@ export type DdDiveRun = {
     updated_by_id?: string
     updated_by_name?: string
     dd_dive_id?: string
-    input_data?: object
+    input_data?: { queries: Query[]; filters: FilterInput[] }
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
@@ -138,7 +140,7 @@ export type UnpersistedDdDiveRun = {
     updated_by_id?: string
     updated_by_name?: string
     dd_dive_id?: string
-    input_data?: object
+    input_data?: { queries: Query[]; filters: FilterInput[] }
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"

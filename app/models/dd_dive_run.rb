@@ -26,7 +26,10 @@ class DdDiveRun < ApplicationRecord
 
   enum_field :status, %w[initial running success error]
 
-  json_field :input_data
+  json_field :input_data, {}, {
+    queries: 'Query[]',
+    filters: 'FilterInput[]'
+  }
   json_field :output_data
 
   include SpreadsheetUploader::Attachment(:output_file)

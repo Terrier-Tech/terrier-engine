@@ -51,7 +51,7 @@ const updatedKey = messages.typedKey<TableRef>()
 function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record<string, FilterInput>) {
     for (const f of table.filters || []) {
         const fi = Filters.toInput(schema, table, f)
-        filters[fi.key] = fi
+        filters[fi.input_key] = fi
     }
     if (table.joins) {
         for (const j of Object.values(table.joins)) {

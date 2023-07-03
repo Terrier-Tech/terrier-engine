@@ -27,6 +27,15 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_equal %w[date_trunc('month',work_order.time) work_order.status location.id u.id], builder.group_bys
   end
 
+  test "filter params" do
+    query = TestDive.order_summary
+    engine = QueryEngine.new(query)
+    # show that we can override filter values explicitly through the params
+    builder = engine.to_sql_builder({'WorkOrder.time#range' => '2022'})
+    assert_includes builder.clauses, "work_order.time >= '2022-01-01'"
+    assert_includes builder.clauses, "work_order.time < '2023-01-01'"
+  end
+
   test 'validate' do
     valid_sql = "select count(*) from locations"
     res = QueryEngine.validate_raw_sql valid_sql

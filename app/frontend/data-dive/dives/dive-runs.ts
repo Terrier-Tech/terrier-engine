@@ -58,11 +58,10 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         const rawInputs = Filters.populateRawInputData(this.filters)
         this.inputFields = new TerrierFormFields<any>(this, rawInputs)
 
-        this.onChange(Filters.inputChangeKey, async _ => {
-            const raw = await this.inputFields.serialize()
-            Filters.serializeRawInputData(this.filters, raw)
-            log.info(`Raw and serialized input data`, raw, this.filters)
+        this.listen('datachanged', this.inputFields.dataChangedKey, _ => {
+            this.updateFilters().then()
         })
+        await this.updateFilters()
 
         this.addAction({
             title: "Run",
@@ -77,10 +76,21 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         this.dirty()
     }
 
+    async updateFilters() {
+        const raw = await this.inputFields.serialize()
+        Filters.serializeRawInputData(this.filters, raw)
+        log.info(`Raw and serialized input data`, raw, this.filters)
+        log.info(`Filter input data:`, this.inputFields.data)
+    }
+
     async createRun() {
         const newRun: UnpersistedDdDiveRun = {
             dd_dive_id: this.state.dive.id,
-            status: 'initial'
+            status: 'initial',
+            input_data: {
+                filters: this.filters,
+                ...this.state.dive.query_data!
+            }
         }
         const res = await Db().upsert('dd_dive_run', newRun)
         if (res.status == 'success' && res.record) {
@@ -176,7 +186,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderInput(parent: HtmlParentTag, filter: FilterInput) {
         parent.div('.dd-dive-run-input', col => {
             // don't show anything after the # and replace periods with spaces
-            const title = inflection.titleize(filter.key.split('#')[0].split('.').join(' '))
+            const title = inflection.titleize(filter.input_key.split('#')[0].split('.').join(' '))
             col.label('.caption-size').text(title)
             switch (filter.filter_type) {
                 case 'direct':
@@ -194,18 +204,15 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderDirectInput(parent: HtmlParentTag, filter: DirectFilter & FilterInput) {
         parent.div('.tt-compound-field', field => {
             field.label().text(Filters.operatorDisplay(filter.operator))
-            this.inputFields.textInput(field, filter.key)
-                .emitChange(Filters.inputChangeKey, {key: filter.key})
+            this.inputFields.textInput(field, filter.input_key)
         })
     }
 
     renderDateRangeInput(parent: HtmlParentTag, filter: DateRangeFilter & FilterInput) {
         parent.div('.tt-compound-field', field => {
-            this.inputFields.dateInput(field, `${filter.key}-min`)
-                .emitChange(Filters.inputChangeKey, {key: filter.key})
+            this.inputFields.dateInput(field, `${filter.input_key}-min`)
             field.label().text('→')
-            this.inputFields.dateInput(field, `${filter.key}-max`)
-                .emitChange(Filters.inputChangeKey, {key: filter.key})
+            this.inputFields.dateInput(field, `${filter.input_key}-max`)
         })
     }
 
@@ -213,8 +220,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         parent.div('.inclusion-radios', container => {
             for (const possible of filter.possible_values || []) {
                 container.label('.body-size', label => {
-                    this.inputFields.checkbox(label, `${filter.key}-${possible}`)
-                        .emitChange(Filters.inputChangeKey, {key: filter.key})
+                    this.inputFields.checkbox(label, `${filter.input_key}-${possible}`)
                     label.span().text(inflection.titleize(possible))
                 })
             }
