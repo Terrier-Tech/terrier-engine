@@ -214,14 +214,17 @@ class Filter < QueryModel
     when 'direct'
       op = sql_operator
       val = input_value.presence || @value
+      params[input_key] = val
       builder.where "#{table.alias}.#{@column} #{op} ?", val
     when 'date_range'
       period = DatePeriod.parse(input_value.presence || @range)
+      params[input_key] = period.to_s
       builder.where "#{table.alias}.#{@column} >= ?", period.start_date
       builder.where "#{table.alias}.#{@column} < ?", period.end_date
     when 'inclusion'
       val = input_value.presence || @in
-      val = val.split(',') if val.is_a?(String)
+      val = val.split(',').map(&:strip) if val.is_a?(String)
+      params[input_key] = val.join(', ')
       builder.where "#{table.alias}.#{@column} in ?", val
     else
       raise "Unknown filter type '#{@filter_type}'"

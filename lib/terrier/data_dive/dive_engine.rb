@@ -46,6 +46,15 @@ class DiveEngine
       end
     end
 
+    # get the computed filter inputs back from the params
+    computed_inputs = []
+    filters.each do |filter|
+      val = params[filter['input_key']]
+      info "Computed #{filter['input_key']} value: #{val}"
+      computed_inputs << {key: filter['input_key'], value: val}
+    end
+    data['Inputs'] = computed_inputs
+
     # write the output to a spreadsheet
     path = PublicTempFile.new "dive-#{@dive.name.slugify}-#{Time.now.strftime(TIMESTAMP_FORMAT)}.xlsx"
     TabularIo.save_xlsx data, path.abs_path
