@@ -6,6 +6,8 @@ import { DdUser } from "../dd-user"
 
 import { OptionalProps } from "tuff-core/types"
 
+import { Attachment } from "../../terrier/attachments"
+
 export type DdDive = {
     id: string
     created_at: string

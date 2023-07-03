@@ -18,6 +18,10 @@ class ModelGenerator < BaseGenerator
     # add the default imports
     @imports['tuff-core/types'] ||= []
     @imports['tuff-core/types'] << 'OptionalProps'
+
+    if @has_shrine
+      @imports['../../terrier/attachments'] = ['Attachment']
+    end
   end
 
   def each_model
