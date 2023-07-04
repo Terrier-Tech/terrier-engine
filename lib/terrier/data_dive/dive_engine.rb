@@ -50,7 +50,11 @@ class DiveEngine
     computed_inputs = []
     filters.each do |filter|
       val = params[filter['input_key']]
-      info "Computed #{filter['input_key']} value: #{val}"
+      col_type = filter['column_type']
+      if col_type.present? && col_type == 'cents'
+        val = val.to_i.cents
+      end
+      info "Computed #{filter['input_key']} value: #{val} (#{col_type})"
       computed_inputs << {key: filter['input_key'], value: val}
     end
     data['Inputs'] = computed_inputs

@@ -63,6 +63,19 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         })
         await this.updateFilters()
 
+        // for numeric types, we use a number input and translate the
+        // value back to the string value field whenever it changes
+        // this.filters.forEach(filter => {
+        //     if ('column_type' in filter) {
+        //         if (filter.column_type == 'cents') {
+        //             filter.numeric_value = parseInt(filter.value) / 100
+        //         }
+        //         else {
+        //             filter.numeric_value = parseFloat(filter.value)
+        //         }
+        //     }
+        // })
+
         this.addAction({
             title: "Run",
             icon: 'glyp-play',
@@ -204,7 +217,17 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderDirectInput(parent: HtmlParentTag, filter: DirectFilter & FilterInput) {
         parent.div('.tt-compound-field', field => {
             field.label().text(Filters.operatorDisplay(filter.operator))
-            this.inputFields.textInput(field, filter.input_key)
+            switch (filter.column_type) {
+                case 'cents':
+                    field.label().text('$')
+                    this.inputFields.numberInput(field, filter.input_key)
+                    break
+                case 'number':
+                    this.inputFields.numberInput(field, filter.input_key)
+                    break
+                default:
+                    this.inputFields.textInput(field, filter.input_key)
+            }
         })
     }
 

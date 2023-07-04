@@ -33,7 +33,10 @@ export type DirectFilter = BaseFilter & {
     operator: DirectOperator
     value: string
     numeric_value?: number
+    column_type?: 'text' | 'number' | 'cents'
 }
+
+// type DirectColumnType = DirectFilter['column_type']
 
 export type DateRangeFilter = BaseFilter & {
     filter_type: 'date_range'
@@ -83,12 +86,12 @@ function operatorDisplay(op: DirectOperator): string {
 }
 
 
-function renderStatic(parent: PartTag, filter: Filter, columnDef: ColumnDef) {
+function renderStatic(parent: PartTag, filter: Filter) {
     switch (filter.filter_type) {
         case 'direct':
             parent.div('.column').text(filter.column)
             parent.div('.operator').text(operatorDisplay(filter.operator))
-            switch (columnDef.type) {
+            switch (filter.column_type) {
                 case 'cents':
                     parent.div('.value').text(Format.cents(filter.value))
                     break
@@ -316,22 +319,19 @@ class FilterEditorContainer extends Part<FilterState> {
 // Direct Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-type DirectInputType = 'text' | 'number' | 'cents'
-
 class DirectFilterEditor extends FilterEditor<DirectFilter> {
 
-    inputType: DirectInputType = 'text'
     numericChangeKey = messages.untypedKey()
 
     async init() {
         await super.init()
 
         if (this.columnDef?.type == 'cents') {
-            this.inputType = 'cents'
+            this.state.column_type = 'cents'
             this.state.numeric_value = parseInt(this.state.value) / 100
         }
         else if (this.columnDef?.type == 'number') {
-            this.inputType = 'number'
+            this.state.column_type = 'number'
             this.state.numeric_value = parseFloat(this.state.value)
         }
 
@@ -339,7 +339,7 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
         // value back to the string value field whenever it changes
         this.onChange(this.numericChangeKey, m => {
             log.info(`Direct filter for ${this.columnDef?.name} numeric value changed to ${m.value}`)
-            if (this.inputType == 'cents') {
+            if (this.state.column_type == 'cents') {
                 this.state.value = Math.round(parseFloat(m.value)*100).toString()
             }
             else {
@@ -359,7 +359,7 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
             this.select(col, 'operator', operatorOptions)
         })
         parent.div('.filter', col => {
-            switch (this.inputType) {
+            switch (this.state.column_type) {
                 case 'cents':
                     col.div('.tt-compound-field', field => {
                         field.label().text('$')
@@ -562,8 +562,9 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
                     case 'date':
                     case 'datetime':
                         return this.state.callback({filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
-                    default:
-                        return this.state.callback({filter_type: 'direct', column, operator: 'eq', value: ''})
+                    default: // direct
+                        const colType = colDef.type == 'number' || colDef.type == 'cents' ? colDef.type : 'text'
+                        return this.state.callback({filter_type: 'direct', column, column_type: colType, operator: 'eq', value: ''})
                 }
             }
             else {
@@ -642,7 +643,13 @@ function populateRawInputData(filters: FilterInput[]): Record<string,string> {
                 data[`${filter.input_key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
                 break
             case 'direct':
-                data[filter.input_key] = filter.value
+                switch (filter.column_type) {
+                    case 'cents':
+                        data[filter.input_key] = (parseInt(filter.value)/100).toString()
+                        break
+                    default:
+                        data[filter.input_key] = filter.value
+                }
                 break
             case 'inclusion':
                 for (const value of filter.in) {
@@ -674,7 +681,14 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                 filter.input_value = period
                 break
             case 'direct':
-                filter.input_value = data[filter.input_key]
+                switch (filter.column_type) {
+                    case 'cents':
+                        const dollars = data[filter.input_key]
+                        filter.input_value = Math.round(parseFloat(dollars)*100).toString()
+                        break
+                    default:
+                        filter.input_value = data[filter.input_key]
+                }
                 break
             case 'inclusion':
                 const values: string[] = []

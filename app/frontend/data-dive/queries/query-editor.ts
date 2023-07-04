@@ -7,8 +7,8 @@ import DiveEditor, {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
 import {messages} from "tuff-core"
 import Html from "tuff-core/html"
-import ContentPart from "../../terrier/parts/content-part";
-import {TabContainerPart} from "../../terrier/tabs";
+import ContentPart from "../../terrier/parts/content-part"
+import {TabContainerPart} from "../../terrier/tabs"
 
 const log = new Logger("QueryEditor")
 
