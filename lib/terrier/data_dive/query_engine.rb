@@ -167,7 +167,7 @@ class ColumnRef < QueryModel
 end
 
 class Filter < QueryModel
-  attr_accessor :column, :filter_type, :operator, :value, :range, :in, :editable, :edit_label
+  attr_accessor :column, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
 
   # this should match the implementation of `Filters.toInput` on the frontend
   def compute_input_key(table)

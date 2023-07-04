@@ -94,10 +94,11 @@ class ModelGenerator < BaseGenerator
       raw_cols = {}
       model[:columns].each do |col|
         enum_field = model[:enum_fields][col.name.to_sym]
+        type = enum_field ? 'enum' : model[:type_map][col.name.to_sym] || col.type
         raw_col = {
           name: col.name,
           nullable: col.null,
-          type: enum_field ? 'enum' : col.type
+          type: type
         }
         if col.sql_type_metadata.sql_type.ends_with?('[]')
           raw_col[:array] = true
@@ -135,6 +136,7 @@ class ModelGenerator < BaseGenerator
         attachments: attachments,
         name: model.name,
         table_name: model.table_name,
+        type_map: model.type_map || {},
         metadata: model.respond_to?(:metadata) ? model.metadata : nil
       }
     end

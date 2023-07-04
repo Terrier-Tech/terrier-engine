@@ -10,6 +10,7 @@ import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import dayjs from "dayjs";
+import Format from "../../terrier/format";
 
 const log = new Logger("Filters")
 
@@ -31,6 +32,7 @@ export type DirectFilter = BaseFilter & {
     filter_type: 'direct'
     operator: DirectOperator
     value: string
+    numeric_value?: number
 }
 
 export type DateRangeFilter = BaseFilter & {
@@ -81,13 +83,20 @@ function operatorDisplay(op: DirectOperator): string {
 }
 
 
-function renderStatic(parent: PartTag, filter: Filter) {
+function renderStatic(parent: PartTag, filter: Filter, columnDef: ColumnDef) {
     switch (filter.filter_type) {
         case 'direct':
             parent.div('.column').text(filter.column)
             parent.div('.operator').text(operatorDisplay(filter.operator))
-            parent.div('.value').text(filter.value)
-            return
+            switch (columnDef.type) {
+                case 'cents':
+                    parent.div('.value').text(Format.cents(filter.value))
+                    break
+                default:
+                    parent.div('.value').text(filter.value)
+                    break
+            }
+            break
         case 'date_range':
             parent.div('.column').text(filter.column)
             parent.div('.value').text(Dates.rangeDisplay(filter.range))
@@ -307,7 +316,37 @@ class FilterEditorContainer extends Part<FilterState> {
 // Direct Editor
 ////////////////////////////////////////////////////////////////////////////////
 
+type DirectInputType = 'text' | 'number' | 'cents'
+
 class DirectFilterEditor extends FilterEditor<DirectFilter> {
+
+    inputType: DirectInputType = 'text'
+    numericChangeKey = messages.untypedKey()
+
+    async init() {
+        await super.init()
+
+        if (this.columnDef?.type == 'cents') {
+            this.inputType = 'cents'
+            this.state.numeric_value = parseInt(this.state.value) / 100
+        }
+        else if (this.columnDef?.type == 'number') {
+            this.inputType = 'number'
+            this.state.numeric_value = parseFloat(this.state.value)
+        }
+
+        // for numeric types, we use a number input and translate the
+        // value back to the string value field whenever it changes
+        this.onChange(this.numericChangeKey, m => {
+            log.info(`Direct filter for ${this.columnDef?.name} numeric value changed to ${m.value}`)
+            if (this.inputType == 'cents') {
+                this.state.value = Math.round(parseFloat(m.value)*100).toString()
+            }
+            else {
+                this.state.value = m.value
+            }
+        })
+    }
 
     render(parent: PartTag) {
         parent.div('.column', col => {
@@ -320,7 +359,21 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
             this.select(col, 'operator', operatorOptions)
         })
         parent.div('.filter', col => {
-            this.textInput(col, 'value', {placeholder: "Value"})
+            switch (this.inputType) {
+                case 'cents':
+                    col.div('.tt-compound-field', field => {
+                        field.label().text('$')
+                        this.numberInput(field, 'numeric_value', {placeholder: "Value"})
+                            .emitChange(this.numericChangeKey)
+                    })
+                    break
+                case 'number':
+                    this.numberInput(col, 'numeric_value', {placeholder: "Value"})
+                        .emitChange(this.numericChangeKey)
+                    break
+                default:
+                    this.textInput(col, 'value', {placeholder: "Value"})
+            }
         })
         this.renderActions(parent)
     }
@@ -341,7 +394,6 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
         await super.init()
 
         this.values = new Set(this.state.in || [])
-
         this.onChange(inclusionChangedKey, m => {
             const val = m.data.value
             const checked = (m.event.target as HTMLInputElement).checked

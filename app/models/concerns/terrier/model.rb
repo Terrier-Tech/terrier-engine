@@ -15,6 +15,19 @@ module Terrier::Model
 
   included do
 
+    # allow custom types for columns
+    @type_map = {}
+
+    class << self
+      attr_reader :type_map
+    end
+
+    # registers a type override for the particular column
+    def self.register_type(col, type)
+      @type_map ||= {}
+      @type_map[col] = type
+    end
+
     ## Upserting (Instance Methods)
 
     # called after the record and all of its provided relations have been upserted
@@ -26,14 +39,6 @@ module Terrier::Model
 
 
   module ClassMethods
-
-    # allow specifying a custom base class for models
-    @base_class = ActiveRecord::Base
-
-    class << self
-      attr_reader :base_class
-    end
-
 
     ## Fields
 
@@ -154,6 +159,7 @@ module Terrier::Model
     # creates a field containing an integer cents value, as well as dollars accessors
     def cents_field(name, options={})
       options[:type] = Integer
+      register_type name, 'cents'
       define_method "#{name}_dollars" do
         c = self.send(name)
         if c

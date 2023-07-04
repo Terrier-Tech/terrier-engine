@@ -229,7 +229,8 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             if (this.table.filters?.length) {
                 for (const filter of this.table.filters) {
                     section.div('.filter.line', line => {
-                        Filters.renderStatic(line, filter)
+                        const columnDef = this.modelDef.columns[filter.column]
+                        Filters.renderStatic(line, filter, columnDef)
                     })
                 }
             } else {
