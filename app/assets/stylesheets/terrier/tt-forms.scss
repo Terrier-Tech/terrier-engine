@@ -119,14 +119,15 @@
 		&:last-child {
 			@include tt-right-rounded-corners;
 		}
+
+		&.icon-only i {
+			display: block;
+			transform: scale(1.5);
+		}
 	}
 
 	label {
 		@include tt-concave-bg(#{var(--tt-field-background)}, false);
-	}
-
-	a {
-		@include tt-raised-bg(#{var(--tt-field-background)}, true);
 	}
 
 	ul.button-group {
@@ -139,7 +140,8 @@
 	}
 
 	a {
-		color: var(--tt-primary-color);
+		@include tt-raised-bg(#{var(--tt-field-background)}, true);
+		color: var(--tt-secondary-color);
 		cursor: pointer;
 
 		&.button {

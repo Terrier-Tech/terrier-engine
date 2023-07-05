@@ -1,0 +1,28 @@
+@import "tt-mixins";
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Date Period Picker
+////////////////////////////////////////////////////////////////////////////////
+
+.tt-date-period-picker .year-grid {
+	display: flex;
+	.year-column {
+		padding: var(--tt-pad);
+		a {
+			text-align: center;
+			display: block;
+			@include tt-inset-white-text;
+			@include tt-shaded-hover;
+			padding: 0.5em 1em;
+			&.year {
+				font-weight: bold;
+				border-bottom: 1px solid rgba(#fff, 0.5);
+			}
+			&.current {
+				background-color: var(--tt-primary-color);
+			}
+		}
+	}
+}
+

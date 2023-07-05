@@ -13,6 +13,8 @@ import {Logger} from "tuff-core/logging";
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {TerrierFormFields} from "../../terrier/forms"
 import inflection from "inflection"
+import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, LiteralDateRange} from "../queries/dates"
+import dayjs from "dayjs"
 
 const log = new Logger("DiveRuns")
 
@@ -46,6 +48,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     queryResults: Record<string, RunQueryResult> = {}
 
     startKey = messages.untypedKey()
+    pickDateKey = messages.typedKey<{ input_key: string }>()
 
     async init() {
         this.setTitle("Run Dive")
@@ -63,19 +66,6 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         })
         await this.updateFilters()
 
-        // for numeric types, we use a number input and translate the
-        // value back to the string value field whenever it changes
-        // this.filters.forEach(filter => {
-        //     if ('column_type' in filter) {
-        //         if (filter.column_type == 'cents') {
-        //             filter.numeric_value = parseInt(filter.value) / 100
-        //         }
-        //         else {
-        //             filter.numeric_value = parseFloat(filter.value)
-        //         }
-        //     }
-        // })
-
         this.addAction({
             title: "Run",
             icon: 'glyp-play',
@@ -84,6 +74,23 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
         this.onClick(this.startKey, _ => {
             this.createRun()
+        })
+
+        this.onClick(this.pickDateKey, m => {
+            const initialRange = {
+                min: this.inputFields.data[`${m.data.input_key}-min`] as DateLiteral,
+                max: dayjs(this.inputFields.data[`${m.data.input_key}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
+            } as LiteralDateRange
+            this.toggleDropdown(DatePeriodPickerPart, {
+                initial: initialRange,
+                callback: (newRange: LiteralDateRange) => {
+                    log.info(`Picked date range for ${m.data.input_key}`, newRange)
+                    this.inputFields.data[`${m.data.input_key}-min`] = newRange.min
+                    this.inputFields.data[`${m.data.input_key}-max`] = dayjs(newRange.max).subtract(1, 'day').format(Dates.literalFormat)
+                    this.dirty()
+                }} as DatePeriodPickerState,
+                m.event.target
+            )
         })
 
         this.dirty()
@@ -236,6 +243,11 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             this.inputFields.dateInput(field, `${filter.input_key}-min`)
             field.label().text('→')
             this.inputFields.dateInput(field, `${filter.input_key}-max`)
+            field.a('.icon-only', {title: "Pick a common date range"}, a => {
+                a.i('.glyp-pick_date')
+            })
+            .emitClick(this.pickDateKey, {input_key: filter.input_key})
+
         })
     }
 

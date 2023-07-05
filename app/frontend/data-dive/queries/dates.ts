@@ -1,5 +1,11 @@
 import inflection from "inflection"
 import dayjs from "dayjs"
+import {Dropdown} from "../../terrier/dropdowns"
+import {PartTag} from "tuff-core/parts"
+import {messages} from "tuff-core"
+import {Logger} from "tuff-core/logging"
+
+const log = new Logger("Dates")
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +194,77 @@ function parsePeriod(period: string): LiteralDateRange {
  */
 function serializePeriod(range: LiteralDateRange): string {
     return `${range.min}:${range.max}`
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Period Picker
+////////////////////////////////////////////////////////////////////////////////
+
+export type DatePeriodPickerState = {
+    initial?: LiteralDateRange
+    callback: (period: LiteralDateRange) => any
+}
+
+/**
+ * Allows the user to pick a data period from a set of common ones.
+ */
+export class DatePeriodPickerPart extends Dropdown<DatePeriodPickerState> {
+
+    periodKey = messages.typedKey<{period: string}>()
+
+    async init() {
+        await super.init()
+        this.onClick(this.periodKey, m => {
+            const range = parsePeriod(m.data.period)
+            log.info(`Picked period ${m.data.period}`, range)
+            this.state.callback(range)
+            this.clear()
+        })
+    }
+
+    get parentClasses(): Array<string> {
+        return ['tt-date-period-picker']
+    }
+
+    get autoClose(): boolean {
+        return true
+    }
+
+    renderContent(parent: PartTag): void {
+        const today = dayjs()
+        const pInitial = this.state.initial ? serializePeriod(this.state.initial) : ''
+        log.info(`Initial period is ${pInitial}`)
+        parent.div('.year-grid', grid => {
+            for (let year = today.year()-2; year < today.year()+1; year++) {
+                grid.div('.year-column', col => {
+                    // year button
+                    const pYear = serializePeriod(parsePeriod(year.toString()))
+                    const yearClasses = ['year']
+                    if (pYear == pInitial) {
+                        yearClasses.push('current')
+                    }
+                    col.a({text: year.toString()})
+                        .class(...yearClasses)
+                        .emitClick(this.periodKey, {period: pYear})
+
+                    // month buttons
+                    for (let m = 0; m < 12; m++) {
+                        const d = today.set('month', m)
+                        const pMonth = serializePeriod(parsePeriod(`${year}-${d.format('MM')}`))
+                        const monthClasses = ['month']
+                        if (pMonth == pInitial) {
+                            monthClasses.push('current')
+                        }
+                        col.a({text: d.format('MMMM')})
+                            .class(...monthClasses)
+                            .emitClick(this.periodKey, {period: pMonth})
+                    }
+                })
+            }
+        })
+    }
+
 }
 
 
