@@ -75,11 +75,14 @@ class BaseGenerator
     system cmd
   end
 
+  def svgo_path
+    Terrier::Engine.root.join('node_modules/svgo/bin/svgo')
+  end
+
   # optimize all SVG files in in_dir using SVGO
   def optimize_svgs(in_dir, out_dir)
     info "Optimizing images in #{in_dir.green} and storing them in #{out_dir.blue}"
     clear_directory out_dir
-    svgo_path = Terrier::Engine.root.join('node_modules/svgo/bin/svgo')
     system "#{svgo_path} -f #{in_dir} --config #{Terrier::Engine.root.join('lib/terrier/icons/svgo-config.cjs')} -o #{out_dir}", exception: true
   end
 
