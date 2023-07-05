@@ -14,6 +14,7 @@ class DataDiveController < ApplicationController
   def entrypoint
     @title = "Data Dive"
     @entrypoint = 'data-dive'
+    render layout: _terrier_layout
   end
 
   # authentication and option data for the session

@@ -7,6 +7,15 @@ module Terrier::TerrierAuth
 
     before_action :_terrier_authenticate
 
+    def _terrier_layout
+      if self.respond_to? :terrier_layout
+        self.terrier_layout
+      else
+        warn "The #terrier_layout method should implemented in your ApplicationController!"
+        'application'
+      end
+    end
+
     def _terrier_authenticate
       if self.respond_to? :terrier_authenticate
         self.terrier_authenticate

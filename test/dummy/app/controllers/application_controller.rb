@@ -21,6 +21,10 @@ class ApplicationController < ActionController::Base
     @title = "Home"
   end
 
+  def terrier_layout
+    'application'
+  end
+
   def terrier_authenticate
     # no authentication in dummy app
   end
