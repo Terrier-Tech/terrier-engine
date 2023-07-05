@@ -11,8 +11,8 @@ export interface ThemeType {
 
 export type IconName = GlypName | HubIconName
 
-const ColorNames = [
-    'link', 'primary', 'secondary', 'active', 'pending', 'success', 'alert', 'white', 'inactive'
+export const ColorNames = [
+    'link', 'primary', 'secondary', 'active', 'pending', 'success', 'warn', 'alert', 'white', 'inactive', 'super', 'billing', 'docs'
 ] as const
 
 export type ColorName = typeof ColorNames[number]
@@ -55,16 +55,13 @@ export default class Theme {
             HubIcons.renderIcon(parent, icon as HubIconName, color)
         }
         else { // a regular font icon
-            const classes: string[] = [icon]
-            if (color?.length) {
-                classes.push(color)
-            }
-            parent.i().class(...classes)
+            const iconElem = parent.i('.icon', icon)
+            if (color?.length) iconElem.class(color)
         }
     }
 
     renderCloseIcon(parent: PartTag, color?: ColorName | null): void {
-        const classes = ['glyp-close', 'close']
+        const classes = ['icon', 'glyp-close', 'close']
         if (color?.length) {
             classes.push(color)
         }
