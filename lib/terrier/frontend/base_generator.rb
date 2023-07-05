@@ -37,7 +37,7 @@ class BaseGenerator
       end
       raise "Could not find template named #{template_name}, looked in #{@template_dirs.to_sentence}" unless template_path.present?
     end
-    template = ERB.new File.read(template_path), nil, '%-'
+    template = ERB.new File.read(template_path), nil, trim_mode: '%-'
 
     # determine the output path
     case name.split('.').last
