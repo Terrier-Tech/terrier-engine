@@ -2,7 +2,7 @@ import {PartTag} from "tuff-core/parts"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableRef, TableView} from "./tables"
 import {Logger} from "tuff-core/logging"
-import {SelectOptions} from "tuff-core/forms"
+import {FormFields, SelectOptions} from "tuff-core/forms"
 import Forms from "../../terrier/forms"
 import {arrays, messages} from "tuff-core"
 import Objects from "tuff-core/objects"
@@ -103,6 +103,8 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     columnStates: ColumnState[] = []
     columnCount = 0
 
+    tableFields!: FormFields<TableRef>
+
     updateColumnEditors() {
         this.assignCollection('columns', ColumnEditor, this.columnStates)
     }
@@ -116,6 +118,8 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     async init () {
         this.table = this.state.tableView.table
         this.modelDef = this.state.tableView.modelDef
+
+        this.tableFields = new FormFields(this, {...this.table})
 
         // initialize the columns states
         const columns: ColumnRef[] = this.table.columns || []
@@ -163,6 +167,13 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     }
 
     renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.tt-form.padded.gap.justify-end.align-center', row => {
+            row.div('.tt-compound-field', field => {
+                field.label().text("Prefix:")
+                this.tableFields.textInput(field, 'prefix')
+            })
+            row.div('.stretch').text("All columns will be prefixed with this")
+        })
         parent.div('.dd-columns-editor-table', table => {
             table.div('.dd-editor-header', header => {
                 header.div('.name').label({text: "Name"})
@@ -183,11 +194,12 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         }
     }
 
-    save() {
+    async save() {
         const columns = this.columnStates.map(state => {
             return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
         })
-        this.state.tableView.updateColumns(columns)
+        const tableData = await this.tableFields.serialize()
+        this.state.tableView.updateColumns(columns, tableData.prefix)
         this.pop()
     }
 

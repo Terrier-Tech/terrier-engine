@@ -2,7 +2,7 @@ import {Logger} from "tuff-core/logging"
 import {typedKey} from "tuff-core/messages"
 import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import {Action, IconName} from "./theme";
+import {Action, IconName, Packet} from "./theme"
 
 const log = new Logger("Tabs")
 
@@ -14,6 +14,8 @@ export type TabParams = {
     title: string
     icon?: IconName
     state?: 'enabled' | 'disabled' | 'hidden'
+    classes?: string[]
+    click?: Packet
 }
 
 /**
@@ -82,6 +84,24 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     }
 
     /**
+     * Removes the tab with the given key.
+     * @param key
+     */
+    removeTab(key: string) {
+        const tab = this.tabs[key]
+        if (tab) {
+            log.info(`Removing tab ${key}`, tab)
+            delete this.tabs[key]
+            this.removeChild(tab.part)
+            this.state.currentTab = undefined
+            this.dirty()
+        }
+        else {
+            log.warn(`No tab ${key} to remove!`)
+        }
+    }
+
+    /**
      * Changes this tab container to show the tab with the given key
      * @param tabKey
      */
@@ -137,6 +157,9 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                         }
                         a.span({text: tab.title})
                         a.emitClick(this.changeTabKey, {tabKey: tab.key})
+                        if (tab.click) {
+                            a.emitClick(tab.click.key, tab.click.data || {})
+                        }
                     })
                 }
                 if (this._afterAction) {
@@ -146,9 +169,12 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
             })
 
             if (currentTabKey) {
-                const currentTabPart = this.tabs[currentTabKey].part
+                const currentTab = this.tabs[currentTabKey]
                 container.div('.tt-tab-content', panel => {
-                    panel.part(currentTabPart as StatelessPart)
+                    if (currentTab.classes?.length) {
+                        panel.class(...currentTab.classes)
+                    }
+                    panel.part(currentTab.part as StatelessPart)
                 })
             }
         })

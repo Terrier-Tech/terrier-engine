@@ -1,8 +1,10 @@
-import {Part} from "tuff-core/parts"
+import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "../app"
 import Loading from "../loading"
-import Theme from "../theme"
+import Theme, {IconName} from "../theme"
 import Toasts, {ToastOptions} from "../toasts"
+import {DbErrors} from "../db-client"
+import inflection from "inflection";
 
 /**
  * Base class for ALL parts in a Terrier application.
@@ -75,6 +77,20 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
     }
 
 
+    /// Errors
+
+    renderErrorBubble(parent: PartTag, errors: DbErrors<any>) {
+        parent.div('.tt-bubble.alert', bubble => {
+            bubble.ul(ul => {
+                for (const kv of Object.entries(errors)) {
+                    const name = inflection.titleize(kv[0])
+                    ul.li().text(`${name} ${kv[1]}`)
+                }
+            })
+        })
+    }
+
+
     /// Toasts
 
     /**
@@ -84,6 +100,33 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
      */
     showToast(message: string, options: ToastOptions) {
         Toasts.show(message, options, this.theme)
+    }
+
+    /**
+     * Show an alert toast with the given message.
+     * @param message
+     * @param icon
+     */
+    alertToast(message: string, icon?: IconName) {
+        this.showToast(message, {icon, color: 'alert'})
+    }
+
+    /**
+     * Show an info toast with the given message.
+     * @param message
+     * @param icon
+     */
+    infoToast(message: string, icon?: IconName) {
+        this.showToast(message, {icon, color: 'primary'})
+    }
+
+    /**
+     * Show a success toast with the given message.
+     * @param message
+     * @param icon
+     */
+    successToast(message: string, icon?: IconName) {
+        this.showToast(message, {icon, color: 'success'})
     }
 
 }

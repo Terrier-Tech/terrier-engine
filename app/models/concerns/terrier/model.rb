@@ -1,3 +1,5 @@
+require 'kramdown'
+
 class ValidationError < StandardError
 
   attr_reader :errors
@@ -12,6 +14,19 @@ module Terrier::Model
   extend ActiveSupport::Concern
 
   included do
+
+    # allow custom types for columns
+    @type_map = {}
+
+    class << self
+      attr_reader :type_map
+    end
+
+    # registers a type override for the particular column
+    def self.register_type(col, type)
+      @type_map ||= {}
+      @type_map[col] = type
+    end
 
     ## Upserting (Instance Methods)
 
@@ -144,6 +159,7 @@ module Terrier::Model
     # creates a field containing an integer cents value, as well as dollars accessors
     def cents_field(name, options={})
       options[:type] = Integer
+      register_type name, 'cents'
       define_method "#{name}_dollars" do
         c = self.send(name)
         if c
@@ -393,6 +409,24 @@ module Terrier::Model
         record.errors
       else
         { base: [ex.message] }
+      end
+    end
+
+
+    ## Markdown
+
+    def markdown_field(name)
+      self.before_validation -> do
+        raw = self.send("#{name}_raw")
+        if raw
+
+          # replace multiple equals or dashes with something better so it doesn't turn into a header
+          raw = raw.gsub /^=+$/, '<hr>'
+          raw = raw.gsub /^-+$/, '<hr>'
+
+          rendered = Kramdown::Document.new(raw, parse_block_html: true).to_html
+          self.send("#{name}_html=", rendered)
+        end
       end
     end
 

@@ -14,7 +14,7 @@ end
 # Base class for references to both from-tables and joined-tables
 class TableRef < QueryModel
   # from the frontend
-  attr_accessor :model, :columns, :joins, :filters
+  attr_accessor :model, :prefix, :columns, :joins, :filters
 
   # used by the runner
   attr_accessor :table_name, :alias, :model_class
@@ -36,7 +36,7 @@ class TableRef < QueryModel
   # Recursively builds the query through the join tree.
   # Assumes #build_from or #build_join has already been called
   # @param builder [SqlBuilder]
-  def build_recursive(builder)
+  def build_recursive(builder, params={})
     # columns
     col_selects = (@columns || []).map do |col|
       col.to_select self, builder
@@ -48,7 +48,7 @@ class TableRef < QueryModel
     # filters
     if @filters.present?
       @filters.each do |filter|
-        filter.build builder, self
+        filter.build builder, self, params
       end
     end
     
@@ -56,7 +56,7 @@ class TableRef < QueryModel
     if @joins.present?
       @joins = @joins.values.map { |join| JoinedTableRef.new(@engine, join, self) }
       @joins.each do |join|
-        join.build_join builder
+        join.build_join builder, params
       end
     end
   end
@@ -77,9 +77,9 @@ class FromTableRef < TableRef
 
   # Adds the from statement, then calls #build_recursive
   # @param builder [SqlBuilder]
-  def build_from(builder)
+  def build_from(builder, params = {})
     builder.from @table_name, @alias
-    self.build_recursive builder
+    self.build_recursive builder, params
   end
 
 end
@@ -107,7 +107,7 @@ class JoinedTableRef < TableRef
 
   # Adds the join statement, then calls #build_recursive
   # @param builder [SqlBuilder]
-  def build_join(builder)
+  def build_join(builder, params={})
     type = @join_type.presence || 'left'
     raise "Invalid join type '#{type}'" unless %w[inner left].include?(type)
     fk = "#{@belongs_to}_id"
@@ -155,15 +155,34 @@ class ColumnRef < QueryModel
     elsif @grouped # grouped but no function
       builder.group_by s
     end
-    if @alias.present?
-      s = "#{s} as #{@alias}"
+    a = @alias.presence
+    if table.prefix.present?
+      a = [table.prefix, a || name].compact.join
+    end
+    if a.present? && a != s
+      s = "#{s} as #{a}"
     end
     s
   end
 end
 
 class Filter < QueryModel
-  attr_accessor :column, :filter_type, :operator, :value, :range, :in, :editable, :edit_label
+  attr_accessor :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
+
+  # this should match the implementation of `Filters.toInput` on the frontend
+  def compute_input_key(table)
+    key = "#{table.model}.#{@column}"
+    case @filter_type
+    when 'inclusion'
+      "#{key}#in"
+    when 'date_range'
+      "#{key}#range"
+    when 'direct'
+      "#{key}##{@operator}"
+    else
+      raise "Don't know how to compute an input_key for a #{@filter_type} filter"
+    end
+  end
 
   def sql_operator
     case @operator
@@ -186,17 +205,27 @@ class Filter < QueryModel
     end
   end
 
-  def build(builder, table)
+  def build(builder, table, params={})
+    # possibly override the value from the params
+    input_key = compute_input_key table
+    input_value = params[input_key]
+
     case @filter_type
     when 'direct'
       op = sql_operator
-      builder.where "#{table.alias}.#{@column} #{op} ?", @value
+      val = input_value.presence || @value
+      params[input_key] = val
+      builder.where "#{table.alias}.#{@column} #{op} ?", val
     when 'date_range'
-      period = DatePeriod.parse @range
+      period = DatePeriod.parse(input_value.presence || @range)
+      params[input_key] = period.to_s
       builder.where "#{table.alias}.#{@column} >= ?", period.start_date
       builder.where "#{table.alias}.#{@column} < ?", period.end_date
     when 'inclusion'
-      builder.where "#{table.alias}.#{@column} in ?", @in
+      val = input_value.presence || @in
+      val = val.split(',').map(&:strip) if val.is_a?(String)
+      params[input_key] = val.join(', ')
+      builder.where "#{table.alias}.#{@column} in ?", val
     else
       raise "Unknown filter type '#{@filter_type}'"
     end
@@ -205,6 +234,8 @@ end
 
 class QueryEngine
   include Loggable
+
+  attr_reader :query
 
   def initialize(query)
     query = JSON.parse(query) if query.is_a?(String)
@@ -216,12 +247,20 @@ class QueryEngine
   end
 
   def execute!(params={})
-
+    builder = self.to_sql_builder params
+    rows = builder.exec
+    {
+      rows: rows,
+      columns: rows.columns
+    }
   end
 
   def to_sql_builder(params={})
-    builder = SqlBuilder.new
-    @from.build_from builder
+    builder = SqlBuilder.new.as_objects
+    if params[:limit].present?
+      builder.limit params[:limit].to_i
+    end
+    @from.build_from builder, params
     builder
   end
 

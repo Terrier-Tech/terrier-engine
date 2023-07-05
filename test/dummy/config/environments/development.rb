@@ -58,6 +58,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
-  config.autoload_paths << Rails.root.join("lib/terrier/frontend")
-  config.autoload_paths << Rails.root.join("lib/terrier/data_dive")
+  config.autoload_paths << Terrier::Engine.root.join("lib/terrier/frontend")
+  config.autoload_paths << Terrier::Engine.root.join("lib/terrier/api")
+  config.autoload_paths << Terrier::Engine.root.join("lib/terrier/data_dive")
+  config.autoload_paths << Terrier::Engine.root.join("lib/terrier")
 end

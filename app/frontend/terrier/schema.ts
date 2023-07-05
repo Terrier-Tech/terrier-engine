@@ -38,10 +38,15 @@ export type HasManyDef = {
  * Definition for a single model in the schema.
  */
 export type ModelDef = {
+    name: string
     table_name: string
     columns: Record<string, ColumnDef>
     belongs_to: Record<string, BelongsToDef>
     has_many: Record<string, HasManyDef>
+    metadata?: {
+        description?: string
+        common?: boolean
+    }
 }
 
 /**
@@ -83,12 +88,35 @@ function belongsToDisplay(belongsTo: BelongsToDef): string {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Meta
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Gets all models with common=true in the metadata.
+ * @param schema
+ */
+function commonModels(schema: SchemaDef): ModelDef[] {
+    return Object.values(schema.models).filter(m => m.metadata?.common)
+}
+
+/**
+ * Gets all models with common=false (or not defined) in the metadata.
+ * @param schema
+ */
+function uncommonModels(schema: SchemaDef): ModelDef[] {
+    return Object.values(schema.models).filter(m => !(m.metadata?.common))
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
 
 const Schema = {
     get,
-    belongsToDisplay
+    belongsToDisplay,
+    commonModels,
+    uncommonModels
 }
 
 export default Schema

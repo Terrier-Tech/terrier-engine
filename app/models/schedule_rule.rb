@@ -1,6 +1,4 @@
 
-# require_relative '../../app/models/concerns/terrier/embedded'
-
 class Array
   def index_runs
     runs = []

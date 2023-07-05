@@ -4,24 +4,39 @@ require 'terrier/frontend/base_generator'
 class ModelGenerator < BaseGenerator
 
   # @param options [Hash] a hash of options for generating the model
-  # @option options [Hash<String,Array<String>>] :imports A hash of import paths to a list of symbols
+  # @option options [Hash<String,Array<String>>] :imports a hash of import paths to a list of symbols
+  # @option options [Hash<String,String>] :type_map a hash of type names to map to other names
+  # @option options [String] :prefix a model name prefix used to filter out the included models
   def initialize(options={})
     super
     @has_shrine = defined?(Shrine)
 
     @imports = options[:imports] || {}
+    @prefix = options[:prefix].presence
+    @type_map = options[:type_map] || {}
 
     # add the default imports
     @imports['tuff-core/types'] ||= []
     @imports['tuff-core/types'] << 'OptionalProps'
+
+    if @has_shrine
+      @imports['../../terrier/attachments'] = ['Attachment']
+    end
+  end
+
+  def each_model
+    ApplicationRecord.descendants.each do |model|
+      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+      next if @prefix && !model.name.start_with?(@prefix) # filter by prefix
+      yield model
+    end
   end
 
   def run
     # load all model metadata
     Rails.application.eager_load!
     models = {}
-    ApplicationRecord.descendants.each do |model|
-      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+    each_model do |model|
       enum_fields = {}
       model.validators.each do |v|
         if v.options[:in].present? && v.attributes.length == 1
@@ -79,10 +94,11 @@ class ModelGenerator < BaseGenerator
       raw_cols = {}
       model[:columns].each do |col|
         enum_field = model[:enum_fields][col.name.to_sym]
+        type = enum_field ? 'enum' : model[:type_map][col.name.to_sym] || col.type
         raw_col = {
           name: col.name,
           nullable: col.null,
-          type: enum_field ? 'enum' : col.type
+          type: type
         }
         if col.sql_type_metadata.sql_type.ends_with?('[]')
           raw_col[:array] = true
@@ -105,8 +121,7 @@ class ModelGenerator < BaseGenerator
   def load_models
     Rails.application.eager_load!
     models = {}
-    ApplicationRecord.descendants.each do |model|
-      next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
+    each_model do |model|
       enum_fields = {}
       model.validators.each do |v|
         if v.options[:in].present? && v.attributes.length == 1
@@ -119,8 +134,10 @@ class ModelGenerator < BaseGenerator
         reflections: model.reflections,
         enum_fields: enum_fields,
         attachments: attachments,
-        name: model,
-        table_name: model.table_name
+        name: model.name,
+        table_name: model.table_name,
+        type_map: model.type_map || {},
+        metadata: model.respond_to?(:metadata) ? model.metadata : nil
       }
     end
     models
@@ -181,6 +198,26 @@ class ModelGenerator < BaseGenerator
     else
       type
     end
+  end
+
+  # @param ref [ActiveRecord::Reflection] a HasMany or BelongsTo reflection
+  # @return [String] the typescript type of the given reflection
+  def compute_ref_type(ref)
+    t = ref.options[:class_name].presence || ref.name.to_s.classify
+    begin
+      if t.constantize.exclude_from_frontend?
+        return nil
+      end
+    end
+    if @type_map[t]
+      t = @type_map[t]
+    else
+      t
+    end
+    if ref.class == ActiveRecord::Reflection::HasManyReflection
+      t = "#{t}[]"
+    end
+    t
   end
 
 end

@@ -41,4 +41,11 @@ class Invoice < ApplicationRecord
   enum_field :status, %w[pending open paid void]
 
   string_array_field :lines
+
+  def self.metadata
+    {
+      description: "Holds charges for work performed at a location",
+      common: true
+    }
+  end
 end

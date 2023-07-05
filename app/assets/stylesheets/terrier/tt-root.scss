@@ -3,12 +3,23 @@
 */
 
 :root {
+	// layout
 	--tt-pad: 16px;
 	--tt-gap: var(--tt-pad);
+
+	// font sizes
 	--tt-body-font-size: 16px;
 	--tt-caption-font-size: 14px;
 	--tt-label-font-size: 12px;
+
+	// other sizes
 	--tt-border-radius: 6px;
+	--tt-scale-push-factor: 0.04;
+	--tt-button-height: 40px;
+	--tt-icon-size: 28px;
+	--tt-animation-duration: 0.2s;
+
+	// colors
 	--tt-border-color: #ddd;
 	--tt-primary-color: #d69338;
 	--tt-secondary-color: #1e6c7b;
@@ -25,24 +36,30 @@
 	--tt-white-color: #fff;
 	--tt-shadow-color: rgba(0, 0, 0, 0.15);
 	--tt-shadow-spread: 6px;
+	--tt-inset-background: #f8f8f8;
+	--tt-dropdown-color: var(--tt-primary-color);
+
+	// tooltips
+	--tt-tooltip-background: var(--tt-white-color);
+	--tt-tooltip-foreground: var(--tt-secondary-color);
+
+	// breakpoints
 	--tt-content-width: 1000px; // full-width content
 	--tt-tablet-breakpoint: 1050px; // tablet portrait
 	--tt-mobile-breakpoint: 850px; // tablet portrait
 	--tt-phone-breakpoint: 550px;
-	--tt-scale-push-factor: 0.04;
-	--tt-button-height: 40px;
-	--tt-icon-size: 28px;
-	--tt-inset-background: #f8f8f8;
-	--tt-dropdown-color: var(--tt-primary-color);
-	--tt-tooltip-background: var(--tt-white-color);
-	--tt-tooltip-foreground: var(--tt-primary-color);
-	--tt-animation-duration: 0.2s;
+	--tt-sheet-width: 420px;
+
+	// forms
 	--tt-field-height: 36px;
 	--tt-field-border-color: #bbb;
+	--tt-field-background: #fff;
 	--tt-inactive-background: var(--tt-odd-row-background);
 
+	// modals
 	--tt-modal-header-font-size: 24px;
 
+	// toolbars
 	--tt-toolbar-font-size: 16px;
 	--tt-toolbar-height: 40px;
 }

@@ -1,3 +1,14 @@
+DUMMY_USER_ATTRS = {
+  email: 'terry@terrier.tech',
+  first_name: "Terry",
+  last_name: "Terrier",
+  extern_id: 'terry',
+  role: 'office',
+  password: 'password',
+  password_confirmation: 'password',
+  created_by_name: 'system'
+}
+
 class ApplicationController < ActionController::Base
   include Terrier::RenderingBase
   include Loggable
@@ -15,7 +26,14 @@ class ApplicationController < ActionController::Base
   end
 
   def terrier_change_user
-    'dummy'
+    # ensure there's always a dummy user
+    user = User.where(extern_id: DUMMY_USER_ATTRS[:extern_id]).first
+    unless user
+      user = User.new(DUMMY_USER_ATTRS)
+      user.save!
+    end
+    user.role = 'super'
+    user
   end
 
 end

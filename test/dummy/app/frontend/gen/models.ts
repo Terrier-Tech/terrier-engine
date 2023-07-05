@@ -44,6 +44,146 @@ export const ContactEnumFields = {
     contact_type: ["customer", "employee"] as const,
 }
 
+export type DdDive = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    owner_id?: string
+    dd_dive_group_id?: string
+    name: string
+    description_raw?: string
+    description_html?: string
+    visibility: "public" | "private"
+    sort_order?: number
+    query_data?: { queries: Query[] }
+    created_by?: User
+    updated_by?: User
+    dd_dive_group?: DdDiveGroup
+    dd_dive_runs?: DdDiveRun[]
+    owner?: User
+}
+
+export type UnpersistedDdDive = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    owner_id?: string
+    dd_dive_group_id?: string
+    name: string
+    description_raw?: string
+    description_html?: string
+    visibility: "public" | "private"
+    sort_order?: number
+    query_data?: { queries: Query[] }
+    created_by?: User
+    updated_by?: User
+    dd_dive_group?: DdDiveGroup
+    dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_id">[]
+    owner?: User
+}
+
+export const DdDiveEnumFields = {
+    visibility: ["public", "private"] as const,
+}
+
+export type DdDiveGroup = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    icon?: string
+    description_raw?: string
+    description_html?: string
+    sort_order?: number
+    group_types: string[]
+    created_by?: User
+    updated_by?: User
+    dd_dives?: DdDive[]
+}
+
+export type UnpersistedDdDiveGroup = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    icon?: string
+    description_raw?: string
+    description_html?: string
+    sort_order?: number
+    group_types: string[]
+    created_by?: User
+    updated_by?: User
+    dd_dives?: OptionalProps<UnpersistedDdDive, "dd_dive_group_id">[]
+}
+
+export type DdDiveRun = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    dd_dive_id?: string
+    input_data?: object
+    output_data?: object
+    status: "running" | "success" | "error"
+    created_by?: User
+    updated_by?: User
+    dd_dive?: DdDive
+    output_file?: File
+}
+
+export type UnpersistedDdDiveRun = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    dd_dive_id?: string
+    input_data?: object
+    output_data?: object
+    status: "running" | "success" | "error"
+    created_by?: User
+    updated_by?: User
+    dd_dive?: DdDive
+    output_file?: File
+}
+
+export const DdDiveRunEnumFields = {
+    status: ["running", "success", "error"] as const,
+}
+
 export type Invoice = {
     id: string
     created_at: string
@@ -440,6 +580,9 @@ export const WorkOrderEnumFields = {
  */
 export type PersistedModelTypeMap = {
     contact: Contact
+    dd_dive: DdDive
+    dd_dive_group: DdDiveGroup
+    dd_dive_run: DdDiveRun
     invoice: Invoice
     location: Location
     script: Script
@@ -454,6 +597,9 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
     contact: UnpersistedContact
+    dd_dive: UnpersistedDdDive
+    dd_dive_group: UnpersistedDdDiveGroup
+    dd_dive_run: UnpersistedDdDiveRun
     invoice: UnpersistedInvoice
     location: UnpersistedLocation
     script: UnpersistedScript
@@ -468,6 +614,9 @@ export type UnpersistedModelTypeMap = {
  */
 export type ModelIncludesMap = {
     contact: "created_by" | "location" | "updated_by" | "user"
+    dd_dive: "created_by" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
+    dd_dive_group: "created_by" | "dd_dives" | "updated_by"
+    dd_dive_run: "created_by" | "dd_dive" | "updated_by"
     invoice: "created_by" | "location" | "updated_by" | "work_orders"
     location: "contacts" | "created_by" | "invoices" | "updated_by" | "work_orders"
     script: "created_by" | "script_runs" | "updated_by"

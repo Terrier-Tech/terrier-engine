@@ -147,4 +147,22 @@ module Terrier::RenderingBase
     uri.to_s
   end
 
+
+  ## Streaming
+
+  # Pass a block that will receive the streamer object used to stream the response:
+  #   stream_response do |stream|
+  #     stream.write 'foo'
+  #   end
+  def stream_response
+    ResponseStreamer.new(self).run do |stream|
+      begin
+        yield stream
+      rescue => ex
+        log_exception ex
+        stream.error ex
+      end
+    end
+  end
+
 end

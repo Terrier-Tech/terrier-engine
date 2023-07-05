@@ -4,6 +4,11 @@ import { QueryParams } from "tuff-core/urls"
 const log = new Logger('Api')
 log.level = 'debug'
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Basic Requests
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * All API responses containing these fields.
  */
@@ -104,9 +109,123 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
 }
 
 
+////////////////////////////////////////////////////////////////////////////////
+// Event Streams
+////////////////////////////////////////////////////////////////////////////////
+
+type LogLevel = 'success' | 'info' | 'warn' | 'debug'
+
+/**
+ * Type of log events from a streaming response.
+ */
+export type LogEvent = {
+    level: LogLevel
+    prefix?: string
+    message: string
+}
+
+/**
+ * Type of error events from a streaming response.
+ */
+export type ErrorEvent = {
+    prefix?: string
+    message: string
+    backtrace: string[]
+}
+
+/**
+ * Configure a `Streamer`.
+ */
+export type StreamOptions = {
+    keepAlive?: boolean
+}
+
+type noArgListener = () => any
+
+type StreamLifecycle = 'close'
+
+/**
+ * Exposes a typesafe API for handling streaming responses using SSE.
+ */
+export class Streamer {
+
+    sse!: EventSource
+    lifecycleListeners: Record<StreamLifecycle, noArgListener[]> = {
+        close: []
+    }
+
+    constructor(readonly url: string, readonly options: StreamOptions) {
+        this.sse = new EventSource(url)
+
+        // this is a special event sent by the ResponseStreamer on the server
+        // to tell us that the request is done
+        this.sse.addEventListener('_close', evt => {
+            if (!this.options.keepAlive) {
+                log.debug(`Closing Streamer at ${url}`, evt)
+                this.sse.close()
+                for (const listener of this.lifecycleListeners['close']) {
+                    listener()
+                }
+            }
+        })
+    }
+
+    /**
+     * Register a listener for events of the given type.
+     * @param type
+     * @param listener
+     */
+    on<T>(type: string, listener: (event: T) => any) {
+        this.sse.addEventListener(type, event => {
+            const data = JSON.parse(event.data) as T
+            log.debug(`${type} event`, data)
+            listener(data)
+        })
+        return this
+    }
+
+    /**
+     * Listen specifically for log events.
+     * @param listener
+     */
+    onLog(listener: (event: LogEvent) => any) {
+        return this.on<LogEvent>('_log', listener)
+    }
+
+    /**
+     * Listen specifically for error events.
+     * @param listener
+     */
+    onError(listener: (event: ErrorEvent) => any) {
+        return this.on<ErrorEvent>('_error', listener)
+    }
+
+    onClose(listener: noArgListener) {
+        this.lifecycleListeners['close'].push(listener)
+    }
+}
+
+
+
+/**
+ * Creates a streaming response for the given endpoint.
+ * @param url
+ * @param options pass `keepAlive: true` to keep retrying the request
+ * @return a `Streamer` on which you attach event handlers
+ */
+function stream(url: string, options: StreamOptions={}): Streamer {
+    return new Streamer(url, options)
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Export
+////////////////////////////////////////////////////////////////////////////////
+
 const Api = {
     safeGet,
     safePost,
-    post
+    post,
+    stream
 }
 export default Api

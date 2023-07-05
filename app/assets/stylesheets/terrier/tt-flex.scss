@@ -45,6 +45,13 @@
 	}
 }
 
+a.tt-flex {
+	gap: 0.5em;
+	&.alert {
+		color: var(--tt-alert-color);
+	}
+}
+
 
 @media screen and (max-width: $phone-breakpoint) {
 	.tt-flex.phone-collapsible {

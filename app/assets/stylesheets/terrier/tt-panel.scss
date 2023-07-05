@@ -1,9 +1,7 @@
 @import "tt-mixins";
 
 .tt-panel {
-	border-radius: var(--tt-border-radius);
-	background: var(--tt-panel-background);
-	@include tt-box-shadow;
+	@include panel-like;
 	display: flex;
 	flex-direction: column;
 
@@ -12,40 +10,110 @@
 		display: flex;
 		align-items: center;
 		gap: var(--tt-gap);
+		padding: var(--tt-pad);
+		// the vertical padding is handled by the gap
+		padding-bottom: 0;
 		h1, h2, h3, h4, h5 {
 			margin: 0;
+			font-weight: normal;
 			display: flex;
-			gap: var(--tt-gap);
+			gap: 0.5em;
 			flex: 1 1 auto;
 			min-width: 0;
+			i {
+				transform: scale(1.25);
+			}
+		}
+		.tertiary-actions {
+			display: flex;
+			align-items: center;
+			gap: var(--tt-gap);
 		}
 		a {
 			display: block;
 			text-align: center;
 			@include tt-scale-push;
+			// actions with text have a small label with larger icon
+			.title {
+				font-size: var(--tt-label-font-size);
+			}
+			i {
+				font-size: 150%;
+			}
+			// actions with only an icon have a larger icon
+			&.icon-only {
+				font-size: 125%;
+			}
 		}
 	}
 	.panel-content {
 		display: flex;
 		flex-direction: column;
+		flex: 1 1 auto;
 		&.gap {
 			gap: var(--tt-gap);
+		}
+		&.padded {
+			// only horizontal padding since the vertical is handled by the gap
+			padding: 0 var(--tt-pad);
 		}
 	}
 	.panel-actions {
 		display: flex;
 		align-items: center;
+		border-top: 1px solid var(--tt-border-color);
+		background-color: var(--tt-border-color);
+		@include tt-bottom-rounded-corners;
+		gap: 1px;
 		.primary-actions, .secondary-actions {
-			gap: var(--tt-gap);
+			gap: 1px;
 			display: flex;
 			align-items: center;
+			flex: 1 1 auto;
 			a {
-				@include tt-button;
+				background-color: var(--tt-inset-background);
+				@include tt-inset-text;
+				flex: 1 1 auto;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				gap: 0.5em;
+				font-weight: bold;
+				padding: var(--tt-pad);
+				i {
+					transform: scale(1.2);
+				}
+				&.primary {
+					color: var(--tt-primary-color);
+				}
+				&.secondary {
+					color: var(--tt-secondary-color);
+				}
+				&.alert {
+					color: var(--tt-alert-color);
+				}
+				&.pending {
+					color: var(--tt-pending-color);
+				}
+				&:hover {
+					filter: brightness(1.05);
+				}
+				&:active {
+					filter: brightness(0.95);
+				}
 			}
 		}
 		.primary-actions {
 			flex: 1 1 auto;
 			justify-content: right;
+			a:last-child {
+				border-bottom-right-radius: var(--tt-border-radius);
+			}
+		}
+		.secondary-actions {
+			a:first-child {
+				border-bottom-left-radius: var(--tt-border-radius);
+			}
 		}
 	}
 	&.padded {

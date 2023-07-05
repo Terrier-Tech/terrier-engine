@@ -1,0 +1,27 @@
+@import "tt-mixins";
+
+
+.tt-sheet-backdrop {
+	@include tt-fixed-fill;
+	background-color: rgba(#000, 0.2);
+}
+
+.tt-sheet {
+	position: fixed;
+	bottom: var(--tt-pad);
+	left: 0;
+	right: 0;
+	.tt-panel {
+		margin: 0 auto;
+		width: var(--tt-sheet-width);
+		max-width: 90%;
+		transform: translate(0, 150%);
+		transition: transform var(--tt-animation-duration) ease;
+		.panel-content {
+			padding-bottom: 2em;
+		}
+	}
+	&.show .tt-panel {
+		transform: translate(0, 0);
+	}
+}

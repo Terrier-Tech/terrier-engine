@@ -1,17 +1,35 @@
-import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
+import {NoState, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "../terrier/app"
+import {RouterPart} from "tuff-core/routing"
+import {routes} from "./dd-routes"
+import {DiveListPage} from "./dives/dive-list"
+import {Logger} from "tuff-core/logging"
+import DdSession from "./dd-session"
 
-export type DdAppState = {
-    part: PartConstructor<any, { }>
+Logger.level = 'debug'
+
+class ContentRouterPart extends RouterPart {
+    get defaultPart() {
+        return DiveListPage
+    }
+
+    get routes() {
+        return routes
+    }
+
 }
 
-export default class DdApp extends TerrierApp<DdAppState> {
+export default class DdApp extends TerrierApp<NoState> {
 
-    part!: StatelessPart
+    contentPart!: ContentRouterPart
+    session!: DdSession
 
     async init() {
         await super.init()
-        this.part = this.makePart(this.state.part, {})
+        this.contentPart = this.makePart(ContentRouterPart, {})
+
+        this.session = await DdSession.get()
+
         this.dirty()
     }
 
@@ -20,16 +38,8 @@ export default class DdApp extends TerrierApp<DdAppState> {
     }
 
     render(parent: PartTag) {
-        parent.part(this.part)
+        parent.part(this.contentPart)
         parent.part(this.overlayPart)
     }
 
-    static mountEntrypoint(part: PartConstructor<any, {}>, id: string) {
-        const container = document.getElementById(id)
-        if (container) {
-            Part.mount(DdApp, container, {part})
-        } else {
-            alert(`No entrypoint container '#${id}'!`)
-        }
-    }
 }

@@ -9,6 +9,8 @@ import {OverlayLayerType, OverlayPart} from "./overlays"
 
 // @ts-ignore
 import logoUrl from './images/optimized/terrier-hub-logo-light.svg'
+import Sheets, {AlertSheetState, ConfirmSheetState, Sheet, SheetState} from "./sheets";
+import {messages} from "tuff-core";
 
 const log = new Logger('App')
 Logger.level = 'info'
@@ -90,6 +92,60 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
         const modal = modalStack.pushModal(constructor, state)
         modalStack.dirty()
         return modal as ModalType
+    }
+
+
+    /// Sheets
+
+    /**
+     * Shows a confirm sheet to the user, asking them a question
+     * @param options
+     * @param callback gets called if the user hits "Confirm"
+     */
+    confirm(options: ConfirmSheetState, callback: () => any) {
+        const key = messages.untypedKey()
+        const state = {...options,
+            primaryActions: [
+                {
+                    title: 'Confirm',
+                    icon: 'glyp-checkmark',
+                    click: {key}
+                }
+            ],
+            secondaryActions: [
+                {
+                    title: 'Cancel',
+                    icon: 'glyp-close',
+                    classes: ['secondary'],
+                    click: {key: Sheets.clearKey}
+                }
+            ]
+        } as SheetState
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet<SheetState>, state, 'sheet')
+        sheet.onClick(key, _ => {
+            sheet.clear()
+            callback()
+        })
+        sheet.dirty()
+    }
+
+    /**
+     * Shows an alert sheet to the user with a message (but no choices).
+     * @param options
+     */
+    alert(options: AlertSheetState) {
+        const state = {...options,
+            primaryActions: [
+                {
+                    title: 'Okay',
+                    icon: 'glyp-checkmark',
+                    click: {key: Sheets.clearKey},
+                    classes: ['secondary']
+                }
+            ]
+        } as SheetState
+        const sheet = this.overlayPart.getOrCreateLayer(Sheet<SheetState>, state, 'sheet')
+        sheet.dirty()
     }
 
 

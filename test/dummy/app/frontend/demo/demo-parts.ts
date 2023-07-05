@@ -6,10 +6,16 @@ import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action, ColorName} from "@terrier/theme"
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
+import {Logger} from "tuff-core/logging"
+import Api from "@terrier/api";
+
+const log = new Logger("Demo Parts")
 
 const openModalKey = messages.untypedKey()
 const toastKey = messages.typedKey<{color: ColorName}>()
 const dropdownKey = messages.typedKey<{message: string}>()
+const streamingKey = messages.untypedKey()
+const sheetKey = messages.typedKey<{type: 'confirm'}>()
 
 
 class Panel extends PanelPart<NoState> {
@@ -18,9 +24,16 @@ class Panel extends PanelPart<NoState> {
         this.setTitle("Panel Header ")
 
         this.addAction({
+            title: 'Streaming',
+            icon: 'glyp-download',
+            click: {key: streamingKey}
+        })
+
+        this.addAction({
             title: "Dropdown",
+            icon: 'glyp-click',
             click: {key: dropdownKey, data: {message: "Simple Dropdown"}}
-        }, "primary")
+        }, "secondary")
 
         this.addAction({
             title: "Toast",
@@ -30,12 +43,38 @@ class Panel extends PanelPart<NoState> {
         }, "secondary")
 
         this.addAction({
-            title: "Tertiary",
-            classes: ['active']
+            icon: 'glyp-camera',
+            classes: ['active'],
+            tooltip: "Icon-Only"
+        }, "tertiary")
+
+        this.addAction({
+            title: "Confirm Sheet",
+            icon: 'glyp-help',
+            classes: ['active'],
+            click: {key: sheetKey, data: {type: 'confirm'}}
         }, "tertiary")
 
         this.onClick(toastKey, m => {
             Toasts.show(`${m.data!!.color} toast`, {color: m.data!!.color}, this.theme)
+        })
+
+        this.onClick(sheetKey, m => {
+            log.info(`Showing ${m.data?.type} sheet`)
+            switch (m.data?.type) {
+                case 'confirm':
+                    this.app.confirm({
+                        title: "Are you sure?",
+                        icon: 'glyp-help',
+                        body: "Are you sure you want to do a thing?"
+                    }, () => {
+                        this.app.alert({
+                            title: "Success!",
+                            icon: 'glyp-complete',
+                            body: "Okay, sounds good!"
+                        })
+                    })
+            }
         })
 
         const dropdownActions: Array<Action> = [
@@ -47,14 +86,18 @@ class Panel extends PanelPart<NoState> {
         this.onClick(dropdownKey, m => {
             this.toggleDropdown(ActionsDropdown, dropdownActions, m.event.target)
         })
+
+        this.onClick(streamingKey, _ => {
+            this.app.showModal(StreamingModal, {})
+        })
     }
 
     protected get panelClasses(): string[] {
-        return ['padded']
+        return []
     }
 
     renderContent(parent: PartTag) {
-        parent.div('.tt-flex.tablet-collapsible', row => {
+        parent.div('.tt-flex.tablet-collapsible.padded', row => {
             row.div('.stretch', col => {
                 col.p({text: "Stretch Column"})
                     .data({tooltip: "This is a tooltip"})
@@ -138,6 +181,46 @@ class DemoTabs extends TabContainerPart {
         this.setBeforeAction({title: "Before", icon: 'hub-arrow_left'})
         this.setAfterAction({title: "After", icon: 'hub-arrow_right'})
     }
+}
+
+
+type FooEvent = {
+    foo: string
+    time: string
+}
+
+class StreamingModal extends ModalPart<NoState> {
+
+    latestFoo?: FooEvent
+
+    async init() {
+        this.setTitle("Streaming")
+        this.setIcon('glyp-download')
+
+        Api.stream("/frontend/streaming")
+            .on<FooEvent>('foo', evt => {
+                this.latestFoo = evt
+                this.dirty()
+            })
+            .onLog(evt => {
+                log.info(`${evt.level} log event: ${evt.message}`)
+            })
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.column.padded.gap', col => {
+            col.h3('.text-center', h3 => {
+                if (this.latestFoo) {
+                    const foo = this.latestFoo
+                    h3.text(`foo <strong>${foo.foo}</strong> at ${foo.time}`)
+                }
+                else {
+                    h3.text("Waiting for response...")
+                }
+            })
+        })
+    }
+
 }
 
 

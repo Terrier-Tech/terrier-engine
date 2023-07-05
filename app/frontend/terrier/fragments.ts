@@ -11,6 +11,18 @@ abstract class ContentFragment {
         
     }
 
+
+    protected _classes: string[] = []
+
+    /**
+     * Add arbitrary classes to the top-level fragment.
+     * @param c
+     */
+    classes(...c: string[]) {
+        this._classes.push(...c)
+        return this
+    }
+
     protected _title?: string
 
     /**
@@ -93,7 +105,7 @@ export class PanelFragment extends ContentFragment {
                 }
             })
             panelActions(panel, this.actions, this.theme)
-        })
+        }).class(...this._classes)
     }
 
 }

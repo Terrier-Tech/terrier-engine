@@ -9,12 +9,12 @@
 
   export type <%= model_name %> = {
     <% model[:columns].each do |col| -%>
+      <% next if model[:attachments].include?(col.name.to_sym) -%>
       <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify -%>
-      <% next if ref_type.constantize.exclude_from_frontend? -%>
-      <% ref_type += '[]' if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
+      <% ref_type = compute_ref_type(ref) -%>
+      <% next unless ref_type -%>
       <%= ref_name %> ? : <%= ref_type %>
     <% end -%>
     <% model[:attachments].each do |attachment| -%>
@@ -24,14 +24,15 @@
 
   export type Unpersisted<%= model_name %> = {
     <% model[:columns].each do |col| -%>
+      <% next if model[:attachments].include?(col.name.to_sym) -%>
       <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
     <% end -%>
     <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = ref.options[:class_name].presence || ref.name.to_s.classify -%>
-      <% next if ref_type.constantize.exclude_from_frontend? -%>
-      <% if ref.class == ActiveRecord::Reflection::HasManyReflection -%>
+      <% ref_type = compute_ref_type(ref) -%>
+      <% next unless ref_type -%>
+      <% if ref_type.include?('[]') -%>
         <% fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id" -%>
-        <% ref_type = "OptionalProps<Unpersisted#{ref_type},'#{fk}'>[]" -%>
+        <% ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]" -%>
       <% end -%>
       <%= ref_name %>?: <%= ref_type %>
     <% end -%>

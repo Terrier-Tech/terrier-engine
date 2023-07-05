@@ -399,7 +399,7 @@ class ScriptSearcher
 		@resultsList = @ui.find '.results-list'
 		@bodyPane = @ui.find '.body-pane'
 		@resultsSummary = @ui.find '.script-search-input .results-summary'
-		@key = 0
+		@input_key = 0
 		@scriptMap = {}
 		@openScriptLink = @ui.find 'a.open-script'
 
@@ -445,7 +445,7 @@ class ScriptSearcher
 		if query.length < 3
 			this.clearResult()
 			return
-		@key += 1
+		@input_key += 1
 		data = {
 			key: @key
 			query: query
@@ -1389,7 +1389,7 @@ class SettingsModal
 	init: (@ui) ->
 		new ScheduleRulesEditor @ui.find('.schedule-column')
 
-		@form = @ui.find 'form'
+		@settingsForm = @ui.find 'form'
 		@errorExplanation = @ui.find '.error-explanation'
 		@errorExplanation.hide()
 		@id10tCount = 0

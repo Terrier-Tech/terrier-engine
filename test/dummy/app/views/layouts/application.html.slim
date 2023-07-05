@@ -15,7 +15,7 @@ html
 		= javascript_include_tag 'https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.2/ext-language_tools.js', 'data-turbolinks-track': 'reload'
 		- if @entrypoint.present?
 			= vite_client_tag
-			= vite_typescript_tag @entrypoint
+			= vite_typescript_tag @entrypoint, 'data-turbolinks-track': 'reload'
 	body
 		#application
 			#top-bar

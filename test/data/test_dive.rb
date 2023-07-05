@@ -2,8 +2,9 @@ module TestDive
 
   def self.get
     {
+      id: 'test',
       name: "Test",
-      queries: [self.order_summary, self.order_details]
+      query_data: {queries: [self.order_details, self.order_summary]}
     }
   end
 
@@ -14,6 +15,9 @@ module TestDive
       from: {
         model: 'WorkOrder',
         columns: [
+          {
+            name: 'id'
+          },
           {
             name: 'time'
           },
@@ -45,23 +49,23 @@ module TestDive
         joins: {
           "location": {
             model: 'Location',
+            prefix: 'location_',
             belongs_to: 'location',
             join_type: 'inner',
             columns: [
               {
-                name: 'number',
-                alias: 'location_number'
+                name: 'number'
               },
               {
                 name: 'display_name',
-                alias: 'location_name'
+                alias: 'name'
               }
             ],
             filters: [
               {
                 filter_type: 'direct',
                 column: 'zip',
-                operator: 'eq',
+                operator: 'ne',
                 value: '55122',
                 editable: 'required',
                 edit_label: 'Zip Code'

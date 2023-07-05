@@ -1,14 +1,16 @@
 import {Part, PartTag} from "tuff-core/parts"
-import Dates, {DateRange, VirtualDatePeriod, VirtualDateRange} from "./dates"
+import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableView, TableRef} from "./tables"
+import {TableRef, TableView} from "./tables"
 import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
 import inflection from "inflection"
 import {ModalPart} from "../../terrier/modals";
-import TerrierFormPart from "../../terrier/parts/terrier-form-part";
-import {Dropdown} from "../../terrier/dropdowns";
+import TerrierFormPart from "../../terrier/parts/terrier-form-part"
+import {Dropdown} from "../../terrier/dropdowns"
+import dayjs from "dayjs";
+import Format from "../../terrier/format";
 
 const log = new Logger("Filters")
 
@@ -30,11 +32,15 @@ export type DirectFilter = BaseFilter & {
     filter_type: 'direct'
     operator: DirectOperator
     value: string
+    numeric_value?: number
+    column_type?: 'text' | 'number' | 'cents'
 }
+
+// type DirectColumnType = DirectFilter['column_type']
 
 export type DateRangeFilter = BaseFilter & {
     filter_type: 'date_range'
-    range: DateRange
+    range: VirtualDateRange
 }
 
 export type InclusionFilter = BaseFilter & {
@@ -80,13 +86,20 @@ function operatorDisplay(op: DirectOperator): string {
 }
 
 
-function render(parent: PartTag, filter: Filter) {
+function renderStatic(parent: PartTag, filter: Filter) {
     switch (filter.filter_type) {
         case 'direct':
             parent.div('.column').text(filter.column)
             parent.div('.operator').text(operatorDisplay(filter.operator))
-            parent.div('.value').text(filter.value)
-            return
+            switch (filter.column_type) {
+                case 'cents':
+                    parent.div('.value').text(Format.cents(filter.value))
+                    break
+                default:
+                    parent.div('.value').text(filter.value)
+                    break
+            }
+            break
         case 'date_range':
             parent.div('.column').text(filter.column)
             parent.div('.value').text(Dates.rangeDisplay(filter.range))
@@ -308,6 +321,33 @@ class FilterEditorContainer extends Part<FilterState> {
 
 class DirectFilterEditor extends FilterEditor<DirectFilter> {
 
+    numericChangeKey = messages.untypedKey()
+
+    async init() {
+        await super.init()
+
+        if (this.columnDef?.type == 'cents') {
+            this.state.column_type = 'cents'
+            this.state.numeric_value = parseInt(this.state.value) / 100
+        }
+        else if (this.columnDef?.type == 'number') {
+            this.state.column_type = 'number'
+            this.state.numeric_value = parseFloat(this.state.value)
+        }
+
+        // for numeric types, we use a number input and translate the
+        // value back to the string value field whenever it changes
+        this.onChange(this.numericChangeKey, m => {
+            log.info(`Direct filter for ${this.columnDef?.name} numeric value changed to ${m.value}`)
+            if (this.state.column_type == 'cents') {
+                this.state.value = Math.round(parseFloat(m.value)*100).toString()
+            }
+            else {
+                this.state.value = m.value
+            }
+        })
+    }
+
     render(parent: PartTag) {
         parent.div('.column', col => {
             col.div('.tt-readonly-field', {text: this.state.column})
@@ -319,7 +359,21 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
             this.select(col, 'operator', operatorOptions)
         })
         parent.div('.filter', col => {
-            this.textInput(col, 'value', {placeholder: "Value"})
+            switch (this.state.column_type) {
+                case 'cents':
+                    col.div('.tt-compound-field', field => {
+                        field.label().text('$')
+                        this.numberInput(field, 'numeric_value', {placeholder: "Value"})
+                            .emitChange(this.numericChangeKey)
+                    })
+                    break
+                case 'number':
+                    this.numberInput(col, 'numeric_value', {placeholder: "Value"})
+                        .emitChange(this.numericChangeKey)
+                    break
+                default:
+                    this.textInput(col, 'value', {placeholder: "Value"})
+            }
         })
         this.renderActions(parent)
     }
@@ -340,7 +394,6 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
         await super.init()
 
         this.values = new Set(this.state.in || [])
-
         this.onChange(inclusionChangedKey, m => {
             const val = m.data.value
             const checked = (m.event.target as HTMLInputElement).checked
@@ -364,7 +417,7 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
         })
         parent.div('.filter', col => {
             if (this.columnDef?.possible_values?.length) {
-                col.div('.tt-flex.gap.wrap.possible-values', row => {
+                col.div('.tt-flex.gap.wrap.possible-values.align-center', row => {
                     for (const val of this.columnDef!.possible_values!) {
                         row.label('.body-size', label => {
                             label.input({type: 'checkbox', checked: this.values.has(val)})
@@ -435,7 +488,7 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
         parent.div('.filter.column', cell => {
 
             // the actual inputs
-            cell.div('.tt-flex.gap', row => {
+            cell.div('.tt-flex.gap.align-center', row => {
                 row.div('.shrink', col => {
                     col.input({type: 'number', value: this.range.relative.toString()})
                         .data({tooltip: "Positive for the future, zero for current, and negative for the past"})
@@ -453,7 +506,7 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
             })
 
             // some common sets
-            cell.div('.tt-flex.gap.wrap', row => {
+            cell.div('.tt-flex.gap.wrap.align-center', row => {
                 for (const period of Dates.virtualPeriods) {
                     row.div('.shrink', col => {
                         for (let relative = -1; relative < 2; relative++) {
@@ -509,8 +562,9 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
                     case 'date':
                     case 'datetime':
                         return this.state.callback({filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
-                    default:
-                        return this.state.callback({filter_type: 'direct', column, operator: 'eq', value: ''})
+                    default: // direct
+                        const colType = colDef.type == 'number' || colDef.type == 'cents' ? colDef.type : 'text'
+                        return this.state.callback({filter_type: 'direct', column, column_type: colType, operator: 'eq', value: ''})
                 }
             }
             else {
@@ -539,12 +593,131 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
+
+export type FilterInput = Filter & {
+    input_key: string
+    input_value: string
+    possible_values?: string[]
+}
+
+/**
+ * Computes a string used to identify filters that are "the same".
+ * @param schema
+ * @param table
+ * @param filter
+ */
+function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
+    const key = `${table.model}.${filter.column}`
+    const filterInput: FilterInput = {input_key: key,...filter, input_value: ''}
+    switch (filter.filter_type) {
+        case 'inclusion':
+            const modelDef = schema.models[table.model]
+            const columnDef = modelDef.columns[filter.column]
+            filterInput.possible_values = columnDef.possible_values
+            filterInput.input_key = `${filterInput.input_key}#in`
+            break
+        case 'date_range':
+            filterInput.input_key = `${filterInput.input_key}#range`
+            break
+        case 'direct':
+            filterInput.input_key = `${filterInput.input_key}#${filter.operator}`
+            break
+    }
+    return filterInput
+}
+
+/**
+ * Populates a hash of raw field values used to track the value of the filter inputs.
+ * @param filters
+ * @return an object ready to be used in a `FormFields`
+ */
+function populateRawInputData(filters: FilterInput[]): Record<string,string> {
+    const data: Record<string, string> = {}
+    for (const filter of filters) {
+        switch (filter.filter_type) {
+            case 'date_range':
+                const range = Dates.materializeVirtualRange(filter.range)
+                data[`${filter.input_key}-min`] = range.min
+                data[`${filter.input_key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
+                break
+            case 'direct':
+                switch (filter.column_type) {
+                    case 'cents':
+                        data[filter.input_key] = (parseInt(filter.value)/100).toString()
+                        break
+                    default:
+                        data[filter.input_key] = filter.value
+                }
+                break
+            case 'inclusion':
+                for (const value of filter.in) {
+                    data[`${filter.input_key}-${value}`] = 'true'
+                }
+                break
+            default:
+                log.warn(`Don't know how to get ${filter.filter_type} raw value`, filter)
+        }
+    }
+    return data
+}
+
+/**
+ * Assign the input_value values for all filters based on the raw filter data that was populated with `populateRawInputData`.
+ * This is necessary since some filter values need more than one form field to represent (like date range and inclusion).
+ * @param filters
+ * @param data
+ */
+function serializeRawInputData(filters: FilterInput[], data: Record<string, string>) {
+    for (const filter of filters) {
+        switch (filter.filter_type) {
+            case 'date_range':
+                const range = {
+                    min: data[`${filter.input_key}-min`] as DateLiteral,
+                    max: dayjs(data[`${filter.input_key}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
+                }
+                const period = Dates.serializePeriod(range)
+                filter.input_value = period
+                break
+            case 'direct':
+                switch (filter.column_type) {
+                    case 'cents':
+                        const dollars = data[filter.input_key]
+                        filter.input_value = Math.round(parseFloat(dollars)*100).toString()
+                        break
+                    default:
+                        filter.input_value = data[filter.input_key]
+                }
+                break
+            case 'inclusion':
+                const values: string[] = []
+                for (const value of filter.possible_values || []) {
+                    if (data[`${filter.input_key}-${value}`]) {
+                        values.push(value)
+                    }
+                }
+                filter.input_value = values.join(',')
+                break
+            default:
+                log.warn(`Don't know how to serialize ${filter.filter_type} raw value`, filter)
+        }
+    }
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
 
 const Filters = {
-    render,
-    operatorDisplay
+    renderStatic,
+    toInput,
+    operatorDisplay,
+    populateRawInputData,
+    serializeRawInputData
 }
 
 export default Filters

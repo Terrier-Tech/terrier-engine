@@ -94,6 +94,9 @@
 				justify-content: center;
 				opacity: var(--label-opacity);
 				border-bottom: 1px solid var(--tt-border-color);
+				.prefix {
+					font-weight: bold;
+				}
 			}
 			.line {
 				font-size: var(--tt-caption-font-size);
@@ -136,10 +139,12 @@
 				@include tt-bottom-rounded-corners;
 			}
 			&:hover {
-				@include tt-box-shadow;
+				@include tt-hover-box-shadow;
+				transform: scale(1.01);
 				z-index: 1;
 			}
 			&:active {
+				@include tt-active-box-shadow;
 				transform: scale(0.99);
 			}
 			&.filters {
@@ -259,7 +264,7 @@
 
 	// fields
 	input[type=number] {
-		width: 80px;
+		width: 90px;
 	}
 
 }
@@ -328,11 +333,14 @@
 		padding: 1em;
 		pre {
 			margin: 0;
+			line-height: 1.3;
+			font-family: monospace;
+			// yes, these colors don't match the ones of the niceql output
 			.code-yellow {
-				color: var(--tt-primary-color);
+				color: var(--tt-secondary-color);
 			}
 			.code-cyan {
-				color: var(--tt-secondary-color);
+				color: var(--tt-primary-color);
 			}
 			.code-red {
 				color: var(--tt-alert-color);
@@ -341,3 +349,72 @@
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Preview
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-query-preview {
+	.table-container {
+		position: relative;
+		overflow: scroll;
+		max-height: 15em;
+		border: 1px solid var(--tt-border-color);
+		@include tt-rounded-corners;
+	}
+}
+
+table.dd-query-result {
+	border-collapse: collapse;
+	th, td {
+		padding: 0.3em 0.6em;
+		font-size: var(--tt-caption-font-size);
+		min-width: 80px; // the table layout is pretty aggressive without this
+		line-height: 1.3;
+	}
+	th {
+		position: sticky;
+		top: 0;
+		background-color: var(--tt-secondary-color);
+		text-align: left;
+		a {
+			@include tt-inset-white-text;
+			font-weight: normal;
+		}
+	}
+	td {
+		border: 1px solid var(--tt-border-color);
+	}
+	.date {
+		text-align: center;
+		font-weight: bold;
+	}
+	.time {
+		text-align: center;
+	}
+	.integer, .float, .dollars {
+		text-align: right;
+	}
+	tbody tr:nth-child(odd) {
+		background-color: var(--tt-odd-row-background);
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Model Picker
+////////////////////////////////////////////////////////////////////////////////
+
+.dd-query-model-picker {
+	label.model-option {
+		flex: 0 0 auto;
+		padding-left: 2em;
+		.name {
+			font-weight: bold;
+			font-size: var(--tt-body-font-size);
+		}
+		.description {
+			font-size: var(--tt-caption-font-size);
+		}
+	}
+}

@@ -1,14 +1,14 @@
 import {PartTag} from "tuff-core/parts"
-import Queries, {Query, QueryValidation} from "./queries"
+import Queries, {Query, QueryResult, QueryValidation} from "./queries"
 import Tables, {FromTableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
-import {DiveEditorState} from "../dives/dive-editor"
+import DiveEditor, {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
 import {messages} from "tuff-core"
 import Html from "tuff-core/html"
-import ContentPart from "../../terrier/parts/content-part";
-import {TabContainerPart} from "../../terrier/tabs";
+import ContentPart from "../../terrier/parts/content-part"
+import {TabContainerPart} from "../../terrier/tabs"
 
 const log = new Logger("QueryEditor")
 
@@ -32,8 +32,19 @@ class SettingsPart extends ContentPart<SubEditorState> {
         this.form = this.makePart(QueryForm, {query: Objects.slice(this.state.query, ...QuerySettingsColumns)})
     }
 
+
+    get parentClasses(): Array<string> {
+        return ['tt-flex', 'column', 'gap']
+    }
+
     renderContent(parent: PartTag) {
         parent.part(this.form)
+        parent.div('.tt-flex.justify-end', row => {
+            row.a('.alert.tt-flex', a => {
+                a.i('.glyp-delete')
+                a.span({text: "Delete"})
+            }).emitClick(DiveEditor.deleteQueryKey, {id: this.state.query.id})
+        })
     }
 
 
@@ -84,8 +95,37 @@ class SqlPart extends ContentPart<SubEditorState> {
 
 class PreviewPart extends ContentPart<SubEditorState> {
 
+    result?: QueryResult
+
+    async updateResult() {
+        const query = this.state.query
+        log.info(`Generating preview for`, query)
+        this.startLoading()
+        this.result = await Queries.preview(query)
+        this.stopLoading()
+        this.dirty()
+    }
+
+    async init() {
+    }
+
+
+    get parentClasses(): Array<string> {
+        return ['dd-query-preview']
+    }
+
     renderContent(parent: PartTag) {
-        parent.div({text: 'Preview'})
+        if (this.result) {
+            parent.div('.table-container', col => {
+                Queries.renderPreview(col, this.result!)
+            })
+        }
+        else {
+            parent.a('.tt-button.stretch', a => {
+                a.i('.glyp-refresh')
+                a.span('.title').text("Load Preview")
+            }).emitClick(this.state.editor.updatePreviewKey)
+        }
     }
 
 
@@ -114,6 +154,8 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
     sqlPart!: SqlPart
     previewPart!: PreviewPart
 
+    updatePreviewKey = messages.untypedKey()
+
     async init() {
         const query = this.state.query
 
@@ -131,7 +173,8 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
 
         this.sqlPart = this.tabs.upsertTab({key: 'sql', title: 'SQL', icon: 'glyp-code'},
             SqlPart, {editor: this, query})
-        this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table'},
+
+        this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: {key: this.updatePreviewKey}},
             PreviewPart, {editor: this, query})
 
         this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, table: this.state.query.from})
@@ -139,9 +182,21 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         this.listenMessage(Tables.updatedKey, m => {
             log.info(`Table ${m.data.model} updated`, m.data)
             this.validate()
+            this.updatePreview()
         })
 
-        await this.validate()
+        this.onClick(this.updatePreviewKey, async _ => {
+            await this.previewPart.updateResult()
+        })
+
+        this.onClick(QueryEditor.copyToClipboardKey, async m => {
+            log.info(`Copy value to clipboard: ${m.data.value}`)
+            await navigator.clipboard.writeText(m.data.value)
+            this.showToast(`Copied '${m.data.value}' to clipboard`, {color: 'primary'})
+        })
+
+        this.validate().then()
+        this.updatePreview().then()
     }
 
 
@@ -165,8 +220,13 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         log.info(`Query validated`, res)
         this.emitMessage(validationKey, res)
         this.sqlPart.setValidation(res)
-        this.tabs.showTab('sql')
         this.dirty()
     }
 
+    async updatePreview() {
+        await this.previewPart.updateResult()
+        this.tabs.showTab('preview')
+    }
+
+    static readonly copyToClipboardKey = messages.typedKey<{ value: string }>()
 }
