@@ -118,6 +118,10 @@
 		a {
 			@include tt-button;
 		}
+
+		&.loading {
+			filter: blur(16px);
+		}
 	}
 
 	.modal-content {

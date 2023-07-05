@@ -73,6 +73,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         })
 
         this.onClick(this.startKey, _ => {
+            this.startActionLoading()
             this.createRun()
         })
 
@@ -130,10 +131,16 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             })
             .on<RunFileOutput>('file_output', res => {
                 this.fileOutput = res
+                this.stopActionLoading()
                 this.dirty()
             })
             .onError(evt => {
                 this.error = evt
+                this.stopActionLoading()
+                this.dirty()
+            })
+            .onClose(() => {
+                this.stopActionLoading()
                 this.dirty()
             })
     }

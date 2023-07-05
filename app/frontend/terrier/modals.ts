@@ -44,7 +44,11 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
         const secondaryActions = this.getActions('secondary')
         const primaryActions = this.getActions('primary')
         if (secondaryActions.length || primaryActions.length) {
-            parent.div('.modal-actions', actions => {
+            const actionsClasses = ['modal-actions']
+            if (this._actionLoading) {
+                actionsClasses.push('loading')
+            }
+            parent.div(...actionsClasses, actions => {
                 actions.div('.secondary-actions', container => {
                     this.theme.renderActions(container, secondaryActions, {iconColor: 'white', defaultClass: 'secondary'})
                 })
@@ -52,6 +56,36 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
                     this.theme.renderActions(container, primaryActions, {iconColor: 'white', defaultClass: 'primary'})
                 })
             })
+        }
+    }
+
+    private _actionLoading = false
+
+    /**
+     * Blurs the actions to indicate that the modal is doing something.
+     */
+    startActionLoading() {
+        const elem = this.element
+        if (elem) {
+            const actions = elem.querySelector('.modal-actions')
+            if (actions) {
+                this._actionLoading = true
+                actions.classList.add('loading')
+            }
+        }
+    }
+
+    /**
+     * Call after calling `startActionLoading()` to remove the loading effect.
+     */
+    stopActionLoading() {
+        this._actionLoading = false
+        const elem = this.element
+        if (elem) {
+            const actions = elem.querySelector('.modal-actions')
+            if (actions) {
+                actions.classList.remove('loading')
+            }
         }
     }
 
