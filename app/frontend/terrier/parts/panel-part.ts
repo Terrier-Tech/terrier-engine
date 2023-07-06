@@ -15,6 +15,10 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
         return []
     }
 
+    protected get contentClasses(): string[] {
+        return []
+    }
+
     render(parent: PartTag) {
         parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
@@ -31,7 +35,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
                     })
                 })
             }
-            panel.div('.panel-content', content => {
+            panel.div('.panel-content', ...this.contentClasses, content => {
                 this.renderContent(content)
             })
             Fragments.panelActions(panel, this.getAllActions(), this.theme)
