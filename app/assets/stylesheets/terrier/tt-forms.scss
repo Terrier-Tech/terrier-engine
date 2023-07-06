@@ -128,6 +128,7 @@
 
 	label {
 		@include tt-concave-bg(#{var(--tt-field-background)}, false);
+		text-transform: none;
 	}
 
 	ul.button-group {

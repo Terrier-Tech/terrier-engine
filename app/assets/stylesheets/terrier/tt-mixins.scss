@@ -376,6 +376,7 @@ $color-diff: 0.08;
 	}
 	&.alert {
 		background-color: var(--tt-alert-color);
+		color: #fff; // to override .alert styling elsewhere
 	}
 	&.pending {
 		background-color: var(--tt-pending-color);
