@@ -26,7 +26,7 @@ namespace :npm do
     FileUtils.cp pkg_in, "#{dest_dir}/package.json"
 
     # copy the contents of the directory
-    from_dir = "app/frontend/terrier/"
+    from_dir = "app/frontend/"
     puts "Copying all files in #{from_dir.blue}"
     FileUtils.cp_r "#{from_dir}.", dest_dir
   end
