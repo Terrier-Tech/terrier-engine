@@ -20,7 +20,7 @@ module Terrier::TerrierAuth
       if self.respond_to? :terrier_authenticate
         self.terrier_authenticate
       else
-        warn "The #terrier_authenticate method should implemented in your ApplicationController!"
+        warn "The #terrier_authenticate method should be implemented in your #{self.class.name}!"
       end
     end
 
@@ -28,7 +28,7 @@ module Terrier::TerrierAuth
       if self.respond_to? :terrier_change_user
         self.terrier_change_user
       else
-        warn "The #terrier_change_user method should implemented in your ApplicationController!"
+        warn "The #terrier_change_user method should be implemented in your #{self.class.name}!"
         'terrier_change_user'
       end
     end

@@ -27,3 +27,7 @@ module Terrier
 
   end
 end
+
+module DataDive
+
+end
