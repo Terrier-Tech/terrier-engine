@@ -3,7 +3,7 @@ require 'terrier/logging/loggable'
 require 'colorize'
 
 # provides common methods for interfacing with external APIs using HTTP
-class ExternApiBase
+class Api::ExternApiBase
   include Loggable
 
   def api_root

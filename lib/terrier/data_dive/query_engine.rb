@@ -232,7 +232,7 @@ class Filter < QueryModel
   end
 end
 
-class QueryEngine
+class DataDive::QueryEngine
   include Loggable
 
   attr_reader :query

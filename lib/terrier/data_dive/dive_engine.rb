@@ -1,4 +1,4 @@
-class DiveEngine
+class DataDive::DiveEngine
   include Loggable
 
   def initialize(dive, change_user)

@@ -1,7 +1,7 @@
 # manages the execution of actions that stream their responses to the client
 # this class also implements Loggable so that it can be inserted into
 # Loggable classes to print the log output to the progressive form
-class ResponseStreamer
+class Api::ResponseStreamer
 
   attr_accessor :prefix, :template
 

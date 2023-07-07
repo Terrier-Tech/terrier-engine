@@ -16,7 +16,7 @@ class ConnectAccessToken
 end
 
 # Extends `ExternApiBase` to add Clypboard Connect access token management.
-class ClypboardConnectApi < ExternApiBase
+class Api::ClypboardConnectApi < Api::ExternApiBase
 
   def initialize(clyp_env, connect_host)
     @clyp_env = clyp_env
