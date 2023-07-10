@@ -8,6 +8,21 @@ $phone-breakpoint: 550px; // phone portrait
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Colors
+////////////////////////////////////////////////////////////////////////////////
+
+$color-names: ['link', 'primary', 'secondary', 'active', 'pending', 'success', 'warn', 'alert', 'white', 'inactive', 'super', 'billing', 'docs'];
+
+@mixin theme-colored {
+	@each $name in $color-names {
+		&.#{$name} {
+			--color: var(--tt-#{$name}-color);
+		}
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Text
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -312,6 +327,7 @@ $color-diff: 0.08;
 	--fontSize: calc(var(--iconSize) / 2);
 	--color: var(--tt-primary-color);
 	border-radius: calc(var(--iconSize) * 2);
+	@include theme-colored;
 
 	display: flex;
 	justify-content: center;
@@ -384,18 +400,10 @@ $color-diff: 0.08;
 			text-align: left;
 		}
 	}
-	&.primary {
-		background-color: var(--tt-primary-color);
-	}
-	&.secondary {
-		background-color: var(--tt-secondary-color);
-	}
+	@include theme-colored;
+	background-color: var(--color);
 	&.alert {
-		background-color: var(--tt-alert-color);
 		color: #fff; // to override .alert styling elsewhere
-	}
-	&.pending {
-		background-color: var(--tt-pending-color);
 	}
 	line-height: 1.3;
 	.backtrace {
