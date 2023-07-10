@@ -29,5 +29,9 @@
 				padding-top: var(--tt-border-radius);
 			}
 		}
+		.page-actions {
+			// we don't need these and they can get in the way
+			display: none;
+		}
 	}
 }

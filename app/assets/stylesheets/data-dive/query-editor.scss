@@ -407,7 +407,10 @@ table.dd-query-result {
 		text-align: right;
 	}
 	tbody tr:nth-of-type(even) {
-		background-color: var(--tt-odd-row-background);
+		background: #fff;
+	}
+	tbody tr:nth-of-type(odd) {
+		background: var(--tt-odd-row-background);
 	}
 }
 
