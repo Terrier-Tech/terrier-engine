@@ -117,6 +117,8 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         const dive = await Dives.get(this.state.id)
         this.editor = this.makePart(DiveEditor, {schema, dive})
 
+        this.mainContentWidth = 'wide'
+
         this.addBreadcrumb({
             title: "Dives",
             icon: 'glyp-data_dives',

@@ -39,6 +39,8 @@ export class DiveListPage extends PagePart<{}> {
         this.schema = await Schema.get()
         this.session = await DdSession.get()
 
+        this.mainContentWidth = 'wide'
+
         this.addAction({
             title: "New Group",
             icon: 'glyp-plus_outline',
