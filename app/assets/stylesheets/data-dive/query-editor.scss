@@ -299,6 +299,9 @@
 
 	a, label {
 		@include tt-shaded-hover;
+		&:hover {
+			color: #fff;
+		}
 	}
 
 	a.add {

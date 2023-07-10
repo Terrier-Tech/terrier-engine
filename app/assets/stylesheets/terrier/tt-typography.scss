@@ -43,6 +43,11 @@
 	label {
 		text-transform: none;
 	}
+
+	// override clypboard's default icon margin
+	[class*='glyp-']::before, [class^='glyp-']::before {
+		margin: 0;
+	}
 }
 
 

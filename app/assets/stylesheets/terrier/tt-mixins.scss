@@ -87,6 +87,9 @@ $phone-breakpoint: 550px; // phone portrait
 
 	&.column {
 		flex-direction: column;
+		// to counter foundation's defaults
+		float: none;
+		width: initial;
 
 		> .full-width {
 			align-self: stretch;
