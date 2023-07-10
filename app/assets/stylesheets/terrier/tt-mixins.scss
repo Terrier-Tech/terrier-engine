@@ -125,6 +125,10 @@ $phone-breakpoint: 550px; // phone portrait
 		align-items: flex-end;
 	}
 
+	&.align-baseline {
+		align-items: baseline;
+	}
+
 	input[type=text].shrink {
 		width: initial;
 	}
