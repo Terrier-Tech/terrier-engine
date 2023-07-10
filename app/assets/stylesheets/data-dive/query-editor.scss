@@ -68,6 +68,7 @@
 			padding: var(--pad) calc(var(--pad)*1.5);
 			gap: var(--gap);
 			display: flex;
+			align-items: center;
 		}
 		min-width: var(--table-editor-width);
 		z-index: 1;
@@ -369,6 +370,7 @@
 
 table.dd-query-result {
 	border-collapse: collapse;
+	min-width: 100%;
 	th, td {
 		padding: 0.3em 0.6em;
 		font-size: var(--tt-caption-font-size);
@@ -384,6 +386,12 @@ table.dd-query-result {
 			@include tt-inset-white-text;
 			font-weight: normal;
 		}
+		&:first-child {
+			border-top-left-radius: var(--tt-border-radius);
+		}
+		&:last-child {
+			border-top-right-radius: var(--tt-border-radius);
+		}
 	}
 	td {
 		border: 1px solid var(--tt-border-color);
@@ -398,7 +406,7 @@ table.dd-query-result {
 	.integer, .float, .dollars {
 		text-align: right;
 	}
-	tbody tr:nth-child(odd) {
+	tbody tr:nth-of-type(even) {
 		background-color: var(--tt-odd-row-background);
 	}
 }

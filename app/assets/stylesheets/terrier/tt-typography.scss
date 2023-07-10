@@ -48,6 +48,15 @@
 	[class*='glyp-']::before, [class^='glyp-']::before {
 		margin: 0;
 	}
+
+	// foundation...
+	.column, .columns {
+		width: initial;
+		float: none;
+	}
+	.column + .column:last-child, .column + .columns:last-child, .columns + .column:last-child, .columns + .columns:last-child {
+		float: none;
+	}
 }
 
 
