@@ -17,6 +17,10 @@
 	.padded {
 		padding: var(--tt-pad);
 	}
+
+	label {
+		text-transform: none;
+	}
 }
 
 .tt-dropdown-backdrop {
