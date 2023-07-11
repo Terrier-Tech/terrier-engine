@@ -1,4 +1,5 @@
-require 'niceql'
+
+require 'coderay'
 
 class QueryModel
   # @param attrs [Hash]
@@ -280,12 +281,22 @@ class QueryEngine
 
   def validate
     sql = self.to_sql
-    colorized_sql = Niceql::Prettifier.prettify_sql(sql)
-    info "Generated SQL:\n#{colorized_sql}"
+
+    # add some line breaks to make it more readable
+    %w[FROM WHERE LIMIT].each do |word|
+      # don't indent these top-level keywords
+      sql.gsub!(word, "\n #{word}")
+    end
+    %w[AND INNER LEFT].each do |word|
+      # do indent these sub-keywords
+      sql.gsub!(word, "\n   #{word}")
+    end
+
+    info "Generated SQL:\n#{sql}"
     res = {
       query: @query,
       sql: sql,
-      sql_html: colorized_sql.terminal_to_html
+      sql_html: CodeRay.scan(sql, :sql).html
     }
     self.class.validate_raw_sql sql, res
     res

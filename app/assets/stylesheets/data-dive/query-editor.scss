@@ -339,15 +339,12 @@
 			margin: 0;
 			line-height: 1.3;
 			font-family: monospace;
-			// yes, these colors don't match the ones of the niceql output
-			.code-yellow {
+			.keyword, .class {
 				color: var(--tt-secondary-color);
+				font-weight: bold;
 			}
-			.code-cyan {
+			.string, .integer {
 				color: var(--tt-primary-color);
-			}
-			.code-red {
-				color: var(--tt-alert-color);
 			}
 		}
 	}

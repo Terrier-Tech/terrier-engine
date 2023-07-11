@@ -1,7 +1,6 @@
 require_relative '../../../../test/data/test_dive'
 require 'terrier/data_dive/query_engine'
 require 'terrier/data_dive/dive_engine'
-require 'niceql'
 
 module DataDive::Endpoints
   extend ActiveSupport::Concern

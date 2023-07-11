@@ -35,10 +35,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'hiredis-client'
   s.add_dependency 'colorize'
   s.add_dependency 'vite_rails'
-  s.add_dependency 'niceql'
   s.add_dependency 'shrine'
   s.add_dependency 'marcel'
   s.add_dependency 'kramdown'
+  s.add_dependency 'coderay'
 
   s.add_development_dependency 'pg'
   s.add_development_dependency 'sassc', '>= 2.4.0'
