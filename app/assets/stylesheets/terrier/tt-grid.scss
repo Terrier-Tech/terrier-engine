@@ -1,0 +1,26 @@
+.tt-grid {
+	display: grid;
+
+	&.gap {
+		grid-gap: var(--tt-gap);
+	}
+
+	&.large-gap {
+		grid-gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-gap {
+		grid-gap: calc(var(--tt-gap) / 2);
+	}
+
+	--tt-grid-column-width: 350px;
+	grid-template-columns: repeat(auto-fill, minmax(var(--tt-grid-column-width), 1fr));
+
+	&.small-columns {
+		--tt-grid-column-width: 225px;
+	}
+
+	&.large-columns {
+		--tt-grid-column-width: 475px;
+	}
+}
