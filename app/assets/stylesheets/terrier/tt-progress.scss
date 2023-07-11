@@ -7,10 +7,11 @@
 		border-radius: calc(var(--height) / 2);
 	}
 	.gutter {
-		@include tt-concave-bg(var(-tt-odd-row-background), false);
+		@include tt-concave-bg(#{var(--tt-inset-background)}, false);
 	}
 	.bar {
-		@include tt-raised-bg(var(--color));
+		@include tt-theme-colored;
+		@include tt-raised-bg(#{var(--color)});
 		height: var(--height);
 		min-width: var(--height);
 	}

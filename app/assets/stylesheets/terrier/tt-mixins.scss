@@ -13,7 +13,8 @@ $phone-breakpoint: 550px; // phone portrait
 
 $color-names: ['link', 'primary', 'secondary', 'active', 'pending', 'success', 'warn', 'alert', 'white', 'inactive', 'super', 'billing', 'docs'];
 
-@mixin theme-colored {
+// sets the --color variable of the container based on the named color classes
+@mixin tt-theme-colored {
 	@each $name in $color-names {
 		&.#{$name} {
 			--color: var(--tt-#{$name}-color);
@@ -327,7 +328,7 @@ $color-diff: 0.08;
 	--fontSize: calc(var(--iconSize) / 2);
 	--color: var(--tt-primary-color);
 	border-radius: calc(var(--iconSize) * 2);
-	@include theme-colored;
+	@include tt-theme-colored;
 
 	display: flex;
 	justify-content: center;
@@ -400,7 +401,7 @@ $color-diff: 0.08;
 			text-align: left;
 		}
 	}
-	@include theme-colored;
+	@include tt-theme-colored;
 	background-color: var(--color);
 	&.alert {
 		color: #fff; // to override .alert styling elsewhere

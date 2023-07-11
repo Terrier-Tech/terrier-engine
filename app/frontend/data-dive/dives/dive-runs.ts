@@ -130,6 +130,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
     beginStreaming(run: DdDiveRun) {
         this.run = run
+        this.progressBar.setProgress(0, 'primary')
         Api.stream(`/data_dive/stream_run/${this.run.id}`)
             .on<RunQueryResult>('query_result', res => {
                 this.queryResults[res.id] = res
@@ -156,44 +157,44 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
 
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.padded', row => {
-            row.part(this.progressBar)
-        })
-        parent.div('.tt-flex.collapsible.padded.gap.tt-form', row => {
-            // inputs
-            row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
-                for (const filter of this.filters) {
-                    this.renderInput(col, filter)
-                }
-            })
-            
-            // output
-            row.div('.dd-dive-run-output', col => {
-                // error
-                if (this.error) {
-                    col.div('.tt-bubble.alert', bubble => {
-                        const error = this.error!
-                        bubble.div('.message').text(error.message)
-                        if (error.backtrace?.length) {
-                            bubble.div('.backtrace', backtrace => {
-                                for (const line of error.backtrace) {
-                                    backtrace.div('.line').text(line)
-                                }
-                            })
-                        }
-                    })
-                    return
-                }
-
-                // queries
-                for (const query of this.state.dive.query_data?.queries || []) {
-                    this.renderQuery(col, query)
-                }
+        parent.div('.tt-flex.padded.gap.column', col => {
+            col.part(this.progressBar)
+            col.div('.tt-flex.collapsible.gap.tt-form', row => {
+                // inputs
+                row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
+                    for (const filter of this.filters) {
+                        this.renderInput(col, filter)
+                    }
+                })
 
                 // output
-                if (this.fileOutput) {
-                    this.renderFileOutput(col, this.fileOutput)
-                }
+                row.div('.dd-dive-run-output', col => {
+                    // error
+                    if (this.error) {
+                        col.div('.tt-bubble.alert', bubble => {
+                            const error = this.error!
+                            bubble.div('.message').text(error.message)
+                            if (error.backtrace?.length) {
+                                bubble.div('.backtrace', backtrace => {
+                                    for (const line of error.backtrace) {
+                                        backtrace.div('.line').text(line)
+                                    }
+                                })
+                            }
+                        })
+                        return
+                    }
+
+                    // queries
+                    for (const query of this.state.dive.query_data?.queries || []) {
+                        this.renderQuery(col, query)
+                    }
+
+                    // output
+                    if (this.fileOutput) {
+                        this.renderFileOutput(col, this.fileOutput)
+                    }
+                })
             })
         })
     }

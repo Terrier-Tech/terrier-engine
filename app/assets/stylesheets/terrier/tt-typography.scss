@@ -57,6 +57,9 @@
 	.column + .column:last-child, .column + .columns:last-child, .columns + .column:last-child, .columns + .columns:last-child {
 		float: none;
 	}
+	.left {
+		float: none !important;
+	}
 }
 
 
