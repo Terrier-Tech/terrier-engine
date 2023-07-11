@@ -6,8 +6,9 @@ import dayjs from "dayjs"
 import QueryEditor from "./query-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
-import {arrays, messages} from "tuff-core"
+import {arrays, messages, strings} from "tuff-core"
 import {Logger} from "tuff-core/logging"
+import inflection from "inflection";
 
 const log = new Logger("Queries")
 
@@ -205,7 +206,8 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
             label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
                 .emitChange(this.pickedKey, {model: model.name})
             label.div(col => {
-                col.div('.name').text(model.name)
+                const name = inflection.pluralize(strings.titleize(model.name))
+                col.div('.name').text(name)
                 if (model.metadata?.description) {
                     col.div('.description').text(model.metadata.description)
                 }
