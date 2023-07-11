@@ -1,0 +1,17 @@
+@import "tt-mixins";
+
+
+.tt-progress-bar {
+	--height: var(--tt-pad);
+	.gutter, .bar {
+		border-radius: calc(var(--height) / 2);
+	}
+	.gutter {
+		@include tt-concave-bg(var(-tt-odd-row-background), false);
+	}
+	.bar {
+		@include tt-raised-bg(var(--color));
+		height: var(--height);
+		min-width: var(--height);
+	}
+}

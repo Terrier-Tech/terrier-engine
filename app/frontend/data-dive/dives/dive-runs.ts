@@ -15,6 +15,7 @@ import {TerrierFormFields} from "../../terrier/forms"
 import inflection from "inflection"
 import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, LiteralDateRange} from "../queries/dates"
 import dayjs from "dayjs"
+import {ProgressBarPart} from "../../terrier/progress";
 
 const log = new Logger("DiveRuns")
 
@@ -46,6 +47,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     inputFields!: TerrierFormFields<any>
     fileOutput?: RunFileOutput
     queryResults: Record<string, RunQueryResult> = {}
+    progressBar!: ProgressBarPart
 
     startKey = messages.untypedKey()
     pickDateKey = messages.typedKey<{ input_key: string }>()
@@ -55,6 +57,10 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         this.setIcon('glyp-play')
 
         this.schema = await Schema.get()
+
+        // progress is # queries + 1 for the output
+        const total = (this.state.dive.query_data?.queries?.length || 0) + 1
+        this.progressBar = this.makePart(ProgressBarPart, {total})
 
         // initialize the inputs
         this.filters = Dives.computeFilterInputs(this.schema, this.state.dive)
@@ -127,16 +133,19 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         Api.stream(`/data_dive/stream_run/${this.run.id}`)
             .on<RunQueryResult>('query_result', res => {
                 this.queryResults[res.id] = res
+                this.progressBar.increment()
                 this.dirty()
             })
             .on<RunFileOutput>('file_output', res => {
                 this.fileOutput = res
                 this.stopActionLoading()
+                this.progressBar.complete('success')
                 this.dirty()
             })
             .onError(evt => {
                 this.error = evt
                 this.stopActionLoading()
+                this.progressBar.complete('alert')
                 this.dirty()
             })
             .onClose(() => {
@@ -147,6 +156,9 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
 
     renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.padded', row => {
+            row.part(this.progressBar)
+        })
         parent.div('.tt-flex.collapsible.padded.gap.tt-form', row => {
             // inputs
             row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
