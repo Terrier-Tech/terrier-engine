@@ -11,9 +11,14 @@
 	}
 	a {
 		display: flex;
-		gap: 0.5em;
+		gap: 0.6em;
 		align-items: center;
 		@include tt-no-select;
+		font-weight: normal;
+		i {
+			display: block;
+			transform: scale(1.2);
+		}
 	}
 	.page-title {
 		flex: 1 1 auto;
