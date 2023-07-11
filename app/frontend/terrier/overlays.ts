@@ -109,6 +109,7 @@ export class OverlayPart extends Part<NoState> {
      */
     clearAll() {
         this.layerStates = []
+        this.updateLayers()
     }
 
     render(parent: PartTag) {
@@ -129,6 +130,18 @@ class OverlayLayer<PartType extends Part<StateType>, StateType extends {}> exten
 
     async init() {
         this.part = this.makePart(this.state.partClass, this.state.partState)
+    }
+
+
+    assignState(state: OverlayLayerState<PartType, StateType>): boolean {
+        const changed = super.assignState(state)
+        if (changed) {
+            if (this.part) {
+                this.removeChild(this.part)
+            }
+            this.part = this.makePart(this.state.partClass, this.state.partState)
+        }
+        return changed
     }
 
     render(parent: PartTag) {
