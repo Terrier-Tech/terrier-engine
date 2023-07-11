@@ -174,9 +174,11 @@ $color-diff: 0.08;
 @mixin tt-shaded-hover {
 	&:hover {
 		background-color: rgba(#000, $color-diff);
+		backdrop-filter: blur(1em); // in case there's anything behind it
 	}
 	&:active {
 		background-color: rgba(#fff, $color-diff);
+		backdrop-filter: blur(1em);
 	}
 }
 

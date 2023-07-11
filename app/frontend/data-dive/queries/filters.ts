@@ -540,7 +540,6 @@ const columnSelectedKey = messages.typedKey<{column: string}>()
 class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
     columns!: string[]
 
-
     get autoClose(): boolean {
         return true
     }

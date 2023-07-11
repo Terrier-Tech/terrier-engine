@@ -20,6 +20,7 @@
 
 	label {
 		text-transform: none;
+		margin-bottom: 0;
 	}
 }
 
@@ -36,8 +37,8 @@
 	a {
 		display: flex;
 		align-items: center;
-		gap: calc(var(--tt-gap)/2);
-		padding: calc(var(--tt-pad) / 2) var(--tt-pad);
+		gap: 0.5em;
+		padding: 0.5em 1em;
 
 		.title {
 			@include tt-inset-white-text;

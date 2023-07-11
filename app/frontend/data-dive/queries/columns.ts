@@ -280,13 +280,19 @@ class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: Sele
     checked: Set<string> = new Set()
     columns!: string[]
 
+    get autoClose(): boolean {
+        return true
+    }
+
     async init() {
+        await super.init()
+
         this.columns = Object.keys(this.state.modelDef.columns).sort()
 
         this.onClick(checkAllKey, _ => {
             // toggle them all being checked
-            const trues = Object.values(this.checked).filter(b => b)
-            if (trues.length > this.columns.length / 2) {
+            log.info(`${this.checked.size} of ${this.columns.length} checked`)
+            if (this.checked.size > this.columns.length / 2) {
                 this.checked = new Set()
             }
             else {
@@ -321,7 +327,7 @@ class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: Sele
     }
 
     renderContent(parent: PartTag) {
-        parent.a(a => {
+        parent.a('.header', a => {
             a.i('.glyp-check_all')
             a.span({text: "Toggle All"})
         }).emitClick(checkAllKey)
