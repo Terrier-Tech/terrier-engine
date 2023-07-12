@@ -240,7 +240,7 @@ module Terrier::Model
         self[name]&.to_json || default.to_json
       end
       self.define_method "#{name}_s=" do |s|
-        if s.nil?
+        if s.blank?
           self[name] = nil
         else
           self[name] = JSON.parse s
@@ -248,7 +248,7 @@ module Terrier::Model
       end
       self.define_method "safe_#{name}" do
         val = self[name]
-        if val.nil?
+        if val.blank?
           default
         elsif val.is_a? String
           JSON.parse val
