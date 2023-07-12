@@ -5,7 +5,9 @@ namespace :frontend do
 
   desc "Generate model files for the application"
   task gen_models: :environment do
-    ModelGenerator.new.run
+    ModelGenerator.new(
+      exclude_prefix: 'Dd',
+    ).run
   end
 
   desc "Generate model files for data-dive"
