@@ -161,7 +161,8 @@ class ColumnRef < QueryModel
       a = [table.prefix, a || name].compact.join
     end
     if a.present? && a != s
-      s = "#{s} as #{a}"
+      # sanitize
+      s = "#{s} as \"#{a}\""
     end
     s
   end

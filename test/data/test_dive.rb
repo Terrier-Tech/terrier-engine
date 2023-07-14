@@ -22,7 +22,8 @@ module TestDive
             name: 'time'
           },
           {
-            name: 'notes'
+            name: 'notes',
+            alias: "Order Notes"
           },
           {
             name: 'price'
@@ -79,7 +80,7 @@ module TestDive
                 columns: [
                   {
                     name: 'email',
-                    alias: 'created_by_email'
+                    alias: 'Created By E-Mail'
                   }
                 ]
               }
@@ -92,15 +93,15 @@ module TestDive
             columns: [
               {
                 name: 'first_name',
-                alias: 'tech_first_name'
+                alias: 'First Name'
               },
               {
                 name: 'last_name',
-                alias: 'tech_last_name'
+                alias: 'Last Name'
               },
               {
                 name: 'email',
-                alias: 'tech_email'
+                alias: 'Tech E-Mail'
               }
             ]
           },
@@ -111,7 +112,7 @@ module TestDive
             columns: [
               {
                 name: 'name',
-                alias: 'target_name'
+                alias: 'Target'
               }
             ],
             filters: [
