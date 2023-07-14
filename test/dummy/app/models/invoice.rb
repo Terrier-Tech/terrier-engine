@@ -45,7 +45,17 @@ class Invoice < ApplicationRecord
   def self.metadata
     {
       description: "Holds charges for work performed at a location",
-      common: true
+      visibility: "common",
+      columns: {
+        price: {
+          description: "The price on the invoice, in dollars",
+          visibility: "common"
+        },
+        date: {
+          description: "The invoice date",
+          visibility: "common"
+        }
+      }
     }
   end
 end

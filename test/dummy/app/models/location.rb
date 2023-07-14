@@ -43,7 +43,7 @@ class Location < ApplicationRecord
   def self.metadata
     {
       description: "A location at which work is performed",
-      common: true
+      visibility: "common"
     }
   end
 end

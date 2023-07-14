@@ -1,9 +1,14 @@
 import Api from "./api"
-import inflection from "inflection";
+import inflection from "inflection"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Schema Definitions
 ////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Possible visibility for models and columns.
+ */
+export type MetaVisibility = 'common' | 'uncommon' | 'never'
 
 /**
  * Definition for a single column in the schema.
@@ -15,6 +20,7 @@ export type ColumnDef = {
     type: string
     possible_values?: string[]
     default?: string
+    visibility?: MetaVisibility
 }
 
 /**
@@ -34,6 +40,7 @@ export type HasManyDef = {
     model: string
 }
 
+
 /**
  * Definition for a single model in the schema.
  */
@@ -45,7 +52,7 @@ export type ModelDef = {
     has_many: Record<string, HasManyDef>
     metadata?: {
         description?: string
-        common?: boolean
+        visibility?: MetaVisibility
     }
 }
 
@@ -96,7 +103,7 @@ function belongsToDisplay(belongsTo: BelongsToDef): string {
  * @param schema
  */
 function commonModels(schema: SchemaDef): ModelDef[] {
-    return Object.values(schema.models).filter(m => m.metadata?.common)
+    return Object.values(schema.models).filter(m => m.metadata?.visibility == 'common')
 }
 
 /**
@@ -104,7 +111,9 @@ function commonModels(schema: SchemaDef): ModelDef[] {
  * @param schema
  */
 function uncommonModels(schema: SchemaDef): ModelDef[] {
-    return Object.values(schema.models).filter(m => !(m.metadata?.common))
+    return Object.values(schema.models).filter(m => {
+        return !m.metadata?.visibility || m.metadata?.visibility == 'uncommon'
+    })
 }
 
 

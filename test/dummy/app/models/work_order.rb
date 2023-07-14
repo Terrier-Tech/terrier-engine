@@ -41,7 +41,17 @@ class WorkOrder < ApplicationRecord
   def self.metadata
     {
       description: "Work being performed at a location",
-      common: true
+      visibility: "common",
+      columns: {
+        time: {
+          description: "Either the scheduled or start time of the order, depending on if it's been started",
+          visibility: "common"
+        },
+        price: {
+          description: "The production amount on the order",
+          visibility: "common"
+        }
+      }
     }
   end
 
