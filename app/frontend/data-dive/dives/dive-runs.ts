@@ -58,8 +58,8 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
         this.schema = await Schema.get()
 
-        // progress is # queries + 1 for the output
-        const total = (this.state.dive.query_data?.queries?.length || 0) + 1
+        // progress is # queries +1 for creating and run and +1 for the output
+        const total = (this.state.dive.query_data?.queries?.length || 0) + 2
         this.progressBar = this.makePart(ProgressBarPart, {total})
 
         // initialize the inputs
@@ -111,6 +111,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     }
 
     async createRun() {
+        this.progressBar.setProgress(0, 'primary')
         const newRun: UnpersistedDdDiveRun = {
             dd_dive_id: this.state.dive.id,
             status: 'initial',
@@ -125,12 +126,12 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         } else {
             this.alertToast(`Error creating dive run: ${res.message}`)
         }
+        this.progressBar.increment()
         this.dirty()
     }
 
     beginStreaming(run: DdDiveRun) {
         this.run = run
-        this.progressBar.setProgress(0, 'primary')
         Api.stream(`/data_dive/stream_run/${this.run.id}`)
             .on<RunQueryResult>('query_result', res => {
                 this.queryResults[res.id] = res
