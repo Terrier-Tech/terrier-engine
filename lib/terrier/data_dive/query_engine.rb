@@ -233,7 +233,7 @@ class Filter < QueryModel
   end
 end
 
-class QueryEngine
+class DataDive::QueryEngine
   include Loggable
 
   attr_reader :query
@@ -307,11 +307,9 @@ class QueryEngine
     res[:explain] = explain
     res
   rescue => ex
-    colorized_error = Niceql::Prettifier.prettify_pg_err ex.message, sql
     res[:error] = ex.message
-    res[:error] = colorized_error
-    Rails.logger.warn "Error explaining query:\n#{colorized_error}"
-    res[:error_html] = colorized_error.terminal_to_html
+    Rails.logger.warn "Error explaining query:\n#{sql}"
+    res[:error_html] = CodeRay.scan(sql, :sql).html
     res
   end
 

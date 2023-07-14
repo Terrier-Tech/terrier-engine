@@ -10,7 +10,7 @@ class QueryEngineTest < ActiveSupport::TestCase
 
   test 'order_details' do
     query = TestDive.order_details
-    engine = QueryEngine.new(query)
+    engine = DataDive::QueryEngine.new(query)
     builder = engine.to_sql_builder
 
     start_date = Date.today.beginning_of_year
@@ -21,7 +21,7 @@ class QueryEngineTest < ActiveSupport::TestCase
 
   test "order_summary" do
     query = TestDive.order_summary
-    engine = QueryEngine.new(query)
+    engine = DataDive::QueryEngine.new(query)
     builder = engine.to_sql_builder
 
     assert_equal %w[date_trunc('month',work_order.time) work_order.status location.id u.id], builder.group_bys
@@ -29,7 +29,7 @@ class QueryEngineTest < ActiveSupport::TestCase
 
   test "filter params" do
     query = TestDive.order_summary
-    engine = QueryEngine.new(query)
+    engine = DataDive::QueryEngine.new(query)
     # show that we can override filter values explicitly through the params
     builder = engine.to_sql_builder({'WorkOrder.time#range' => '2022'})
     assert_includes builder.clauses, "work_order.time >= '2022-01-01'"
@@ -38,11 +38,11 @@ class QueryEngineTest < ActiveSupport::TestCase
 
   test 'validate' do
     valid_sql = "select count(*) from locations"
-    res = QueryEngine.validate_raw_sql valid_sql
+    res = DataDive::QueryEngine.validate_raw_sql valid_sql
     assert_nil res[:error]
 
     invalid_sql = "select count(*), status, time from work_orders group by status"
-    res = QueryEngine.validate_raw_sql invalid_sql
+    res = DataDive::QueryEngine.validate_raw_sql invalid_sql
     assert_not_empty res[:error]
 
   end

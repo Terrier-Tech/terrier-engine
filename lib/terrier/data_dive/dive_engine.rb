@@ -1,4 +1,4 @@
-class DiveEngine
+class DataDive::DiveEngine
   include Loggable
 
   def initialize(dive, change_user)
@@ -22,7 +22,7 @@ class DiveEngine
 
     # execute the queries and collect the results
     queries.each do |query|
-      qe = QueryEngine.new query
+      qe = DataDive::QueryEngine.new query
       begin
         t = Time.now
         p = params.to_unsafe_hash

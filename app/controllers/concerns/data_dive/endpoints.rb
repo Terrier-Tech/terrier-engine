@@ -1,6 +1,5 @@
 require_relative '../../../../test/data/test_dive'
-require 'terrier/data_dive/query_engine'
-require 'terrier/data_dive/dive_engine'
+require 'terrier/data_dive'
 
 module DataDive::Endpoints
   extend ActiveSupport::Concern
@@ -44,7 +43,7 @@ module DataDive::Endpoints
     # validates the query and computes the raw SQL for it if it's valid
     def validate_query
       query = required_param :query
-      engine = QueryEngine.new query
+      engine = DataDive::QueryEngine.new query
       res = engine.validate
       render_api_success res
     rescue => ex
@@ -54,7 +53,7 @@ module DataDive::Endpoints
     # executes the query for a small limit to preview on the client
     def preview_query
       query = required_param :query
-      engine = QueryEngine.new query
+      engine = DataDive::QueryEngine.new query
       res = engine.execute! limit: 100
       render_api_success res
     rescue => ex
@@ -65,7 +64,7 @@ module DataDive::Endpoints
       run = DdDiveRun.find required_param(:run_id)
       dive = run.dd_dive
       stream_response do |stream|
-        engine = DiveEngine.new dive, _terrier_change_user
+        engine = DataDive::DiveEngine.new dive, _terrier_change_user
         engine.stream_run! stream, run, params
       end
     end
