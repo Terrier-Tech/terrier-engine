@@ -3,8 +3,7 @@ import {strings} from "tuff-core"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
 import {InputTag, InputTagAttrs} from "tuff-core/html"
-import TerrierPart from "./parts/terrier-part";
-import {an} from "vitest/dist/types-ad1c3f45";
+import TerrierPart from "./parts/terrier-part"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Options
@@ -64,7 +63,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
      */
     renderErrorBubble(parent: PartTag) {
         if (this.errors) {
-            (this.part as TerrierPart<an>).renderErrorBubble(parent, this.errors)
+            (this.part as TerrierPart<any>).renderErrorBubble(parent, this.errors)
         }
     }
 }
