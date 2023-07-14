@@ -236,8 +236,9 @@ module Terrier::Model
     # @param default [Hash,Array] the default value to return from safe_name if the value is nil
     # @param schema [Hash,String] an optional hash defining what the expected shape of the data is
     def json_field(name, default = {}, schema = nil)
+      default = default.dup
       self.define_method "#{name}_s" do
-        self[name]&.to_json || default.to_json
+        self[name]&.to_json || default.dup.to_json
       end
       self.define_method "#{name}_s=" do |s|
         if s.blank?
@@ -249,7 +250,7 @@ module Terrier::Model
       self.define_method "safe_#{name}" do
         val = self[name]
         if val.blank?
-          default
+          default.dup
         elsif val.is_a? String
           JSON.parse val
         else
