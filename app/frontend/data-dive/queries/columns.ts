@@ -167,6 +167,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     }
 
     renderContent(parent: PartTag): void {
+        // fields
         parent.div('.tt-flex.tt-form.padded.gap.justify-end.align-center', row => {
             row.div('.tt-compound-field', field => {
                 field.label().text("Prefix:")
@@ -174,6 +175,8 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             })
             row.div('.stretch').text("All columns will be prefixed with this")
         })
+
+        // the table of column editors
         parent.div('.dd-columns-editor-table', table => {
             table.div('.dd-editor-header', header => {
                 header.div('.name').label({text: "Name"})
@@ -184,6 +187,25 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             this.renderCollection(table, 'columns')
                 .class('dd-editor-row-container')
         })
+
+        // common column quick links
+        const commonCols = Object.values(this.modelDef.columns).filter(c => c.metadata?.visibility == 'common')
+        if (commonCols.length) {
+            parent.div('.dd-common-columns-picker.tt-flex.column.gap.padded', col => {
+                col.h3(h3 => {
+                    h3.span().text("Common Columns")
+                })
+                for (const colDef of commonCols) {
+                    col.a('.add-column.tt-button.secondary', a => {
+                        a.div('.name').text(colDef.name)
+                        if (colDef.metadata?.description?.length) {
+                            a.div('.description').text(colDef.metadata.description)
+                        }
+                    })
+                }
+            })
+        }
+
     }
 
     removeColumn(id: string) {

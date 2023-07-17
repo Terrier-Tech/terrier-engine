@@ -281,6 +281,23 @@
 	}
 }
 
+// common columns picker
+.dd-common-columns-picker {
+	a.add-column {
+		//flex-wrap: wrap;
+		display: inline-flex;
+		gap: 1em;
+		.name {
+			font-weight: bold;
+			//flex: 0 0 100%;
+		}
+		.description {
+			font-weight: normal;
+		}
+	}
+}
+
+
 .dd-select-columns-dropdown {
 	.tt-dropdown-content {
 		overflow-y: scroll;
