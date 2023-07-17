@@ -64,51 +64,68 @@ class ModelGenerator < BaseGenerator
     prettier_file out_path
   end
 
+  def process_raw_model(model)
+    # remove the columns metadata so that they can be placed in the relevant column definitions
+    model_meta = model[:metadata] || {}
+    columns_meta = model_meta.delete(:columns).presence || {}
+
+    # split out the reflections
+    refs = model.delete :reflections
+    belongs_to = {}
+    has_many = {}
+    refs.each do |ref_name, ref|
+      ref_type = ref.options[:class_name].presence || ref.name.to_s.classify
+      next if ref_type.constantize.exclude_from_frontend?
+      raw_ref = {
+        name: ref_name,
+        model: ref_type
+      }
+      if ref.class.name.include?('BelongsTo')
+        raw_ref[:optional] = ref.options[:optional] || false
+        belongs_to[ref_name] = raw_ref
+      else
+        has_many[ref_name] = raw_ref
+      end
+    end
+    model[:belongs_to] = belongs_to
+    model[:has_many] = has_many
+
+    # make the columns into a map
+    raw_cols = {}
+    model[:columns].each do |col|
+      enum_field = model[:enum_fields][col.name.to_sym]
+      type = enum_field ? 'enum' : model[:type_map][col.name.to_sym] || col.type
+      raw_col = {
+        name: col.name,
+        nullable: col.null,
+        type: type
+      }
+
+      # get column metadata
+      col_meta = columns_meta[col.name.to_sym]
+      if col_meta
+        raw_col[:metadata] = col_meta
+      end
+
+      # is it an array?
+      if col.sql_type_metadata.sql_type.ends_with?('[]')
+        raw_col[:array] = true
+      end
+
+      # is it an enum?
+      if enum_field
+        raw_col[:possible_values] = enum_field
+      end
+      raw_cols[col.name] = raw_col
+    end
+    model[:columns] = raw_cols
+  end
+
   # @return [Hash] a raw representation of the schema
   def raw_schema
     models = load_models
-    models.each do |name, model|
-      # split out the reflections
-      refs = model.delete :reflections
-      belongs_to = {}
-      has_many = {}
-      refs.each do |ref_name, ref|
-        ref_type = ref.options[:class_name].presence || ref.name.to_s.classify
-        next if ref_type.constantize.exclude_from_frontend?
-        raw_ref = {
-          name: ref_name,
-          model: ref_type
-        }
-        if ref.class.name.include?('BelongsTo')
-          raw_ref[:optional] = ref.options[:optional] || false
-          belongs_to[ref_name] = raw_ref
-        else
-          has_many[ref_name] = raw_ref
-        end
-      end
-      model[:belongs_to] = belongs_to
-      model[:has_many] = has_many
-
-      # make the columns into a map
-      raw_cols = {}
-      model[:columns].each do |col|
-        enum_field = model[:enum_fields][col.name.to_sym]
-        type = enum_field ? 'enum' : model[:type_map][col.name.to_sym] || col.type
-        raw_col = {
-          name: col.name,
-          nullable: col.null,
-          type: type
-        }
-        if col.sql_type_metadata.sql_type.ends_with?('[]')
-          raw_col[:array] = true
-        end
-        if enum_field
-          raw_col[:possible_values] = enum_field
-        end
-        raw_cols[col.name] = raw_col
-      end
-      model[:columns] = raw_cols
-
+    models.each do |_, model|
+      process_raw_model model
     end
     {
       models: models

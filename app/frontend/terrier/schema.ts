@@ -20,7 +20,10 @@ export type ColumnDef = {
     type: string
     possible_values?: string[]
     default?: string
-    visibility?: MetaVisibility
+    metadata?: {
+        description?: string
+        visibility?: MetaVisibility
+    }
 }
 
 /**
