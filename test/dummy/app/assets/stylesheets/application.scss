@@ -10,11 +10,7 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
- *= require terrier/grid
- *= require terrier/tiny-modal
- *= require terrier/scripts
- *= require terrier/glyps
- *= require terrier/tt-styles-all
+ *= require terrier
  *= require_tree .
  *= require_self
  */

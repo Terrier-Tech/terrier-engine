@@ -146,7 +146,7 @@ The `.tt-*` styles are meant to be reusable across projects.
 To include them in a particular host stylesheet, just add:
 
 ```scss
-*= require terrier/tt-styles-all
+*= require terrier
 ```
 
 In order to prevent conflicts with the host application and allow for as much flexibility as possible, these are *hard* rules for their development:
