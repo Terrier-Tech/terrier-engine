@@ -30,6 +30,9 @@
 		&.centered {
 			justify-content: center;
 		}
+		&.large-top-padding {
+			padding-top: 2em;
+		}
 	}
 	h1 {
 		font-size: 26px;
@@ -63,6 +66,10 @@
 	}
 }
 
+
+.tt-button {
+	@include tt-button;
+}
 
 .tt-bubble {
 	@include tt-bubble;

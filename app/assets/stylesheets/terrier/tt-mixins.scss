@@ -379,6 +379,16 @@ $color-diff: 0.08;
 		gap: calc(var(--tt-gap) / 2);
 		--iconSize: calc(var(--tt-icon-size) * 2);
 	}
+
+	&.circle {
+		width: var(--tt-button-height);
+		height: var(--tt-button-height);
+		padding: calc((var(--tt-button-height) - var(--tt-icon-size)) / 2) 0;
+	}
+
+	&.inline {
+		display: inline-flex;
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////

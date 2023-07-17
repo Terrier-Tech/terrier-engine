@@ -1,0 +1,35 @@
+@import "../terrier/tt-mixins";
+
+
+// some common styles for tables throughout Data Dive
+.dd-table {
+	width: 100%;
+	border-collapse: collapse;
+
+	thead th {
+		font-weight: normal;
+		font-size: var(--tt-label-font-size);
+		border-bottom: 1px solid var(--tt-border-color);
+		text-align: left;
+	}
+
+	&.text-center {
+		text-align: center;
+	}
+
+	th, td {
+		padding: 0.5em 1em;
+	}
+
+	.name {
+		font-weight: bold;
+	}
+
+	td:last-child {
+		text-align: right;
+	}
+
+	tbody tr:nth-child(odd) {
+		background-color: var(--tt-odd-row-background);
+	}
+}

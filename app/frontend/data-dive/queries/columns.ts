@@ -91,6 +91,7 @@ export type ColumnsEditorState = {
 
 const saveKey = messages.untypedKey()
 const addKey = messages.untypedKey()
+const addSingleKey = messages.typedKey<{ name: string }>()
 const removeKey = messages.typedKey<{id: string}>()
 
 /**
@@ -151,6 +152,19 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             this.removeColumn(m.data.id)
         })
 
+        this.onClick(addSingleKey, m => {
+            const colDef = this.modelDef.columns[m.data.name]
+            log.info(`Add column ${m.data.name}`)
+            if (colDef) {
+                this.addState({name: colDef.name})
+                this.updateColumnEditors()
+                this.dirty()
+            }
+            else {
+                alert(`Unknown column name '${m.data.name}'`)
+            }
+        })
+
         this.onClick(addKey, m => {
             const onSelected = (columns: string[]) => {
                 log.info(`Adding ${columns.length} columns`, columns)
@@ -189,20 +203,31 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         // common column quick links
-        const commonCols = Object.values(this.modelDef.columns).filter(c => c.metadata?.visibility == 'common')
+        const includedNames = new Set(this.columnStates.map(s => s.name))
+        const commonCols = Object.values(this.modelDef.columns).filter(c => c.metadata?.visibility == 'common' && !includedNames.has(c.name))
         if (commonCols.length) {
-            parent.div('.dd-common-columns-picker.tt-flex.column.gap.padded', col => {
-                col.h3(h3 => {
-                    h3.span().text("Common Columns")
-                })
-                for (const colDef of commonCols) {
-                    col.a('.add-column.tt-button.secondary', a => {
-                        a.div('.name').text(colDef.name)
-                        if (colDef.metadata?.description?.length) {
-                            a.div('.description').text(colDef.metadata.description)
-                        }
+            parent.h3('.centered.large-top-padding', h3 => {
+                h3.span().text("Common Columns")
+            })
+            parent.table('.dd-table', table => {
+                table.thead(thead => {
+                    thead.tr(tr => {
+                        tr.th().text("Name")
+                        tr.th().text("Description")
+                        tr.th().text("")
                     })
-                }
+                })
+                table.tbody(tbody => {
+                    for (const colDef of commonCols) {
+                        tbody.tr(tr => {
+                            tr.td('.name').text(colDef.name)
+                            tr.td('.description').text(colDef.metadata?.description || '')
+                            tr.td().a('.add-column.tt-button.secondary.circle.inline', a => {
+                                a.i('.glyp-plus')
+                            }).emitClick(addSingleKey, {name: colDef.name})
+                        })
+                    }
+                })
             })
         }
 

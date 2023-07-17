@@ -43,7 +43,17 @@ class Location < ApplicationRecord
   def self.metadata
     {
       description: "A location at which work is performed",
-      visibility: "common"
+      visibility: "common",
+      columns: {
+        number: {
+          description: "The location number",
+          visibility: "common"
+        },
+        display_name: {
+          description: "The name of the location",
+          visibility: "common"
+        }
+      }
     }
   end
 end
