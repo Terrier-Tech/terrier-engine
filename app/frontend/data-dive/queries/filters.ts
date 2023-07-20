@@ -11,6 +11,7 @@ import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import dayjs from "dayjs";
 import Format from "../../terrier/format";
+import DiveEditor from "../dives/dive-editor";
 
 const log = new Logger("Filters")
 
@@ -219,6 +220,7 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
             return Objects.omit(state, 'schema', 'filtersEditor', 'id') as Filter
         })
         this.state.tableView.updateFilters(filters)
+        this.emitMessage(DiveEditor.diveChangedKey, {})
         this.pop()
     }
 

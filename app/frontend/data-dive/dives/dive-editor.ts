@@ -14,7 +14,8 @@ import {DdDive} from "../gen/models"
 import Ids from "../../terrier/ids"
 import Db from "../dd-db"
 import DdSession from "../dd-session"
-import {DiveRunModal} from "./dive-runs";
+import {DiveRunModal} from "./dive-runs"
+import Nav from "tuff-core/nav";
 
 const log = new Logger("DiveEditor")
 
@@ -33,6 +34,8 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     tabs!: TabContainerPart
 
     newQueryKey = messages.untypedKey()
+
+    static readonly diveChangedKey = messages.untypedKey()
 
     queries = new Array<Query>()
 
@@ -107,6 +110,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
     session!: DdSession
 
     saveKey = messages.untypedKey()
+    discardKey = messages.untypedKey()
     runKey = messages.untypedKey()
 
     async init() {
@@ -130,8 +134,16 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         })
 
         this.addAction({
+            title: 'Discard',
+            icon: 'glyp-cancelled',
+            classes: ['discard-dive-action'],
+            click: {key: this.discardKey}
+        }, 'tertiary')
+
+        this.addAction({
             title: 'Save',
-            icon: 'glyp-checkmark',
+            icon: 'glyp-complete',
+            classes: ['save-dive-action'],
             click: {key: this.saveKey}
         }, 'tertiary')
 
@@ -141,9 +153,19 @@ export class DiveEditorPage extends PagePart<{id: string}> {
             click: {key: this.runKey}
         }, 'tertiary')
 
+        this.onClick(this.discardKey, _ => {
+            log.info("Discarding dive changes")
+            Nav.visit(location.href)
+        })
+
         this.onClick(this.saveKey, _ => this.save())
 
         this.onClick(this.runKey, _ => this.run())
+
+        this.listenMessage(DiveEditor.diveChangedKey, _ => {
+            log.info("Dive changed")
+            this.element?.classList.add('changed')
+        }, {attach: 'passive'})
 
         this.dirty()
     }
@@ -162,6 +184,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         const res = await Db().upsert('dd_dive', dive)
         if (res.status == 'success') {
             this.successToast(`Saved Dive!`)
+            this.element?.classList.remove('changed')
         }
         else {
             this.alertToast(res.message)

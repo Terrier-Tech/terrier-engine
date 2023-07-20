@@ -34,4 +34,22 @@
 			display: none;
 		}
 	}
+
+	// the main Save action gets highlighted when the dive has changed
+	// and the discard action only appears then
+	.tt-toolbar .discard-dive-action {
+		display: none;
+		color: var(--tt-alert-color);
+	}
+	&.changed .tt-toolbar {
+		.discard-dive-action {
+			display: flex;
+		}
+		.save-dive-action {
+			font-weight: bold;
+			.title::after {
+				content: "*";
+			}
+		}
+	}
 }

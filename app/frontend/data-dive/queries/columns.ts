@@ -9,6 +9,7 @@ import Objects from "tuff-core/objects"
 import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
+import DiveEditor from "../dives/dive-editor";
 
 const log = new Logger("Columns")
 
@@ -247,6 +248,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
         const tableData = await this.tableFields.serialize()
         this.state.tableView.updateColumns(columns, tableData.prefix)
+        this.emitMessage(DiveEditor.diveChangedKey, {})
         this.pop()
     }
 

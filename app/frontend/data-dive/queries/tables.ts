@@ -9,6 +9,7 @@ import ContentPart from "../../terrier/parts/content-part"
 import {ActionsDropdown} from "../../terrier/dropdowns"
 import {ModalPart} from "../../terrier/modals"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
+import DiveEditor from "../dives/dive-editor";
 
 const log = new Logger("Tables")
 
@@ -391,6 +392,7 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
         this.onClick(this.applyKey, async _ => {
             const table = await this.form.serialize()
             this.state.callback(table)
+            this.emitMessage(DiveEditor.diveChangedKey, {})
             this.pop()
         })
     }
