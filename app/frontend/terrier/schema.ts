@@ -87,12 +87,13 @@ async function get(): Promise<SchemaDef> {
  * @param belongsTo
  */
 function belongsToDisplay(belongsTo: BelongsToDef): string {
+    const btName = inflection.titleize(belongsTo.name)
     if (belongsTo.name != inflection.singularize(inflection.tableize(belongsTo.model))) {
         // the model is different than the name of the association
-        return `${belongsTo.model} (${belongsTo.name})`
+        return `${btName} (${belongsTo.model})`
     }
     else {
-        return belongsTo.model
+        return btName
     }
 }
 

@@ -31,6 +31,7 @@ export type Packet = {
  */
 export type Action = {
     title?: string
+    subtitle?: string
     tooltip?: string
     icon?: IconName
     href?: string
@@ -97,6 +98,9 @@ export default class Theme {
                 }
                 if (action.title?.length) {
                     a.div('.title', {text: action.title})
+                }
+                if (action.subtitle?.length) {
+                    a.div('.subtitle', {text: action.subtitle})
                 }
                 else {
                     a.class('icon-only')

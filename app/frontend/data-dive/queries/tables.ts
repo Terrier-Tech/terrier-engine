@@ -3,7 +3,7 @@ import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters, {Filter, FilterInput, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
-import {messages} from "tuff-core"
+import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import ContentPart from "../../terrier/parts/content-part"
 import {ActionsDropdown} from "../../terrier/dropdowns"
@@ -98,19 +98,37 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             this.app.showModal(FiltersEditorModal, {schema: this.schema, tableView: this as TableView<TableRef>})
         })
 
+        // show the new join dropdown
         this.onClick(this.newJoinedKey, m => {
             log.info(`Adding join to ${this.displayName}`)
 
             // only show belongs-tos that aren't already joined
             const existingJoins = new Set(Object.keys(this.table.joins || []))
-            const actions = Object.values(this.modelDef.belongs_to)
+
+            const newJoins = Object.values(this.modelDef.belongs_to)
                 .filter(bt => !existingJoins.has(bt.name))
-                .map(bt => {
-                    return {
-                        title: Schema.belongsToDisplay(bt),
-                        click: {key: this.createJoinedKey, data: {name: bt.name}}
-                    }
-                })
+
+            // show the common tables at the top
+            let showingCommon = true
+            const actions = arrays.sortByFunction(newJoins, bt => {
+                const model = this.schema.models[bt.model]
+                const common = model.metadata?.visibility == 'common' ? '0' : '1'
+                return `${common}${bt.name}`
+            })
+            .map(bt => {
+                const model = this.schema.models[bt.model]
+                const isCommon = model.metadata?.visibility == 'common'
+                // put a border between the common and uncommon
+                const classes = showingCommon && !isCommon ? ['border-top'] : []
+                showingCommon = isCommon
+                return {
+                    title: Schema.belongsToDisplay(bt),
+                    subtitle: model.metadata?.description,
+                    classes,
+                    click: {key: this.createJoinedKey, data: {name: bt.name}}
+                }
+            })
+
 
             // don't show the dropdown if there are no more belongs-tos left
             if (actions.length) {
@@ -121,6 +139,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             }
         })
 
+        // create a new join
         this.onClick(this.createJoinedKey, m => {
             const belongsTo = this.modelDef.belongs_to[m.data.name]
             if (belongsTo) {
