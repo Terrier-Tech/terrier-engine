@@ -19,7 +19,7 @@
 
 
 	@mixin stretch {
-		flex: 1 1 0;
+		flex: 1 1 auto;
 	}
 	@mixin shrink {
 		flex: 0 0 auto;
