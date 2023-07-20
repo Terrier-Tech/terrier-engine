@@ -28,6 +28,12 @@
 # +------------+---------------+-------------+
 class DdDive < ApplicationRecord
 
+  def self.metadata
+    {
+      visibility: "hidden"
+    }
+  end
+
   belongs_to :dd_dive_group, optional: true
 
   has_many :dd_dive_runs, dependent: :restrict_with_error

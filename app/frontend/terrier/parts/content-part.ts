@@ -154,13 +154,12 @@ export default abstract class ContentPart<TState> extends TerrierPart<TState> {
         constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
         state: DropdownStateType,
         target: EventTarget | null) {
-        if (!(target && target instanceof HTMLElement)) {
-            throw "Trying to show a dropdown without an element target!"
-        }
         const dropdown = this.app.addOverlay(constructor, state, 'dropdown')
         dropdown.parentPart = this
-        dropdown.anchor(target)
-        this.app.lastDropdownTarget = target
+        if (target && target instanceof HTMLElement) {
+            dropdown.anchor(target)
+            this.app.lastDropdownTarget = target
+        }
     }
 
     clearDropdowns() {

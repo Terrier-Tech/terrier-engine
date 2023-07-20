@@ -12,7 +12,6 @@ import {Dropdown} from "../../terrier/dropdowns"
 import dayjs from "dayjs"
 import Format from "../../terrier/format"
 import DiveEditor from "../dives/dive-editor"
-import {isContext} from "vm";
 
 const log = new Logger("Filters")
 
@@ -172,7 +171,8 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 
         this.addAction({
             title: 'Add Filter',
-            icon: 'glyp-plus',
+            icon: 'glyp-plus_outline',
+            classes: ['add-filter'],
             click: {key: addKey}
         }, 'secondary')
 
@@ -185,12 +185,7 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
         })
 
         this.onClick(addKey, m => {
-            const onSelected = (filter: Filter) => {
-                log.info(`Adding ${filter.filter_type} filter`, filter)
-                this.addState(filter)
-                this.updateFilterEditors()
-            }
-            this.toggleDropdown(AddFilterDropdown, {modelDef: this.modelDef, callback: onSelected}, m.event.target)
+            this.showAddFilterDropdown(m.event.target! as HTMLElement)
         })
     }
 
@@ -215,6 +210,23 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
         }
     }
 
+    showAddFilterDropdown(target: HTMLElement | null) {
+        const onSelected = (filter: Filter) => {
+            log.info(`Adding ${filter.filter_type} filter`, filter)
+            this.addState(filter)
+            this.updateFilterEditors()
+        }
+        this.toggleDropdown(AddFilterDropdown, {modelDef: this.modelDef, callback: onSelected}, target)
+    }
+
+    update(elem: HTMLElement) {
+        super.update(elem)
+
+        // if there are no filters, show the dropdown right away
+        if (this.filterStates.length == 0) {
+            this.showAddFilterDropdown(null)
+        }
+    }
 
     save() {
         const filters = this.filterStates.map(state => {

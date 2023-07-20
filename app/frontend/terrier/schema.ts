@@ -8,7 +8,7 @@ import inflection from "inflection"
 /**
  * Possible visibility for models and columns.
  */
-export type MetaVisibility = 'common' | 'uncommon' | 'never'
+export type MetaVisibility = 'common' | 'uncommon' | 'hidden'
 
 /**
  * Definition for a single column in the schema.

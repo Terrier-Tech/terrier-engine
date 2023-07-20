@@ -78,9 +78,15 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
 
     update(_elem: HTMLElement) {
         const content = _elem.querySelector('.tt-dropdown-content')
-        if (this.anchorTarget && content) {
-            log.info(`Anchoring dropdown`, content, this.anchorTarget)
-            Overlays.anchorElement(content as HTMLElement, this.anchorTarget)
+        if (content) {
+            if (this.anchorTarget) {
+                log.info(`Anchoring dropdown`, content, this.anchorTarget)
+                Overlays.anchorElement(content as HTMLElement, this.anchorTarget)
+            }
+            else {
+                // no anchor, just center it on the screen
+                Overlays.centerElement(content as HTMLElement)
+            }
             content.classList.add('show')
         }
     }

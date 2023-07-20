@@ -273,24 +273,40 @@ function anchorBox(size: Size, anchor: Box, container: Size, options: AnchorOpti
     return preferredResult
 }
 
+
+/**
+ * Gets the size of an element, forcing the browser to calculate it if necessary.
+ * @param elem
+ */
+function getElementSize(elem: HTMLElement): Size {
+    // Sometimes the actual width and height of the rendered element is incorrect before we set the style attribute.
+    // Setting the style attribute first forces the browser to re-calculate the size of the element so that we can use
+    // the "real" size to calculate where to anchor the element.
+    elem.setAttribute('style', 'top:0;left:0;')
+
+    return {
+        width: elem.offsetWidth,
+        height: elem.offsetHeight
+    }
+}
+
+/**
+ * Gets the current size of the browser window.
+ */
+function getWindowSize(): Size {
+    return {width: window.innerWidth, height: window.innerHeight}
+}
+
 /**
  * Anchors one element to the side of another.
  * @param elem the element to reposition
  * @param anchor the anchor element
  */
 function anchorElement(elem: HTMLElement, anchor: HTMLElement) {
-    // Sometimes the actual width and height of the rendered element is incorrect before we set the style attribute.
-    // Setting the style attribute first forces the browser to re-calculate the size of the element so that we can use
-    // the "real" size to calculate where to anchor the element.
-    elem.setAttribute('style', 'top:0;left:0;')
-
-    const elemSize = {
-        width: elem.offsetWidth,
-        height: elem.offsetHeight
-    }
+    const elemSize = getElementSize(elem)
     log.debug(`Anchoring element`, elem, anchor)
     const rect = anchor.getBoundingClientRect()
-    const win = {width: window.innerWidth, height: window.innerHeight }
+    const win = getWindowSize()
     const anchorResult = anchorBox(elemSize, rect, win, {preferredSide: 'bottom'})
 
     let styleString = ""
@@ -302,6 +318,25 @@ function anchorElement(elem: HTMLElement, anchor: HTMLElement) {
     elem.setAttribute('style', styleString)
 }
 
+/**
+ * Centers an element on the page.
+ * @param elem
+ */
+function centerElement(elem: HTMLElement) {
+    const elemSize = getElementSize(elem)
+    const win = getWindowSize()
+    log.debug(`Centering element`, elem, win)
+    const cappedSize = {
+        width: Math.min(win.width, elemSize.width),
+        height: Math.min(win.height, elemSize.height)
+    }
+    const styleString = [
+        `left: ${(win.width - cappedSize.width)/2}px`,
+        `top: ${(win.height - cappedSize.height)/2}px`
+    ].join('; ')
+    elem.setAttribute('style', styleString)
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Export
@@ -309,6 +344,7 @@ function anchorElement(elem: HTMLElement, anchor: HTMLElement) {
 
 const Overlays = {
     anchorElement,
+    centerElement,
     anchorBox
 }
 

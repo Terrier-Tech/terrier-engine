@@ -30,6 +30,12 @@
 class ScriptRun < ApplicationRecord
   include Terrier::ScriptRunBase
 
+  def self.metadata
+    {
+      visibility: "hidden"
+    }
+  end
+
   has_attached_file :log
   validates_attachment_content_type :log, content_type: %w(text/plain text/html)
 

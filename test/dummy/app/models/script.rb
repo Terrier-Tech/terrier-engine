@@ -33,6 +33,12 @@ class Script < ApplicationRecord
   include Terrier::ScriptBase
   include Terrier::FullTextSearch
 
+  def self.metadata
+    {
+      visibility: "hidden"
+    }
+  end
+
   can_full_text_search :body
   can_full_text_search :title
   can_full_text_search :description

@@ -22,6 +22,12 @@
 # +------------+------------+--------+
 class DdDiveRun < ApplicationRecord
 
+  def self.metadata
+    {
+      visibility: "hidden"
+    }
+  end
+
   belongs_to :dd_dive
 
   enum_field :status, %w[initial running success error]

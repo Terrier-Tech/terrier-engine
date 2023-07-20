@@ -9,7 +9,7 @@ import Objects from "tuff-core/objects"
 import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
-import DiveEditor from "../dives/dive-editor";
+import DiveEditor from "../dives/dive-editor"
 
 const log = new Logger("Columns")
 

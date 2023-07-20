@@ -23,6 +23,12 @@
 # +------------+------------+--------+
 class DdDiveGroup < ApplicationRecord
 
+  def self.metadata
+    {
+      visibility: "hidden"
+    }
+  end
+
   has_many :dd_dives, dependent: :restrict_with_error
 
   validates :name, presence: true
