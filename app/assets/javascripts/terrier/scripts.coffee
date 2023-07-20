@@ -178,7 +178,8 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 			h4 '.with-icon', ->
 				icon '.glyp-download.lyph-download'
 				span '', 'Output'
-			div '.script-messages'
+			div '.tt-flex.column.gap.script-output', ->
+				div '.script-messages'
 
 
 # @options can contain field_options and field_values, which will override 
@@ -322,12 +323,21 @@ class ReportExecModal
 
 	onChunks: (chunks) ->
 		for chunk in chunks
-			if chunk.type == 'file'
-				this.addOutputFile chunk
-			else
-				@messagesList.addBuffered chunk
+			this.handleChunk(chunk)
+
 		@messagesList.flushBuffer()
 		@messagesList.scrollToBottom()
+
+	handleChunk: (chunk) ->
+		if window.scripts.customChunkHandlers?.length
+			for handler in window.scripts.customChunkHandlers
+				handled = handler(chunk)
+				return if handled
+
+		if chunk.type == 'file'
+			this.addOutputFile chunk
+		else
+			@messagesList.addBuffered chunk
 
 	afterRun: ->
 		@ioControls.removeLoadingOverlay()
@@ -342,6 +352,8 @@ class ReportExecModal
 		d = new Date()
 		@outputFilesView.append "<a class='file with-icon' href='#{file.body}?timestamp=#{d.getTime()}' target='_blank'><i class='glyp-document.lyph-document'></i>#{fileName}</a>"
 
+
+window.scripts.customChunkHandlers = []
 
 window.scripts.newReportExecModal = (script, constants, options={}) ->
 	new ReportExecModal script, constants, options

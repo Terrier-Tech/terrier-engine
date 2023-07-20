@@ -125,11 +125,43 @@ Optionally link to puma-dev:
 puma-dev link -n terrier-engine .
 ```
 
-Whenever changes are made to `app/frontend/terrier`, be sure to publish the npm package:
+## Publishing
 
-```zsh
-rails npm:publish
-```
+Terrier engine consists of two components that must be published separately:
+the gem (contains .rb, .rake, .coffee, and .scss files)
+and the npm package (contains .ts files and hub .svg icons).
+
+### The Gem
+
+Publishing a new version of the gem is very simple:
+
+1. Update the version number in `lib/terrier/version.rb`.
+2. Run `bundle install`.
+3. Push changes.
+
+Step 2 updates the `Gemfile.lock` with the new version number;
+make sure to include it in the pushed changes.
+
+Since the gem is distributed via Github, this is all that is necessary.
+
+### The NPM Package
+
+Whenever changes are made to `app/frontend/terrier`,
+additional publish steps are required:
+
+1. Update the version number in `lib/terrier/version.rb`.
+2. Run `rails npm:build`.
+3. Run `npm i`.
+4. Run `bundle install`.
+5. Push changes.
+6. Run `rails npm:publish`
+
+Steps 2-4 update the `Gemfile.lock`, `package.json`,
+and `package-lock.json` with the new version number;
+make sure to include it in the pushed changes.
+
+Step 6 requires you to have an npmjs.org account
+that has been added to the `terrier-engine` package.
 
 ## Terrier Platform
 
