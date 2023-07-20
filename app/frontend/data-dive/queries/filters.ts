@@ -9,9 +9,10 @@ import inflection from "inflection"
 import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
-import dayjs from "dayjs";
-import Format from "../../terrier/format";
-import DiveEditor from "../dives/dive-editor";
+import dayjs from "dayjs"
+import Format from "../../terrier/format"
+import DiveEditor from "../dives/dive-editor"
+import {isContext} from "vm";
 
 const log = new Logger("Filters")
 
@@ -540,7 +541,7 @@ type AddFilterCallback = (filter: Filter) => any
 const columnSelectedKey = messages.typedKey<{column: string}>()
 
 class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
-    columns!: string[]
+    columns!: ColumnDef[]
 
     get autoClose(): boolean {
         return true
@@ -549,7 +550,11 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
     async init() {
         await super.init()
 
-        this.columns = Object.keys(this.state.modelDef.columns).sort()
+        this.columns = arrays.sortByFunction(Object.values(this.state.modelDef.columns), col => {
+            const visibility = col.metadata?.visibility
+            const sort = visibility == 'common' ? '0' : '1'
+            return `${sort}${col.name}`
+        })
 
         this.onClick(columnSelectedKey, m => {
             const column = m.data.column
@@ -576,7 +581,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
     }
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-select-columns-dropdown']);
+        return super.parentClasses.concat(['dd-select-columns-dropdown', 'tt-actions-dropdown']);
     }
 
     renderContent(parent: PartTag) {
@@ -584,9 +589,22 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
             header.i(".glyp-columns")
             header.span().text("Select a Column")
         })
+        let showingCommon = true
         for (const column of this.columns) {
-            parent.a({text: column})
-                .emitClick(columnSelectedKey, {column})
+            const isCommon = column.metadata?.visibility == 'common'
+            parent.a(a => {
+                a.div('.title').text(column.name)
+                const desc = column.metadata?.description
+                if (desc?.length) {
+                    a.div('.subtitle').text(desc)
+                }
+
+                // show a border between common and uncommon columns
+                if (showingCommon && !isCommon) {
+                    a.class('border-top')
+                }
+            }).emitClick(columnSelectedKey, {column: column.name})
+            showingCommon = isCommon
         }
     }
 
