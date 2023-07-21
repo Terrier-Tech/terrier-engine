@@ -1,6 +1,8 @@
 @import "../terrier/tt-mixins";
 
 #data-dive-app {
+	--dd-hint-color: var(--tt-docs-color);
+
 	flex: 1 1 auto;
 	.tt-page-part {
 		gap: 0;

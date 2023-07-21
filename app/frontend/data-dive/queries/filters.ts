@@ -172,7 +172,7 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
         this.addAction({
             title: 'Add Filter',
             icon: 'glyp-plus_outline',
-            classes: ['add-filter'],
+            classes: ['add-filter', 'secondary'],
             click: {key: addKey}
         }, 'secondary')
 

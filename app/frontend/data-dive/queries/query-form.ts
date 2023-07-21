@@ -27,7 +27,7 @@ export default class QueryForm extends ContentPart<{ query: QuerySettings }> {
 
 
     get parentClasses(): Array<string> {
-        return ['tt-form']
+        return ['tt-form', 'tt-flex', 'column', 'gap']
     }
 
     renderContent(parent: PartTag): void {

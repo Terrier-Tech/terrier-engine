@@ -178,8 +178,8 @@ class DemoTabs extends TabContainerPart {
             {key: 'three', title: "Tab Three", icon: 'glyp-pending', state: "disabled"},
             DummyTab, {container: this, title: "Tab Three", content: "This is the third tab."}
         )
-        this.setBeforeAction({title: "Before", icon: 'hub-arrow_left'})
-        this.setAfterAction({title: "After", icon: 'hub-arrow_right'})
+        this.addBeforeAction({title: "Before", icon: 'hub-arrow_left'})
+        this.addAfterAction({title: "After", icon: 'hub-arrow_right'})
     }
 }
 

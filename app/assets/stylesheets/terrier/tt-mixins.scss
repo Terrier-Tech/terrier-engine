@@ -294,6 +294,11 @@ $color-diff: 0.08;
 	box-shadow: inset 0 calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
 }
 
+// same as tt-box-shadow but at a 45 degree angle
+@mixin tt-box-shadow-45($height: 2, $opacity:  0.1) {
+	box-shadow: calc(var(--tt-shadow-spread) / 2) calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
+}
+
 @mixin tt-scale-push {
 	@include tt-no-select;
 	&:hover {

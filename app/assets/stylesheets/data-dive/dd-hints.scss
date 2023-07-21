@@ -1,0 +1,73 @@
+@import "../terrier/tt-mixins";
+
+.dd-hint {
+	@include tt-rounded-corners;
+	@include tt-inset-white-text;
+	@include tt-box-shadow;
+	display: none;
+	background-color: var(--dd-hint-color);
+	font-size: var(--tt-caption-font-size);
+	position: relative;
+	padding: 0.8em;
+
+	.title {
+		text-align: center;
+		flex: 1 1 auto;
+	}
+
+	// arrows
+	--arrow-size: 16px;
+	&::after {
+		position: absolute;
+		width: var(--arrow-size);
+		height: var(--arrow-size);
+		background-color: var(--dd-hint-color);
+		@include tt-box-shadow-45;
+	}
+
+	// only show the arrow if there's an arrow- class
+	&.arrow-left, &.arrow-right, &.arrow-top, &.arrow-bottom {
+		&::after {
+			content: "";
+		}
+	}
+
+	&.arrow-left, &.arrow-right {
+		&::after {
+			top: 50%;
+			transform: translate(0, -50%) rotate(45deg);
+		}
+	}
+
+	&.arrow-left::after {
+		left: calc(var(--arrow-size) / -2);
+		clip-path: polygon(-100% -100%, 200% 200%, -100% 200%);
+	}
+
+	&.arrow-right::after {
+		right: calc(var(--arrow-size) / -2);
+		clip-path: polygon(-100% -100%, 200% 200%, 200% -100%);
+	}
+
+	&.arrow-top, &.arrow-bottom {
+		&::after {
+			left: 50%;
+			transform: translate(-50%, 0) rotate(45deg);
+		}
+	}
+
+	&.arrow-top::after {
+		top: calc(var(--arrow-size) / -2 + 1px); // extra pixel to eliminate small gap
+		clip-path: polygon(200% -100%, -100% -100%, -100% 200%);
+	}
+
+	&.arrow-bottom::after {
+		bottom: calc(var(--arrow-size) / -2);
+		clip-path: polygon(200% -100%, 200% 200%, -100% 200%);
+	}
+}
+
+// only show hints when the body has the dd-show-hints class
+.dd-show-hints .dd-hint {
+	display: flex;
+}

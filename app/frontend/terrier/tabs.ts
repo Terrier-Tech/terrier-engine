@@ -117,17 +117,17 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     }
 
 
-    _beforeAction?: Action
+    _beforeActions: Action[] = []
 
-    setBeforeAction(action: Action) {
-        this._beforeAction = action
+    addBeforeAction(action: Action) {
+        this._beforeActions.push(action)
         this.dirty()
     }
 
-    _afterAction?: Action
+    _afterActions: Action[] = []
 
-    setAfterAction(action: Action) {
-        this._afterAction = action
+    addAfterAction(action: Action) {
+        this._afterActions.push(action)
         this.dirty()
     }
 
@@ -141,8 +141,8 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         }
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
-                if (this._beforeAction) {
-                    this.theme.renderActions(tabList, [this._beforeAction], {defaultClass: 'action'})
+                if (this._beforeActions.length) {
+                    this.theme.renderActions(tabList, this._beforeActions, {defaultClass: 'action'})
                 }
                 for (const tab of Object.values(this.tabs)) {
                     if (tab.state == 'hidden') continue
@@ -162,9 +162,9 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                         }
                     })
                 }
-                if (this._afterAction) {
+                if (this._afterActions.length) {
                     tabList.div('.spacer')
-                    this.theme.renderActions(tabList, [this._afterAction], {defaultClass: 'action'})
+                    this.theme.renderActions(tabList, this._afterActions, {defaultClass: 'action'})
                 }
             })
 

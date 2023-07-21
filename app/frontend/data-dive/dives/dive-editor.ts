@@ -27,6 +27,7 @@ const log = new Logger("DiveEditor")
 export type DiveEditorState = {
     schema: SchemaDef
     dive: DdDive
+    session: DdSession
 }
 
 export default class DiveEditor extends ContentPart<DiveEditorState> {
@@ -42,12 +43,19 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     async init() {
         this.tabs = this.makePart(TabContainerPart, {side: 'top'})
 
-        this.tabs.setBeforeAction({
+        this.tabs.addBeforeAction({
             title: 'Queries:',
             icon: 'glyp-data_dive_query'
         })
-        this.tabs.setAfterAction({
+        this.tabs.addAfterAction({
+            title: "Add Another Query",
+            classes: ['dd-hint', 'arrow-right'],
+            tooltip: "Each query represents a separate tab in the resulting spreadsheet",
+            click: {key: this.newQueryKey}
+        })
+        this.tabs.addAfterAction({
             icon: 'glyp-plus_outline',
+            classes: ['new-query'],
             click: {key: this.newQueryKey}
         })
 
@@ -119,7 +127,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         const schema = await Schema.get()
         this.session = await DdSession.get()
         const dive = await Dives.get(this.state.id)
-        this.editor = this.makePart(DiveEditor, {schema, dive})
+        this.editor = this.makePart(DiveEditor, {schema, dive, session: this.session})
 
         this.mainContentWidth = 'wide'
 

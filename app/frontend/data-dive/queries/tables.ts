@@ -215,7 +215,17 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 a.div().text("Join")
                 a.i('.glyp-belongs_to')
             }).emitClick(this.newJoinedKey)
+
+            // join hint
+            if (!Object.keys(this.table.joins || {}).length) {
+                panel.a('.dd-hint.joins.arrow-top', hint => {
+                    hint.div('.title').text("Join More Tables")
+                })
+                .emitClick(this.newJoinedKey)
+                .data({tooltip: "Include data from other tables that are related to this one"})
+            }
         })
+
     }
 
     renderColumns(parent: PartTag) {
