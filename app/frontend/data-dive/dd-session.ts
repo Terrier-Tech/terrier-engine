@@ -15,6 +15,12 @@ type DdSessionData = {
 const showHintsKey = 'dd-show-hints'
 
 /**
+ * Class that gets added to the body when hints shouldn't be shown.
+ * Needs to be negative like this so we can just apply an !important and override any accidental display values.
+ */
+const hideHintsClass = 'dd-hide-hints'
+
+/**
  * Stores authentication information as well as various options from the server.
  */
 export default class DdSession {
@@ -54,9 +60,9 @@ export default class DdSession {
         const body = document.querySelector('body')
         if (body) {
             if (this._showHints) {
-                body.classList.add(showHintsKey)
+                body.classList.remove(hideHintsClass)
             } else {
-                body.classList.remove(showHintsKey)
+                body.classList.add(hideHintsClass)
             }
         }
     }

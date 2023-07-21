@@ -4,7 +4,7 @@
 	@include tt-rounded-corners;
 	@include tt-inset-white-text;
 	@include tt-box-shadow;
-	display: none;
+	display: flex;
 	background-color: var(--dd-hint-color);
 	font-size: var(--tt-caption-font-size);
 	position: relative;
@@ -67,7 +67,7 @@
 	}
 }
 
-// only show hints when the body has the dd-show-hints class
-.dd-show-hints .dd-hint {
-	display: flex;
+// only show hints when the body doesn't have the dd-hide-hints class
+.dd-hide-hints .dd-hint {
+	display: none !important;
 }

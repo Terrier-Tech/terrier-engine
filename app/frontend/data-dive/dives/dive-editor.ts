@@ -146,6 +146,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
             title: "Hints",
             icon: 'glyp-help',
             defaultValue: this.session.showHints.toString(),
+            onChangeKey: this.showHintsKey,
             onInputKey: this.showHintsKey
         })
 
@@ -179,8 +180,10 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         this.onClick(this.runKey, _ => this.run())
 
         this.onInput(this.showHintsKey, m => {
-            log.info(`Show hints changed to ${m.value}`, m)
-            this.session.showHints = m.value == 'true'
+            // TODO: fix emitInput and emitChange to return the correct value in tuff
+            const showHints = (m.event.target as HTMLInputElement).checked
+            log.info(`Show hints input to ${showHints}`, m)
+            this.session.showHints = showHints
         })
 
         this.listenMessage(DiveEditor.diveChangedKey, _ => {
