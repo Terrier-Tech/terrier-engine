@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>hint</title>
+    <g id="hint" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" fill="#000000" x="30" y="4" width="4" height="8" rx="2"></rect>
+        <path d="M27,53 L37,53 C37.5522847,53 38,53.4477153 38,54 L38,57 C38,57.5522847 37.5522847,58 37,58 L35,58 L35,58 C34.3333333,59.3333333 33.3333333,60 32,60 C30.6666667,60 29.6666667,59.3333333 29,58 L27,58 C26.4477153,58 26,57.5522847 26,57 L26,54 C26,53.4477153 26.4477153,53 27,53 Z" id="Path-218" fill="#000000"></path>
+        <rect id="Rectangle" fill="#000000" x="30" y="30" width="4" height="12" rx="2"></rect>
+        <circle id="Oval" fill="#000000" cx="32" cy="26" r="2"></circle>
+        <rect id="Rectangle" fill="#000000" transform="translate(48.9706, 15.0294) rotate(45) translate(-48.9706, -15.0294)" x="46.9705627" y="11.0294373" width="4" height="8" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(56, 32) rotate(90) translate(-56, -32)" x="54" y="28" width="4" height="8" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(48.9706, 48.9706) rotate(135) translate(-48.9706, -48.9706)" x="46.9705627" y="44.9705627" width="4" height="8" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(15.0294, 48.9706) rotate(225) translate(-15.0294, -48.9706)" x="13.0294373" y="44.9705627" width="4" height="8" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(8, 32) rotate(270) translate(-8, -32)" x="6" y="28" width="4" height="8" rx="2"></rect>
+        <rect id="Rectangle" fill="#000000" transform="translate(15.0294, 15.0294) rotate(315) translate(-15.0294, -15.0294)" x="13.0294373" y="11.0294373" width="4" height="8" rx="2"></rect>
+        <path d="M32,16 C40.836556,16 48,23.163444 48,32 C48,35.9332251 45.4265013,40.5279541 40.2795039,45.784187 C39.391831,46.6934421 38.6819166,48.4956911 38.1497606,51.1909341 C38.0590674,51.660073 37.6487219,51.9989833 37.1708984,52 L26.8291016,52 C26.3512935,51.998985 25.9409554,51.6600974 25.8502353,51.1909793 C25.3180658,48.4958886 24.6081444,46.6937565 23.720471,45.7845832 C18.5734903,40.5283111 16,35.93345 16,32 C16,23.163444 23.163444,16 32,16 Z M32,20 C25.372583,20 20,25.372583 20,32 C20,34.6682093 22.0931975,38.4055272 26.5825365,42.9901994 C27.9303619,44.3706699 28.9133846,46.0416445 29.4702523,47.8534094 L29.513,48 L34.486,48 L34.5299153,47.8530164 C35.0523114,46.1541639 35.9498053,44.5783943 37.1726444,43.2483165 L37.4215354,42.9856131 C41.9068004,38.4051566 44,34.6679545 44,32 C44,25.372583 38.627417,20 32,20 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

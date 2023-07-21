@@ -5,14 +5,21 @@
 	@include tt-inset-white-text;
 	@include tt-box-shadow;
 	display: flex;
+	align-items: center;
 	background-color: var(--dd-hint-color);
 	font-size: var(--tt-caption-font-size);
 	position: relative;
 	padding: 0.8em;
+	gap: 0.5em;
 
-	.title {
+	.title, .hint-title {
 		text-align: center;
 		flex: 1 1 auto;
+	}
+
+	&::before {
+		display: block;
+		transform: scale(1.5);
 	}
 
 	// arrows
@@ -68,6 +75,8 @@
 }
 
 // only show hints when the body doesn't have the dd-hide-hints class
-.dd-hide-hints .dd-hint {
-	display: none !important;
+.dd-hide-hints {
+	.dd-hint, .dd-hint-container {
+		display: none !important;
+	}
 }

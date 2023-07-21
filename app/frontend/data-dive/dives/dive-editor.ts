@@ -49,7 +49,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         })
         this.tabs.addAfterAction({
             title: "Add Another Query",
-            classes: ['dd-hint', 'arrow-right'],
+            classes: ['dd-hint', 'arrow-right', 'glyp-hint'],
             tooltip: "Each query represents a separate tab in the resulting spreadsheet",
             click: {key: this.newQueryKey}
         })
@@ -144,7 +144,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
 
         this.addToolbarInput('show-hints', 'checkbox', {
             title: "Hints",
-            icon: 'glyp-help',
+            icon: 'glyp-hint',
             defaultValue: this.session.showHints.toString(),
             onChangeKey: this.showHintsKey,
             onInputKey: this.showHintsKey

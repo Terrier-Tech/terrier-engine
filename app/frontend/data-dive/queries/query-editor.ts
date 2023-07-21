@@ -40,7 +40,7 @@ class SettingsPart extends ContentPart<SubEditorState> {
     renderContent(parent: PartTag) {
         parent.part(this.form)
         parent.div('.tt-flex.gap.align-center.justify-end', row => {
-            row.div('.dd-hint', hint => {
+            row.div('.dd-hint.glyp-hint', hint => {
                 hint.div('.title').text("These settings only apply to this query, not the dive as a whole")
             })
             row.a('.alert.tt-flex', a => {

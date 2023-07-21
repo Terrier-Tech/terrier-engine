@@ -218,7 +218,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
 
             // join hint
             if (!Object.keys(this.table.joins || {}).length) {
-                panel.a('.dd-hint.joins.arrow-top', hint => {
+                panel.a('.dd-hint.joins.arrow-top.glyp-hint', hint => {
                     hint.div('.title').text("Join More Tables")
                 })
                 .emitClick(this.newJoinedKey)
@@ -246,6 +246,11 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             }
             else {
                 section.div('.line.empty').div().text('None')
+                section.div('.dd-hint-container', hintContainer => {
+                    hintContainer.div('dd-hint.glyp-hint', hint => {
+                        hint.div('.hint-title').text("Add Columns")
+                    })
+                })
             }
         }).emitClick(this.editColumnsKey, {})
     }
@@ -264,6 +269,11 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 }
             } else {
                 section.div('.line.empty').text('None')
+                section.div('.dd-hint-container', hintContainer => {
+                    hintContainer.div('dd-hint.glyp-hint', hint => {
+                        hint.div('.hint-title').text("Add Filters")
+                    })
+                })
             }
         }).emitClick(this.editFiltersKey, {})
     }
