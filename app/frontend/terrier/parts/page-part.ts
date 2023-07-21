@@ -1,10 +1,9 @@
-import {Action, RenderActionOptions} from "../theme"
+import {Action, IconName, RenderActionOptions} from "../theme"
 import ContentPart, {ActionLevel} from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import {optionsForSelect, SelectOptions} from "tuff-core/forms"
 import {UntypedKey} from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
-import {HtmlParentTag} from "tuff-core/html"
 
 const log = new Logger("Terrier PagePart")
 
@@ -18,15 +17,17 @@ export type ContentWidth = "normal" | "wide"
 type BaseFieldDef = { name: string } & ToolbarFieldDefOptions
 
 type ToolbarFieldDefOptions = {
-    onChangeKey?: UntypedKey,
-    onInputKey?: UntypedKey,
-    defaultValue?: string,
+    onChangeKey?: UntypedKey
+    onInputKey?: UntypedKey
+    defaultValue?: string
     tooltip?: string
+    title?: string
+    icon?: IconName
 }
 
 type ToolbarSelectDef = { type: 'select', options: SelectOptions } & BaseFieldDef
 
-type ValuedInputType = 'text' | 'color' | 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'time' | 'url' | 'week'
+type ValuedInputType = 'text' | 'color' | 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'time' | 'url' | 'week' | 'checkbox'
 type ToolbarValuedInputDef = { type: ValuedInputType } & BaseFieldDef
 
 /**
@@ -163,7 +164,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
     }
 
     protected renderToolbarFields(parent: PartTag) {
-        parent.div('.fields.tt-flex.align-center.small-gap', fields => {
+        parent.div('.fields', fields => {
             for (const name of this._toolbarFieldsOrder) {
                 const def = this._toolbarFields[name]
                 if (!def) {
@@ -171,18 +172,33 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                     continue;
                 }
 
-                let field!: HtmlParentTag
-                if (def.type === 'select') {
-                    field = fields.select({name: def.name}, select => {
-                        optionsForSelect(select, def.options, def.defaultValue)
-                    })
-                } else {
-                    field = fields.input({name: def.name, type: def.type})
-                }
+                fields.label(label => {
+                    if (def.icon?.length) {
+                        label.i('.icon').class(def.icon)
+                    }
 
-                if (def.onChangeKey) field.emitChange(def.onChangeKey)
-                if (def.onInputKey) field.emitInput(def.onInputKey)
-                if (def.tooltip?.length) field.dataAttr('tooltip', def.tooltip)
+                    if (def.title?.length) {
+                        label.div('.title').text(def.title)
+                    }
+
+                    if (def.type === 'select') {
+                        const select = label.select({name: def.name}, select => {
+                            optionsForSelect(select, def.options, def.defaultValue)
+                        })
+                        if (def.onChangeKey) select.emitChange(def.onChangeKey)
+                        if (def.onInputKey) select.emitInput(def.onInputKey)
+                    } else {
+                        const input = label.input({name: def.name, type: def.type, value: def.defaultValue})
+                        if (def.type == 'checkbox' && def.defaultValue?.length) {
+                            input.attrs({checked: def.defaultValue == 'true'})
+                        }
+                        if (def.onChangeKey) input.emitChange(def.onChangeKey)
+                        if (def.onInputKey) input.emitInput(def.onInputKey)
+                    }
+
+
+                    if (def.tooltip?.length) label.dataAttr('tooltip', def.tooltip)
+                })
             }
         })
     }

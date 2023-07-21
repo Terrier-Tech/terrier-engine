@@ -6,6 +6,10 @@
 	height: var(--tt-toolbar-height);
 	font-size: var(--tt-toolbar-font-size);
 	gap: var(--tt-gap);
+	i {
+		display: block;
+		transform: scale(1.2);
+	}
 	> div {
 		flex: 0 0 auto;
 	}
@@ -15,10 +19,6 @@
 		align-items: center;
 		@include tt-no-select;
 		font-weight: normal;
-		i {
-			display: block;
-			transform: scale(1.2);
-		}
 	}
 	.page-title {
 		flex: 1 1 auto;
@@ -34,6 +34,24 @@
 	}
 	.tertiary-actions {
 		flex: 0 0 auto;
+	}
+	.fields {
+		display: flex;
+		align-items: stretch;
+	}
+	label {
+		@include tt-no-select;
+		display: flex;
+		flex: 0 0 auto;
+		gap: 0.5em;
+		align-items: center;
+		font-size: var(--tt-toolbar-font-size);
+		@include tt-shaded-hover;
+		padding: 0 1em;
+		input[type=checkbox] {
+			margin: 0;
+			transform: scale(1.25);
+		}
 	}
 }
 

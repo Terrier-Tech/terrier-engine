@@ -3,7 +3,9 @@ import Api from "../terrier/api"
 import {DdDiveGroup} from "./gen/models"
 import {arrays} from "tuff-core";
 import {SelectOptions} from "tuff-core/forms"
+import {Logger} from "tuff-core/logging"
 
+const log = new Logger("DD Session")
 
 type DdSessionData = {
     user: DdUser
@@ -39,6 +41,7 @@ export default class DdSession {
      */
     set showHints(val: boolean) {
         this._showHints = val
+        log.info(`Persisting ${showHintsKey} to ${val}`)
         localStorage.setItem(showHintsKey, val.toString())
         this.updateShowHints()
     }

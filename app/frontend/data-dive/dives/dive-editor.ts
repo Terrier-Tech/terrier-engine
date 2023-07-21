@@ -117,6 +117,7 @@ export class DiveEditorPage extends PagePart<{id: string}> {
     editor!: DiveEditor
     session!: DdSession
 
+    showHintsKey = messages.untypedKey()
     saveKey = messages.untypedKey()
     discardKey = messages.untypedKey()
     runKey = messages.untypedKey()
@@ -139,6 +140,13 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         this.addBreadcrumb({
             title: dive.name,
             icon: 'glyp-data_dive'
+        })
+
+        this.addToolbarInput('show-hints', 'checkbox', {
+            title: "Hints",
+            icon: 'glyp-help',
+            defaultValue: this.session.showHints.toString(),
+            onInputKey: this.showHintsKey
         })
 
         this.addAction({
@@ -169,6 +177,11 @@ export class DiveEditorPage extends PagePart<{id: string}> {
         this.onClick(this.saveKey, _ => this.save())
 
         this.onClick(this.runKey, _ => this.run())
+
+        this.onInput(this.showHintsKey, m => {
+            log.info(`Show hints changed to ${m.value}`, m)
+            this.session.showHints = m.value == 'true'
+        })
 
         this.listenMessage(DiveEditor.diveChangedKey, _ => {
             log.info("Dive changed")
