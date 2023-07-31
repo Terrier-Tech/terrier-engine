@@ -2,7 +2,7 @@ import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
 import {untypedKey} from "tuff-core/messages";
-type PanelState = {
+export type PanelState = {
     collapsed?: Boolean
     collapsible?: Boolean
     chevronSide?: string
@@ -10,7 +10,7 @@ type PanelState = {
 /**
  * A part that renders content inside a panel.
  */
-export default abstract class PanelPart<TState> extends ContentPart<TState> {
+export default abstract class PanelPart<TState extends PanelState> extends ContentPart<TState> {
 
     toggleCollapseKey = untypedKey()
 
