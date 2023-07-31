@@ -12,10 +12,7 @@ type PanelState = {
  */
 export default abstract class PanelPart<TState> extends ContentPart<TState> {
 
-    toggleCollapseKey = typedKey<{}>()
-    private collapsed = false
-    private collapsible = false
-    chevronSide: 'left' | 'right' = 'left'
+    toggleCollapseKey = untypedKey()
 
     async init() {
         if (!this.state.chevronSide) {
@@ -43,7 +40,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
             panel.class(...this.panelClasses)
             if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
-                    if (this.chevronSide == 'left') {
+                    if (this.state.chevronSide == 'left') {
                         this.renderChevron(header)
                     }
                     header.h2(h2 => {
@@ -55,12 +52,12 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
                     header.div('.tertiary-actions', actions => {
                         this.theme.renderActions(actions, this.getActions('tertiary'))
                     })
-                    if (this.chevronSide == 'right') {
+                    if (this.state.chevronSide == 'right') {
                         this.renderChevron(header)
                     }
                 })
             }
-            if (!this.collapsed) {
+            if (!this.state.collapsed) {
                 panel.div('.panel-content', ...this.contentClasses, content => {
                     this.renderContent(content)
                 })
@@ -76,15 +73,15 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
     }
 
     renderChevron(parent: PartTag) {
-        if (this.collapsible) {
+        if (this.state.collapsible) {
             parent.div('.collapsible-chevron', chev => {
-                if (this.collapsed) {
+                if (this.state.collapsed) {
                     this.app.theme.renderIcon(chev, `glyp-chevron_right`, 'white')
                 }
                 else {
                     this.app.theme.renderIcon(chev, 'glyp-chevron_down', 'white')
                 }
-                chev.emitClick(this.toggleCollapseKey, {})
+                parent.emitClick(this.toggleCollapseKey)
             })
         }
     }
