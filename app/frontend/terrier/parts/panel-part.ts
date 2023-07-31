@@ -18,8 +18,8 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
     chevronSide: 'left' | 'right' = 'left'
 
     async init() {
-        if ('collapsible' in this.state) {
-            this.collapsible = true
+        if (!this.state.chevronSide) {
+            this.state.chevronSide = 'left'
         }
         this.onClick(this.toggleCollapseKey, _ => {
             this.toggleCollapse()
