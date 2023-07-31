@@ -1410,7 +1410,7 @@ class SettingsModal
 
 	save: ->
 		@errorExplanation.hide()
-		data = @form.serializeObject()
+		data = @settingsForm.serializeObject()
 		if data.title == 'New Script'
 			reply = [
 				"should be more descriptive"
@@ -1419,7 +1419,7 @@ class SettingsModal
 				"needs to be a real name - stop abusing the database"
 				"doesn't matter anymore. you can't read anyway"
 			]
-			@form.showErrors {title: reply[@id10tCount % reply.length]}
+			@settingsForm.showErrors {title: reply[@id10tCount % reply.length]}
 			@id10tCount += 1
 			return false
 
@@ -1435,7 +1435,7 @@ class SettingsModal
 					@ui.removeLoadingOverlay()
 					puts res.script
 					puts res.errors
-					@form.showErrors res.errors
+					@settingsForm.showErrors res.errors
 		)
 
 window.scripts.newSettingsModal = (scriptId) ->
