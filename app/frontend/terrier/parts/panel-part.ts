@@ -2,7 +2,11 @@ import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
 import {untypedKey} from "tuff-core/messages";
-
+type PanelState = {
+    collapsed?: Boolean
+    collapsible?: Boolean
+    chevronSide?: string
+}
 /**
  * A part that renders content inside a panel.
  */
