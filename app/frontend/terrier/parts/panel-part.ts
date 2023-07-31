@@ -71,7 +71,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState> {
     }
 
     toggleCollapse() {
-        this.collapsed = !this.collapsed
+        this.state.collapsed = !this.state.collapsed
         this.dirty()
     }
 
