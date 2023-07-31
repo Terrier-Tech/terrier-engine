@@ -1,7 +1,7 @@
 import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
-import {typedKey} from "tuff-core/messages";
+import {untypedKey} from "tuff-core/messages";
 
 /**
  * A part that renders content inside a panel.
