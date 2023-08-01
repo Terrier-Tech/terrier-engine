@@ -2,25 +2,25 @@ import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
 import {untypedKey} from "tuff-core/messages";
-export type PanelState = {
+
+export type CollapsibleConfig = {
     collapsed?: Boolean
-    collapsible?: Boolean
-    chevronSide?: string
+    chevronSide: string
 }
 /**
  * A part that renders content inside a panel.
  */
-export default abstract class PanelPart<TState extends PanelState> extends ContentPart<TState> {
+export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig}> {
 
     toggleCollapseKey = untypedKey()
 
     async init() {
-        if (!this.state.chevronSide) {
-            this.state.chevronSide = 'left'
+        if (this.state.collapsible && !this.state.collapsible.chevronSide) {
+            this.state.collapsible.chevronSide = 'left'
+            this.onClick(this.toggleCollapseKey, _ => {
+                this.toggleCollapse()
+            })
         }
-        this.onClick(this.toggleCollapseKey, _ => {
-            this.toggleCollapse()
-        })
     }
 
     getLoadingContainer() {
@@ -40,7 +40,7 @@ export default abstract class PanelPart<TState extends PanelState> extends Conte
             panel.class(...this.panelClasses)
             if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
-                    if (this.state.chevronSide == 'left') {
+                    if (this.state.collapsible?.chevronSide == 'left') {
                         this.renderChevron(header)
                     }
                     header.h2(h2 => {
@@ -52,12 +52,12 @@ export default abstract class PanelPart<TState extends PanelState> extends Conte
                     header.div('.tertiary-actions', actions => {
                         this.theme.renderActions(actions, this.getActions('tertiary'))
                     })
-                    if (this.state.chevronSide == 'right') {
+                    if (this.state.collapsible?.chevronSide == 'right') {
                         this.renderChevron(header)
                     }
                 })
             }
-            if (!this.state.collapsed) {
+            if (!this.state.collapsible?.collapsed) {
                 panel.div('.panel-content', ...this.contentClasses, content => {
                     this.renderContent(content)
                 })
@@ -68,21 +68,22 @@ export default abstract class PanelPart<TState extends PanelState> extends Conte
     }
 
     toggleCollapse() {
-        this.state.collapsed = !this.state.collapsed
-        this.dirty()
+        if (this.state.collapsible) {
+            this.state.collapsible.collapsed = !this.state.collapsible?.collapsed
+            this.dirty()
+        }
     }
 
     renderChevron(parent: PartTag) {
         if (this.state.collapsible) {
             parent.div('.collapsible-chevron', chev => {
-                if (this.state.collapsed) {
-                    this.app.theme.renderIcon(chev, `glyp-chevron_right`, 'white')
-                }
-                else {
-                    this.app.theme.renderIcon(chev, 'glyp-chevron_down', 'white')
-                }
+                this.renderChevronIcon(chev, this.state.collapsible?.collapsed!)
                 parent.emitClick(this.toggleCollapseKey)
             })
         }
+    }
+
+    renderChevronIcon(parent: PartTag, isCollapsed: Boolean) {
+        this.app.theme.renderIcon(parent, isCollapsed ? 'glyp-chevron_right' : 'glyp-chevron_down', 'white')
     }
 }
