@@ -2,18 +2,8 @@
 <svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>icon-day</title>
     <g id="icon-day" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <circle id="Oval" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="16" cy="16" r="7"></circle>
-        <rect id="Rectangle" fill="#000000" x="15" y="4" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(21.250000, 6.906733) rotate(30.000000) translate(-21.250000, -6.906733) " x="20.25" y="5.40673326" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(25.093267, 10.750000) rotate(60.000000) translate(-25.093267, -10.750000) " x="24.0932667" y="9.25" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(26.500000, 16.000000) rotate(90.000000) translate(-26.500000, -16.000000) " x="25.5" y="14.5" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(25.093267, 21.250000) rotate(120.000000) translate(-25.093267, -21.250000) " x="24.0932667" y="19.75" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(21.250000, 25.093267) rotate(150.000000) translate(-21.250000, -25.093267) " x="20.25" y="23.5932667" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(16.000000, 26.500000) rotate(180.000000) translate(-16.000000, -26.500000) " x="15" y="25" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(10.750000, 25.093267) rotate(210.000000) translate(-10.750000, -25.093267) " x="9.75" y="23.5932667" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(6.906733, 21.250000) rotate(240.000000) translate(-6.906733, -21.250000) " x="5.90673326" y="19.75" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(5.500000, 16.000000) rotate(270.000000) translate(-5.500000, -16.000000) " x="4.5" y="14.5" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(6.906733, 10.750000) rotate(300.000000) translate(-6.906733, -10.750000) " x="5.90673326" y="9.25" width="2" height="3" rx="1"></rect>
-        <rect id="Rectangle" fill="#000000" transform="translate(10.750000, 6.906733) rotate(330.000000) translate(-10.750000, -6.906733) " x="9.75" y="5.40673326" width="2" height="3" rx="1"></rect>
+        <rect id="Rectangle" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" x="5" y="7" width="22" height="18"></rect>
+        <path d="M22,4 C22.5522847,4 23,4.44771525 23,5 L23,6 L26,6 C27.1045695,6 28,6.8954305 28,8 L28,24 C28,25.1045695 27.1045695,26 26,26 L6,26 C4.8954305,26 4,25.1045695 4,24 L4,8 C4,6.8954305 4.8954305,6 6,6 L9,6 L9,5 C9,4.44771525 9.44771525,4 10,4 C10.5522847,4 11,4.44771525 11,5 L11,6 L21,6 L21,5 C21,4.44771525 21.4477153,4 22,4 Z M9,8 L6,8 L6,24 L26,24 L26,8 L23,8 L23,9 C23,9.55228475 22.5522847,10 22,10 C21.4477153,10 21,9.55228475 21,9 L21,8 L11,8 L11,9 C11,9.55228475 10.5522847,10 10,10 C9.44771525,10 9,9.55228475 9,9 L9,8 Z" id="Combined-Shape" fill="#000000"></path>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="17" y="14" width="4" height="4" rx="1"></rect>
     </g>
 </svg>
