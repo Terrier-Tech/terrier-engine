@@ -5,7 +5,7 @@ import {untypedKey} from "tuff-core/messages";
 
 export type CollapsibleConfig = {
     collapsed?: Boolean
-    chevronSide: string
+    chevronSide?: string
 }
 /**
  * A part that renders content inside a panel.
@@ -15,8 +15,10 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
     toggleCollapseKey = untypedKey()
 
     async init() {
-        if (this.state.collapsible && !this.state.collapsible.chevronSide) {
-            this.state.collapsible.chevronSide = 'left'
+        if (this.state.collapsible) {
+            if (!this.state.collapsible.chevronSide) {
+                this.state.collapsible.chevronSide = 'left'
+            }
             this.onClick(this.toggleCollapseKey, _ => {
                 this.toggleCollapse()
             })
