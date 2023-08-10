@@ -50,14 +50,37 @@
 		display: flex;
 		flex-direction: column;
 		flex: 1 1 auto;
-		&.gap {
-			gap: var(--tt-gap);
-		}
 		&.padded {
 			// only horizontal padding since the vertical is handled by the gap
 			padding: 0 var(--tt-pad);
 		}
+
+		.content-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		&.gap .content-container {
+			gap: var(--tt-gap);
+		}
+
+		overflow-y: hidden;
+		transition: flex-basis var(--tt-animation-duration) ease-in-out;
 	}
+	.collapsible-chevron {
+		transition: rotate var(--tt-animation-duration) ease-in;
+	}
+	&.collapsed {
+		.panel-content {
+			flex-basis: 0;
+			pointer-events: none;
+		}
+
+		.collapsible-chevron {
+			rotate: -90deg;
+		}
+	}
+
 	.panel-actions {
 		display: flex;
 		align-items: center;

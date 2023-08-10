@@ -4,25 +4,32 @@ import Fragments from "../fragments"
 import {untypedKey} from "tuff-core/messages";
 
 export type CollapsibleConfig = {
-    collapsed?: Boolean
-    chevronSide?: string
+    collapsed?: boolean
+    chevronSide?: 'left' | 'right'
 }
 /**
  * A part that renders content inside a panel.
  */
 export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig}> {
+    protected static readonly DEFAULT_CHEVRON_SIDE: 'left' | 'right' = 'left'
 
     toggleCollapseKey = untypedKey()
 
+    private _prevCollapsedState?: boolean
+
     async init() {
         if (this.state.collapsible) {
-            if (!this.state.collapsible.chevronSide) {
-                this.state.collapsible.chevronSide = 'left'
-            }
+            this._prevCollapsedState = this.state.collapsible.collapsed
+            this.state.collapsible.chevronSide ??= PanelPart.DEFAULT_CHEVRON_SIDE
             this.onClick(this.toggleCollapseKey, _ => {
                 this.toggleCollapse()
             })
         }
+    }
+
+    assignState(state: TState & { collapsible?: CollapsibleConfig }): boolean {
+        this._prevCollapsedState = state.collapsible?.collapsed
+        return super.assignState(state);
     }
 
     getLoadingContainer() {
@@ -38,11 +45,13 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
     }
 
     render(parent: PartTag) {
+        const collapsibleConfig = this.state.collapsible
         parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
+            if (collapsibleConfig?.collapsed) panel.class('collapsed')
             if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
-                    if (this.state.collapsible?.chevronSide == 'left') {
+                    if (collapsibleConfig?.chevronSide == 'left') {
                         this.renderChevron(header)
                     }
                     header.h2(h2 => {
@@ -54,38 +63,70 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
                     header.div('.tertiary-actions', actions => {
                         this.theme.renderActions(actions, this.getActions('tertiary'))
                     })
-                    if (this.state.collapsible?.chevronSide == 'right') {
+                    if (collapsibleConfig?.chevronSide == 'right') {
                         this.renderChevron(header)
                     }
                 })
             }
-            if (!this.state.collapsible?.collapsed) {
-                panel.div('.panel-content', ...this.contentClasses, content => {
-                    this.renderContent(content)
+            panel.div('.panel-content', ...this.contentClasses, content => {
+                content.div('.content-container', container => {
+                    this.renderContent(container)
                 })
-            }
+            })
 
             Fragments.panelActions(panel, this.getAllActions(), this.theme)
         })
     }
 
+    update(elem: HTMLElement) {
+        const panel = elem.querySelector('.tt-panel')
+        if (!(panel instanceof HTMLElement)) return
+        this.transitionCollapsed(panel)
+    }
+
+    private transitionCollapsed(panelElem: HTMLElement) {
+        const collapsibleConfig = this.state.collapsible
+        if (!collapsibleConfig) return
+
+        if (collapsibleConfig.collapsed == this._prevCollapsedState) return
+
+        const content = panelElem.querySelector('.panel-content') as HTMLElement
+        const contentContainer = content.querySelector('.content-container') as HTMLElement
+
+        const height = `${contentContainer.clientHeight}px`
+        if (collapsibleConfig.collapsed) {
+            // we can't transition between 'auto' and a set pixel value,
+            // so we need to first set to the initial pixel value (gotten from the content container,
+            // whose height is not limited), then set to 0
+            content.style.flexBasis = height
+            requestAnimationFrame(() => {
+                // ensure initial height has been set before continuing
+                content.style.flexBasis = '0'
+            })
+        } else {
+            content.style.flexBasis = height
+        }
+
+        panelElem.classList.toggle('collapsed', collapsibleConfig.collapsed)
+    }
+
     toggleCollapse() {
         if (this.state.collapsible) {
-            this.state.collapsible.collapsed = !this.state.collapsible?.collapsed
-            this.dirty()
+            this._prevCollapsedState = this.state.collapsible.collapsed
+            this.state.collapsible.collapsed = !this.state.collapsible.collapsed
+            this.stale()
         }
     }
 
     renderChevron(parent: PartTag) {
         if (this.state.collapsible) {
-            parent.div('.collapsible-chevron', chev => {
+            parent.a('.collapsible-chevron', chev => {
                 this.renderChevronIcon(chev, this.state.collapsible?.collapsed!)
-                parent.emitClick(this.toggleCollapseKey)
-            })
+            }).emitClick(this.toggleCollapseKey)
         }
     }
 
-    renderChevronIcon(parent: PartTag, isCollapsed: Boolean) {
-        this.app.theme.renderIcon(parent, isCollapsed ? 'glyp-chevron_right' : 'glyp-chevron_down', 'white')
+    renderChevronIcon(parent: PartTag, _isCollapsed: Boolean) {
+        this.app.theme.renderIcon(parent, 'glyp-chevron_down', 'white')
     }
 }
