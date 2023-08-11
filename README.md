@@ -172,7 +172,7 @@ it's evolved into a platform of shared tooling and styles to build applications.
 
 TODO: document usage of frontend/terrier classes 
 
-Whenever you extend `Part`, be sure to call `await super.init()` in your class's `init()` function. This ensures behavior from the parent is preserved in the child class, such as for collapsible panels. 
+By convention when overriding the `init()` method on any `Part`, you should call `await super.init()` to preserve any functionality contained in the super-class's init method. This should be done in all cases, even if the super class does not define an init method, because if functionality is added to the superclass in the future the subclass should not need to change to support that functionality. The only exception should be when when you explicitly don't want the super class functionality in your subclass.
 
 ### Terrier Styles
 
