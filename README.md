@@ -172,6 +172,8 @@ it's evolved into a platform of shared tooling and styles to build applications.
 
 TODO: document usage of frontend/terrier classes 
 
+Whenever you extend `Part`, be sure to call `await super.init()` in your class's `init()` function. This ensures behavior from the parent is preserved in the child class, such as for collapsible panels. 
+
 ### Terrier Styles
 
 The `.tt-*` styles are meant to be reusable across projects.
