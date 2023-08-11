@@ -1,0 +1,28 @@
+@import "tt-mixins";
+
+.glyp-picker-part {
+	height: 100%;
+	.grid-container {
+		flex: 1 1 auto;
+		min-height: 0;
+		overflow-y: scroll;
+	}
+}
+
+.glyp-picker-grid {
+	display: grid;
+	--glyp-grid-size: 120px;
+	grid-template-columns: repeat(auto-fill, minmax(var(--glyp-grid-size), 1fr));
+	grid-gap: var(--tt-gap);
+
+	a {
+		display: block;
+		text-align: center;
+		i {
+			font-size: calc(var(--glyp-grid-size) / 3);
+		}
+		.title {
+			font-size: var(--tt-label-font-size);
+		}
+	}
+}

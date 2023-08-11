@@ -639,7 +639,7 @@ _fieldPartial = (field, constants) ->
 
 class FieldsControls
 	constructor: (@editor, container, @constants) ->
-		@list = container.find '.script-fields'
+		@grid = container.find '.script-fields'
 		@output = container.find 'input[name=script_fields_json]'
 		container.find('a.add-field').click =>
 			this.addField()

@@ -38,10 +38,15 @@ class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
                 //     for (const type of DdDiveEnumFields.visibility)
                 // })
             })
-            row.div('.stretch', col => {
-                col.label().text("Description")
-                this.fields.textArea(col, 'description_raw')
+            row.div('.shrink', col => {
+                col.label().text("Icon")
+                this.fields.renderGlypField(col, 'icon')
             })
+
+        })
+        parent.div(row => {
+            row.label().text("Description")
+            this.fields.textArea(row, 'description_raw')
         })
     }
 

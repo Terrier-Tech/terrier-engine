@@ -2,8 +2,11 @@ import {FormPart, FormPartData} from "tuff-core/forms"
 import Theme from "../theme"
 import {TerrierApp} from "../app"
 
-export default abstract class TerrierFormPart<TState extends FormPartData> extends FormPart<TState> {
 
+/**
+ * Form part that implements the Terrier platform methods like `app` and `theme`.
+ */
+export default abstract class TerrierFormPart<TState extends FormPartData> extends FormPart<TState> {
 
     get app(): TerrierApp<any> {
         return this.root as unknown as TerrierApp<any> // this should always be true

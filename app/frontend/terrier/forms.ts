@@ -1,9 +1,13 @@
 import {Field, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
-import {strings} from "tuff-core"
+import {logging, messages, strings} from "tuff-core"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
 import {InputTag, InputTagAttrs} from "tuff-core/html"
 import TerrierPart from "./parts/terrier-part"
+import GlypPicker from "./parts/glyp-picker"
+import Glyps from "./glyps"
+
+const log = new logging.Logger("TerrierForms")
 
 ////////////////////////////////////////////////////////////////////////////////
 // Options
@@ -35,6 +39,8 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
 
     errors?: DbErrors<T>
 
+    pickGlypKey = messages.typedKey<{ key: KeyOfType<T, string | undefined> & string }>()
+
     /**
      * You must pass a `TerrierPart` so that we can render the error bubble with it.
      * @param part
@@ -44,6 +50,18 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
     constructor(part: TerrierPart<any>, data: T, errors?: DbErrors<T>) {
         super(part, data)
         this.errors = errors
+
+
+        this.part.onClick(this.pickGlypKey, m => {
+            log.info(`Pick glyp for ${m.data.key}`)
+            const key = m.data.key as KeyOfType<T, string | undefined>
+            const current = this.data[key]
+            const onPicked = (icon?: string) => {
+                this.data[key] = icon as any // TODO: figure out how to better make typescript happy
+                this.part.dirty()
+            }
+            part.app.showModal(GlypPicker.Modal, {icon: current, onPicked})
+        })
     }
 
     protected input<Key extends KeyOfType<T, any> & string>(parent: PartTag, type: InputType, name: Key, serializerType: {
@@ -65,6 +83,23 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         if (this.errors) {
             (this.part as TerrierPart<any>).renderErrorBubble(parent, this.errors)
         }
+    }
+
+    /**
+     * Render a readonly field for a glyp icon value that shows the glyp picker when clicked.
+     * @param parent where to render the field
+     * @param key the data key where the icon value is stored
+     */
+    renderGlypField<Key extends KeyOfType<T, string> & string>(parent: PartTag, key: Key) {
+        const value = this.data[key]
+        parent.a('.tt-readonly-field', field => {
+            if (value?.length) {
+                field.i(value)
+                field.div().text(Glyps.displayName(value))
+            } else {
+                field.div().text("Pick Icon")
+            }
+        }).emitClick(this.pickGlypKey, {key})
     }
 }
 
