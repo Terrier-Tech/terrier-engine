@@ -172,6 +172,8 @@ it's evolved into a platform of shared tooling and styles to build applications.
 
 TODO: document usage of frontend/terrier classes 
 
+By convention when overriding the `init()` method on any `Part`, you should call `await super.init()` to preserve any functionality contained in the super-class's init method. This should be done in all cases, even if the super class does not define an init method, because if functionality is added to the superclass in the future the subclass should not need to change to support that functionality. The only exception should be when when you explicitly don't want the super class functionality in your subclass.
+
 ### Terrier Styles
 
 The `.tt-*` styles are meant to be reusable across projects.
