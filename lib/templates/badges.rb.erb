@@ -1,0 +1,14 @@
+
+# prefer use of Badges.all
+BADGE_TITLES = <%= badge_titles.to_s %>
+
+BADGES = BADGE_TITLES.keys
+
+# Badge metadata and helpers
+module Badges
+
+  def self.all
+    BADGES
+  end
+
+end

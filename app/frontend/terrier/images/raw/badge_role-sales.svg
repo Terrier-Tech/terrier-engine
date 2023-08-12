@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge_role-sales</title>
+    <defs>
+        <ellipse id="path-1" cx="23.9999797" cy="24.0001005" rx="8.00002026" ry="8.0001005"></ellipse>
+        <filter x="-1.6%" y="-1.6%" width="103.1%" height="103.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.25 0" type="matrix" in="shadowInnerInner1" result="shadowMatrixInner1"></feColorMatrix>
+            <feOffset dx="0" dy="-0.5" in="SourceAlpha" result="shadowOffsetInner2"></feOffset>
+            <feComposite in="shadowOffsetInner2" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner2" result="shadowMatrixInner2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixInner1"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M28.4204051,19.3295949 C28.5584763,19.3295949 28.6704051,19.4415237 28.6704051,19.5795949 L28.6704051,24.7260415 C28.6704051,24.7923456 28.6440659,24.8559341 28.5971818,24.9028182 C28.4995508,25.0004492 28.3412595,25.0004492 28.2436284,24.9028182 L26.730853,23.3895949 L21.6265132,28.4948071 C21.0407268,29.0805936 20.0909793,29.0805936 19.5051929,28.4948071 C18.9194064,27.9090207 18.9194064,26.9592732 19.5051929,26.3734868 L24.608853,21.2685949 L23.0971818,19.7563716 C23.0659258,19.7251155 23.0438008,19.6864353 23.0325237,19.6444757 L23.0239585,19.5795949 C23.0239585,19.4415237 23.1358873,19.3295949 23.2739585,19.3295949 Z" id="path-3"></path>
+        <filter x="-2.6%" y="-2.6%" width="105.2%" height="105.2%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="badge_role-sales" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Oval">
+            <use fill="#01B201" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+        </g>
+        <g id="Path-87" fill-rule="nonzero">
+            <use fill="#FFFFFF" xlink:href="#path-3"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+        </g>
+    </g>
+</svg>

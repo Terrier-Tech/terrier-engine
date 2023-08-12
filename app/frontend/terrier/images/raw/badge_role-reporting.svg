@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge_role-reporting</title>
+    <defs>
+        <ellipse id="path-1" cx="24.0000102" cy="23.9999095" rx="8.00001022" ry="8.00009047"></ellipse>
+        <filter x="-1.6%" y="-1.6%" width="103.1%" height="103.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.25 0" type="matrix" in="shadowInnerInner1" result="shadowMatrixInner1"></feColorMatrix>
+            <feOffset dx="0" dy="-0.5" in="SourceAlpha" result="shadowOffsetInner2"></feOffset>
+            <feComposite in="shadowOffsetInner2" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner2" result="shadowMatrixInner2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixInner1"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M25.0857876,18.5 C25.3510034,18.5 25.6053567,18.6053563 25.792893,18.7928918 L27.7071156,20.7071065 C27.8946528,20.894643 28.0000102,21.1489976 28.0000102,21.4142148 L28.0000102,28.5 C28.0000102,29.0522847 27.552295,29.5 27.0000102,29.5 L21,29.5 C20.4477153,29.5 20,29.0522847 20,28.5 L20,19.5 C20,18.9477153 20.4477153,18.5 21,18.5 Z M24.0000102,19.9998995 C23.4477255,19.9998995 23.0000102,20.4476148 23.0000102,20.9998995 L23,24.999 L21.707117,25 C21.4309746,25 21.207117,25.2238576 21.207117,25.5 C21.207117,25.6326082 21.2597954,25.7597852 21.3535636,25.8535534 L23.6464568,28.1464466 C23.841719,28.3417088 24.1583015,28.3417088 24.3535636,28.1464466 L26.6464568,25.8535534 C26.841719,25.6582912 26.841719,25.3417088 26.6464568,25.1464466 C26.5526886,25.0526784 26.4255117,25 26.2929034,25 L25,24.999 L25.0000102,20.9998995 C25.0000102,20.4870637 24.61397,20.0643923 24.1166314,20.0066272 Z" id="path-3"></path>
+        <filter x="-3.1%" y="-2.3%" width="106.2%" height="104.5%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="badge_role-reporting" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Oval">
+            <use fill="#1E6C7B" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+        </g>
+        <g id="Path-91">
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-3"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+        </g>
+    </g>
+</svg>

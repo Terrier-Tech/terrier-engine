@@ -1,0 +1,50 @@
+// noinspection JSAnnotator,ES6UnusedImports,TypeScriptCheckImport,TypeScriptValidateTypes,TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
+
+const allBadges = [
+<% all_badges.each do|badge| %>
+    '<%= badge %>',
+<% end %>
+] as const
+
+export type Badge = typeof allBadges[number]
+
+const BadgeTitles = {
+<% badge_titles.each do|badge,title| %>
+    '<%= badge %>': "<%= title %>",
+<% end %>
+}
+
+/**
+ * @param badge
+ * @return the title for the given badge
+ */
+function title(badge: Badge): string {
+    return BadgeTitles[badge]
+}
+
+<% badge_vars.each do |badge, var| %>
+// @ts-ignore
+import <%= var %> from '../images/badges/badge-<%= badge %>.svg'
+<% end %>
+
+/**
+ * @param badge
+ * @return the image source path for the given badge
+ */
+function imageSource(badge: Badge): string {
+    switch (badge) {
+<% badge_vars.each do |badge, var| %>
+    case '<%= badge %>': return <%= var %>
+<% end %>
+    default:
+        throw `Invalid badge '${badge}'`
+    }
+}
+
+const Badges = {
+    all: allBadges,
+    title,
+    imageSource
+}
+
+export default Badges

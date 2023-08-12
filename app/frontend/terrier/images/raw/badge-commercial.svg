@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge_commercial</title>
+    <defs>
+        <path d="M16,2 C17.1045695,2 18.1045695,2.44771525 18.8284271,3.17157288 C19.5522847,3.8954305 20,4.8954305 20,6 L20,13.9992453 L26.1538462,14 C27.2330044,14 28.2186876,14.4598501 28.9288809,15.2292262 C29.5834374,15.9383291 30,16.9148252 30,18 L30,28.0002 C30.0002,29.1047695 29.1047695,30.0002 28.0002,30.0002 C28.0001333,30.0002 28.0000667,30.0002 28,30 L18.0001429,29.999 L18.0001429,29.999 L3.99999999,30.00005 C2.89543051,30.0002829 1.99993285,29.1049195 1.99985001,28.00035 C1.99985001,28.0003 1.99985,28.00025 2,28.0002 L2,6 L2,6 C2,4.8954305 2.44771525,3.8954305 3.17157288,3.17157288 C3.8954305,2.44771525 4.8954305,2 6,2 L16,2 Z" id="path-1"></path>
+        <filter x="-12.5%" y="-8.9%" width="125.0%" height="125.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="1.35870151e-12%" y1="37.5%" x2="100%" y2="62.5%" id="linearGradient-3">
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#9BFBFF" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="1.35870151e-12%" y1="27.7777778%" x2="100%" y2="72.2222222%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.5" offset="0%"></stop>
+            <stop stop-color="#9BFBFF" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="badge_commercial" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Combined-Shape-Copy-2">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <path d="M16,4 C17.1045695,4 18,4.8954305 18,6 L18,15.999 L26.1538462,16 C27.1734488,16 28,16.8954305 28,18 L28,28 L18,27.999 L4,28 L4,6 C4,4.8954305 4.8954305,4 6,4 L16,4 Z" id="Combined-Shape-Copy" fill="#CECECE" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="url(#linearGradient-3)" fill-rule="nonzero" x="6" y="6" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-13" fill="url(#linearGradient-3)" fill-rule="nonzero" x="12" y="6" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-2" fill="url(#linearGradient-3)" fill-rule="nonzero" x="6" y="10.0015514" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-14" fill="url(#linearGradient-3)" fill-rule="nonzero" x="12" y="10.0015514" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-3" fill="url(#linearGradient-3)" fill-rule="nonzero" x="6" y="14.0031028" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-15" fill="url(#linearGradient-3)" fill-rule="nonzero" x="12" y="14.0031028" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-4" fill="url(#linearGradient-3)" fill-rule="nonzero" x="6" y="18.0046542" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-16" fill="url(#linearGradient-3)" fill-rule="nonzero" x="12" y="18.0046542" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-5" fill="url(#linearGradient-3)" fill-rule="nonzero" x="6" y="22.0062056" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-17" fill="url(#linearGradient-3)" fill-rule="nonzero" x="12" y="22.0062056" width="4" height="2"></rect>
+        <rect id="Rectangle-Copy-7" fill="url(#linearGradient-4)" fill-rule="nonzero" x="18" y="17.9968972" width="3" height="2"></rect>
+        <rect id="Rectangle-Copy-19" fill="url(#linearGradient-4)" fill-rule="nonzero" x="23" y="17.9968972" width="3" height="2"></rect>
+        <rect id="Rectangle-Copy-6" fill="url(#linearGradient-4)" fill-rule="nonzero" x="18" y="21.9984486" width="3" height="2"></rect>
+        <rect id="Rectangle-Copy-18" fill="url(#linearGradient-4)" fill-rule="nonzero" x="23" y="21.9984486" width="3" height="2"></rect>
+        <rect id="Rectangle-Copy-9" fill="#AEAEAE" x="8" y="25" width="6" height="3"></rect>
+        <rect id="Rectangle-Copy-10" fill="#AEAEAE" x="19" y="25" width="6" height="3"></rect>
+    </g>
+</svg>

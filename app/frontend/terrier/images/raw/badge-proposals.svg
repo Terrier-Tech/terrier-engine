@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge-proposals</title>
+    <defs>
+        <path d="M6,2 L16,2 C16.530433,2 17.0391408,2.21071368 17.4142136,2.58578644 L23.4142136,8.58578644 C23.7892863,8.96085919 24,9.46956702 24,10 L24,28 C24,29.1045695 23.1045695,30 22,30 L6,30 C4.8954305,30 4,29.1045695 4,28 L4,4 C4,2.8954305 4.8954305,2 6,2 Z" id="path-1"></path>
+        <filter x="-17.5%" y="-8.9%" width="135.0%" height="125.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#EEEEEE" offset="0%"></stop>
+            <stop stop-color="#D8D8D8" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="badge-proposals" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Path-73-Copy">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <polygon id="Path-73" fill="url(#linearGradient-3)" points="6 4 6 28 22 28 22 10 16 4"></polygon>
+        <polygon id="Path-74" fill="#CACACA" points="16 4 16 10 22 10"></polygon>
+        <path d="M14,11 C17.3137085,11 20,13.6862915 20,17 C20,20.3137085 17.3137085,23 14,23 C10.6862915,23 8,20.3137085 8,17 C8,13.6862915 10.6862915,11 14,11 Z M14,12.3333333 C11.4226712,12.3333333 9.33333333,14.4226712 9.33333333,17 C9.33333333,19.5773288 11.4226712,21.6666667 14,21.6666667 C16.5773288,21.6666667 18.6666667,19.5773288 18.6666667,17 C18.6666667,14.4226712 16.5773288,12.3333333 14,12.3333333 Z M16.6763305,14.0950047 C16.9694992,14.270906 17.0787137,14.6365655 16.94115,14.9406884 L16.9049953,15.0096638 L13.9049953,20.0096638 C13.6957977,20.3583264 13.2316328,20.4356496 12.9217311,20.1912547 L12.8619288,20.1380712 L10.8619288,18.1380712 C10.6015793,17.8777217 10.6015793,17.4556117 10.8619288,17.1952621 C11.1022515,16.9549395 11.4804055,16.9364531 11.741933,17.1398031 L11.8047379,17.1952621 L13.2006667,18.5906667 L15.7616714,14.3236695 C15.9511035,14.0079493 16.3606103,13.9055726 16.6763305,14.0950047 Z" id="Combined-Shape" fill="#01A7B1" fill-rule="nonzero"></path>
+    </g>
+</svg>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="c1" x1="0%" x2="100%" y1="50%" y2="50%">
+      <stop offset="0%" stop-color="#EEE"/>
+      <stop offset="100%" stop-color="#D8D8D8"/>
+    </linearGradient>
+    <linearGradient id="d1" x1="0%" x2="100%" y1="50%" y2="50%">
+      <stop offset="0%" stop-color="#EEE"/>
+      <stop offset="100%" stop-color="#D8D8D8"/>
+    </linearGradient>
+    <filter id="a1" width="125%" height="126.9%" x="-12.5%" y="-9.6%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.33 0"/>
+    </filter>
+    <path id="b1" d="M3 29h26a1 1 0 0 0 1-1V6.721a2.024 2.024 0 0 0-1.098-1.984C26.602 3.579 24.301 3 22 3c-2.129 0-3.833.319-5.112.956a2 2 0 0 1-1.781 0C13.829 3.317 12.127 3 10 3c-2.3 0-4.602.579-6.902 1.737A2.024 2.024 0 0 0 2 6.721V28a1 1 0 0 0 1 1Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#b1" fill="#000" filter="url(#a1)"/>
+    <use xlink:href="#b1" fill="#FFF"/>
+    <path fill="#C4C4C4" d="M4 27h24v-2H4z"/>
+    <path fill="url(#c1)" d="M28 27V7.251a.504.504 0 0 0-.155-.362C26.513 5.63 24.565 5 22 5s-4.513.63-5.845 1.89A.504.504 0 0 0 16 7.25V27c1.333-1.361 3.333-2.042 6-2.042s4.667.68 6 2.042Z"/>
+    <path fill="url(#d1)" d="M16 27.042V7.252a.504.504 0 0 0-.155-.363C14.513 5.63 12.565 5 10 5s-4.513.63-5.845 1.89A.504.504 0 0 0 4 7.251v19.79C5.333 25.68 7.333 25 10 25s4.667.68 6 2.042Z"/>
+    <g transform="translate(6 7.27)">
+      <circle cx="10.5" cy="6" r="5.5" fill="#FFF" fill-opacity=".827" stroke="#1E6C7B"/>
+      <path fill="#1E6C7B" d="M8 10.914v1.172a1 1 0 0 1-.293.707l-4 4a1 1 0 0 1-1.414 0L.707 15.207a1 1 0 0 1 0-1.414l4-4a1 1 0 0 1 .707-.293h1.172a1 1 0 0 1 .707.293l.414.414a1 1 0 0 1 .293.707Z"/>
+      <path fill="#01A7B1" fill-rule="nonzero" d="M13.117 4.117a.643.643 0 0 1 .953.86l-.044.049-3.857 3.857a.643.643 0 0 1-.86.044l-.05-.044L7.546 7.17a.643.643 0 0 1 .86-.953l.05.044 1.26 1.26 3.402-3.403Z"/>
+    </g>
+  </g>
+  <defs>
+    <filter id="b2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" result="shadowMatrixInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
+      <feOffset dy="-.5" in="SourceAlpha" result="shadowOffsetInner2"/>
+      <feComposite in="shadowOffsetInner2" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner2"/>
+      <feColorMatrix in="shadowInnerInner2" result="shadowMatrixInner2" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixInner1"/>
+        <feMergeNode in="shadowMatrixInner2"/>
+      </feMerge>
+    </filter>
+    <filter id="d2" width="108.3%" height="104%" x="-4.2%" y="-2%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+    </filter>
+    <circle id="a2" cx="24" cy="24" r="8"/>
+    <path id="c2" d="m21.518 18.777 1.35 2.025a.5.5 0 0 1 .062.425l-1.841 5.985a.5.5 0 0 0 .124.5l2.433 2.434a.5.5 0 0 0 .708 0l2.433-2.433a.5.5 0 0 0 .124-.5l-1.841-5.986a.5.5 0 0 1 .062-.425l1.35-2.025a.5.5 0 0 0-.416-.777h-4.132a.5.5 0 0 0-.416.777Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#a2" fill="#F49891"/>
+    <use xlink:href="#a2" fill="#000" filter="url(#b2)"/>
+    <use xlink:href="#c2" fill="#FFF"/>
+    <use xlink:href="#c2" fill="#000" filter="url(#d2)"/>
+  </g>
+</svg>

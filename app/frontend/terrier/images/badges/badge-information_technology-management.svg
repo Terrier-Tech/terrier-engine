@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="c1" x1="50%" x2="50%" y1="39.872%" y2="100%">
+      <stop offset="0%" stop-color="#C8C8C8"/>
+      <stop offset="100%" stop-color="#D0D0D0"/>
+    </linearGradient>
+    <filter id="a1" width="125%" height="126.9%" x="-12.5%" y="-9.6%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.33 0"/>
+    </filter>
+    <path id="b1" d="M27.143 3c.785 0 1.494.315 2.008.82.526.517.849 1.233.849 2.022v14.316c0 .789-.323 1.505-.85 2.022a2.857 2.857 0 0 1-2.007.82h-5.126c.218.304.47.597.752.881a2.99 2.99 0 0 1 .877 2.123 3 3 0 0 1-3 2.996h-9.295a2.99 2.99 0 0 1-2.12-.88 2.996 2.996 0 0 1 0-4.238c.283-.285.534-.578.752-.882H4.857a2.857 2.857 0 0 1-2.008-.82A2.825 2.825 0 0 1 2 20.158V5.842c0-.789.323-1.505.85-2.022A2.857 2.857 0 0 1 4.856 3h22.286Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#b1" fill="#000" filter="url(#a1)"/>
+    <use xlink:href="#b1" fill="#FFF"/>
+    <path fill="url(#c1)" fill-rule="nonzero" d="M13 20c0 4-2.828 5.652-3 6-.172.348.243 1 1 1h10c.757 0 1.172-.652 1-1-.172-.348-3-2-3-6s-6-4-6 0Z"/>
+    <path fill="#01A7B1" fill-rule="nonzero" stroke="#D7D4D4" stroke-width="2" d="M27 6v14H5V6h22Z"/>
+    <path fill="#FFF" fill-rule="nonzero" d="M17.3 10c.378 0 .72.247.827.61.11.353.187.71.232 1.064l.023.227.089.026a8.375 8.375 0 0 1 1.49.62l.085.046.178-.144c.213-.165.44-.317.682-.458l.247-.138a.87.87 0 0 1 1.005.162l.915.919.916.915a.875.875 0 0 1 .153 1.02c-.175.33-.373.637-.592.92l-.141.172.047.084c.253.477.46.975.617 1.49l.025.09.275.03a6.1 6.1 0 0 1 .756.151l.251.072c.376.11.642.462.62.83l-.001.292h-4.787A5.316 5.316 0 0 0 16 14.694 5.312 5.312 0 0 0 10.788 19H6v-.295c0-.379.247-.721.615-.83a6.41 6.41 0 0 1 1.272-.251l.014-.001.026-.093a8.338 8.338 0 0 1 .618-1.492l.044-.08-.145-.18a6.082 6.082 0 0 1-.458-.682l-.135-.246a.87.87 0 0 1 .16-1.005l1.836-1.835a.874.874 0 0 1 1.017-.154c.33.174.638.371.92.59l.175.142.081-.044c.476-.253.974-.46 1.49-.617l.092-.026.023-.226c.033-.266.084-.53.153-.793l.076-.263a.862.862 0 0 1 .83-.62Z"/>
+  </g>
+  <defs>
+    <filter id="b2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" result="shadowMatrixInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
+      <feOffset dy="-.5" in="SourceAlpha" result="shadowOffsetInner2"/>
+      <feComposite in="shadowOffsetInner2" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner2"/>
+      <feColorMatrix in="shadowInnerInner2" result="shadowMatrixInner2" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixInner1"/>
+        <feMergeNode in="shadowMatrixInner2"/>
+      </feMerge>
+    </filter>
+    <filter id="d2" width="108.3%" height="104%" x="-4.2%" y="-2%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+    </filter>
+    <circle id="a2" cx="24" cy="24" r="8"/>
+    <path id="c2" d="m21.518 18.777 1.35 2.025a.5.5 0 0 1 .062.425l-1.841 5.985a.5.5 0 0 0 .124.5l2.433 2.434a.5.5 0 0 0 .708 0l2.433-2.433a.5.5 0 0 0 .124-.5l-1.841-5.986a.5.5 0 0 1 .062-.425l1.35-2.025a.5.5 0 0 0-.416-.777h-4.132a.5.5 0 0 0-.416.777Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#a2" fill="#F49891"/>
+    <use xlink:href="#a2" fill="#000" filter="url(#b2)"/>
+    <use xlink:href="#c2" fill="#FFF"/>
+    <use xlink:href="#c2" fill="#000" filter="url(#d2)"/>
+  </g>
+</svg>

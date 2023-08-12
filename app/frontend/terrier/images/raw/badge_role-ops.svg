@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge_role-ops</title>
+    <defs>
+        <ellipse id="path-1" cx="24.0000002" cy="24.0001005" rx="8.00002026" ry="8.0001005"></ellipse>
+        <filter x="-1.6%" y="-1.6%" width="103.1%" height="103.1%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1  0 0 0 0.25 0" type="matrix" in="shadowInnerInner1" result="shadowMatrixInner1"></feColorMatrix>
+            <feOffset dx="0" dy="-0.5" in="SourceAlpha" result="shadowOffsetInner2"></feOffset>
+            <feComposite in="shadowOffsetInner2" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner2"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner2" result="shadowMatrixInner2"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixInner1"></feMergeNode>
+                <feMergeNode in="shadowMatrixInner2"></feMergeNode>
+            </feMerge>
+        </filter>
+        <path d="M23.5000002,19.5 L23.5000002,22 C23.5000002,22.2761424 23.7238578,22.5 24.0000002,22.5 C24.2761426,22.5 24.5000002,22.2761424 24.5000002,22 L24.5000002,19.5 L25.4583335,19.5 C25.7059745,19.5 25.9175736,19.6543135 26.0022184,19.872028 L26.0000002,22.5 C26.0000002,22.7761424 26.2238578,23 26.5000002,23 C26.7761426,23 27.0000002,22.7761424 27.0000002,22.5 L27.0013611,20.5433492 C28.2872096,21.3681523 29.1255451,22.8290777 29.4967222,24.8932606 L29.5077502,24.95675 L29.8502952,25.293218 C29.9354145,25.3767897 29.987496,25.4876579 29.9980188,25.6055155 L30.0000002,25.65 L30.0000002,26.55 C30.0000002,26.7850712 29.836252,26.9883984 29.6065837,27.0385079 C28.4488161,27.2911117 26.9885068,27.4392966 25.2225883,27.4848314 L24.8251301,27.4932613 L24.4176032,27.498316 C24.280082,27.4994389 24.1408814,27.5 24.0000002,27.5 C23.859119,27.5 23.7199184,27.4994389 23.5823972,27.498316 L23.1748703,27.4932613 L22.7774121,27.4848314 C21.0114936,27.4392966 19.5511843,27.2911117 18.3934167,27.0385079 C18.1637484,26.9883984 18.0000002,26.7850712 18.0000002,26.55 L18.0000002,25.65 C18.0000002,25.5158015 18.053946,25.3872361 18.1497052,25.293218 L18.4920002,24.95675 L18.5242468,24.7799028 C18.9055871,22.774877 19.7369876,21.3520626 20.9998501,20.5425728 L21.0000002,22.5 C21.0000002,22.7761424 21.2238578,23 21.5000002,23 C21.7761426,23 22.0000002,22.7761424 22.0000002,22.5 L21.9985818,19.8699824 C22.0837538,19.6533475 22.2948022,19.5 22.5416669,19.5 L23.5000002,19.5 Z M27.7916669,24.625 L20.2083335,24.625 C19.8861674,24.625 19.6250002,24.8861672 19.6250002,25.2083333 C19.6250002,25.5304994 19.8861674,25.7916667 20.2083335,25.7916667 L27.7916669,25.7916667 C28.113833,25.7916667 28.3750002,25.5304994 28.3750002,25.2083333 C28.3750002,24.8861672 28.113833,24.625 27.7916669,24.625 Z" id="path-3"></path>
+        <filter x="-2.1%" y="-3.1%" width="104.2%" height="106.2%" filterUnits="objectBoundingBox" id="filter-4">
+            <feOffset dx="0" dy="0.5" in="SourceAlpha" result="shadowOffsetInner1"></feOffset>
+            <feComposite in="shadowOffsetInner1" in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowInnerInner1"></feComposite>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.1 0" type="matrix" in="shadowInnerInner1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="badge_role-ops" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Oval">
+            <use fill="#EFA234" fill-rule="evenodd" xlink:href="#path-1"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+        </g>
+        <g id="Path-49" fill-rule="nonzero">
+            <use fill="#FFFFFF" xlink:href="#path-3"></use>
+            <use fill="black" fill-opacity="1" filter="url(#filter-4)" xlink:href="#path-3"></use>
+        </g>
+    </g>
+</svg>

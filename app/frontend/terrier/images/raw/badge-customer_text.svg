@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge-customer_text</title>
+    <defs>
+        <path d="M16.7037037,2 C17.6278989,2 18.4713545,2.3885503 19.0793304,3.03699375 C19.6421558,3.63728142 20,4.46395957 20,5.38257919 L20,6 L27.0284559,6 C27.8554744,6 28.6069879,6.34040523 29.1499172,6.89923657 C29.6722507,7.43686881 30,8.17832447 30,9 L30,17 C30,17.8216755 29.6722507,18.5631312 29.1499172,19.1007634 C28.6069879,19.6595948 27.8554744,20 27.0284559,20 L20,20 L20,26.8674208 C20,27.7860404 19.6421558,28.6127186 19.0793304,29.2130062 C18.4713545,29.8614497 17.6278989,30.25 16.7037037,30.25 L5.2962963,30.25 C4.37210107,30.25 3.52864547,29.8614497 2.92066956,29.2130062 C2.35784416,28.6127186 2,27.7860404 2,26.8674208 L2,5.38257919 C2,4.46395957 2.35784416,3.63728142 2.92066955,3.03699375 C3.52864546,2.3885503 4.37210107,2 5.2962963,2 L16.7037037,2 Z" id="path-1"></path>
+        <filter x="-12.5%" y="-8.8%" width="125.0%" height="124.8%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="0.611888112%" y1="0.611888112%" x2="100%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#000000" offset="0%"></stop>
+            <stop stop-color="#5B5B5B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="32%" y1="3.99680289e-14%" x2="68%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#FFFFFF" stop-opacity="0.25" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="badge-customer_text" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Combined-Shape">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <g id="phone" transform="translate(4.000000, 4.000000)" fill-rule="nonzero">
+            <path d="M12.7037037,0 C13.4196284,0 14,0.619001786 14,1.38257919 L14,22.8674208 C14,23.6309982 13.4196284,24.25 12.7037037,24.25 L1.2962963,24.25 C0.580371642,24.25 0,23.6309982 0,22.8674208 L0,1.38257919 C0,0.619001786 0.580371642,0 1.2962963,0 L12.7037037,0 Z" id="Rectangle-path" fill="#1A1A1A"></path>
+            <polygon id="Rectangle-path" fill="#313131" points="13 1.5 1 1.5 1 21.5 13 21.5"></polygon>
+            <path d="M7,23.5 C7.41421355,23.5 7.75,23.1642135 7.75,22.75 C7.75,22.3357865 7.41421355,22 7,22 C6.58578645,22 6.25,22.3357865 6.25,22.75 C6.25,23.1642135 6.58578645,23.5 7,23.5 Z" id="Rectangle-path" fill="url(#linearGradient-3)"></path>
+            <polygon id="Rectangle-path-Copy-4" fill="url(#linearGradient-4)" points="13 1.5 1 1.5 1 21.5 13 21.5"></polygon>
+        </g>
+        <path d="M27.0284559,8 C27.5650249,8 28,8.44771525 28,9 L28,17 C28,17.5522847 27.5650249,18 27.0284559,18 L12.4552939,18 C11.9187249,18 11.4837498,17.5522847 11.4837498,17 L11.4837498,13.4142136 C11.4837498,13.1489971 11.3813909,12.8946432 11.1991911,12.7071068 L8.28455869,9.70710678 C7.9051471,9.31658249 7.9051471,8.68341751 8.28455869,8.29289322 C8.46675856,8.10535684 8.71387461,8 8.97154413,8 L27.0284559,8 Z" id="Combined-Shape" fill="#2BA0FD" fill-rule="nonzero"></path>
+    </g>
+</svg>

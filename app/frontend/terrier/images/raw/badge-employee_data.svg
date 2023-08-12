@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge-employee_data</title>
+    <defs>
+        <path d="M19,2 C21.209139,2 23,3.790861 23,6 L28,6 C29.1045695,6 30,6.8954305 30,8 L30,24 C30,25.1045695 29.1045695,26 28,26 L3.99849463,26 C2.89392513,26 1.99849463,25.1045695 1.99849463,24 L1.99849463,8 C1.99849463,6.8954305 2.89392513,6 3.99849463,6 L9,6 C9,3.790861 10.790861,2 13,2 L19,2 Z" id="path-1"></path>
+        <filter x="-12.5%" y="-10.4%" width="125.0%" height="129.2%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="badge-employee_data" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Rectangle-Copy-2">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <rect id="Rectangle" fill="#76502D" x="4" y="8" width="24" height="16" rx="2"></rect>
+        <path d="M4,10 C4,10.6666667 4,11.3333333 4,12 C4,14 5,15 7,15 L25,15 C27,15 28,14 28,12 C28,11.3333333 28,10.6666667 28,10 C28,8.8954305 27.1045695,8 26,8 L6,8 C4.8954305,8 4,8.8954305 4,10 Z" id="Path-75" fill="#362B21"></path>
+        <rect id="Rectangle" fill="#D69338" x="8.998495" y="13" width="2.001505" height="4" rx="0.5"></rect>
+        <rect id="Rectangle-Copy-3" fill="#D69338" x="20.9992475" y="13" width="2.001505" height="4" rx="0.5"></rect>
+        <path d="M12,8.5 L12,7 C12,5.66666667 12.6666667,5 14,5 C16,5 16,5 18,5 C19.3333333,5 20,5.66666667 20,7 L20,8.5" id="Path-76" stroke="#76502D" stroke-width="2"></path>
+    </g>
+</svg>

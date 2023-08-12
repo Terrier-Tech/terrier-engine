@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="c1" x1="0%" x2="100%" y1="40.131%" y2="40.131%">
+      <stop offset="0%" stop-color="#B9B9B9"/>
+      <stop offset="100%" stop-color="#838383"/>
+    </linearGradient>
+    <linearGradient id="d1" x1="0%" x2="100%" y1="63.336%" y2="63.336%">
+      <stop offset="0%" stop-color="#D7D7D7"/>
+      <stop offset="100%" stop-color="#AFAFAF"/>
+    </linearGradient>
+    <filter id="a1" width="130.2%" height="125%" x="-15.1%" y="-8.9%" filterUnits="objectBoundingBox">
+      <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+      <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
+      <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.33 0"/>
+    </filter>
+    <path id="b1" d="M13.582 2c1.304 0 2.49.302 3.436.778a8.165 8.165 0 0 1 2.112-.274c1.534 0 2.911.417 3.913 1.043 1.424.89 2.121 2.176 2.121 3.479 0 1.115-.504 2.196-1.521 3.045-.61.51-1.422.935-2.371 1.195l-4.534 4.518a4.629 4.629 0 0 1 1.067 1.267c.059.105.155.293.251.544l.052 10.78c-.455.472-.821.698-.947.776-.24.15-1.35.849-3.468.849-1.857 0-3.11-.557-3.43-.71a6.878 6.878 0 0 1-1.134-.693L9.06 18.189c.713-1.715.842-1.861.996-2.014.12-.12.256-.244.404-.364l-4.53-4.534c-.956-.257-1.775-.681-2.391-1.19C2.51 9.235 2 8.147 2 7.026c0-1.303.697-2.589 2.122-3.48C5.123 2.922 6.5 2.505 8.035 2.505c.75 0 1.463.1 2.112.274C11.093 2.302 12.28 2 13.582 2Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#b1" fill="#000" filter="url(#a1)"/>
+    <use xlink:href="#b1" fill="#FFF"/>
+    <path fill="#01A7B1" fill-rule="nonzero" d="M13.582 4c1.299 0 2.454.383 3.192.979.662-.299 1.476-.475 2.356-.475 2.228 0 4.034 1.13 4.034 2.522 0 1.146-1.224 2.114-2.9 2.42l-6.682 6.658-6.646-6.651C5.242 9.153 4 8.18 4 7.026c0-1.393 1.806-2.522 4.035-2.522.88 0 1.693.176 2.356.475C11.13 4.383 12.284 4 13.582 4Z" opacity=".5"/>
+    <path fill="url(#c1)" fill-rule="nonzero" d="M11.06 27.454s1.014.546 2.633.546c1.62 0 2.41-.546 2.41-.546V18s-1.12.608-2.52.608c-1.402 0-2.522-.518-2.522-.518v9.364Z"/>
+    <path fill="url(#d1)" fill-rule="nonzero" d="M11.043 18.078s1.303.656 2.522.656c1.218 0 2.521-.656 2.521-.656s-.587-1.23-1.96-1.23c-.07 0-.357.18-.561.18-.204 0-.33-.18-.579-.18-1.102 0-1.943 1.23-1.943 1.23Z"/>
+    <path fill="gray" fill-rule="nonzero" d="M13.078 16.985s.325.11.504.11c.157 0 .504-.11.504-.11v-.876S13.733 16 13.582 16c-.186 0-.504.11-.504.11v.875Z"/>
+  </g>
+  <defs>
+    <filter id="b2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" result="shadowMatrixInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
+      <feOffset dy="-.5" in="SourceAlpha" result="shadowOffsetInner2"/>
+      <feComposite in="shadowOffsetInner2" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner2"/>
+      <feColorMatrix in="shadowInnerInner2" result="shadowMatrixInner2" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+      <feMerge>
+        <feMergeNode in="shadowMatrixInner1"/>
+        <feMergeNode in="shadowMatrixInner2"/>
+      </feMerge>
+    </filter>
+    <filter id="d2" width="108.3%" height="104%" x="-4.2%" y="-2%" filterUnits="objectBoundingBox">
+      <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
+      <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
+      <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
+    </filter>
+    <circle id="a2" cx="24" cy="24" r="8"/>
+    <path id="c2" d="m21.518 18.777 1.35 2.025a.5.5 0 0 1 .062.425l-1.841 5.985a.5.5 0 0 0 .124.5l2.433 2.434a.5.5 0 0 0 .708 0l2.433-2.433a.5.5 0 0 0 .124-.5l-1.841-5.986a.5.5 0 0 1 .062-.425l1.35-2.025a.5.5 0 0 0-.416-.777h-4.132a.5.5 0 0 0-.416.777Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use xlink:href="#a2" fill="#F49891"/>
+    <use xlink:href="#a2" fill="#000" filter="url(#b2)"/>
+    <use xlink:href="#c2" fill="#FFF"/>
+    <use xlink:href="#c2" fill="#000" filter="url(#d2)"/>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge-credit_card</title>
+    <defs>
+        <rect id="path-1" x="2" y="4" width="28" height="20" rx="4"></rect>
+        <filter x="-12.5%" y="-12.5%" width="125.0%" height="135.0%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+        <linearGradient x1="5.77315973e-13%" y1="27.7777778%" x2="100%" y2="72.2222222%" id="linearGradient-3">
+            <stop stop-color="#40A5B2" offset="0%"></stop>
+            <stop stop-color="#1E6C7B" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#EDC569" offset="0%"></stop>
+            <stop stop-color="#D69338" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="badge-credit_card" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Rectangle-Copy">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <rect id="Rectangle" fill="url(#linearGradient-3)" x="4" y="6" width="24" height="16" rx="2"></rect>
+        <rect id="Rectangle-266" fill-opacity="0.416220498" fill="#000000" fill-rule="nonzero" x="4" y="9" width="24" height="3"></rect>
+        <rect id="Rectangle-267" fill="url(#linearGradient-4)" fill-rule="nonzero" opacity="0.760416667" x="21" y="15" width="4" height="4" rx="1"></rect>
+    </g>
+</svg>

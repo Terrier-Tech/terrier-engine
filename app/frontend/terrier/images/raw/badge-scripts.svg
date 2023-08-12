@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>badge_scripts</title>
+    <defs>
+        <path d="M21.1428542,2.5 C21.9689964,2.5 22.7566091,2.85851053 23.301196,3.48872436 L29.3011955,10.4321206 C29.7480454,10.9492299 29.9825854,11.590503 29.9990648,12.2380852 C30.0155307,12.8851393 29.8142341,13.5373284 29.3945967,14.0766448 L18.2517405,28.3973995 C17.6778673,29.1349392 16.8378438,29.5 15.9999965,29.5 C15.1621512,29.5 14.3221278,29.1349392 13.7482545,28.3973995 L2.60539835,14.0766448 C2.18576088,13.5373284 1.98446433,12.8851393 2.00093026,12.2380852 C2.01740963,11.590503 2.25194966,10.9492299 2.69879952,10.4321206 L8.69879898,3.48872436 C9.24338588,2.85851053 10.0309986,2.5 10.8571408,2.5 L21.1428542,2.5 Z" id="path-1"></path>
+        <filter x="-12.5%" y="-9.3%" width="125.0%" height="125.9%" filterUnits="objectBoundingBox" id="filter-2">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.33 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+        </filter>
+    </defs>
+    <g id="badge_scripts" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Path">
+            <use fill="black" fill-opacity="1" filter="url(#filter-2)" xlink:href="#path-1"></use>
+            <use fill="#FFFFFF" fill-rule="evenodd" xlink:href="#path-1"></use>
+        </g>
+        <path d="M16,12.25 L16.0009929,27.4999994 C15.749817,27.5002915 15.4985359,27.3900283 15.326719,27.1692099 L4.18386284,12.8484551 C4.04779432,12.6735804 3.98758283,12.4596249 4.00211578,12.2503098 L16,12.25 Z" id="Path-2" fill="#EA4133" fill-rule="nonzero"></path>
+        <path d="M27.9978792,12.2503098 C28.0124122,12.4596249 27.9522007,12.6735804 27.8161322,12.8484551 L16.673276,27.1692099 C16.501686,27.3897366 16.2508418,27.5 15.9999975,27.5 L16,12.25 Z" id="Path-2-Copy-3" fill="#DE2516" fill-rule="nonzero"></path>
+        <path d="M15.9990929,4.5 L16,12.25 L4.00209293,12.2506398 C4.01477735,12.0669515 4.08502222,11.8868189 4.21207568,11.7397885 L10.2120751,4.79639223 C10.3748364,4.60803962 10.6099729,4.5 10.8571408,4.5 L15.9990929,4.5 Z" id="Path-2-Copy" fill="#ED564A" fill-rule="nonzero"></path>
+        <path d="M21.1428542,4.5 C21.3900221,4.5 21.6251587,4.60803962 21.7879199,4.79639223 L27.7879193,11.7397885 C27.9149728,11.8868189 27.9852177,12.0669515 27.9979021,12.2506398 L15.9999975,12.25 L15.9999686,4.5 Z" id="Path-2-Copy-2" fill="#E93425" fill-rule="nonzero"></path>
+        <polygon id="Path-77" fill="#E92F21" points="16 27.5 11 12.25 21 12.25"></polygon>
+        <polygon id="Path-78" fill="#EB4538" points="11 12.25 14.5 4.5 17.5 4.5 21 12.25"></polygon>
+    </g>
+</svg>
