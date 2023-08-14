@@ -332,7 +332,9 @@ function centerElement(elem: HTMLElement) {
     }
     const styleString = [
         `left: ${(win.width - cappedSize.width)/2}px`,
-        `top: ${(win.height - cappedSize.height)/2}px`
+        `top: ${(win.height - cappedSize.height)/2}px`,
+        `max-height: ${cappedSize.height}px`,
+        `max-width: ${cappedSize.width}px`
     ].join('; ')
     elem.setAttribute('style', styleString)
 }
