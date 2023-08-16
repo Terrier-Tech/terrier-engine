@@ -26,10 +26,11 @@ namespace :frontend do
     root_dir = Terrier::Engine.root.join('app/frontend/terrier/images').to_s
     template_dir = Terrier::Engine.root.join('lib/templates').to_s
     typescript_dir = Terrier::Engine.root.join('app/frontend/terrier/gen').to_s
+    ruby_dir = Terrier::Engine.root.join('config/initializers').to_s
     optimized_dir = "#{root_dir}/optimized"
 
     generator = HubIconGenerator.new(template_dir: template_dir,
-                             typescript_dir: typescript_dir)
+                             typescript_dir: typescript_dir, ruby_dir: ruby_dir)
     generator.optimize_svgs "#{root_dir}/raw", optimized_dir
     generator.run optimized_dir, "#{root_dir}/icons"
   end

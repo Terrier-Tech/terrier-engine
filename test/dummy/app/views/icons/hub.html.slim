@@ -1,0 +1,5 @@
+.hub-icons-preview
+	- HubIcons.all.each do |name|
+		.icon
+			== HubIcons.raw(name)
+			span == name

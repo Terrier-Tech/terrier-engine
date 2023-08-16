@@ -4,4 +4,8 @@ class IconsController < ApplicationController
     @title = 'Glyps'
   end
 
+  def hub
+    @title = 'Hub Icons'
+  end
+
 end

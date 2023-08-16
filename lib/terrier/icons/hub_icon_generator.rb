@@ -35,12 +35,22 @@ class HubIconGenerator < BaseGenerator
     out_path = render_template 'hub-icons.ts', binding
     info "Wrote #{icon_defs.count.to_s.bold} client-side icons to #{out_path.blue}"
 
-    # generate icons.rb
+    # generate hub_icons.rb
     icon_names_def = '%i[' + icon_names.join(' ') + ']'
     out_path = render_template 'hub_icons.rb', binding
     info "Wrote #{icon_names.count.to_s.bold} server-side icons to #{out_path.blue}"
 
-    # copy some images to public/images
+    # copy the icons to app/assets/hub_icons
+    icons_out_dir = Terrier::Engine.root.join("app/assets/hub_icons").to_s
+    FileUtils.mkdir_p icons_out_dir unless File.exist? icons_out_dir
+    icon_names.each do |name|
+      from_path = Terrier::Engine.root.join("app/frontend/terrier/images/icons/#{name}.svg").to_s
+      to_path = Terrier::Engine.root.join("app/assets/hub_icons/#{name}.svg").to_s
+      info "Copying #{from_path.bold} to #{to_path.bold}"
+      FileUtils.cp from_path, to_path
+    end
+
+    # copy some images to app/assets/images
     %w[terrier-hub-favicon-alert.png terrier-hub-favicon-dark.png terrier-hub-favicon.png terrier-hub-logo-dark.svg terrier-hub-logo-light.svg].each do |name|
       subdir = name.ends_with?('png') ? 'raw' : 'optimized'
       from_path = Terrier::Engine.root.join("app/frontend/terrier/images/#{subdir}/#{name}").to_s

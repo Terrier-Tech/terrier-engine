@@ -116,6 +116,12 @@ class String
     end
   end
 
+  # creates a data URL of the string of the given mime type
+  def to_base64_data_url(mime_type = "image/svg+xml")
+    base64_data = Base64.strict_encode64(self)
+    "data:#{mime_type};base64,#{base64_data}"
+  end
+
 end
 
 

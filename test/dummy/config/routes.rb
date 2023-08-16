@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'tt_styles' => 'client_side#tt_styles'
 
   get 'icons/glyps'
+  get 'icons/hub'
 
   get 'rendering/exception'
 

@@ -1,7 +1,7 @@
 
 require 'benchmark'
 
-# prefer use of Icons.all
+# prefer HubIcons.all
 HUB_ICON_NAMES = <%= icon_names_def %>
 
 HUB_ICONS = {}
@@ -17,12 +17,14 @@ module HubIcons
 end
 
 # abort if there are no icons (we're generating them)
-if Dir[Rails.root.join("app/frontend/terrier/images/icons/*").to_s].count == 0
+if Dir[Terrier::Engine.root.join("app/frontend/terrier/images/icons/*").to_s].count == 0
   return
 end
 
 Benchmark.measure "Loading icons" do
   HUB_ICON_NAMES.each do |name|
-    HUB_ICONS[name] = File.read Rails.root.join("app/frontend/terrier/images/icons/#{name}.svg")
+    HUB_ICONS[name] = File.read Terrier::Engine.root.join("app/frontend/terrier/images/icons/#{name}.svg")
   end
 end
+
+

@@ -1,9 +1,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
-// Glyps
+// Preview
 ////////////////////////////////////////////////////////////////////////////////
 
-.glyps-preview {
+.glyps-preview, .hub-icons-preview {
 	z-index: 0;
 	display: grid;
 	padding: 20px;
@@ -18,6 +18,12 @@
 			margin: 0;
 			font-size: 40px;
 			line-height: 1.1;
+		}
+		svg {
+			display: block;
+			margin: 0 auto;
+			width: 48px;
+			height: 48px;
 		}
 		span {
 			font-size: 12px;
