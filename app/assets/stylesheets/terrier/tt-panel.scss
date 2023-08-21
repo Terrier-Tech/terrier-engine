@@ -64,7 +64,6 @@
 			gap: var(--tt-gap);
 		}
 
-		overflow-y: hidden;
 		transition: flex-basis var(--tt-animation-duration) ease-in-out;
 	}
 	.collapsible-chevron {
@@ -78,6 +77,11 @@
 
 		.collapsible-chevron {
 			rotate: -90deg;
+		}
+	}
+	&.collapsed, &.collapsing {
+		.panel-content {
+			overflow-y: hidden;
 		}
 	}
 

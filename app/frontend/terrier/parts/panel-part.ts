@@ -13,7 +13,8 @@ export type CollapsibleConfig = {
 export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig}> {
     protected static readonly DEFAULT_CHEVRON_SIDE: 'left' | 'right' = 'left'
 
-    toggleCollapseKey = untypedKey()
+    private _toggleCollapseKey = untypedKey()
+    private _transitionEndKey = untypedKey()
 
     private _prevCollapsedState?: boolean
 
@@ -21,8 +22,13 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         if (this.state.collapsible) {
             this._prevCollapsedState = this.state.collapsible.collapsed
             this.state.collapsible.chevronSide ??= PanelPart.DEFAULT_CHEVRON_SIDE
-            this.onClick(this.toggleCollapseKey, _ => {
+            this.onClick(this._toggleCollapseKey, _ => {
                 this.toggleCollapse()
+            })
+            this.onTransitionEnd(this._transitionEndKey, m => {
+                if (m.event.propertyName != 'flex-basis') return
+                if (!(m.event.currentTarget instanceof HTMLElement)) return
+                m.event.currentTarget.querySelector('.tt-panel')?.classList.remove('collapsing')
             })
         }
     }
@@ -49,6 +55,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
             if (collapsibleConfig?.collapsed) panel.class('collapsed')
+            panel.emitTransitionEnd(this._transitionEndKey)
             if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
                     if (collapsibleConfig?.chevronSide == 'left') {
@@ -107,6 +114,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
             content.style.flexBasis = height
         }
 
+        panelElem.classList.add('collapsing') // 'collapsing' is applied for the duration of the open and close animation
         panelElem.classList.toggle('collapsed', collapsibleConfig.collapsed)
     }
 
@@ -122,7 +130,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         if (this.state.collapsible) {
             parent.a('.collapsible-chevron', chev => {
                 this.renderChevronIcon(chev, this.state.collapsible?.collapsed!)
-            }).emitClick(this.toggleCollapseKey)
+            }).emitClick(this._toggleCollapseKey)
         }
     }
 
