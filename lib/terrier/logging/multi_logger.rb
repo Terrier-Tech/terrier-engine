@@ -5,14 +5,21 @@ AmazingPrint.defaults[:ruby19_syntax] = true
 
 class MultiLogger
 
-  attr_accessor :use_stdout, :use_rails, :stream, :level, :prefix, :messages
+  attr_accessor :use_stdout, :use_rails, :logger, :stream, :level, :prefix, :messages
 
   LEVELS = %w(debug info success separator warn error)
 
   def initialize(prefix, opts={})
     @prefix = prefix
-    @use_stdout = opts[:use_stdout] || true
-    @use_rails = opts[:use_rails] || true
+    @logger = opts[:logger]
+    @use_stdout = opts[:use_stdout]
+    @use_rails = opts[:use_rails]
+
+    # if a specific logger is passed in, use_stdout and use_rails are opt-in (off by default)
+    # if a specific logger is not passed in, use_stdout and use_rails are opt-out (on by default)
+    @use_stdout = @logger.nil? if @use_stdout.nil?
+    @use_rails = @logger.nil? if @use_rails.nil?
+
     @level = 'info'
     @messages = []
   end
@@ -85,10 +92,16 @@ class MultiLogger
 
   # writes directly to the appropriate outputs
   def write(level, s)
+    if @logger
+      rails_level = level=='separator' ? 'info' : level
+      @logger.send rails_level, s
+    end
+
     if Rails&.logger && @use_rails
       rails_level = level=='separator' ? 'info' : level
       Rails.logger.send rails_level, s
     end
+
     if @use_stdout
       puts s
     end
