@@ -67,21 +67,25 @@ class MultiLogger
   def log(level, message, *args)
     return if LEVELS.index(@level) > LEVELS.index(level)
     if level == 'separator'
-      s = "#{@prefix} :: ==== #{message} ===="
-    else
-      s = "#{@prefix} #{level.upcase} :: #{message}"
+      message = "==== #{message} ===="
     end
-    write level, s
+    write level, message
 
     # amazing_print extra args
     rails_level = %w(separator success).index(level) ? 'info' : level
     args.each do |arg|
+      if @logger && @logger.respond_to?(:ap)
+        @logger.ap arg, rails_level
+      end
+
       if @use_stdout
         ap arg
       end
+
       if Rails&.logger && @use_rails
         Rails.logger.ap arg, rails_level
       end
+
       write_stream level, arg.inspect # TODO: figure out how to send ap output to the stream
     end
   end
@@ -92,20 +96,21 @@ class MultiLogger
 
   # writes directly to the appropriate outputs
   def write(level, s)
+    logger_level = level=='separator' ? 'info' : level
+    logger_message = "#{@prefix} #{s}"
     if @logger
-      rails_level = level=='separator' ? 'info' : level
-      @logger.send rails_level, s
+      @logger.send logger_level, logger_message
     end
 
     if Rails&.logger && @use_rails
-      rails_level = level=='separator' ? 'info' : level
-      Rails.logger.send rails_level, s
+      Rails.logger.send logger_level, logger_message
     end
 
+    stdout_message = "#{level.upcase} -- #{@prefix} #{s}"
     if @use_stdout
-      puts s
+      puts stdout_message
     end
-    write_stream level, s
+    write_stream level, stdout_message
   end
 
   def write_stream(level, s)
