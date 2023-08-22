@@ -1,0 +1,38 @@
+@import "tt-mixins";
+
+.tt-log-entries {
+	@include tt-inset-box;
+	position: relative;
+	.log-entry {
+		display: flex;
+		padding: 0.5em 0.8em;
+		gap: 1em;
+		font-size: var(--tt-body-font-size);
+		border-left: 4px solid var(--tt-secondary-color);
+		.prefix {
+			color: var(--tt-secondary-color);
+			opacity: 0.75;
+		}
+		&.warn {
+			border-left-color: var(--tt-pending-color);
+		}
+		&.error {
+			border-left-color: var(--tt-alert-color);
+		}
+		background-color: var(--tt-white-color);
+		&:nth-child(odd) {
+			background-color: var(--tt-odd-row-background);
+		}
+		&:first-child {
+			@include tt-top-rounded-corners;
+		}
+		&:last-child {
+			@include tt-bottom-rounded-corners;
+		}
+	}
+	&::after {
+		@include tt-absolute-fill;
+		@include tt-inset-box-shadow;
+		content: "";
+	}
+}

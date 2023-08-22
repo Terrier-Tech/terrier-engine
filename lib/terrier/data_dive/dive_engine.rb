@@ -110,7 +110,7 @@ class DataDive::DiveEngine
     return val.to_s unless type.present?
     case type
     when 'cents'
-      val.to_i.cents
+      val.to_i / 100.0
     else
       val.to_s
     end

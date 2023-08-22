@@ -1,5 +1,6 @@
 import { Logger } from "tuff-core/logging"
 import { QueryParams } from "tuff-core/urls"
+import {LogEntry} from "./logging"
 
 const log = new Logger('Api')
 log.level = 'debug'
@@ -113,17 +114,6 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
 // Event Streams
 ////////////////////////////////////////////////////////////////////////////////
 
-type LogLevel = 'success' | 'info' | 'warn' | 'debug'
-
-/**
- * Type of log events from a streaming response.
- */
-export type LogEvent = {
-    level: LogLevel
-    prefix?: string
-    message: string
-}
-
 /**
  * Type of error events from a streaming response.
  */
@@ -188,8 +178,8 @@ export class Streamer {
      * Listen specifically for log events.
      * @param listener
      */
-    onLog(listener: (event: LogEvent) => any) {
-        return this.on<LogEvent>('_log', listener)
+    onLog(listener: (event: LogEntry) => any) {
+        return this.on<LogEntry>('_log', listener)
     }
 
     /**

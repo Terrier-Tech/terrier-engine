@@ -16,6 +16,7 @@ import inflection from "inflection"
 import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, LiteralDateRange} from "../queries/dates"
 import dayjs from "dayjs"
 import {ProgressBarPart} from "../../terrier/progress";
+import {LogListPart} from "../../terrier/logging";
 
 const log = new Logger("DiveRuns")
 
@@ -52,6 +53,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     fileOutput?: RunFileOutput
     queryResults: Record<string, RunQueryResult> = {}
     progressBar!: ProgressBarPart
+    logList!: LogListPart
 
     startKey = messages.untypedKey()
     pickDateKey = messages.typedKey<{ input_key: string }>()
@@ -63,6 +65,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         this.schema = await Schema.get()
 
         this.progressBar = this.makePart(ProgressBarPart, {total: 10})
+        this.logList = this.makePart(LogListPart, {})
 
         // initialize the inputs
         this.filters = Dives.computeFilterInputs(this.schema, this.state.dive)
@@ -125,6 +128,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         const res = await Db().upsert('dd_dive_run', newRun)
         if (res.status == 'success' && res.record) {
             this.beginStreaming(res.record)
+            this.logList.info(`Created dive run`)
         } else {
             this.alertToast(`Error creating dive run: ${res.message}`)
         }
@@ -154,6 +158,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             .onLog(evt => {
                 this.progressBar.increment()
                 log.log(evt.level, evt.message)
+                this.logList.push(evt)
                 this.dirty()
             })
             .onError(evt => {
@@ -172,6 +177,8 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.padded.gap.column', col => {
             col.part(this.progressBar)
+
+            // inputs and outputs row
             col.div('.tt-flex.collapsible.gap.tt-form', row => {
                 // inputs
                 row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
@@ -209,6 +216,9 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
                     }
                 })
             })
+
+            // log
+            col.part(this.logList)
         })
     }
 
