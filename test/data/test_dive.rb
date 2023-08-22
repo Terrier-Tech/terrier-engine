@@ -26,7 +26,8 @@ module TestDive
             alias: "Order Notes"
           },
           {
-            name: 'price'
+            name: 'price',
+            alias: 'Order Price'
           },
           {
             name: 'status'
