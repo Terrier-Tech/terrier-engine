@@ -51,23 +51,18 @@ async function validate(query: Query): Promise<QueryValidation> {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Inputs
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
 // Preview
 ////////////////////////////////////////////////////////////////////////////////
 
 export type QueryResultRow = Record<string, any>
 
-const ColumnTypes = ['string', 'integer', 'float', 'date', 'time',  'dollars'] as const
+const ColumnTypes = ['string', 'integer', 'float', 'date', 'datetime', 'cents', 'dollars'] as const
 
 export type ColumnType = typeof ColumnTypes[number]
 
 export type QueryResultColumn = {
-    name: string
+    select_name: string
+    column_name: string
     type: ColumnType
 }
 
@@ -102,15 +97,19 @@ function renderCell(td: TableCellTag, col: QueryResultColumn, val: any): any {
         case 'date':
             const date = dayjs(val.toString())
             return td.div('.date').text(date.format(DateFormat))
-        case 'time':
+        case 'datetime':
             const time = dayjs(val.toString())
             td.div('.date').text(time.format(DateFormat))
             return td.div('.time').text(time.format(TimeFormat))
         case 'dollars':
             const dollars = parseFloat(val)
             return td.div('.dollars').text(`\$${dollars}`)
+        case 'cents':
+            const cents = parseInt(val)
+            const d = (cents/100.0).toFixed(2)
+            return td.div('.dollars').text(`\$${d}`)
         case 'string':
-            if (col.name.endsWith('id')) {
+            if (col.select_name.endsWith('id')) {
                 const id = val.toString()
                 td.a('.id')
                     .data({tooltip: id})
@@ -134,7 +133,7 @@ function renderTable(parent: PartTag, rows: QueryResultRow[], columns: QueryResu
             thead.tr(tr => {
                 for (const col of columns) {
                     tr.th(col.type, th => {
-                        th.a().text(col.name)
+                        th.a().text(col.select_name)
                     })
                 }
             })
@@ -146,7 +145,7 @@ function renderTable(parent: PartTag, rows: QueryResultRow[], columns: QueryResu
                 tbody.tr(tr => {
                     for (const col of columns) {
                         tr.td(td => {
-                            const val = row[col.name]
+                            const val = row[col.select_name]
                             if (val) {
                                 renderCell(td, col, val)
                             }

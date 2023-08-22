@@ -15,11 +15,12 @@ class ResponseStreamer
 
   def run
     begin
+      @step = 0
       yield self
       # tell the client to close, otherwise the EventSource will keep re-sending the request
       write '_close'
     rescue => ex
-      error ex.message, ex.backtrace
+      error ex
       Rails.logger.warn "Error executing progressive: #{ex.message}"
       ex.backtrace.filter_backtrace.each do |line|
         Rails.logger.warn line

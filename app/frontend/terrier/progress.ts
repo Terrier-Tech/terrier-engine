@@ -15,6 +15,16 @@ export class ProgressBarPart extends TerrierPart<ProgressState> {
     color: ColorName = 'primary'
 
     /**
+     * Set the total number of steps.
+     * @param total
+     */
+    setTotal(total: number) {
+        this.state.total = total
+        this.progress = Math.min(this.progress, this.state.total)
+        this.dirty()
+    }
+
+    /**
      * Sets the progress and (optionally) color, then dirties the part.
      * @param progress
      * @param color

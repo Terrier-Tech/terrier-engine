@@ -28,6 +28,10 @@ module Terrier::Model
       @type_map[col] = type
     end
 
+    def self.custom_type(col)
+      @type_map&.dig(col.to_sym)
+    end
+
     ## Upserting (Instance Methods)
 
     # called after the record and all of its provided relations have been upserted

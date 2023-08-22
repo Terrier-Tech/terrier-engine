@@ -26,6 +26,10 @@ type RunQueryResult = {
     message?: string
 }
 
+type InitRunResult = {
+    total_steps: number
+}
+
 const statusIcons: Record<RunQueryResult['status'], IconName> = {
     pending: 'glyp-pending',
     success: 'glyp-complete',
@@ -58,9 +62,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
         this.schema = await Schema.get()
 
-        // progress is # queries +1 for creating and run and +1 for the output
-        const total = (this.state.dive.query_data?.queries?.length || 0) + 2
-        this.progressBar = this.makePart(ProgressBarPart, {total})
+        this.progressBar = this.makePart(ProgressBarPart, {total: 10})
 
         // initialize the inputs
         this.filters = Dives.computeFilterInputs(this.schema, this.state.dive)
@@ -133,6 +135,11 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     beginStreaming(run: DdDiveRun) {
         this.run = run
         Api.stream(`/data_dive/stream_run/${this.run.id}`)
+            .on<InitRunResult>('init_run', res => {
+                this.progressBar.setTotal(res.total_steps)
+                log.info(`Total steps for run: ${res.total_steps}`)
+                this.dirty()
+            })
             .on<RunQueryResult>('query_result', res => {
                 this.queryResults[res.id] = res
                 this.progressBar.increment()
@@ -142,6 +149,11 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
                 this.fileOutput = res
                 this.stopActionLoading()
                 this.progressBar.complete('success')
+                this.dirty()
+            })
+            .onLog(evt => {
+                this.progressBar.increment()
+                log.log(evt.level, evt.message)
                 this.dirty()
             })
             .onError(evt => {

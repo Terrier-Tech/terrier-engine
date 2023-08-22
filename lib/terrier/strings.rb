@@ -124,11 +124,63 @@ class String
 
 end
 
+class Integer
+
+  def cents(include_cents = true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self / 100.0, precision: precision
+  end
+
+  def dollars(include_cents = true)
+    precision = include_cents ? 2 : 0
+    ActionController::Base.helpers.number_to_currency self, precision: precision
+  end
+
+  # @return [String] a string representing the byte size of self
+  def to_human_size
+    ActiveSupport::NumberHelper.number_to_human_size self
+  end
+
+  # @return [String] a string representing the number with comma delimiters for the thousands
+  def to_delimited
+    ActiveSupport::NumberHelper.number_to_delimited self
+  end
+
+  # @return [String] the number formatted as a string with an explicit '+' prefic for positive values
+  def to_signed_s
+    self > 0 ? "+#{self}" : self.to_s
+  end
+
+  # @return [String] the bolded string value of the number
+  def bold
+    self.to_s.bold
+  end
+end
 
 class Float
 
+  # @return [String] the number formatted as a string with an explicit '+' prefic for positive values
+  def to_signed_s
+    self > 0 ? "+#{self}" : self.to_s
+  end
+
+  # @return [String] the bolded string value of the number
+  def bold
+    self.to_s.bold
+  end
+
+  # @return [String] the floating point number formatted as a percentage with the given number of decimals
+  def to_percentage(decimals = 1)
+    "#{(self * 100).round(decimals)}%"
+  end
+
   def to_ms
     (self*1000).round(1)
+  end
+
+  # format the floating point seconds value for human consumption
+  def seconds
+    "#{self.round(1)}s"
   end
 
   def is_float?
@@ -142,20 +194,6 @@ class Float
 
   def percent
     '%g%%' % (self*100.0)
-  end
-
-end
-
-class Integer
-
-  def cents(include_cents=true)
-    precision = include_cents ? 2 : 0
-    ActionController::Base.helpers.number_to_currency self/100.0, precision: precision
-  end
-
-  def dollars(include_cents=true)
-    precision = include_cents ? 2 : 0
-    ActionController::Base.helpers.number_to_currency self, precision: precision
   end
 
 end

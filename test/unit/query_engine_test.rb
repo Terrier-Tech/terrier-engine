@@ -58,6 +58,7 @@ class QueryEngineTest < ActiveSupport::TestCase
     end
     assert_equal 12, columns.size
 
+    assert_equal 'cents', columns['Order Price'].type
   end
 
 end
