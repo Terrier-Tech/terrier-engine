@@ -179,7 +179,7 @@ class Float
   end
 
   # format the floating point seconds value for human consumption
-  def seconds
+  def seconds_s
     "#{self.round(1)}s"
   end
 
