@@ -62,7 +62,7 @@ class DataDive::DiveEngine
           id: qe.query.id,
           time: Time.now,
           status: 'success',
-          message: "Got <strong>#{query_output[:rows].count.to_delimited}</strong> rows in #{dt.seconds}"
+          message: "Got <strong>#{query_output[:rows].count.to_delimited}</strong> rows in #{dt.seconds_s}"
         }
       rescue => ex
         error ex
