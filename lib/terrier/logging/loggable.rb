@@ -7,6 +7,13 @@ module Loggable
     @logger = MultiLogger.new "[#{self.class.name}]"
   end
 
+  # Sets the logger for this instance to be a +MultiLogger+ with the class name as its prefix that wraps the given
+  # inner logger.
+  def wrap_logger(inner_logger, **opts)
+    return if inner_logger.nil?
+    @logger = MultiLogger.new "[#{self.class.name}]", logger: inner_logger, **opts
+  end
+
   def success(m, *args)
     get_logger.success m, *args
   end
