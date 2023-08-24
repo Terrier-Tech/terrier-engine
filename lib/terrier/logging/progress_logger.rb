@@ -19,7 +19,7 @@ class ProgressLogger
     percent = n / @total.to_f * 100
     t = Time.now
     elapsed = distance_of_time_in_words @t_start, t
-    t_finish = @t_start + ((t - @t_start) / n * @total).seconds_s
+    t_finish = @t_start + ((t - @t_start) / n * @total).seconds
     to_go = distance_of_time_in_words t, t_finish
     m = ["[#{n} of #{@total} (#{percent.round(2)}%)] #{elapsed} elapsed, #{to_go} to go", message.presence].compact.join(' - ')
     if @context.respond_to? :info
