@@ -341,6 +341,23 @@ $(document).on 'click', 'a.modal', (evt) ->
 	evt.stopPropagation()
 	false
 
+# Open a modal on form submit. This is used when you want to open a modal
+# with user input using server-side rendering (SSR) templating only.
+$(document).on 'submit', 'form.modal', (evt) ->
+	# Prevent the default form submission
+	evt.preventDefault()
+	form = $(evt.currentTarget)
+	if form.attr('method') == 'get'
+		# Construct the URL with the serialized form data
+		href = "#{form.attr('action')}?#{form.serialize()}"
+		options = { tiny: form.hasClass('tiny-modal') }
+		window.tinyModal.show href, options
+	else
+		alert("Opening a modal from form.modal submission requires form action='get'")
+	# Stop the event from propagating further & ensure no further event handlers execute
+	evt.stopPropagation()
+	false
+
 $(document).on 'click', 'a.close-modal', ->
 	modal = $ '#modal-window'
 	window.tinyModal.pop()
