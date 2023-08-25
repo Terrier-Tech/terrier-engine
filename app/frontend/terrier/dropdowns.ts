@@ -89,8 +89,6 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
             }
             content.classList.add('show')
         }
-
-
     }
 
 }

@@ -169,7 +169,7 @@ function clampAnchorResult(result: AnchorResult, size: Size, container: Size) {
         result.width = container.width
     }
     const rightOffset = container.width - (result.width ?? size.width) // don't hang off the right side of the viewport
-    result.left = Math.max(0, Math.min(result.left, rightOffset)) // don't hang off the left side of the viewport
+    result.left = Math.max(0, Math.min(result.left, rightOffset))
     if (result.top < 0 || result.top+size.height > container.height) {
         result.valid = false
     }
@@ -178,7 +178,7 @@ function clampAnchorResult(result: AnchorResult, size: Size, container: Size) {
         result.height = container.height
     }
     const bottomOffset = container.height - (result.height ?? size.height) // don't hang off the bottom of the viewport
-    result.top = Math.max(0, Math.min(result.top, bottomOffset)) // don't hang off the top of the viewport
+    result.top = Math.max(0, Math.min(result.top, bottomOffset))
     if (result.left < 0 || result.left + size.width > container.width) {
         result.valid = false
     }
