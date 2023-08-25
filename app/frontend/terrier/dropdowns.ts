@@ -77,7 +77,7 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
     }
 
     update(_elem: HTMLElement) {
-        const content = _elem.querySelector('.tt-dropdown-content')
+        const content: HTMLElement | null = _elem.querySelector('.tt-dropdown-content')
         if (content) {
             if (this.anchorTarget) {
                 log.info(`Anchoring dropdown`, content, this.anchorTarget)

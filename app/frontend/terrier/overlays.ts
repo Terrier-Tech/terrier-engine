@@ -164,13 +164,22 @@ type AnchorResult = {
     valid: boolean
 }
 
-function clampHorizontal(result: AnchorResult, size: Size, container: Size) {
+function clampAnchorResult(result: AnchorResult, size: Size, container: Size) {
     if (container.width < size.width) {
         result.width = container.width
     }
     const rightOffset = container.width - (result.width ?? size.width) // don't hang off the right side of the viewport
-    result.left = Math.max(0, Math.min(result.left, rightOffset)) // don't hang off the left side of the viewport
+    result.left = Math.max(0, Math.min(result.left, rightOffset))
     if (result.top < 0 || result.top+size.height > container.height) {
+        result.valid = false
+    }
+
+    if (container.height < size.height) {
+        result.height = container.height
+    }
+    const bottomOffset = container.height - (result.height ?? size.height) // don't hang off the bottom of the viewport
+    result.top = Math.max(0, Math.min(result.top, bottomOffset))
+    if (result.left < 0 || result.left + size.width > container.width) {
         result.valid = false
     }
 }
@@ -181,7 +190,7 @@ function anchorBoxBottom(size: Size, anchor: Box, container: Size): AnchorResult
         left: anchor.x + anchor.width / 2 - size.width / 2,
         valid: true
     }
-    clampHorizontal(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
 }
 
@@ -191,19 +200,8 @@ function anchorBoxTop(size: Size, anchor: Box, container: Size): AnchorResult {
         left: anchor.x + anchor.width / 2 - size.width / 2,
         valid: true
     }
-    clampHorizontal(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
-}
-
-function clampVertical(result: AnchorResult, size: Size, container: Size) {
-    if (container.height < size.height) {
-        result.height = container.height
-    }
-    const bottomOffset = container.height - (result.height ?? size.height) // don't hang off the bottom of the viewport
-    result.top = Math.max(0, Math.min(result.top, bottomOffset)) // don't hang off the top of the viewport
-    if (result.left < 0 || result.left + size.width > container.width) {
-        result.valid = false
-    }
 }
 
 function anchorBoxLeft(size: Size, anchor: Box, container: Size): AnchorResult {
@@ -212,7 +210,7 @@ function anchorBoxLeft(size: Size, anchor: Box, container: Size): AnchorResult {
         left: anchor.x - size.width,
         valid: true
     }
-    clampVertical(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
 }
 
@@ -222,7 +220,7 @@ function anchorBoxRight(size: Size, anchor: Box, container: Size): AnchorResult 
         left: anchor.x + anchor.width,
         valid: true
     }
-    clampVertical(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
 }
 
