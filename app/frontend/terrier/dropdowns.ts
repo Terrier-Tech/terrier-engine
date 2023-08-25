@@ -77,7 +77,7 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
     }
 
     update(_elem: HTMLElement) {
-        const content = _elem.querySelector('.tt-dropdown-content')
+        const content: HTMLElement | null = _elem.querySelector('.tt-dropdown-content')
         if (content) {
             if (this.anchorTarget) {
                 log.info(`Anchoring dropdown`, content, this.anchorTarget)
@@ -88,7 +88,14 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
                 Overlays.centerElement(content as HTMLElement)
             }
             content.classList.add('show')
+
+            const height = window.innerHeight - parseInt(content.style.top, 10)
+            if (height < content.offsetHeight) {
+                content.style.height = `${height}px`
+            }
         }
+
+
     }
 
 }
