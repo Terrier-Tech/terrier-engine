@@ -88,11 +88,6 @@ export abstract class Dropdown<TState> extends TerrierPart<TState> {
                 Overlays.centerElement(content as HTMLElement)
             }
             content.classList.add('show')
-
-            const height = window.innerHeight - parseInt(content.style.top, 10)
-            if (height < content.offsetHeight) {
-                content.style.height = `${height}px`
-            }
         }
 
 

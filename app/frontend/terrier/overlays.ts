@@ -164,7 +164,7 @@ type AnchorResult = {
     valid: boolean
 }
 
-function clampHorizontal(result: AnchorResult, size: Size, container: Size) {
+function clampAnchorResult(result: AnchorResult, size: Size, container: Size) {
     if (container.width < size.width) {
         result.width = container.width
     }
@@ -173,29 +173,7 @@ function clampHorizontal(result: AnchorResult, size: Size, container: Size) {
     if (result.top < 0 || result.top+size.height > container.height) {
         result.valid = false
     }
-}
 
-function anchorBoxBottom(size: Size, anchor: Box, container: Size): AnchorResult {
-    const result = {
-        top: anchor.y + anchor.height,
-        left: anchor.x + anchor.width / 2 - size.width / 2,
-        valid: true
-    }
-    clampHorizontal(result, size, container)
-    return result
-}
-
-function anchorBoxTop(size: Size, anchor: Box, container: Size): AnchorResult {
-    const result = {
-        top: anchor.y - size.height,
-        left: anchor.x + anchor.width / 2 - size.width / 2,
-        valid: true
-    }
-    clampHorizontal(result, size, container)
-    return result
-}
-
-function clampVertical(result: AnchorResult, size: Size, container: Size) {
     if (container.height < size.height) {
         result.height = container.height
     }
@@ -206,13 +184,33 @@ function clampVertical(result: AnchorResult, size: Size, container: Size) {
     }
 }
 
+function anchorBoxBottom(size: Size, anchor: Box, container: Size): AnchorResult {
+    const result = {
+        top: anchor.y + anchor.height,
+        left: anchor.x + anchor.width / 2 - size.width / 2,
+        valid: true
+    }
+    clampAnchorResult(result, size, container)
+    return result
+}
+
+function anchorBoxTop(size: Size, anchor: Box, container: Size): AnchorResult {
+    const result = {
+        top: anchor.y - size.height,
+        left: anchor.x + anchor.width / 2 - size.width / 2,
+        valid: true
+    }
+    clampAnchorResult(result, size, container)
+    return result
+}
+
 function anchorBoxLeft(size: Size, anchor: Box, container: Size): AnchorResult {
     const result = {
         top: anchor.y + anchor.height/2 - size.height / 2,
         left: anchor.x - size.width,
         valid: true
     }
-    clampVertical(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
 }
 
@@ -222,7 +220,7 @@ function anchorBoxRight(size: Size, anchor: Box, container: Size): AnchorResult 
         left: anchor.x + anchor.width,
         valid: true
     }
-    clampVertical(result, size, container)
+    clampAnchorResult(result, size, container)
     return result
 }
 
