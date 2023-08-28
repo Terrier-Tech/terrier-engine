@@ -42,13 +42,13 @@ command = ARGV.first || 'restart'
 case command
 when 'restart'
   if stop_server pid_path
-    puts "Restarting server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}"
+    puts "Restarting server at #{Time.now.to_s}"
     sleep 0.5 # without this, the port is still bound when the application tries to start again
   else
-    puts "Starting server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}..."
+    puts "Starting server at #{Time.now.to_s}..."
   end
 when 'stop'
-  puts "Stopping server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}..."
+  puts "Stopping server at #{Time.now.to_s}..."
   stop_server pid_path
   exit
 else
