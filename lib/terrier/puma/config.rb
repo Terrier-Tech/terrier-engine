@@ -1,5 +1,4 @@
 require 'dotenv/load'
-require 'puma/daemon'
 require 'sys/proctable'
 
 
@@ -33,6 +32,8 @@ def stop_server(pid_path)
       end
     end
     File.delete pid_path
+  else
+    puts "No pid file at #{pid_path}"
   end
   was_killed
 end
@@ -41,13 +42,13 @@ command = ARGV.first || 'restart'
 case command
 when 'restart'
   if stop_server pid_path
-    puts "Restarting server..."
+    puts "Restarting server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}"
     sleep 0.5 # without this, the port is still bound when the application tries to start again
   else
-    puts "Starting server..."
+    puts "Starting server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}..."
   end
 when 'stop'
-  puts 'Stopping server...'
+  puts "Stopping server at #{Time.now.strftime(PRETTY_TIME_FORMAT)}..."
   stop_server pid_path
   exit
 else
@@ -83,6 +84,4 @@ plugin :tmp_restart
 # This directive tells Puma to first boot the layout and load code
 # before forking the layout. This takes advantage of Copy On Write
 # process behavior so workers use less memory.
-# preload_app!
-
-daemonize
+preload_app!

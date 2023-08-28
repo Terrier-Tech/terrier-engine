@@ -20,7 +20,6 @@ PATH
       nokogiri (>= 1.10.4)
       parser
       puma
-      puma-daemon
       rails (>= 7.0)
       redis
       shrine
@@ -210,9 +209,6 @@ GEM
     public_suffix (5.0.3)
     puma (6.3.1)
       nio4r (~> 2.0)
-    puma-daemon (0.3.2)
-      puma (>= 5.0)
-      rack
     racc (1.7.1)
     rack (2.2.8)
     rack-proxy (0.7.6)

@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'loofah', '>= 2.3.1'
   s.add_dependency 'amazing_print'
   s.add_dependency 'puma'
-  s.add_dependency 'puma-daemon'
   s.add_dependency 'sys-proctable'
   s.add_dependency 'dotenv-rails'
   s.add_dependency 'http'
