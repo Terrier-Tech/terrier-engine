@@ -1,7 +1,7 @@
 import ContentPart from "./content-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "../fragments"
-import {untypedKey} from "tuff-core/messages";
+import Messages from "tuff-core/messages"
 
 export type CollapsibleConfig = {
     collapsed?: boolean
@@ -13,8 +13,8 @@ export type CollapsibleConfig = {
 export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig}> {
     protected static readonly DEFAULT_CHEVRON_SIDE: 'left' | 'right' = 'left'
 
-    private _toggleCollapseKey = untypedKey()
-    private _transitionEndKey = untypedKey()
+    private _toggleCollapseKey = Messages.untypedKey()
+    private _transitionEndKey = Messages.untypedKey()
 
     private _prevCollapsedState?: boolean
 

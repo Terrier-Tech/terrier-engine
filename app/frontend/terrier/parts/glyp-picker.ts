@@ -1,12 +1,13 @@
 import {ModalPart} from "../modals"
 import {Part, PartTag} from "tuff-core/parts"
-import {messages, logging} from "tuff-core"
 import Glyps from "../glyps"
+import {Logger} from "tuff-core/logging"
+import Messages from "tuff-core/messages"
 
-const log = new logging.Logger("GlypPicker")
+const log = new Logger("GlypPicker")
 
 
-const pickKey = messages.typedKey<{ icon: string }>()
+const pickKey = Messages.typedKey<{ icon: string }>()
 
 export type GlypPickerState = {
     icon?: string
@@ -20,7 +21,7 @@ class GlypPickerModal extends ModalPart<GlypPickerState> {
 
     grid!: GlypGrid
 
-    filterKey = messages.untypedKey()
+    filterKey = Messages.untypedKey()
 
     async init() {
         await super.init()

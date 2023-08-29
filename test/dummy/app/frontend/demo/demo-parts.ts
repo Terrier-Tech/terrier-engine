@@ -1,6 +1,5 @@
 import {NoState, Part, PartTag} from "tuff-core/parts"
 import {ModalPart, modalPopKey} from "@terrier/modals"
-import {messages, strings} from "tuff-core"
 import Toasts from "@terrier/toasts"
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action, ColorName} from "@terrier/theme"
@@ -8,14 +7,16 @@ import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
 import {Logger} from "tuff-core/logging"
 import Api from "@terrier/api";
+import Messages from "tuff-core/messages"
+import Strings from "tuff-core/strings"
 
 const log = new Logger("Demo Parts")
 
-const openModalKey = messages.untypedKey()
-const toastKey = messages.typedKey<{color: ColorName}>()
-const dropdownKey = messages.typedKey<{message: string}>()
-const streamingKey = messages.untypedKey()
-const sheetKey = messages.typedKey<{type: 'confirm'}>()
+const openModalKey = Messages.untypedKey()
+const toastKey = Messages.typedKey<{color: ColorName}>()
+const dropdownKey = Messages.typedKey<{message: string}>()
+const streamingKey = Messages.untypedKey()
+const sheetKey = Messages.typedKey<{type: 'confirm'}>()
 
 
 class Panel extends PanelPart<NoState> {
@@ -155,7 +156,7 @@ class DummyTab extends Part<{container: DemoTabs, title: string, content: string
                     const checked = this.state.container.state.side == side
                     label.input({type: 'radio', name: 'tab-side', value: side, checked})
                         .emitChange(this.state.container.changeSideKey, {side})
-                    label.span().text(strings.titleize(side))
+                    label.span().text(Strings.titleize(side))
                 })
             }
         })

@@ -2,16 +2,17 @@ import {Part, PartTag} from "tuff-core/parts"
 import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableRef, TableView} from "./tables"
-import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import Objects from "tuff-core/objects"
 import inflection from "inflection"
-import {ModalPart} from "../../terrier/modals";
+import {ModalPart} from "../../terrier/modals"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import dayjs from "dayjs"
 import Format from "../../terrier/format"
 import DiveEditor from "../dives/dive-editor"
+import Messages from "tuff-core/messages"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("Filters")
 
@@ -125,9 +126,9 @@ export type FiltersEditorState = {
     tableView: TableView<TableRef>
 }
 
-const saveKey = messages.untypedKey()
-const addKey = messages.untypedKey()
-const removeKey = messages.typedKey<{ id: string }>()
+const saveKey = Messages.untypedKey()
+const addKey = Messages.untypedKey()
+const removeKey = Messages.typedKey<{ id: string }>()
 
 export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 
@@ -202,10 +203,10 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
     }
 
     removeFilter(id: string) {
-        const filter = arrays.find(this.filterStates, f => f.id == id)
+        const filter = Arrays.find(this.filterStates, f => f.id == id)
         if (filter) {
             log.info(`Removing filter ${id}`, filter)
-            this.filterStates = arrays.without(this.filterStates, filter)
+            this.filterStates = Arrays.without(this.filterStates, filter)
             this.updateFilterEditors()
         }
     }
@@ -336,7 +337,7 @@ class FilterEditorContainer extends Part<FilterState> {
 
 class DirectFilterEditor extends FilterEditor<DirectFilter> {
 
-    numericChangeKey = messages.untypedKey()
+    numericChangeKey = Messages.untypedKey()
 
     async init() {
         await super.init()
@@ -399,7 +400,7 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
 // Inclusion Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-const inclusionChangedKey = messages.typedKey<{value: string}>()
+const inclusionChangedKey = Messages.typedKey<{value: string}>()
 
 class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
 
@@ -456,9 +457,9 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
 // Date Range Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-const dateRangeRelativeChangedKey = messages.untypedKey()
-const dateRangePeriodChangedKey = messages.typedKey<{period: string}>()
-const dateRangePreselectKey = messages.typedKey<VirtualDateRange>()
+const dateRangeRelativeChangedKey = Messages.untypedKey()
+const dateRangePeriodChangedKey = Messages.typedKey<{period: string}>()
+const dateRangePreselectKey = Messages.typedKey<VirtualDateRange>()
 
 class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
 
@@ -550,7 +551,7 @@ class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
 
 type AddFilterCallback = (filter: Filter) => any
 
-const columnSelectedKey = messages.typedKey<{column: string}>()
+const columnSelectedKey = Messages.typedKey<{column: string}>()
 
 class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilterCallback}> {
     columns!: ColumnDef[]
@@ -562,7 +563,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
     async init() {
         await super.init()
 
-        this.columns = arrays.sortByFunction(Object.values(this.state.modelDef.columns), col => {
+        this.columns = Arrays.sortByFunction(Object.values(this.state.modelDef.columns), col => {
             const visibility = col.metadata?.visibility
             const sort = visibility == 'common' ? '0' : '1'
             return `${sort}${col.name}`

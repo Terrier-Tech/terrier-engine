@@ -1,8 +1,8 @@
 import {Logger} from "tuff-core/logging"
-import {untypedKey} from "tuff-core/messages"
 import TerrierPart from "./parts/terrier-part"
 import {PartConstructor, PartTag} from "tuff-core/parts"
 import ContentPart from "./parts/content-part"
+import Messages from "tuff-core/messages"
 
 const log = new Logger('Modals')
 
@@ -99,7 +99,7 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
 /**
  * Emit this key from anywhere inside a modal to pop it off the stack.
  */
-export const modalPopKey = untypedKey()
+export const modalPopKey = Messages.untypedKey()
 
 export class ModalStackPart extends TerrierPart<{}> {
 

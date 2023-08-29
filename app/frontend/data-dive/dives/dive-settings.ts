@@ -1,6 +1,5 @@
 import TerrierPart from "../../terrier/parts/terrier-part"
 import {Logger} from "tuff-core/logging"
-import {messages} from "tuff-core"
 import {PartTag} from "tuff-core/parts"
 import {DdDive, DdDiveEnumFields, UnpersistedDdDive} from "../gen/models"
 import inflection from "inflection"
@@ -15,6 +14,7 @@ import {DbErrors} from "../../terrier/db-client"
 import {TerrierFormFields} from "../../terrier/forms"
 import DdSession from "../dd-session"
 import Dives from "./dives";
+import Messages from "tuff-core/messages"
 
 const log = new Logger("DiveForm")
 
@@ -39,7 +39,7 @@ class DiveForm extends TerrierPart<{dive: DiveSettings, session: DdSession}> {
         }, {attach: 'passive'})
     }
 
-    static readonly settingsChangedKey = messages.typedKey<DiveSettings>()
+    static readonly settingsChangedKey = Messages.typedKey<DiveSettings>()
 
 
     get parentClasses(): Array<string> {
@@ -109,8 +109,8 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
 
     settingsForm!: DiveForm
     modelPicker!: QueryModelPicker
-    saveKey = messages.untypedKey()
-    deleteKey = messages.untypedKey()
+    saveKey = Messages.untypedKey()
+    deleteKey = Messages.untypedKey()
     isNew = true
 
     async init() {

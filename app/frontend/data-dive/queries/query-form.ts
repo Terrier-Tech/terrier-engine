@@ -2,8 +2,8 @@ import {Query} from "./queries"
 import {PartTag} from "tuff-core/parts"
 import {FormFields} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
-import {messages} from "tuff-core"
-import ContentPart from "../../terrier/parts/content-part";
+import ContentPart from "../../terrier/parts/content-part"
+import Messages from "tuff-core/messages"
 
 const log = new Logger("QueryForm")
 
@@ -46,6 +46,6 @@ export default class QueryForm extends ContentPart<{ query: QuerySettings }> {
         })
     }
 
-    static readonly settingsChangedKey = messages.typedKey<QuerySettings>()
+    static readonly settingsChangedKey = Messages.typedKey<QuerySettings>()
 
 }

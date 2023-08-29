@@ -2,7 +2,6 @@ import {Logger} from "tuff-core/logging"
 import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
-import {arrays, messages} from "tuff-core"
 import {DdDive, DdDiveGroup, UnpersistedDdDive, UnpersistedDdDiveGroup} from "../gen/models"
 import Dives, {DiveListResult} from "./dives"
 import {GroupEditorModal} from "./group-editor"
@@ -11,6 +10,8 @@ import {IconName} from "../../terrier/theme"
 import {routes} from "../dd-routes"
 import {DiveSettingsModal} from "./dive-settings"
 import DdSession from "../dd-session"
+import Messages from "tuff-core/messages"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("DiveList")
 
@@ -21,10 +22,10 @@ const log = new Logger("DiveList")
 
 export class DiveListPage extends PagePart<{}> {
 
-    newGroupKey = messages.untypedKey()
-    editGroupKey = messages.typedKey<{id: string}>()
-    newDiveKey = messages.typedKey<{group_id: string}>()
-    editDiveKey = messages.typedKey<{id: string}>()
+    newGroupKey = Messages.untypedKey()
+    editGroupKey = Messages.typedKey<{id: string}>()
+    newDiveKey = Messages.typedKey<{group_id: string}>()
+    editDiveKey = Messages.typedKey<{id: string}>()
 
     session!: DdSession
     result!: DiveListResult
@@ -104,16 +105,16 @@ export class DiveListPage extends PagePart<{}> {
         this.result = await Dives.list()
         log.info("Loading data dive list", this.result)
         this.groupMap = this.session.data.groupMap
-        this.diveMap = arrays.indexBy(this.result.dives, 'id')
+        this.diveMap = Arrays.indexBy(this.result.dives, 'id')
         this.dirty()
     }
 
     renderContent(parent: PartTag): void {
 
-        const groupedDives = arrays.groupBy(this.result.dives, 'dd_dive_group_id')
+        const groupedDives = Arrays.groupBy(this.result.dives, 'dd_dive_group_id')
 
         parent.div('.dd-group-grid', grid => {
-            const groups = arrays.sortBy(Object.values(this.groupMap), 'name')
+            const groups = Arrays.sortBy(Object.values(this.groupMap), 'name')
             for (const group of groups) {
                 this.renderGroupPanel(grid, group, groupedDives[group.id] || [])
             }
@@ -127,7 +128,7 @@ export class DiveListPage extends PagePart<{}> {
             .classes('group')
             .content(content => {
                 content.class('tt-list')
-                for (const dive of arrays.sortBy(dives, 'name')) {
+                for (const dive of Arrays.sortBy(dives, 'name')) {
                     this.renderDiveRow(content, dive)
                 }
             })

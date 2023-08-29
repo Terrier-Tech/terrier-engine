@@ -1,5 +1,5 @@
 import {Logger} from "tuff-core/logging"
-import {typedKey} from "tuff-core/messages"
+import Messages from "tuff-core/messages"
 import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
 import {Action, IconName, Packet} from "./theme"
@@ -37,8 +37,8 @@ export type TabContainerState = {
 export class TabContainerPart extends TerrierPart<TabContainerState> {
 
     private tabs = {} as Record<string, TabDefinition>
-    changeTabKey = typedKey<{ tabKey: string }>()
-    changeSideKey = typedKey<{ side: TabSide }>()
+    changeTabKey = Messages.typedKey<{ tabKey: string }>()
+    changeSideKey = Messages.typedKey<{ side: TabSide }>()
 
     async init() {
         this.onClick(this.changeTabKey, m => {

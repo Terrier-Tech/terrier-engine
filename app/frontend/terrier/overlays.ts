@@ -1,7 +1,7 @@
 import {Part, PartTag, StatelessPart, NoState, PartConstructor} from "tuff-core/parts"
-import { Size, Box, Side } from "tuff-core/box"
+import { Size, Box, Side } from "tuff-core/boxes"
 import { Logger } from "tuff-core/logging"
-import {arrays} from "tuff-core";
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger('Overlays')
 
@@ -73,7 +73,7 @@ export class OverlayPart extends Part<NoState> {
             for (let i = this.layerStates.length-1; i>=0; i--) {
                 if (this.layerStates[i].type == type) {
                     const part = oldParts[i]
-                    this.layerStates = arrays.without(this.layerStates, this.layerStates[i])
+                    this.layerStates = Arrays.without(this.layerStates, this.layerStates[i])
                     this.updateLayers()
                     return part
                 }
@@ -96,7 +96,7 @@ export class OverlayPart extends Part<NoState> {
     removeLayer<StateType>(state: StateType): boolean {
         for (const layerState of this.layerStates) {
             if (layerState.partState == state) {
-                this.layerStates = arrays.without(this.layerStates, layerState)
+                this.layerStates = Arrays.without(this.layerStates, layerState)
                 this.updateLayers()
                 return true
             }

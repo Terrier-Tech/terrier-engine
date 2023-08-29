@@ -3,12 +3,12 @@ import TerrierPart from "../../terrier/parts/terrier-part"
 import {DdDiveGroup, UnpersistedDdDiveGroup} from "../gen/models"
 import Db from "../dd-db"
 import {PartTag} from "tuff-core/parts"
-import {messages} from "tuff-core"
 import {DbErrors} from "../../terrier/db-client"
 import DdSession from "../dd-session"
 import Nav from "tuff-core/nav"
 import {routes} from "../dd-routes"
 import {TerrierFormFields} from "../../terrier/forms"
+import Messages from "tuff-core/messages"
 
 class GroupForm extends TerrierPart<{ group: UnpersistedDdDiveGroup }> {
 
@@ -66,8 +66,8 @@ export type GroupModalState = {
 export class GroupEditorModal extends ModalPart<GroupModalState> {
 
     form!: GroupForm
-    saveKey = messages.untypedKey()
-    deleteKey = messages.untypedKey()
+    saveKey = Messages.untypedKey()
+    deleteKey = Messages.untypedKey()
 
     async init() {
         const group = this.state.group

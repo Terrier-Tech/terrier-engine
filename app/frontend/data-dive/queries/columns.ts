@@ -4,12 +4,13 @@ import {TableRef, TableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import {FormFields, SelectOptions} from "tuff-core/forms"
 import Forms from "../../terrier/forms"
-import {arrays, messages} from "tuff-core"
 import Objects from "tuff-core/objects"
 import {ModalPart} from "../../terrier/modals";
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import DiveEditor from "../dives/dive-editor"
+import Messages from "tuff-core/messages"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("Columns")
 
@@ -90,10 +91,10 @@ export type ColumnsEditorState = {
     tableView: TableView<TableRef>
 }
 
-const saveKey = messages.untypedKey()
-const addKey = messages.untypedKey()
-const addSingleKey = messages.typedKey<{ name: string }>()
-const removeKey = messages.typedKey<{id: string}>()
+const saveKey = Messages.untypedKey()
+const addKey = Messages.untypedKey()
+const addSingleKey = Messages.typedKey<{ name: string }>()
+const removeKey = Messages.typedKey<{id: string}>()
 
 /**
  * A modal that lets the user edit the columns being referenced for a particular table.
@@ -235,9 +236,9 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     }
 
     removeColumn(id: string) {
-        const col = arrays.find(this.columnStates, c => c.id == id)
+        const col = Arrays.find(this.columnStates, c => c.id == id)
         if (col) {
-            this.columnStates = arrays.without(this.columnStates, col)
+            this.columnStates = Arrays.without(this.columnStates, col)
             this.updateColumnEditors()
         }
     }
@@ -315,9 +316,9 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
 // Add Column Dropdown
 ////////////////////////////////////////////////////////////////////////////////
 
-const checkAllKey = messages.untypedKey()
-const applySelectionKey = messages.untypedKey()
-const checkChangedKey = messages.typedKey<{column: string}>()
+const checkAllKey = Messages.untypedKey()
+const applySelectionKey = Messages.untypedKey()
+const checkChangedKey = Messages.typedKey<{column: string}>()
 
 type SelectColumnsCallback = (columns: string[]) => any
 

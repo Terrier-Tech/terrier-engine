@@ -2,8 +2,8 @@ import inflection from "inflection"
 import dayjs from "dayjs"
 import {Dropdown} from "../../terrier/dropdowns"
 import {PartTag} from "tuff-core/parts"
-import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
+import Messages from "tuff-core/messages"
 
 const log = new Logger("Dates")
 
@@ -211,7 +211,7 @@ export type DatePeriodPickerState = {
  */
 export class DatePeriodPickerPart extends Dropdown<DatePeriodPickerState> {
 
-    periodKey = messages.typedKey<{period: string}>()
+    periodKey = Messages.typedKey<{period: string}>()
 
     async init() {
         await super.init()

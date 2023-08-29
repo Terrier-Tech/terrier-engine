@@ -5,7 +5,6 @@ import Db from "../dd-db"
 import Api, {ErrorEvent} from "../../terrier/api"
 import {Query} from "../queries/queries"
 import {DivTag, HtmlParentTag} from "tuff-core/html"
-import {messages} from "tuff-core"
 import {IconName} from "../../terrier/theme"
 import Filters, {DateRangeFilter, DirectFilter, FilterInput, InclusionFilter} from "../queries/filters"
 import Dives from "./dives"
@@ -17,6 +16,7 @@ import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, Literal
 import dayjs from "dayjs"
 import {ProgressBarPart} from "../../terrier/progress";
 import {LogListPart} from "../../terrier/logging";
+import Messages from "tuff-core/messages"
 
 const log = new Logger("DiveRuns")
 
@@ -55,8 +55,8 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     progressBar!: ProgressBarPart
     logList!: LogListPart
 
-    startKey = messages.untypedKey()
-    pickDateKey = messages.typedKey<{ input_key: string }>()
+    startKey = Messages.untypedKey()
+    pickDateKey = Messages.typedKey<{ input_key: string }>()
 
     async init() {
         this.setTitle("Run Dive")

@@ -1,13 +1,15 @@
 import {Field, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
-import {logging, messages, strings} from "tuff-core"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
 import {InputTag, InputTagAttrs} from "tuff-core/html"
 import TerrierPart from "./parts/terrier-part"
 import GlypPicker from "./parts/glyp-picker"
 import Glyps from "./glyps"
+import Messages from "tuff-core/messages"
+import {Logger} from "tuff-core/logging"
+import Strings from "tuff-core/strings"
 
-const log = new logging.Logger("TerrierForms")
+const log = new Logger("TerrierForms")
 
 ////////////////////////////////////////////////////////////////////////////////
 // Options
@@ -19,7 +21,7 @@ const log = new logging.Logger("TerrierForms")
  */
 function titleizeOptions(opts: string[], blank?: string): SelectOptions {
     const out = opts.map(c => {
-        return {value: c, title: strings.titleize(c)}
+        return {value: c, title: Strings.titleize(c)}
     })
     if (blank != undefined) { // don't test length, allow it to be a blank string
         out.unshift({title: blank, value: ''})
@@ -39,7 +41,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
 
     errors?: DbErrors<T>
 
-    pickGlypKey = messages.typedKey<{ key: KeyOfType<T, string | undefined> & string }>()
+    pickGlypKey = Messages.typedKey<{ key: KeyOfType<T, string | undefined> & string }>()
 
     /**
      * You must pass a `TerrierPart` so that we can render the error bubble with it.

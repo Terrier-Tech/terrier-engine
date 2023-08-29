@@ -1,5 +1,5 @@
 import {Logger} from "tuff-core/logging"
-import {untypedKey} from "tuff-core/messages"
+import Messages from "tuff-core/messages"
 import {Part, PartTag} from "tuff-core/parts"
 import {TerrierApp} from "./app"
 
@@ -52,7 +52,7 @@ function showPart(app: TerrierApp<any>, state: LightboxState) {
     app.addOverlay(LightboxPart, state, 'lightbox')
 }
 
-const closeKey = untypedKey()
+const closeKey = Messages.untypedKey()
 
 class LightboxPart extends Part<LightboxState> {
 

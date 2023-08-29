@@ -6,9 +6,11 @@ import dayjs from "dayjs"
 import QueryEditor from "./query-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
-import {arrays, messages, strings} from "tuff-core"
 import {Logger} from "tuff-core/logging"
-import inflection from "inflection";
+import inflection from "inflection"
+import Messages from "tuff-core/messages"
+import Strings from "tuff-core/strings"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("Queries")
 
@@ -184,7 +186,7 @@ export type QueryModelPickerState = {
  */
 export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 
-    pickedKey = messages.typedKey<{ model: string }>()
+    pickedKey = Messages.typedKey<{ model: string }>()
     model?: ModelDef
 
     async init() {
@@ -205,7 +207,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
             label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
                 .emitChange(this.pickedKey, {model: model.name})
             label.div(col => {
-                const name = inflection.pluralize(strings.titleize(model.name))
+                const name = inflection.pluralize(Strings.titleize(model.name))
                 col.div('.name').text(name)
                 if (model.metadata?.description) {
                     col.div('.description').text(model.metadata.description)
@@ -228,7 +230,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
                         h3.i('.glyp-refresh')
                         h3.span().text("Common Tables")
                     })
-                    for (const model of arrays.sortBy(commonModels, 'name')) {
+                    for (const model of Arrays.sortBy(commonModels, 'name')) {
                         this.renderModelOption(col, model)
                     }
                 }
@@ -241,7 +243,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
                         h3.i('.glyp-pending')
                         h3.span().text("Other Tables")
                     })
-                    for (const model of arrays.sortBy(uncommonModels, 'name')) {
+                    for (const model of Arrays.sortBy(uncommonModels, 'name')) {
                         this.renderModelOption(col, model)
                     }
                 }

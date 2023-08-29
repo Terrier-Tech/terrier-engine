@@ -1,15 +1,15 @@
 import {Logger} from "tuff-core/logging"
-import {untypedKey} from "tuff-core/messages"
-import {unique} from "tuff-core/arrays"
+import Messages from "tuff-core/messages"
 import {PartTag, StatelessPart} from "tuff-core/parts"
 import Overlays from "./overlays"
 import TerrierPart from "./parts/terrier-part"
 import Objects from "tuff-core/objects"
 import {Action} from "./theme"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger('Dropdowns')
 
-const clearDropdownKey = untypedKey()
+const clearDropdownKey = Messages.untypedKey()
 
 /**
  * Abstract base class for dropdown parts.
@@ -109,7 +109,7 @@ export class ActionsDropdown extends Dropdown<Array<Action>> {
     renderContent(parent: PartTag) {
         // handle each key declared on the actions directly,
         // then clear the dropdown and re-emit them on the parent part
-        const keys = unique(this.state.map(action => action.click?.key).filter(Objects.notNull))
+        const keys = Arrays.unique(this.state.map(action => action.click?.key).filter(Objects.notNull))
         for (const key of keys) {
             this.onClick(key, m => {
                 this.clear()

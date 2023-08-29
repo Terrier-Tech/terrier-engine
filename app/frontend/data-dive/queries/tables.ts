@@ -3,13 +3,14 @@ import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import inflection from "inflection"
 import Filters, {Filter, FilterInput, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
-import {arrays, messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
 import ContentPart from "../../terrier/parts/content-part"
 import {ActionsDropdown} from "../../terrier/dropdowns"
 import {ModalPart} from "../../terrier/modals"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
-import DiveEditor from "../dives/dive-editor";
+import DiveEditor from "../dives/dive-editor"
+import Messages from "tuff-core/messages"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("Tables")
 
@@ -35,7 +36,7 @@ export type JoinedTableRef = TableRef & {
 // Keys
 ////////////////////////////////////////////////////////////////////////////////
 
-const updatedKey = messages.typedKey<TableRef>()
+const updatedKey = Messages.typedKey<TableRef>()
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -75,11 +76,11 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
     modelDef!: ModelDef
     parentView?: TableView<any>
 
-    editTableKey = messages.untypedKey()
-    editColumnsKey = messages.untypedKey()
-    editFiltersKey = messages.untypedKey()
-    newJoinedKey = messages.untypedKey()
-    createJoinedKey = messages.typedKey<{name: string}>()
+    editTableKey = Messages.untypedKey()
+    editColumnsKey = Messages.untypedKey()
+    editFiltersKey = Messages.untypedKey()
+    newJoinedKey = Messages.untypedKey()
+    createJoinedKey = Messages.typedKey<{name: string}>()
 
     async init() {
         this.schema = this.state.schema
@@ -111,7 +112,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
 
             // show the common tables at the top
             let showingCommon = true
-            const actions = arrays.sortByFunction(newJoins, bt => {
+            const actions = Arrays.sortByFunction(newJoins, bt => {
                 const model = this.schema.models[bt.model]
                 const common = model.metadata?.visibility == 'common' ? '0' : '1'
                 return `${common}${bt.name}`
@@ -394,7 +395,7 @@ class JoinedTableEditorForm extends TerrierFormPart<JoinedTableRef> {
 class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
 
     form!: JoinedTableEditorForm
-    applyKey = messages.untypedKey()
+    applyKey = Messages.untypedKey()
 
     async init() {
         this.form = this.makePart(JoinedTableEditorForm, this.state.table)

@@ -1,7 +1,7 @@
 import {DdUser} from "./dd-user"
 import Api from "../terrier/api"
 import {DdDiveGroup} from "./gen/models"
-import {arrays} from "tuff-core";
+import Arrays from "tuff-core/arrays"
 import {SelectOptions} from "tuff-core/forms"
 import {Logger} from "tuff-core/logging"
 
@@ -76,7 +76,7 @@ export default class DdSession {
     }
 
     groupsInOrder(): DdDiveGroup[] {
-        return arrays.sortBy(Object.values(this.data.groupMap), 'name')
+        return Arrays.sortBy(Object.values(this.data.groupMap), 'name')
     }
 
     groupOptions(): SelectOptions {

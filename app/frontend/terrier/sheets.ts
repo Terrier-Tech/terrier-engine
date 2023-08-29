@@ -2,8 +2,8 @@ import {Action, IconName} from "./theme"
 import TerrierPart from "./parts/terrier-part"
 import {PartTag} from "tuff-core/parts"
 import Fragments from "./fragments"
-import {messages} from "tuff-core"
 import {Logger} from "tuff-core/logging"
+import Messages from "tuff-core/messages"
 
 const log = new Logger('Sheets')
 
@@ -20,7 +20,7 @@ export type SheetState = {
     secondaryActions?: Action[]
 }
 
-const clearKey = messages.untypedKey()
+const clearKey = Messages.untypedKey()
 
 export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
 

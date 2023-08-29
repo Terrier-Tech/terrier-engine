@@ -5,10 +5,10 @@ import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
 import DiveEditor, {DiveEditorState} from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
-import {messages} from "tuff-core"
 import Html from "tuff-core/html"
 import ContentPart from "../../terrier/parts/content-part"
 import {TabContainerPart} from "../../terrier/tabs"
+import Messages from "tuff-core/messages"
 
 const log = new Logger("QueryEditor")
 
@@ -17,7 +17,7 @@ const log = new Logger("QueryEditor")
 // Keys
 ////////////////////////////////////////////////////////////////////////////////
 
-const validationKey = messages.typedKey<QueryValidation>()
+const validationKey = Messages.typedKey<QueryValidation>()
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
     sqlPart!: SqlPart
     previewPart!: PreviewPart
 
-    updatePreviewKey = messages.untypedKey()
+    updatePreviewKey = Messages.untypedKey()
 
     async init() {
         const query = this.state.query
@@ -231,5 +231,5 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         this.tabs.showTab('preview')
     }
 
-    static readonly copyToClipboardKey = messages.typedKey<{ value: string }>()
+    static readonly copyToClipboardKey = Messages.typedKey<{ value: string }>()
 }

@@ -5,7 +5,6 @@ import {Query, QueryModelPicker} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
-import {arrays, messages} from "tuff-core"
 import {TabContainerPart} from "../../terrier/tabs"
 import PagePart from "../../terrier/parts/page-part"
 import ContentPart from "../../terrier/parts/content-part"
@@ -15,7 +14,9 @@ import Ids from "../../terrier/ids"
 import Db from "../dd-db"
 import DdSession from "../dd-session"
 import {DiveRunModal} from "./dive-runs"
-import Nav from "tuff-core/nav";
+import Nav from "tuff-core/nav"
+import Messages from "tuff-core/messages"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("DiveEditor")
 
@@ -34,9 +35,9 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     tabs!: TabContainerPart
 
-    newQueryKey = messages.untypedKey()
+    newQueryKey = Messages.untypedKey()
 
-    static readonly diveChangedKey = messages.untypedKey()
+    static readonly diveChangedKey = Messages.untypedKey()
 
     queries = new Array<Query>()
 
@@ -88,7 +89,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     deleteQuery(id: string) {
         log.info(`Deleting query ${id}`)
-        if (arrays.deleteIf(this.queries, q => q.id == id) > 0) {
+        if (Arrays.deleteIf(this.queries, q => q.id == id) > 0) {
             this.tabs.removeTab(id)
             this.dirty()
         }
@@ -102,7 +103,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         parent.part(this.tabs)
     }
 
-    static readonly deleteQueryKey = messages.typedKey<{ id: string }>()
+    static readonly deleteQueryKey = Messages.typedKey<{ id: string }>()
 
     async serialize(): Promise<DdDive> {
         const queries = this.queries
@@ -117,10 +118,10 @@ export class DiveEditorPage extends PagePart<{id: string}> {
     editor!: DiveEditor
     session!: DdSession
 
-    showHintsKey = messages.untypedKey()
-    saveKey = messages.untypedKey()
-    discardKey = messages.untypedKey()
-    runKey = messages.untypedKey()
+    showHintsKey = Messages.untypedKey()
+    saveKey = Messages.untypedKey()
+    discardKey = Messages.untypedKey()
+    runKey = Messages.untypedKey()
 
     async init() {
         log.info(`Loading dive ${this.state.id}`)
@@ -233,7 +234,7 @@ type NewQueryState = {
 
 class NewQueryModal extends ModalPart<NewQueryState> {
 
-    addKey = messages.untypedKey()
+    addKey = Messages.untypedKey()
     settingsForm!: QueryForm
     modelPicker!: QueryModelPicker
 

@@ -1,7 +1,7 @@
 import {PartTag} from "tuff-core/parts"
-import {messages} from "tuff-core"
 import {GlypName} from "./glyps"
 import HubIcons, {HubIconName} from "./gen/hub-icons"
+import {Key} from "tuff-core/messages"
 
 export interface ThemeType {
     readonly icons: string
@@ -22,7 +22,7 @@ export type ColorName = typeof ColorNames[number]
  * A combination of a message key and its associated data.
  */
 export type Packet = {
-    key: messages.Key
+    key: Key
     data?: Record<string, unknown>
 }
 

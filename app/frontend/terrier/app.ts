@@ -1,4 +1,4 @@
-import { Logger } from "tuff-core/logging"
+import {Logger} from "tuff-core/logging"
 import {Part, PartConstructor, PartParent} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
 import Tooltips from "./tooltips"
@@ -6,11 +6,12 @@ import Lightbox from "./lightbox"
 import Theme from "./theme"
 import {ModalPart, ModalStackPart} from "./modals"
 import {OverlayLayerType, OverlayPart} from "./overlays"
+import Messages from "tuff-core/messages"
 
 // @ts-ignore
 import logoUrl from './images/optimized/terrier-hub-logo-light.svg'
-import Sheets, {AlertSheetState, ConfirmSheetState, Sheet, SheetState} from "./sheets";
-import {messages} from "tuff-core";
+import Sheets, {AlertSheetState, ConfirmSheetState, Sheet, SheetState} from "./sheets"
+
 
 const log = new Logger('App')
 Logger.level = 'info'
@@ -103,7 +104,7 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
      * @param callback gets called if the user hits "Confirm"
      */
     confirm(options: ConfirmSheetState, callback: () => any) {
-        const key = messages.untypedKey()
+        const key = Messages.untypedKey()
         const state = {...options,
             primaryActions: [
                 {
