@@ -20,4 +20,19 @@ class PublicTempFile
     File.exist? @abs_path
   end
 
+  # copies the contents from a Ruby TempFile
+  # @param temp_file [TempFile]
+  def from_temp_file(temp_file)
+    File.open(self.abs_path, "wb") do |f|
+      f.write(temp_file.read)
+    end
+  end
+
+  # serializes the attributes to a hash
+  def as_json
+    h = {}
+    %w[name abs_path rel_path].each {|f| h[f] = self.send(f)}
+    h
+  end
+
 end
