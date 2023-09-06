@@ -411,7 +411,7 @@ class ScriptSearcher
 		@resultsList = @ui.find '.results-list'
 		@bodyPane = @ui.find '.body-pane'
 		@resultsSummary = @ui.find '.script-search-input .results-summary'
-		@input_key = 0
+		@key = 0
 		@scriptMap = {}
 		@openScriptLink = @ui.find 'a.open-script'
 
@@ -457,7 +457,7 @@ class ScriptSearcher
 		if query.length < 3
 			this.clearResult()
 			return
-		@input_key += 1
+		@key += 1
 		data = {
 			key: @key
 			query: query
