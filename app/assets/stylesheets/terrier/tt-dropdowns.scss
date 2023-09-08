@@ -10,7 +10,7 @@
 	transform: scale(0);
 	transition: transform var(--tt-animation-duration) ease;
 
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 
 	&.show {

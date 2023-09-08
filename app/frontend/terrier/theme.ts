@@ -102,7 +102,7 @@ export default class Theme {
                 if (action.subtitle?.length) {
                     a.div('.subtitle', {text: action.subtitle})
                 }
-                else {
+                if (!(action.title?.length || action.subtitle?.length)) {
                     a.class('icon-only')
                 }
                 if (action.href?.length) {
