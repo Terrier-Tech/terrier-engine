@@ -13,6 +13,7 @@ import Format from "../../terrier/format"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
+import {SelectOptions} from "tuff-core/forms"
 
 const log = new Logger("Filters")
 
@@ -27,8 +28,33 @@ type BaseFilter = {
     edit_label?: string
 }
 
-export const DirectOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte'] as const
-export type DirectOperator = typeof DirectOperators[number]
+const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte'] as const
+export type DirectOperator = typeof directOperators[number]
+
+/**
+ * Computes the operator options for the given column type.
+ * @param type
+ */
+function operatorOptions(type: string): SelectOptions {
+    let operators: DirectOperator[] = ['eq', 'ne'] // equality is the only thing we can assume for any type
+    switch (type) {
+        case 'text':
+        case 'string':
+            operators = ['eq', 'ne', 'ilike']
+            break
+        case 'float':
+        case 'integer':
+        case 'cents':
+            operators = ['eq', 'ne', 'lt', 'gt', 'lte', 'gte']
+            break
+    }
+    return operators.map(op => {
+        return {
+            value: op,
+            title: operatorDisplay(op)
+        }
+    })
+}
 
 export type DirectFilter = BaseFilter & {
     filter_type: 'direct'
@@ -73,7 +99,7 @@ function operatorDisplay(op: DirectOperator): string {
         case 'ne':
             return '≠'
         case 'ilike':
-            return '~'
+            return '≈'
         case 'lt':
             return '<'
         case 'lte':
@@ -369,10 +395,8 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
             col.div('.tt-readonly-field', {text: this.state.column})
         })
         parent.div('.operator', col => {
-            const operatorOptions = DirectOperators.map(op => {
-                return {title: operatorDisplay(op), value: op}
-            })
-            this.select(col, 'operator', operatorOptions)
+            const opts = operatorOptions(this.columnDef?.type || 'text')
+            this.select(col, 'operator', opts)
         })
         parent.div('.filter', col => {
             switch (this.state.column_type) {
