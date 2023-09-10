@@ -11,6 +11,7 @@ import {Dropdown} from "../../terrier/dropdowns"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
+import {ColumnValidationError} from "./validation"
 
 const log = new Logger("Columns")
 
@@ -57,8 +58,24 @@ export type ColumnRef = {
     alias?: string
     grouped?: boolean
     function?: AggFunction | DateFunction
+    errors?: ColumnValidationError[]
 }
 
+
+/**
+ * Computes the name of the resulting select clause.
+ * @param table
+ * @param col
+ */
+function computeSelectName(table: TableRef, col: ColumnRef): string {
+    if (col.alias?.length) {
+        return col.alias
+    } else if (table.prefix?.length) {
+        return `${table.prefix}${col.name}`
+    } else {
+        return col.name
+    }
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -405,7 +422,8 @@ class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: Sele
 
 const Columns = {
     render,
-    functionType
+    functionType,
+    computeSelectName
 }
 
 export default Columns

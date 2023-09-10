@@ -136,6 +136,14 @@
 					flex: 1 1 auto;
 					opacity: var(--label-opacity);
 				}
+				&.error {
+					max-width: var(--table-editor-width);
+					background-color: var(--tt-alert-color);
+					@include tt-inset-white-text;
+					.error-message {
+						flex: 0 1 100%;
+					}
+				}
 			}
 			&:last-child .line:last-child {
 				@include tt-bottom-rounded-corners;

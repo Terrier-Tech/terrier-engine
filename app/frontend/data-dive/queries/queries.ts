@@ -11,6 +11,7 @@ import inflection from "inflection"
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
 import Arrays from "tuff-core/arrays"
+import {ColumnRef} from "./columns"
 
 const log = new Logger("Queries")
 
@@ -28,13 +29,41 @@ export type Query = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Validation
+// Utilities
+////////////////////////////////////////////////////////////////////////////////
+
+type ColumnFunction = (table: TableRef, col: ColumnRef) => any
+
+function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
+    if (table.columns) {
+        for (const col of table.columns) {
+            fn(table, col)
+        }
+    }
+    if (table.joins) {
+        for (const joinedTable of Object.values(table.joins)) {
+            eachColumnForTable(joinedTable, fn)
+        }
+    }
+}
+
+/**
+ * Recursively iterates over all columns in a query.
+ * @param query
+ */
+function eachColumn(query: Query, fn: ColumnFunction) {
+    eachColumnForTable(query.from, fn)
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Server-Side Validation
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Type for the response to a server-side query validation.
  */
-export type QueryValidation = ApiResponse & {
+export type QueryServerValidation = ApiResponse & {
     query: Query
     sql?: string
     sql_html?: string
@@ -47,8 +76,8 @@ export type QueryValidation = ApiResponse & {
  * Has the server validate the given query and generate SQL for it.
  * @param query
  */
-async function validate(query: Query): Promise<QueryValidation> {
-    return await api.post<QueryValidation>("/data_dive/validate_query.json", {query})
+async function validate(query: Query): Promise<QueryServerValidation> {
+    return await api.post<QueryServerValidation>("/data_dive/validate_query.json", {query})
 }
 
 
@@ -258,6 +287,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 ////////////////////////////////////////////////////////////////////////////////
 
 const Queries = {
+    eachColumn,
     validate,
     preview,
     renderPreview

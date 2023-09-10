@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import Queries, {Query, QueryResult, QueryValidation} from "./queries"
+import Queries, {Query, QueryResult, QueryServerValidation} from "./queries"
 import Tables, {FromTableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
@@ -9,6 +9,7 @@ import Html from "tuff-core/html"
 import ContentPart from "../../terrier/parts/content-part"
 import {TabContainerPart} from "../../terrier/tabs"
 import Messages from "tuff-core/messages"
+import Validation, {QueryClientValidation} from "./validation"
 
 const log = new Logger("QueryEditor")
 
@@ -17,7 +18,7 @@ const log = new Logger("QueryEditor")
 // Keys
 ////////////////////////////////////////////////////////////////////////////////
 
-const validationKey = Messages.typedKey<QueryValidation>()
+const validationKey = Messages.typedKey<QueryServerValidation>()
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,9 +61,9 @@ class SettingsPart extends ContentPart<SubEditorState> {
 
 class SqlPart extends ContentPart<SubEditorState> {
 
-    validation?: QueryValidation
+    validation?: QueryServerValidation
 
-    setValidation(validation: QueryValidation) {
+    setValidation(validation: QueryServerValidation) {
         this.validation = validation
         this.dirty()
     }
@@ -156,11 +157,13 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
     settingsPart!: SettingsPart
     sqlPart!: SqlPart
     previewPart!: PreviewPart
+    clientValidation!: QueryClientValidation
 
     updatePreviewKey = Messages.untypedKey()
 
     async init() {
         const query = this.state.query
+        this.clientValidation = Validation.validateQuery(query)
 
         log.info("Initializing query editor", query)
 
@@ -180,7 +183,7 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: {key: this.updatePreviewKey}},
             PreviewPart, {editor: this, query})
 
-        this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, table: this.state.query.from})
+        this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, queryEditor: this, table: this.state.query.from})
 
         this.listenMessage(Tables.updatedKey, m => {
             log.info(`Table ${m.data.model} updated`, m.data)
@@ -219,10 +222,14 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
     }
 
     async validate() {
+        // server-side validation
         const res = await Queries.validate(this.state.query)
         log.info(`Query validated`, res)
         this.emitMessage(validationKey, res)
         this.sqlPart.setValidation(res)
+
+        // client-side validation
+        this.clientValidation = Validation.validateQuery(this.state.query)
         this.dirty()
     }
 

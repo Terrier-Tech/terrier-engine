@@ -152,7 +152,7 @@ end
 
 # Represents a single element of a select (and possibly group by) statement
 class ColumnRef < QueryModel
-  attr_accessor :name, :alias, :grouped, :function
+  attr_accessor :name, :alias, :grouped, :function, :errors
 
   AGG_FUNCTIONS = %w[count min max]
   

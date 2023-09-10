@@ -11,6 +11,7 @@ import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
+import QueryEditor from "./query-editor"
 
 const log = new Logger("Tables")
 
@@ -48,7 +49,9 @@ const updatedKey = Messages.typedKey<TableRef>()
  * Only keep one (the last one traversed) per table/column combination.
  * This means that some filters may clobber others, but I think it will yield
  * the desired result most of the time.
+ * @param schema
  * @param table
+ * @param filters
  */
 function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record<string, FilterInput>) {
     for (const f of table.filters || []) {
@@ -67,7 +70,7 @@ function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record
 // View
 ////////////////////////////////////////////////////////////////////////////////
 
-export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaDef, table: T }> {
+export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaDef, queryEditor: QueryEditor, table: T }> {
 
     schema!: SchemaDef
     table!: T
@@ -88,7 +91,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         this.modelDef = this.schema.models[this.table.model]
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
         this.displayName = this.tableName
-        this.updatedJoinedViews()
+        this.updateJoinedViews()
 
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.displayName} Columns`)
@@ -155,7 +158,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                     log.info(`Creating joined table`, newTable)
                     this.table.joins ||= {}
                     this.table.joins[newTable.belongs_to] = newTable
-                    this.updatedJoinedViews()
+                    this.updateJoinedViews()
                 }
                 this.app.showModal(JoinedTableEditorModal, {table, belongsTo, callback, parentTable: this.state.table as TableRef})
             }
@@ -165,9 +168,9 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
     /**
      * Re-generates all views for the joined tables.
      */
-    updatedJoinedViews() {
+    updateJoinedViews() {
         const states = Object.values(this.table.joins || {}).map(table => {
-            return {schema: this.schema, table}
+            return {schema: this.schema, queryEditor: this.state.queryEditor, table}
         })
         this.assignCollection('joined', JoinedTableView, states)
         for (const part of this.getCollectionParts('joined')) {
@@ -242,6 +245,12 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 for (const col of this.table.columns) {
                     section.div('.column.line', line => {
                         Columns.render(line, col)
+                        if (col.errors?.length) {
+                            line.class('error')
+                            for (const error of col.errors) {
+                                line.div('.error-message').text(error.message)
+                            }
+                        }
                     })
                 }
             }
