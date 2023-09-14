@@ -117,6 +117,14 @@ import EditRaw from '../images/icons/edit.svg?raw'
 // @ts-ignore
 import EditSrc from '../images/icons/edit.svg'
 // @ts-ignore
+import ExistingChildRaw from '../images/icons/existing_child.svg?raw'
+// @ts-ignore
+import ExistingChildSrc from '../images/icons/existing_child.svg'
+// @ts-ignore
+import ExistingParentRaw from '../images/icons/existing_parent.svg?raw'
+// @ts-ignore
+import ExistingParentSrc from '../images/icons/existing_parent.svg'
+// @ts-ignore
 import FeatureRaw from '../images/icons/feature.svg?raw'
 // @ts-ignore
 import FeatureSrc from '../images/icons/feature.svg'
@@ -208,6 +216,14 @@ import MetricsSrc from '../images/icons/metrics.svg'
 import MinusRaw from '../images/icons/minus.svg?raw'
 // @ts-ignore
 import MinusSrc from '../images/icons/minus.svg'
+// @ts-ignore
+import NewChildRaw from '../images/icons/new_child.svg?raw'
+// @ts-ignore
+import NewChildSrc from '../images/icons/new_child.svg'
+// @ts-ignore
+import NewParentRaw from '../images/icons/new_parent.svg?raw'
+// @ts-ignore
+import NewParentSrc from '../images/icons/new_parent.svg'
 // @ts-ignore
 import NightRaw from '../images/icons/night.svg?raw'
 // @ts-ignore
@@ -470,6 +486,14 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
         raw: EditRaw,
         src: EditSrc,
     },
+    "hub-existing_child": {
+        raw: ExistingChildRaw,
+        src: ExistingChildSrc,
+    },
+    "hub-existing_parent": {
+        raw: ExistingParentRaw,
+        src: ExistingParentSrc,
+    },
     "hub-feature": {
         raw: FeatureRaw,
         src: FeatureSrc,
@@ -561,6 +585,14 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
     "hub-minus": {
         raw: MinusRaw,
         src: MinusSrc,
+    },
+    "hub-new_child": {
+        raw: NewChildRaw,
+        src: NewChildSrc,
+    },
+    "hub-new_parent": {
+        raw: NewParentRaw,
+        src: NewParentSrc,
     },
     "hub-night": {
         raw: NightRaw,
@@ -713,7 +745,7 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
 }
 
 const Names = [
-    'hub-active', 'hub-admin', 'hub-archive', 'hub-arrow_down', 'hub-arrow_left', 'hub-arrow_right', 'hub-arrow_up', 'hub-assign', 'hub-attachment', 'hub-back', 'hub-badge', 'hub-board', 'hub-branch', 'hub-bug', 'hub-calculator', 'hub-checkmark', 'hub-close', 'hub-clypboard', 'hub-comment', 'hub-complete', 'hub-dashboard', 'hub-data_pull', 'hub-data_update', 'hub-database', 'hub-day', 'hub-delete', 'hub-documentation', 'hub-edit', 'hub-feature', 'hub-flex', 'hub-forward', 'hub-github', 'hub-history', 'hub-home', 'hub-image', 'hub-inbox', 'hub-info', 'hub-internal', 'hub-issue', 'hub-lane', 'hub-lane_asap', 'hub-lane_days', 'hub-lane_hours', 'hub-lane_weeks', 'hub-lanes_board', 'hub-level_complete', 'hub-level_highway', 'hub-level_on_ramp', 'hub-level_parking', 'hub-metrics', 'hub-minus', 'hub-night', 'hub-origin', 'hub-pending', 'hub-plus', 'hub-post', 'hub-posts', 'hub-pr_closed', 'hub-pr_merged', 'hub-pr_open', 'hub-prioritized', 'hub-project', 'hub-question', 'hub-reaction', 'hub-read_mail', 'hub-recent', 'hub-refresh', 'hub-related_posts', 'hub-request', 'hub-settings', 'hub-status', 'hub-step_deploy', 'hub-step_develop', 'hub-step_investigate', 'hub-step_review', 'hub-step_test', 'hub-steps', 'hub-steps_board', 'hub-subscribe', 'hub-support', 'hub-terrier', 'hub-thumbs_up', 'hub-type', 'hub-unprioritized', 'hub-upload', 'hub-user', 'hub-users', 'hub-week'
+    'hub-active', 'hub-admin', 'hub-archive', 'hub-arrow_down', 'hub-arrow_left', 'hub-arrow_right', 'hub-arrow_up', 'hub-assign', 'hub-attachment', 'hub-back', 'hub-badge', 'hub-board', 'hub-branch', 'hub-bug', 'hub-calculator', 'hub-checkmark', 'hub-close', 'hub-clypboard', 'hub-comment', 'hub-complete', 'hub-dashboard', 'hub-data_pull', 'hub-data_update', 'hub-database', 'hub-day', 'hub-delete', 'hub-documentation', 'hub-edit', 'hub-existing_child', 'hub-existing_parent', 'hub-feature', 'hub-flex', 'hub-forward', 'hub-github', 'hub-history', 'hub-home', 'hub-image', 'hub-inbox', 'hub-info', 'hub-internal', 'hub-issue', 'hub-lane', 'hub-lane_asap', 'hub-lane_days', 'hub-lane_hours', 'hub-lane_weeks', 'hub-lanes_board', 'hub-level_complete', 'hub-level_highway', 'hub-level_on_ramp', 'hub-level_parking', 'hub-metrics', 'hub-minus', 'hub-new_child', 'hub-new_parent', 'hub-night', 'hub-origin', 'hub-pending', 'hub-plus', 'hub-post', 'hub-posts', 'hub-pr_closed', 'hub-pr_merged', 'hub-pr_open', 'hub-prioritized', 'hub-project', 'hub-question', 'hub-reaction', 'hub-read_mail', 'hub-recent', 'hub-refresh', 'hub-related_posts', 'hub-request', 'hub-settings', 'hub-status', 'hub-step_deploy', 'hub-step_develop', 'hub-step_investigate', 'hub-step_review', 'hub-step_test', 'hub-steps', 'hub-steps_board', 'hub-subscribe', 'hub-support', 'hub-terrier', 'hub-thumbs_up', 'hub-type', 'hub-unprioritized', 'hub-upload', 'hub-user', 'hub-users', 'hub-week'
 ] as const
 
 export type HubIconName = typeof Names[number]

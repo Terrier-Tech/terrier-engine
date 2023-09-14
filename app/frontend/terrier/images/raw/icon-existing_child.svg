@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-existing_child</title>
+    <g id="icon-existing_child" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval-Copy" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="8" cy="24" r="3"></circle>
+        <circle id="Oval-Copy-2" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="16" cy="8" r="3"></circle>
+        <path d="M8,21 L8,18 C8,16.8954305 8.8954305,16 10,16 L22,16 C23.1045695,16 24,16.8954305 24,18 L24,23 L24,23" id="Path-100" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+        <rect id="Rectangle" fill="#000000" x="15" y="11" width="2" height="5"></rect>
+        <path d="M22.1507914,20.914964 L26.6142006,24.7407434 C27.0335265,25.1001655 27.082088,25.7314655 26.7226659,26.1507914 C26.6893412,26.1896702 26.6530794,26.2259319 26.6142006,26.2592566 L22.1507914,30.085036 C21.7314655,30.4444581 21.1001655,30.3958966 20.7407434,29.9765707 C20.5853922,29.7953276 20.5,29.5644906 20.5,29.3257794 L20.5,21.6742206 C20.5,21.1219359 20.9477153,20.6742206 21.5,20.6742206 C21.7387113,20.6742206 21.9695483,20.7596128 22.1507914,20.914964 Z" id="Path-101" fill="#000000" transform="translate(24, 25.5) scale(1, -1) rotate(-90) translate(-24, -25.5)"></path>
+    </g>
+</svg>

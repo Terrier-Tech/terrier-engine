@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-new-child</title>
+    <g id="icon-new-child" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="16" cy="8" r="3"></circle>
+        <circle id="Oval-Copy" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="8" cy="24" r="3"></circle>
+        <circle id="Oval-Copy-2" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" cx="24" cy="24" r="5"></circle>
+        <path d="M8,21 L8,18 C8,16.8954305 8.8954305,16 10,16 L22.0231969,16 C23.1186657,16 24.0102814,16.8812743 24.0230608,17.9766686 L24.0344614,18.9538745 L24.0344614,18.9538745" id="Path-100" stroke="#000000" stroke-width="2" stroke-linejoin="round"></path>
+        <rect id="Rectangle" fill="#000000" x="15" y="11" width="2" height="5"></rect>
+        <path d="M24,21 C24.5522847,21 25,21.4477153 25,22 L25,22.999 L26,23 C26.5522847,23 27,23.4477153 27,24 C27,24.5522847 26.5522847,25 26,25 L25,25 L25,26 C25,26.5522847 24.5522847,27 24,27 C23.4477153,27 23,26.5522847 23,26 L23,25 L22,25 C21.4477153,25 21,24.5522847 21,24 C21,23.4477153 21.4477153,23 22,23 L23,23 L23,22 C23,21.4477153 23.4477153,21 24,21 Z" id="Combined-Shape" fill="#000000"></path>
+    </g>
+</svg>
