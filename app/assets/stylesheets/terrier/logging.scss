@@ -33,6 +33,7 @@
 	&::after {
 		@include tt-absolute-fill;
 		@include tt-inset-box-shadow;
+		@include tt-rounded-corners;
 		content: "";
 	}
 }

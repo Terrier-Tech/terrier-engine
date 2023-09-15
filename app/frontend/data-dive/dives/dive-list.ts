@@ -13,6 +13,7 @@ import DdSession from "../dd-session"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import TerrierPart from "../../terrier/parts/terrier-part"
+import {DiveRunModal} from "./dive-runs"
 
 const log = new Logger("DiveList")
 
@@ -22,7 +23,7 @@ const log = new Logger("DiveList")
 ////////////////////////////////////////////////////////////////////////////////
 
 export type DiveListState = {
-
+    mode: 'editor' | 'readonly' // whether or not to allow editing or simply viewing dives
 }
 
 /**
@@ -33,6 +34,7 @@ export class DiveListPart extends TerrierPart<DiveListState> {
     editGroupKey = Messages.typedKey<{ id: string }>()
     newDiveKey = Messages.typedKey<{ group_id: string }>()
     editDiveKey = Messages.typedKey<{ id: string }>()
+    runDiveKey = Messages.typedKey<{ id: string }>()
 
     session!: DdSession
     result!: DiveListResult
@@ -84,6 +86,16 @@ export class DiveListPart extends TerrierPart<DiveListState> {
             }
         })
 
+        this.onClick(this.runDiveKey, m => {
+            const dive = this.diveMap[m.data.id] as DdDive
+            if (dive) {
+                log.info(`Running dive ${dive.name}`)
+                this.app.showModal(DiveRunModal, {dive})
+            } else {
+                log.warn(`No dive with id ${m.data.id}`)
+            }
+        })
+
         this.reload().then()
     }
 
@@ -109,7 +121,7 @@ export class DiveListPart extends TerrierPart<DiveListState> {
     }
 
     renderGroupPanel(parent: PartTag, group: DdDiveGroup, dives: DdDive[]) {
-        Fragments.panel(this.theme)
+        const panel = Fragments.panel(this.theme)
             .title(group.name)
             .icon((group.icon || 'glyp-data_dives') as IconName)
             .classes('group')
@@ -119,33 +131,53 @@ export class DiveListPart extends TerrierPart<DiveListState> {
                     this.renderDiveRow(content, dive)
                 }
             })
-            .addAction({
+        if (this.state.mode == 'editor') {
+            panel.addAction({
                 title: "New Dive",
                 icon: 'glyp-data_dive',
                 click: {key: this.newDiveKey, data: {group_id: group.id}}
             }, 'secondary')
-            .addAction({
+            panel.addAction({
                 icon: 'glyp-settings',
                 click: {key: this.editGroupKey, data: {id: group.id}}
             }, 'tertiary')
-            .render(parent)
+        }
+        panel.render(parent)
     }
 
     renderDiveRow(parent: PartTag, dive: DdDive) {
         parent.div('.dive', row => {
-            row.a({href: routes.editor.path({id: dive.id})}, a => {
-                if (dive.visibility == 'private') {
-                    a.i('.glyp-privacy')
-                        .data({tooltip: "Private Dive"})
-                } else {
-                    a.i('.glyp-data_dive')
-                }
-                a.span().text(dive.name)
-            }).data({tooltip: "Open Editor"})
-            row.a('.icon-only', a => {
-                a.i('.glyp-settings')
-            }).data({tooltip: "Dive Settings"})
-                .emitClick(this.editDiveKey, {id: dive.id})
+            if (this.state.mode == 'editor') {
+                row.a({href: routes.editor.path({id: dive.id})}, a => {
+                    if (dive.visibility == 'private') {
+                        a.i('.glyp-privacy')
+                            .data({tooltip: "Private Dive"})
+                    } else {
+                        a.i('.glyp-data_dive')
+                            .data({tooltip: "Public Dive"})
+                    }
+                    a.span().text(dive.name)
+                }).data({tooltip: "Open Editor"})
+                row.a('.icon-only', a => {
+                    a.i('.glyp-settings')
+                }).data({tooltip: "Dive Settings"})
+                    .emitClick(this.editDiveKey, {id: dive.id})
+            }
+            else {
+                // readonly mode
+                row.a(a => {
+                    if (dive.visibility == 'private') {
+                        a.i('.glyp-privacy')
+                            .data({tooltip: "Private Dive"})
+                    } else {
+                        a.i('.glyp-data_dive')
+                            .data({tooltip: "Public Dive"})
+                    }
+                    a.span().text(dive.name)
+                })
+                    .data({tooltip: "Run Dive"})
+                    .emitClick(this.runDiveKey, {id: dive.id})
+            }
         })
     }
 
@@ -166,7 +198,7 @@ export class DiveListPage extends PagePart<{}> {
         this.setIcon('glyp-data_dives')
         this.mainContentWidth = 'wide'
 
-        this.listPart = this.makePart(DiveListPart, {})
+        this.listPart = this.makePart(DiveListPart, {mode: 'editor'})
 
         this.addAction({
             title: "New Group",
