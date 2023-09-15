@@ -12,6 +12,7 @@ import {DiveSettingsModal} from "./dive-settings"
 import DdSession from "../dd-session"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
+import TerrierPart from "../../terrier/parts/terrier-part"
 
 const log = new Logger("DiveList")
 
@@ -20,42 +21,30 @@ const log = new Logger("DiveList")
 // List
 ////////////////////////////////////////////////////////////////////////////////
 
-export class DiveListPage extends PagePart<{}> {
+export type DiveListState = {
 
-    newGroupKey = Messages.untypedKey()
-    editGroupKey = Messages.typedKey<{id: string}>()
-    newDiveKey = Messages.typedKey<{group_id: string}>()
-    editDiveKey = Messages.typedKey<{id: string}>()
+}
+
+/**
+ * Show a list of all dive groups and dives that match the given state.
+ */
+export class DiveListPart extends TerrierPart<DiveListState> {
+
+    editGroupKey = Messages.typedKey<{ id: string }>()
+    newDiveKey = Messages.typedKey<{ group_id: string }>()
+    editDiveKey = Messages.typedKey<{ id: string }>()
 
     session!: DdSession
     result!: DiveListResult
     schema!: SchemaDef
     groupMap: Record<string, DdDiveGroup> = {}
-    diveMap: Record<string,DdDive> = {}
+    diveMap: Record<string, DdDive> = {}
+
 
     async init() {
-        this.setTitle("Data Dive")
-        this.setIcon('glyp-data_dives')
 
         this.schema = await Schema.get()
         this.session = await DdSession.get()
-
-        this.mainContentWidth = 'wide'
-
-        this.addAction({
-            title: "New Group",
-            icon: 'glyp-plus_outline',
-            click: {key: this.newGroupKey}
-        }, 'tertiary')
-
-        this.onClick(this.newGroupKey, _ => {
-            log.info("Showing new dive group model")
-            const newGroup = {name: '', group_types: []}
-            this.app.showModal(GroupEditorModal, {session: this.session,
-                group: newGroup,
-                callback: _ => this.reload()
-            })
-        })
 
         this.onClick(this.editGroupKey, m => {
             log.info(`Edit group ${m.data.id}`)
@@ -66,8 +55,7 @@ export class DiveListPage extends PagePart<{}> {
                     group: group as UnpersistedDdDiveGroup,
                     callback: _ => this.reload()
                 })
-            }
-            else {
+            } else {
                 this.alertToast(`No group with id ${m.data.id}`)
             }
         })
@@ -91,13 +79,12 @@ export class DiveListPage extends PagePart<{}> {
             if (dive) {
                 log.info(`Editing settings for dive: ${dive.name}`)
                 this.app.showModal(DiveSettingsModal, {schema: this.schema, dive, session: this.session})
-            }
-            else {
+            } else {
                 log.warn(`No dive with id ${m.data.id}`)
             }
         })
 
-        await this.reload()
+        this.reload().then()
     }
 
     async reload() {
@@ -109,7 +96,7 @@ export class DiveListPage extends PagePart<{}> {
         this.dirty()
     }
 
-    renderContent(parent: PartTag): void {
+    render(parent: PartTag): any {
 
         const groupedDives = Arrays.groupBy(this.result.dives, 'dd_dive_group_id')
 
@@ -150,8 +137,7 @@ export class DiveListPage extends PagePart<{}> {
                 if (dive.visibility == 'private') {
                     a.i('.glyp-privacy')
                         .data({tooltip: "Private Dive"})
-                }
-                else {
+                } else {
                     a.i('.glyp-data_dive')
                 }
                 a.span().text(dive.name)
@@ -159,9 +145,53 @@ export class DiveListPage extends PagePart<{}> {
             row.a('.icon-only', a => {
                 a.i('.glyp-settings')
             }).data({tooltip: "Dive Settings"})
-              .emitClick(this.editDiveKey, {id: dive.id})
+                .emitClick(this.editDiveKey, {id: dive.id})
         })
     }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Page
+////////////////////////////////////////////////////////////////////////////////
+
+export class DiveListPage extends PagePart<{}> {
+
+    listPart!: DiveListPart
+    newGroupKey = Messages.untypedKey()
+
+    async init() {
+        this.setTitle("Data Dive")
+        this.setIcon('glyp-data_dives')
+        this.mainContentWidth = 'wide'
+
+        this.listPart = this.makePart(DiveListPart, {})
+
+        this.addAction({
+            title: "New Group",
+            icon: 'glyp-plus_outline',
+            click: {key: this.newGroupKey}
+        }, 'tertiary')
+
+        // we're handling this here instead of in the list part because, as of 9/15/23,
+        // attach: 'passive' doesn't seem to work for click handlers,
+        // so this handler never got called when it was inside the list part
+        this.onClick(this.newGroupKey, _ => {
+            log.info("Showing new dive group model")
+            const newGroup = {name: '', group_types: []}
+            this.app.showModal(GroupEditorModal, {
+                session: this.listPart.session,
+                group: newGroup,
+                callback: _ => this.listPart.reload()
+            })
+        })
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.part(this.listPart)
+    }
+
 
 }
 
