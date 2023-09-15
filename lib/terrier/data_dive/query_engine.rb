@@ -27,9 +27,13 @@ class TableRef < QueryModel
     # parse the collections
     if @columns.present?
       @columns = @columns.map{|col| ColumnRef.new(@engine, col)}
+    else
+      @columns = []
     end
     if @filters.present?
       @filters = @filters.map{|filter| Filter.new(@engine, filter)}
+    else
+      @filters = []
     end
   end
 
@@ -306,6 +310,9 @@ class DataDive::QueryEngine
 
   def execute!(params={})
     builder = self.to_sql_builder params
+    if builder.selects.empty?
+      return {rows: [], columns: []}
+    end
     rows = builder.exec
     {
       rows: rows,

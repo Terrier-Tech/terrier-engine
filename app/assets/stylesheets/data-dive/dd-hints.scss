@@ -1,5 +1,10 @@
 @import "../terrier/tt-mixins";
 
+
+.dd-hint-container {
+	padding: 0.5em;
+}
+
 .dd-hint {
 	@include tt-rounded-corners;
 	@include tt-inset-white-text;
@@ -11,6 +16,10 @@
 	position: relative;
 	padding: 0.8em;
 	gap: 0.5em;
+
+	&.centered {
+		justify-content: center;
+	}
 
 	.title, .hint-title {
 		text-align: center;

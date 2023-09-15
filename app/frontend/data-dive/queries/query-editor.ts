@@ -120,9 +120,18 @@ class PreviewPart extends ContentPart<SubEditorState> {
 
     renderContent(parent: PartTag) {
         if (this.result) {
-            parent.div('.table-container', col => {
-                Queries.renderPreview(col, this.result!)
-            })
+            if (this.result.columns?.length) {
+                parent.div('.table-container', col => {
+                    Queries.renderPreview(col, this.result!)
+                })
+            }
+            else {
+                // empty query
+                parent.div('.dd-hint-container', hintContainer => {
+                    hintContainer.div('.dd-hint.centered.glyp-columns')
+                        .text("Select at least one column")
+                })
+            }
         }
         else {
             parent.a('.tt-button.stretch', a => {
