@@ -90,11 +90,11 @@ export class PanelFragment extends ContentFragment {
         return parent.div(this.prefix, panel => {
             if (this._title?.length) {
                 panel.div(`.${noTtPrefix}-header`, header => {
-                    header.h2(h2 => {
+                    header.h3(h3 => {
                         if (this._icon) {
-                            this.theme.renderIcon(h2, this._icon, 'link')
+                            this.theme.renderIcon(h3, this._icon, 'link')
                         }
-                        h2.div('.title', {text: this._title})
+                        h3.div('.title', {text: this._title})
                     })
                     this.theme.renderActions(header, this.actions.tertiary)
                 })

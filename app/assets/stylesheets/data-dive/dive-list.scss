@@ -4,5 +4,5 @@
 	display: grid;
 	grid-gap: 1em;
 	padding: var(--tt-pad);
-	grid-template-columns: repeat(auto-fit, minmax(260px, 320px));
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
