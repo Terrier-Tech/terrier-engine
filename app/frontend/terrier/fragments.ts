@@ -170,7 +170,7 @@ class CardFragment extends ContentFragment {
                     this._content(content)
                 }
             })
-        })
+        }).class(...this._classes)
     }
 
 }

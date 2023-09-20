@@ -1,0 +1,9 @@
+@import "tt-mixins";
+
+.tt-card {
+	@include panel-like;
+
+	&.padded {
+		padding: var(--tt-pad);
+	}
+}
