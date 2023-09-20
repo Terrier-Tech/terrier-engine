@@ -29,11 +29,14 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
         return this.element
     }
 
+    protected _isLoading = false
+
 
     /**
      * Shows the loading animation on top of the part.
      */
     startLoading() {
+        this._isLoading = true
         const elem = this.getLoadingContainer()
         if (!elem) {
             return
@@ -45,6 +48,7 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
      * Removes the loading animation from the part.
      */
     stopLoading() {
+        this._isLoading = false
         const elem = this.getLoadingContainer()
         if (!elem) {
             return
@@ -74,6 +78,31 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
                 this.stopLoading()
             }
         }
+    }
+
+    update(elem: HTMLElement) {
+        super.update(elem);
+        if (!this._isLoading) return
+
+        const loadingContainer = this.getLoadingContainer()
+        if (!loadingContainer) return
+
+        const existingOverlay = Loading.getOverlay(elem)
+        const existingLoadingContainer = existingOverlay?.parentElement
+
+        if (
+            existingLoadingContainer &&
+            existingLoadingContainer != loadingContainer &&
+            existingLoadingContainer.contains(loadingContainer)
+        ) {
+            // If there's an existing overlay on this part, but on an ancestor of our loading container,
+            // remove the existing overlay so our loading container gets the overlay.
+            // This case happens most frequently when the loading container doesn't yet exist on first render, but
+            // does exist on subsequent renders. In that case, we prefer the more specific loading container.
+            Loading.removeOverlay(elem)
+        }
+
+        Loading.showOverlay(loadingContainer, this.theme)
     }
 
 
