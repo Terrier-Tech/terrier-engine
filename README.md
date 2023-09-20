@@ -163,6 +163,43 @@ make sure to include it in the pushed changes.
 Step 6 requires you to have an npmjs.org account
 that has been added to the `terrier-engine` package.
 
+## Testing Changes Locally
+
+You can force applications that use Terrier engine to use your local version of the engine rather than the remotely published version.
+The process is different depending on whether you need to use the local version of the npm package (anything in the `./app/frontend/` directory) or the gem (everything else).
+
+### The Gem
+
+1. In your client application repo, run `bundle config set --local local.terrier-engine </path/to/terrier-engine>`.
+   This adds a `.bundle/config` file in your repo that redirects the terrier engine gem to your local path.
+2. Run `bundle`.
+3. Restart the client application.
+
+Changes to these files should be automatically reflected in the client application upon refreshing.
+
+### The NPM Package
+
+1. In the terrier-engine repo, run `rails npm:build`.
+   This assembles the required files for the terrier-engine npm package in the `./tmp/dist/` directory.
+2. In your client application repo, run `npm install </path/to/terrier-engine>/tmp/dist/`.
+3. Restart the client application (including vite if necessary).
+
+In order for changes to these files to be reflected in the client application,
+you must run `rails npm:build` again from the terrier engine repo, then refresh the client application.
+
+### Reverting
+
+To revert these changes and return to using the remote versions of the gem and npm package,
+follow these steps:
+
+1. Delete `./.bundle/config`
+2. Run `bundle`
+3. Revert changes to `./package.json`
+4. Run `npm i`
+
+Make sure to revert prior to merging or deploying.
+
+
 ## Terrier Platform
 
 While this project started as a collection of utilities to share between projects,
