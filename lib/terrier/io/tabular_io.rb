@@ -49,16 +49,39 @@ module TabularIo
       self.load_xlsx rel_path, options
     elsif rel_path.ends_with? '.csv'
       self.load_csv rel_path, options
+    elsif rel_path.ends_with? '.tsv'
+      self.load_tsv rel_path, options
+    elsif rel_path.ends_with? '.xls'
+      self.load_xls rel_path, options
     else
       raise "Don't know how to load file #{File.basename(rel_path)}"
     end
   end
+
 
   def self.load_csv(rel_path, options={})
     abs_path = self.rel_to_abs_path rel_path
     headers = nil
     data = []
     CSV.open(abs_path, 'r:bom|utf-8').each do |row|
+      if headers
+        record = {}
+        row.each_with_index do |val, i|
+          record[headers[i]] = val
+        end
+        data << record
+      else
+        headers = self.sanitize_csv_header row
+      end
+    end
+    data
+  end
+
+  def self.load_tsv(rel_path, options={})
+    abs_path = self.rel_to_abs_path rel_path
+    headers = nil
+    data = []
+    CSV.open(abs_path, 'r:bom|utf-8', col_sep: "\t").each do |row|
       if headers
         record = {}
         row.each_with_index do |val, i|
@@ -121,6 +144,26 @@ module TabularIo
     output
   end
 
+  def self.load_xls(rel_path, options={})
+    abs_path = self.rel_to_abs_path rel_path
+    book = Spreadsheet.open abs_path
+    output = {}
+    sheets_to_import = options[:sheets]
+    book.worksheets.each do |sheet|
+      next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
+      headers = self.sanitize_csv_header sheet.row(0)
+      data = []
+      sheet.each(1) do |row|
+        record = {}
+        row.each_with_index do |val, i|
+          record[headers[i]] = val
+        end
+        data << record
+      end
+      output[sheet.name] = data
+    end
+    output
+  end
 
   ## Splitting
 
@@ -242,14 +285,30 @@ module TabularIo
     abs_path
   end
 
+  def self.save_tsv(data, rel_path, options={})
+    abs_path = self.safe_rel_to_abs_path rel_path
+    columns, columns_s = self.compute_columns data, options
+
+    CSV.open(abs_path, 'w', col_sep: "\t") do |csv|
+      csv << columns_s
+      data.each do |row|
+        csv << columns.map { |col| self.pluck_column row, col }
+      end
+    end
+
+    abs_path
+  end
+
   # dumps data to a csv or xls file
   def self.save(data, rel_path, options={})
-    if rel_path.ends_with? '.xls'
-      self.save_xls data, rel_path, options
-    elsif rel_path.ends_with? '.xlsx'
+    if rel_path.ends_with? '.xlsx'
       self.save_xlsx data, rel_path, options
     elsif rel_path.ends_with? '.csv'
       self.save_csv data, rel_path, options
+    elsif rel_path.ends_with? '.tsv'
+      self.save_tsv data, rel_path, options
+    elsif rel_path.ends_with? '.xls'
+      self.save_xls data, rel_path, options
     else
       raise "Don't know how to save file #{File.basename(rel_path)}"
     end
