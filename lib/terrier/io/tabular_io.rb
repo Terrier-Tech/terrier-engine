@@ -42,19 +42,43 @@ module TabularIo
 
   ## Loading
 
-  # loads a csv or xlsx file in the given path (absolute or relative to project root)
-  # and returns a hash with keys based on the first row
+  # This class method loads a tabular file (CSV, TSV, XLS, or XLSX) from the given path
+  # and returns a hash where the keys are derived from the first row of the file(s).
+  #
+  # @param rel_path [String] The relative or absolute path to the file to be loaded.
+  # @param options [Hash] An optional hash for additional configurations.
+  #   options[:output] - When set to :standardized, it ensures a consistent hash structure
+  #                      for the output, irrespective of the input file format.
+  #
+  # @raise [RuntimeError] If the file type is unknown or unprocessable,
+  #   the method raises an exception with a message indicating the issue.
+  #
+  # @example
+  #   load('/path/to/file.xlsx', output: :standardized)
+  #
   def self.load(rel_path, options={})
-    if rel_path.ends_with? '.xlsx'
-      self.load_xlsx rel_path, options
-    elsif rel_path.ends_with? '.csv'
-      self.load_csv rel_path, options
-    elsif rel_path.ends_with? '.tsv'
-      self.load_tsv rel_path, options
-    elsif rel_path.ends_with? '.xls'
-      self.load_xls rel_path, options
-    else
-      raise "Don't know how to load file #{File.basename(rel_path)}"
+    # Determine the file type and delegate to the corresponding load method.
+    data = case File.extname(rel_path)
+           when '.xlsx' then self.load_xlsx(rel_path, options)
+           when '.csv' then self.load_csv(rel_path, options)
+           when '.tsv' then self.load_tsv(rel_path, options)
+           when '.xls' then self.load_xls(rel_path, options)
+           else raise "Don't know how to load file #{File.basename(rel_path)}"
+           end
+
+    # Standardize the output format if the option is specified.
+    if options[:output] == :standardized
+      case data
+      when Hash then data # Excel with multiple sheets
+      when Array
+        if data.first.is_a?(String) # Excel with a single sheet
+          {data.first => data.second}
+        elsif data.first.is_a?(Hash) # Text file (CSV, TSV)
+          {nil => data}
+        else
+          raise("Don't know how to parse output of #{rel_path}")
+        end
+      end
     end
   end
 
