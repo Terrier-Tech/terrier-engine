@@ -68,7 +68,7 @@ module TabularIo
 
     # Standardize the output format if the option is specified.
     if options[:output] == :standardized
-      case data
+      data = case data
       when Hash then data # Excel with multiple sheets
       when Array
         if data.first.is_a?(String) # Excel with a single sheet
@@ -80,6 +80,8 @@ module TabularIo
         end
       end
     end
+
+    data
   end
 
 
