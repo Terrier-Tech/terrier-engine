@@ -302,57 +302,6 @@
 }
 
 
-.dd-select-columns-dropdown {
-	.tt-dropdown-content {
-		overflow-y: scroll;
-	}
-	a, label, .header {
-		@include tt-inset-white-text;
-		@include tt-text-pad;
-		@include tt-no-select;
-		display: flex;
-		align-items: center;
-		gap: 0.5em;
-		padding: 0.5em 1em;
-		font-size: var(--tt-body-font-size);
-		input {
-			margin: 0;
-		}
-		> div, span {
-			flex: 1 1 auto;
-		}
-	}
-
-	a, label {
-		@include tt-shaded-hover;
-		&:hover {
-			color: #fff;
-		}
-	}
-
-	a.add {
-		background-color: var(--tt-primary-color);
-		@include tt-bottom-rounded-corners;
-		position: sticky;
-		bottom: 0;
-		&:hover {
-			filter: brightness(1.08);
-		}
-		&:active {
-			filter: brightness(0.92);
-		}
-	}
-
-	.header {
-		border-bottom: 1px solid rgba(#fff, 0.5);
-		position: sticky;
-		top: 0;
-		background: var(--tt-dropdown-color);
-		z-index: 1;
-	}
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // SQL Output
 ////////////////////////////////////////////////////////////////////////////////

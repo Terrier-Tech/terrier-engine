@@ -618,7 +618,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
     }
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-select-columns-dropdown', 'tt-actions-dropdown']);
+        return super.parentClasses.concat(['tt-actions-dropdown'])
     }
 
     renderContent(parent: PartTag) {

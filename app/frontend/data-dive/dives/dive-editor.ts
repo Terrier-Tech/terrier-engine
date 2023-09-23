@@ -95,7 +95,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      * Adds a tab for an existing query.
      * @param query
      */
-    addQueryTag(query: Query) {
+    private addQueryTag(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
     }
