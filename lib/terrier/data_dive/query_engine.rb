@@ -15,7 +15,7 @@ end
 # Base class for references to both from-tables and joined-tables
 class TableRef < QueryModel
   # from the frontend
-  attr_accessor :model, :prefix, :columns, :joins, :filters
+  attr_accessor :model, :prefix, :columns, :joins, :filters, :_id
 
   # used by the runner
   attr_accessor :table_name, :alias, :model_class
@@ -158,7 +158,7 @@ end
 class ColumnRef < QueryModel
   attr_accessor :name, :alias, :grouped, :function, :errors
 
-  AGG_FUNCTIONS = %w[count min max]
+  AGG_FUNCTIONS = %w[count sum min max]
   
   def to_select(table, builder)
     s = "#{table.alias}.#{name}"
@@ -193,12 +193,11 @@ class ColumnRef < QueryModel
     elsif @grouped # grouped but no function
       builder.group_by s
     end
-    a = @alias.presence
+    a = @alias.presence || @name
     if table.prefix.present?
-      a = [table.prefix, a || name].compact.join
+      a = [table.prefix, a].compact.join
     end
-    if a.present? && a != s
-      # sanitize
+    unless a == s
       s = "#{s} as \"#{a}\""
     end
     s

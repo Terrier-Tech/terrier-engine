@@ -223,6 +223,7 @@
 
 .dd-editor-header, .dd-editor-row {
 	display: flex;
+	flex-wrap: wrap;
 	gap: var(--tt-gap);
 	align-items: center;
 	padding: calc(var(--tt-pad)/2) var(--tt-pad);
@@ -286,6 +287,14 @@
 	// fields
 	input[type=number] {
 		width: 90px;
+	}
+
+	// errors
+	.error {
+		flex: 0 0 100%;
+		display: flex;
+		font-weight: normal;
+		padding: 0.5em 1em;
 	}
 
 }

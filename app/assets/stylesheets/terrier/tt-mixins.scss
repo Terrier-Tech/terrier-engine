@@ -410,7 +410,8 @@ $color-diff: 0.08;
 ////////////////////////////////////////////////////////////////////////////////
 
 @mixin tt-bubble($clickable: false) {
-	display: block;
+	display: flex;
+	gap: 0.5em;
 	padding: 1em;
 	@include tt-rounded-corners;
 	@include tt-inset-white-text;

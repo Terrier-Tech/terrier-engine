@@ -12,7 +12,8 @@ import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import Dom from "tuff-core/dom"
-import {ColumnValidationError} from "./validation"
+import Validation, {ColumnValidationError} from "./validation"
+import Queries, {Query} from "./queries"
 
 const log = new Logger("Columns")
 
@@ -23,7 +24,7 @@ const log = new Logger("Columns")
 /**
  * Possible functions used to aggregate a column.
  */
-const AggFunctions = ['count', 'min', 'max'] as const
+const AggFunctions = ['count', 'sum', 'min', 'max'] as const
 
 export type AggFunction = typeof AggFunctions[number]
 
@@ -41,7 +42,7 @@ export type Function = AggFunction | DateFunction
  * @param fun a function name
  * @return the type of function
  */
-function functionType(fun: Function): 'aggregate' | 'time' | undefined {
+function functionType(fun: Function | undefined): 'aggregate' | 'time' | undefined {
     if (AggFunctions.includes(fun as AggFunction)) {
         return 'aggregate'
     }
@@ -106,6 +107,7 @@ function render(parent: PartTag, col: ColumnRef) {
 
 export type ColumnsEditorState = {
     schema: SchemaDef
+    query: Query
     tableView: TableView<TableRef>
 }
 
@@ -113,6 +115,7 @@ const saveKey = Messages.untypedKey()
 const addKey = Messages.untypedKey()
 const addSingleKey = Messages.typedKey<{ name: string }>()
 const removeKey = Messages.typedKey<{id: string}>()
+const valueChangedKey = Messages.untypedKey()
 
 /**
  * A modal that lets the user edit the columns being referenced for a particular table.
@@ -178,6 +181,11 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
         this.onClick(addKey, m => {
             this.toggleDropdown(SelectColumnsDropdown, {editor: this as ColumnsEditorModal}, m.event.target)
+        })
+
+        this.onChange(valueChangedKey, m => {
+            log.info(`Column value changed`, m)
+            this.validate().then()
         })
     }
 
@@ -258,10 +266,44 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         }
     }
 
-    async save() {
-        const columns = this.columnStates.map(state => {
+    serialize(): ColumnRef[] {
+        return this.columnStates.map(state => {
             return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
         })
+    }
+
+    /**
+     * Performs client-side validation against the current values in the editors.
+     */
+    async validate() {
+        // serialize the columns and table settings
+        const columns = this.serialize()
+        const tableData = await this.tableFields.serialize()
+
+        // make a deep copy of the query and update this table's columns and settings
+        this.table._id = this.id // we need this to identify the table after the deep copy
+        const query = Objects.deepCopy(this.state.query)
+        Queries.eachTable(query, table => {
+            if (table._id == this.id) {
+                table.columns = columns
+                table.prefix = tableData.prefix
+            }
+        })
+
+        // validate the temporary query
+        log.info(`Validating temporary query with column changes`, query)
+        Validation.validateQuery(query)
+
+        // copy the column errors over
+        for (let i = 0; i < columns.length; i++) {
+            this.columnStates[i].errors = columns[i].errors
+        }
+
+        this.dirty()
+    }
+
+    async save() {
+        const columns = this.serialize()
         const tableData = await this.tableFields.serialize()
         this.state.tableView.updateColumns(columns, tableData.prefix)
         this.emitMessage(DiveEditor.diveChangedKey, {})
@@ -310,18 +352,26 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
         })
         parent.div('.alias', col => {
             this.textInput(col, "alias", {placeholder: "Alias"})
+                .emitChange(valueChangedKey)
         })
         parent.div('.function', col => {
             this.select(col, "function", this.functionOptions)
+                .emitChange(valueChangedKey)
         })
         parent.div('.group-by', col => {
             this.checkbox(col, "grouped")
+                .emitChange(valueChangedKey)
         })
         parent.div('.actions', actions => {
             actions.a(a => {
                 a.i('.glyp-close')
             }).emitClick(removeKey, {id: this.state.id})
         })
+        if (this.state.errors?.length) {
+            for (const error of this.state.errors) {
+                parent.div('.error.tt-bubble.alert').text(error.message)
+            }
+        }
     }
     
 }

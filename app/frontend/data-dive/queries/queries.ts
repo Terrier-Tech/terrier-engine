@@ -32,6 +32,28 @@ export type Query = {
 // Utilities
 ////////////////////////////////////////////////////////////////////////////////
 
+type TableFunction = (table: TableRef) => any
+
+function eachChildTable(table: TableRef, fn: TableFunction) {
+    if (!table.joins) {
+        return
+    }
+    for (const joinedTable of Object.values(table.joins)) {
+        fn(joinedTable)
+        eachChildTable(joinedTable, fn)
+    }
+}
+
+/**
+ * Recursively iterates through each table reference in the query and evaluates the function.
+ * @param query
+ * @param fn
+ */
+function eachTable(query: Query, fn: TableFunction) {
+    fn(query.from)
+    eachChildTable(query.from, fn)
+}
+
 type ColumnFunction = (table: TableRef, col: ColumnRef) => any
 
 function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
@@ -50,6 +72,7 @@ function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
 /**
  * Recursively iterates over all columns in a query.
  * @param query
+ * @param fn a function to evaluate for each column in the query
  */
 function eachColumn(query: Query, fn: ColumnFunction) {
     eachColumnForTable(query.from, fn)
@@ -288,6 +311,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 
 const Queries = {
     eachColumn,
+    eachTable,
     validate,
     preview,
     renderPreview

@@ -120,7 +120,10 @@ class PreviewPart extends ContentPart<SubEditorState> {
 
     renderContent(parent: PartTag) {
         if (this.result) {
-            if (this.result.columns?.length) {
+            if (this.result.status == 'error') {
+                parent.div('.tt-bubble.alert').text(this.result.message)
+            }
+            else if (this.result.columns?.length) {
                 parent.div('.table-container', col => {
                     Queries.renderPreview(col, this.result!)
                 })

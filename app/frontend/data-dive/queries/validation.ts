@@ -1,5 +1,6 @@
 import Queries, {Query} from "./queries"
 import Columns, {ColumnRef} from "./columns"
+import {TableRef} from "./tables"
 
 export type ColumnValidationError = {
     message: string
@@ -32,6 +33,7 @@ function validateQuery(query: Query): QueryClientValidation {
     const usedNames: Set<string> = new Set<string>()
 
     let isGrouped = false
+    const groupedTables: Set<TableRef> = new Set()
     Queries.eachColumn(query, (table, col) => {
         // clear the errors
         col.errors = undefined
@@ -39,6 +41,10 @@ function validateQuery(query: Query): QueryClientValidation {
         // determine if there's a _group by_ in the query
         if (col.grouped) {
             isGrouped = true
+            if (col.name == 'id') {
+                // ungrouped columns on this table are okay
+                groupedTables.add(table)
+            }
         }
 
         // each select name should only be used once
@@ -50,10 +56,10 @@ function validateQuery(query: Query): QueryClientValidation {
     })
 
     // if the query is grouped, ensure that all other column refs
-    // are either grouped or have an aggregate function
+    // are either grouped, have an aggregate function, or are on a grouped table
     if (isGrouped) {
-        Queries.eachColumn(query, (_, col) => {
-            if (!col.grouped && !col.function) {
+        Queries.eachColumn(query, (table, col) => {
+            if (!col.grouped && Columns.functionType(col.function) != 'aggregate' && !groupedTables.has(table)) {
                 addColumnError(col, `<strong>${col.name}</strong> must be grouped or have an aggregate function`)
             }
         })
