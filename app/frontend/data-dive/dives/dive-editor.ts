@@ -62,7 +62,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         this.queries = this.state.dive.query_data?.queries || []
         for (const query of this.queries) {
-            this.addQuery(query)
+            this.addQueryTag(query)
         }
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {
@@ -82,7 +82,20 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         })
     }
 
+    /**
+     * Add a new query to the dive.
+     * @param query
+     */
     addQuery(query: Query) {
+        this.queries.push(query)
+        this.addQueryTag(query)
+    }
+
+    /**
+     * Adds a tab for an existing query.
+     * @param query
+     */
+    private addQueryTag(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
     }

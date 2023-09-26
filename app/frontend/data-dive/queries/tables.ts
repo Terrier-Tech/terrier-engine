@@ -12,6 +12,7 @@ import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import QueryEditor from "./query-editor"
+import {Query} from "./queries";
 
 const log = new Logger("Tables")
 
@@ -25,6 +26,7 @@ export type TableRef = {
     columns?: ColumnRef[]
     joins?: Record<string, JoinedTableRef>
     filters?: Filter[]
+    _id?: string // ephemeral
 }
 
 export type JoinedTableRef = TableRef & {
@@ -73,6 +75,7 @@ function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record
 export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaDef, queryEditor: QueryEditor, table: T }> {
 
     schema!: SchemaDef
+    query!: Query
     table!: T
     tableName!: string
     displayName!: string
@@ -87,6 +90,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
 
     async init() {
         this.schema = this.state.schema
+        this.query = this.state.queryEditor.state.query
         this.table = this.state.table
         this.modelDef = this.schema.models[this.table.model]
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
@@ -95,7 +99,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
 
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.displayName} Columns`)
-            this.app.showModal(ColumnsEditorModal, {schema: this.schema, tableView: this as TableView<TableRef>})
+            this.app.showModal(ColumnsEditorModal, {schema: this.schema, query: this.query, tableView: this as TableView<TableRef>})
         })
 
         this.onClick(this.editFiltersKey, _ => {

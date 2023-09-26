@@ -182,6 +182,15 @@ $color-diff: 0.08;
 	}
 }
 
+@mixin tt-brighten-hover {
+	&:hover {
+		filter: brightness(1.08);
+	}
+	&:active {
+		filter: brightness(0.92);
+	}
+}
+
 
 @mixin tt-raised-bg($color, $pressable: true, $diff-mult: 1, $disabled: false) {
 	$diff: ($color-diff * $diff-mult);
@@ -401,7 +410,8 @@ $color-diff: 0.08;
 ////////////////////////////////////////////////////////////////////////////////
 
 @mixin tt-bubble($clickable: false) {
-	display: block;
+	display: flex;
+	gap: 0.5em;
 	padding: 1em;
 	@include tt-rounded-corners;
 	@include tt-inset-white-text;

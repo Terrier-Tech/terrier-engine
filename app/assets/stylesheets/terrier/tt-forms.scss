@@ -25,7 +25,8 @@
 	// checkboxes and radio buttons
 	input[type=checkbox], input[type=radio] {
 		margin: 0;
-		transform: scale(1.5);
+		width: 1.5em;
+		height: 1.5em;
 		cursor: pointer;
 	}
 
@@ -64,13 +65,15 @@
 
 .tt-compound-field {
 	@include tt-rounded-corners;
+	@include tt-concave-bg(#{var(--tt-field-background)}, false);
 	display: flex;
 	align-items: stretch;
 
-	// use a 1px padding and gap to emulate a border
-	padding: 1px;
-	gap: 1px;
-	background-color: var(--tt-field-border-color);
+	border: 1px solid var(--tt-field-border-color);
+
+	> *:not(:last-child) {
+		border-right: 1px solid var(--tt-field-border-color);
+	}
 
 	&.inline {
 		display: inline-flex;
@@ -97,6 +100,11 @@
 		&:last-child {
 			@include tt-right-rounded-corners;
 		}
+	}
+
+	input[type=checkbox], input[type=radio] {
+		align-self: center;
+		margin: 0 14px; // can't use padding on checkbox/radio, but we need space. so margin
 	}
 
 	ul {
@@ -130,7 +138,6 @@
 	}
 
 	label {
-		@include tt-concave-bg(#{var(--tt-field-background)}, false);
 		text-transform: none;
 	}
 

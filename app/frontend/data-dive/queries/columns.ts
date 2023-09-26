@@ -11,7 +11,9 @@ import {Dropdown} from "../../terrier/dropdowns"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
-import {ColumnValidationError} from "./validation"
+import Dom from "tuff-core/dom"
+import Validation, {ColumnValidationError} from "./validation"
+import Queries, {Query} from "./queries"
 
 const log = new Logger("Columns")
 
@@ -22,7 +24,7 @@ const log = new Logger("Columns")
 /**
  * Possible functions used to aggregate a column.
  */
-const AggFunctions = ['count', 'min', 'max'] as const
+const AggFunctions = ['count', 'sum', 'min', 'max'] as const
 
 export type AggFunction = typeof AggFunctions[number]
 
@@ -40,7 +42,7 @@ export type Function = AggFunction | DateFunction
  * @param fun a function name
  * @return the type of function
  */
-function functionType(fun: Function): 'aggregate' | 'time' | undefined {
+function functionType(fun: Function | undefined): 'aggregate' | 'time' | undefined {
     if (AggFunctions.includes(fun as AggFunction)) {
         return 'aggregate'
     }
@@ -105,6 +107,7 @@ function render(parent: PartTag, col: ColumnRef) {
 
 export type ColumnsEditorState = {
     schema: SchemaDef
+    query: Query
     tableView: TableView<TableRef>
 }
 
@@ -112,6 +115,7 @@ const saveKey = Messages.untypedKey()
 const addKey = Messages.untypedKey()
 const addSingleKey = Messages.typedKey<{ name: string }>()
 const removeKey = Messages.typedKey<{id: string}>()
+const valueChangedKey = Messages.untypedKey()
 
 /**
  * A modal that lets the user edit the columns being referenced for a particular table.
@@ -172,31 +176,33 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         this.onClick(addSingleKey, m => {
-            const colDef = this.modelDef.columns[m.data.name]
-            log.info(`Add column ${m.data.name}`)
-            if (colDef) {
-                this.addState({name: colDef.name})
-                this.updateColumnEditors()
-                this.dirty()
-            }
-            else {
-                alert(`Unknown column name '${m.data.name}'`)
-            }
+            this.addColumn(m.data.name)
         })
 
         this.onClick(addKey, m => {
-            const onSelected = (columns: string[]) => {
-                log.info(`Adding ${columns.length} columns`, columns)
-                for (const col of columns) {
-                    const colDef = this.modelDef.columns[col]
-                    if (colDef) {
-                        this.addState({name: colDef.name})
-                    }
-                }
-                this.updateColumnEditors()
-            }
-            this.toggleDropdown(SelectColumnsDropdown, {modelDef: this.modelDef, callback: onSelected}, m.event.target)
+            this.toggleDropdown(SelectColumnsDropdown, {editor: this as ColumnsEditorModal}, m.event.target)
         })
+
+        this.onChange(valueChangedKey, m => {
+            log.info(`Column value changed`, m)
+            this.validate().then()
+        })
+    }
+
+    addColumn(col: string) {
+        const colDef = this.modelDef.columns[col]
+        log.info(`Add column ${col}`, colDef)
+        if (colDef) {
+            this.addState({name: colDef.name})
+            this.updateColumnEditors()
+            this.dirty()
+        } else {
+            alert(`Unknown column name '${col}'`)
+        }
+    }
+
+    get currentColumnNames(): Set<string> {
+        return new Set(this.columnStates.map(s => s.name))
     }
 
     renderContent(parent: PartTag): void {
@@ -222,7 +228,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         // common column quick links
-        const includedNames = new Set(this.columnStates.map(s => s.name))
+        const includedNames = this.currentColumnNames
         const commonCols = Object.values(this.modelDef.columns).filter(c => c.metadata?.visibility == 'common' && !includedNames.has(c.name))
         if (commonCols.length) {
             parent.h3('.centered.large-top-padding', h3 => {
@@ -260,10 +266,44 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         }
     }
 
-    async save() {
-        const columns = this.columnStates.map(state => {
+    serialize(): ColumnRef[] {
+        return this.columnStates.map(state => {
             return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
         })
+    }
+
+    /**
+     * Performs client-side validation against the current values in the editors.
+     */
+    async validate() {
+        // serialize the columns and table settings
+        const columns = this.serialize()
+        const tableData = await this.tableFields.serialize()
+
+        // make a deep copy of the query and update this table's columns and settings
+        this.table._id = this.id // we need this to identify the table after the deep copy
+        const query = Objects.deepCopy(this.state.query)
+        Queries.eachTable(query, table => {
+            if (table._id == this.id) {
+                table.columns = columns
+                table.prefix = tableData.prefix
+            }
+        })
+
+        // validate the temporary query
+        log.info(`Validating temporary query with column changes`, query)
+        Validation.validateQuery(query)
+
+        // copy the column errors over
+        for (let i = 0; i < columns.length; i++) {
+            this.columnStates[i].errors = columns[i].errors
+        }
+
+        this.dirty()
+    }
+
+    async save() {
+        const columns = this.serialize()
         const tableData = await this.tableFields.serialize()
         this.state.tableView.updateColumns(columns, tableData.prefix)
         this.emitMessage(DiveEditor.diveChangedKey, {})
@@ -312,18 +352,26 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
         })
         parent.div('.alias', col => {
             this.textInput(col, "alias", {placeholder: "Alias"})
+                .emitChange(valueChangedKey)
         })
         parent.div('.function', col => {
             this.select(col, "function", this.functionOptions)
+                .emitChange(valueChangedKey)
         })
         parent.div('.group-by', col => {
             this.checkbox(col, "grouped")
+                .emitChange(valueChangedKey)
         })
         parent.div('.actions', actions => {
             actions.a(a => {
                 a.i('.glyp-close')
             }).emitClick(removeKey, {id: this.state.id})
         })
+        if (this.state.errors?.length) {
+            for (const error of this.state.errors) {
+                parent.div('.error.tt-bubble.alert').text(error.message)
+            }
+        }
     }
     
 }
@@ -333,19 +381,21 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
 // Add Column Dropdown
 ////////////////////////////////////////////////////////////////////////////////
 
-const checkAllKey = Messages.untypedKey()
-const applySelectionKey = Messages.untypedKey()
-const checkChangedKey = Messages.typedKey<{column: string}>()
-
-type SelectColumnsCallback = (columns: string[]) => any
+type SelectableColumn = ColumnDef & {
+    included: boolean
+    sortOrder: string
+}
 
 /**
  * Shows a dropdown that allows the user to select one or more columns from the given model.
  */
-class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: SelectColumnsCallback}> {
+class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
 
+    addAllKey = Messages.untypedKey()
+    addKey = Messages.typedKey<{ name: string }>()
     checked: Set<string> = new Set()
-    columns!: string[]
+    columns!: SelectableColumn[]
+    modelDef!: ModelDef
 
     get autoClose(): boolean {
         return true
@@ -354,63 +404,61 @@ class SelectColumnsDropdown extends Dropdown<{modelDef: ModelDef, callback: Sele
     async init() {
         await super.init()
 
-        this.columns = Object.keys(this.state.modelDef.columns).sort()
+        this.modelDef = this.state.editor.modelDef
 
-        this.onClick(checkAllKey, _ => {
-            // toggle them all being checked
-            log.info(`${this.checked.size} of ${this.columns.length} checked`)
-            if (this.checked.size > this.columns.length / 2) {
-                this.checked = new Set()
-            }
-            else {
-                for (const c of this.columns) {
-                    this.checked.add(c)
+        // sort the columns by whether they're in the editor already
+        const includedNames = this.state.editor.currentColumnNames
+        this.columns = Object.values(this.modelDef.columns).map(col => {
+            const included = includedNames.has(col.name)
+            const sortOrder = `${included ? '1' : '0'}${col.name}`
+            return {included, sortOrder,...col}
+        })
+        this.columns = Arrays.sortBy(this.columns, 'sortOrder')
+
+        this.onClick(this.addKey, m => {
+            log.info(`Adding column ${m.data.name}`)
+            this.state.editor.addColumn(m.data.name)
+
+            // remove the link
+            const link = Dom.queryAncestorClass(m.event.target as HTMLInputElement, 'column')
+            link?.remove()
+        })
+
+        this.onClick(this.addAllKey, _ => {
+            // add all of the unincluded columns and close the dropdown
+            for (const col of this.columns) {
+                if (!col.included) {
+                    this.state.editor.addColumn(col.name)
                 }
             }
-            this.dirty()
-        })
-
-        this.onClick(applySelectionKey, _ => {
-            this.state.callback(Array.from(this.checked))
             this.clear()
-        })
-
-        this.onChange(checkChangedKey, m => {
-            const col = m.data.column
-            const checked = (m.event.target as HTMLInputElement).checked
-            log.info(`Column '${col}' checkbox changed to`, checked)
-            if (checked) {
-                this.checked.add(col)
-            }
-            else {
-                this.checked.delete(col)
-            }
         })
     }
 
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-select-columns-dropdown']);
+        return super.parentClasses.concat(['tt-actions-dropdown']);
     }
 
     renderContent(parent: PartTag) {
-        parent.a('.header', a => {
-            a.i('.glyp-check_all')
-            a.span({text: "Toggle All"})
-        }).emitClick(checkAllKey)
-
         for (const col of this.columns) {
-            parent.label(label => {
-                label.input({type: 'checkbox', checked: this.checked.has(col)})
-                    .emitChange(checkChangedKey, {column: col})
-                label.div().text(col)
-            })
+            parent.a('.column', a => {
+                a.div('.name').text(col.name)
+                a.div('.right-title').text(col.type)
+                if (col.included) {
+                    // style the columns that are already included differently
+                    a.class('inactive')
+                }
+                if (col.metadata?.description?.length) {
+                    a.div('.subtitle').text(col.metadata.description)
+                }
+            }).emitClick(this.addKey, {name: col.name})
         }
 
-        parent.a('.add', a => {
-            a.i('.glyp-checkmark')
-            a.span({text: "Add Selected"})
-        }).emitClick(applySelectionKey)
+        parent.a('.primary', a => {
+            a.i('.glyp-check_all')
+            a.span({text: "Add All"})
+        }).emitClick(this.addAllKey)
     }
 
 }
