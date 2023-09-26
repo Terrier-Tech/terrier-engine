@@ -472,6 +472,55 @@ module TabularIo
     abs_path
   end
 
+  ## Validation
+
+  def self.accepts_exts
+    ['.csv', '.tsv', '.xls', '.xlsx']
+  end
+
+  def self.validate_file_type!(rel_path)
+    abs_path = self.rel_to_abs_path rel_path
+    extension = File.extname(rel_path)
+
+    begin
+      case extension
+      when '.csv', '.tsv'
+        separator = extension == '.csv' ? ',' : "\t"
+
+        # Check for null bytes to identify non-text files
+        if File.read(abs_path).include?("\x00")
+          raise "The file appears to be binary, which is not supported for .csv or .tsv files."
+        end
+
+        CSV.foreach(abs_path, headers: true, col_sep: separator)
+
+      when '.xlsx'
+        Xsv::Workbook.open(abs_path.to_s)
+
+      when '.xls'
+        Spreadsheet.open abs_path
+
+      else
+        raise "Unsupported file extension."
+      end
+
+    rescue CSV::MalformedCSVError
+      raise "The file is not a valid #{extension} file. If you are unsure of the file type, you can open it in a text editor and check the content."
+
+    rescue Xsv::Error => e
+      raise "The file is not a valid .xlsx file. Please open the file in Microsoft Excel or another spreadsheet program and save it as an .xlsx file before trying again."
+
+    rescue Ole::Storage::FormatError
+      raise "The file is not a valid .xls file. Please open the file in Microsoft Excel or another spreadsheet program and save it as an .xls file before trying again."
+
+    rescue => e
+      raise "An error occurred while validating the file: #{e.message}"
+
+    end
+
+    # If no exception was raised, the file type is likely correct.
+    true
+  end
 
 
 end

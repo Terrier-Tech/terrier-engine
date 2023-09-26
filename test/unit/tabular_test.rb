@@ -93,14 +93,14 @@ CSV
 
   test 'allow loading of just the header' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      sheet_headers = TabularIo.load_headers "/test/input/missing_header_#{ext}.#{ext}"
+      sheet_headers = TabularIo.load_headers "/test/input/correct_#{ext}.#{ext}"
       sheet_headers.each do |sheet_name, headers|
-        assert_equal headers, ["test@test.com", "John", "Doe", "123-456-7890"]
+        assert_equal headers, ["email", "first_name", "last_name", "phone"]
       end
     end
   end
 
-  test 'empty sheet returns empty array' do
+  test 'empty sheet returns empty array for load_headers' do
     ['csv', 'xls', 'xlsx'].each do |ext|
       sheet_headers = TabularIo.load_headers "/test/input/empty_#{ext}.#{ext}"
       sheet_headers.each do |sheet_name, headers|
@@ -109,7 +109,7 @@ CSV
     end
   end
 
-  test 'blank rows (still commas in case of csv) returns empty array' do
+  test 'blank rows (still commas in case of csv) returns empty array for load_headers' do
     ['csv', 'xls', 'xlsx'].each do |ext|
       sheet_headers = TabularIo.load_headers "/test/input/blank_rows_#{ext}.#{ext}"
       sheet_headers.each do |sheet_name, headers|
@@ -117,4 +117,20 @@ CSV
       end
     end
   end
+
+  test 'validate_file_type! for files formatted correctly according to their extension' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      assert TabularIo.validate_file_type! "/test/input/correct_#{ext}.#{ext}"
+    end
+  end
+
+  test 'validate_file_type! for files formatted incorrectly according to their extension' do
+    ['csv', 'xls', 'xlsx'].permutation(2).each do |actual_ext, fake_ext|
+      #puts "#{actual_ext} - #{fake_ext}"
+      assert_raise do
+        TabularIo.validate_file_type! "/test/input/incorrect_format_#{actual_ext}_as_#{fake_ext}.#{fake_ext}"
+      end
+    end
+  end
+
 end
