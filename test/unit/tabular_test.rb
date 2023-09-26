@@ -90,4 +90,31 @@ CSV
     assert_equal row['__3__'], 'THREE'
     assert_equal row['four'], 'FOUR'
   end
+
+  test 'allow loading of just the header' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      sheet_headers = TabularIo.load_headers "/test/input/missing_header_#{ext}.#{ext}"
+      sheet_headers.each do |sheet_name, headers|
+        assert_equal headers, ["test@test.com", "John", "Doe", "123-456-7890"]
+      end
+    end
+  end
+
+  test 'empty sheet returns empty array' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      sheet_headers = TabularIo.load_headers "/test/input/empty_#{ext}.#{ext}"
+      sheet_headers.each do |sheet_name, headers|
+        assert_equal headers, []
+      end
+    end
+  end
+
+  test 'blank rows (still commas in case of csv) returns empty array' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      sheet_headers = TabularIo.load_headers "/test/input/blank_rows_#{ext}.#{ext}"
+      sheet_headers.each do |sheet_name, headers|
+        assert_equal headers, []
+      end
+    end
+  end
 end

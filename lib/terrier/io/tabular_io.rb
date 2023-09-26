@@ -191,6 +191,56 @@ module TabularIo
     output
   end
 
+  ##
+  # Loads and returns headers from a file (CSV, TSV, XLS, XLSX).
+  #
+  # @param rel_path [String] The relative path to the file.
+  # @return [Hash] Headers in a hash format: {sheet_name => [headers]} or {nil => []} for TSV/CSV or empty files.
+  # @raise [RuntimeError] If the file format is unsupported.
+  #
+  def self.load_headers(rel_path)
+    abs_path = self.rel_to_abs_path rel_path
+
+    case File.extname(rel_path)
+    when '.csv', '.tsv'
+      # For CSV and TSV, attempt to read the first line and return it as headers
+      separator = File.extname(rel_path) == '.csv' ? ',' : "\t"
+      file = File.open(abs_path, 'r:bom|utf-8')
+
+      begin
+        headers = file.readline.chomp.split(separator)
+      rescue EOFError
+        headers = []
+      ensure
+        file.close
+      end
+
+      return {nil => headers}
+
+    when '.xlsx'
+      # For XLSX, iterate through each sheet and get the headers
+      workbook = Xsv::Workbook.open(abs_path.to_s)
+      headers = {}
+      workbook.sheets.each do |sheet|
+        sheet.parse_headers!
+        headers[sheet.name] = sheet.headers
+      end
+      return headers
+
+    when '.xls'
+      # For XLS, iterate through each sheet and get the headers
+      book = Spreadsheet.open abs_path
+      headers = {}
+      book.worksheets.each do |sheet|
+        headers[sheet.name] = sheet.row(0).to_a
+      end
+      return headers
+
+    else
+      raise "Don't know how to load headers for file #{File.basename(rel_path)}"
+    end
+  end
+
   ## Splitting
 
   # splits out the given file into separate csv files named based on the sheet names
