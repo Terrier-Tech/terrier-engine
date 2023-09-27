@@ -522,6 +522,46 @@ module TabularIo
     true
   end
 
+  def self.validate_nonempty!(rel_path)
+    abs_path = self.rel_to_abs_path rel_path
+
+    # Raise an error if the file does not exist
+    raise "File does not exist at #{abs_path}" unless File.exist?(abs_path)
+
+    # Raise an error if the file is empty
+    raise "File is empty at #{abs_path}" if File.zero?(abs_path)
+
+    case File.extname(rel_path)
+    when '.csv', '.tsv'
+      separator = File.extname(rel_path) == '.csv' ? ',' : "\t"
+      CSV.foreach(abs_path, col_sep: separator) do |row|
+        # Check if any value in the row is not nil or not an empty string
+        row=row.map{|cell|cell.sub(/\A\uFEFF/, '')} # strip byte order mark
+        unless row.all? { |cell| cell.nil? || cell.strip.empty? }
+          return true
+        end
+      end
+      # If we reach here, all rows are empty
+      raise "File contains only empty rows at #{abs_path}"
+
+    when '.xlsx', '.xls'
+      # For Excel files, you can use existing methods to load the file
+      # and check if any sheet contains data.
+      data = self.load(rel_path)
+      data.each do |sheet_name, rows|
+        unless rows.empty?
+          return true
+        end
+      end
+      # If we reach here, all sheets are empty
+      raise "All sheets are empty in the file at #{abs_path}"
+
+    else
+      raise "Unsupported file type for #{abs_path}"
+    end
+  end
+
+
 
 end
 

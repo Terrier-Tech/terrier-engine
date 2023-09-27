@@ -133,4 +133,33 @@ CSV
     end
   end
 
+  test 'validate_nonempty! for files formatted correctly' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      assert TabularIo.validate_file_type! "/test/input/correct_#{ext}.#{ext}"
+    end
+  end
+
+  test 'validate_nonempty! for files with blank rows' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      assert_raise do
+        TabularIo.validate_nonempty! "/test/input/blank_rows_#{ext}.#{ext}"
+      end
+    end
+  end
+
+
+  test 'validate_nonempty! for empty files' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      assert_raise do
+        TabularIo.validate_nonempty! "/test/input/empty_#{ext}.#{ext}"
+      end
+    end
+  end
+
+  test 'validate_nonempty! for files missing headers (should be fine)' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      TabularIo.validate_nonempty! "/test/input/missing_header_#{ext}.#{ext}"
+    end
+  end
+
 end
