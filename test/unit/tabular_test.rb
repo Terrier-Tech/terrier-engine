@@ -118,47 +118,39 @@ CSV
     end
   end
 
-  test 'validate_file_type! for files formatted correctly according to their extension' do
+  test 'valid_file_type? for files formatted correctly according to their extension' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      assert TabularIo.validate_file_type! "/test/input/correct_#{ext}.#{ext}"
+      assert TabularIo.valid_file_type? "/test/input/correct_#{ext}.#{ext}"
     end
   end
 
-  test 'validate_file_type! for files formatted incorrectly according to their extension' do
+  test 'valid_file_type? for files formatted incorrectly according to their extension' do
     ['csv', 'xls', 'xlsx'].permutation(2).each do |actual_ext, fake_ext|
-      #puts "#{actual_ext} - #{fake_ext}"
-      assert_raise do
-        TabularIo.validate_file_type! "/test/input/incorrect_format_#{actual_ext}_as_#{fake_ext}.#{fake_ext}"
-      end
+      assert (not TabularIo.valid_file_type? "/test/input/incorrect_format_#{actual_ext}_as_#{fake_ext}.#{fake_ext}")
     end
   end
 
-  test 'validate_nonempty! for files formatted correctly' do
+  test 'file_empty? for files formatted correctly' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      assert TabularIo.validate_file_type! "/test/input/correct_#{ext}.#{ext}"
+      assert (not TabularIo.file_empty? "/test/input/correct_#{ext}.#{ext}")
     end
   end
 
-  test 'validate_nonempty! for files with blank rows' do
+  test 'file_empty? for files with blank rows' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      assert_raise do
-        TabularIo.validate_nonempty! "/test/input/blank_rows_#{ext}.#{ext}"
-      end
+      assert TabularIo.file_empty? "/test/input/blank_rows_#{ext}.#{ext}"
     end
   end
 
-
-  test 'validate_nonempty! for empty files' do
+  test 'file_empty? for empty files' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      assert_raise do
-        TabularIo.validate_nonempty! "/test/input/empty_#{ext}.#{ext}"
-      end
+      assert TabularIo.file_empty? "/test/input/empty_#{ext}.#{ext}"
     end
   end
 
-  test 'validate_nonempty! for files missing headers (should be fine)' do
+  test 'file_empty? for files missing headers (should be fine)' do
     ['csv', 'xls', 'xlsx'].each do |ext|
-      TabularIo.validate_nonempty! "/test/input/missing_header_#{ext}.#{ext}"
+      assert (not TabularIo.file_empty? "/test/input/missing_header_#{ext}.#{ext}")
     end
   end
 
