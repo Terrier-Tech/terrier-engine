@@ -36,6 +36,11 @@ class MultiLogger
     @stream.close
   end
 
+  # Setter method to change the log level
+  def level=(new_level)
+    @level = new_level
+  end
+
   def debug(message, *args)
     log 'debug', message, *args
   end
@@ -58,8 +63,10 @@ class MultiLogger
 
   def error(ex, *args)
     message = ex.message
-    ex.backtrace[0..20].each do |line|
-      message += "\n#{line}"
+    unless ex.backtrace.nil?
+      ex.backtrace[0..20].each do |line|
+        message += "\n#{line}"
+      end
     end
     log 'error', message, *args
   end
@@ -96,7 +103,7 @@ class MultiLogger
 
   # writes directly to the appropriate outputs
   def write(level, s)
-    logger_level = level=='separator' ? 'info' : level
+    logger_level = %w(separator success).index(level) ? 'info' : level
     logger_message = "#{@prefix} #{s}"
     if @logger
       @logger.send logger_level, logger_message
