@@ -164,7 +164,11 @@ module TabularIo
     x.sheets.each do |sheet|
       # Offer the option to skip importing unneeded sheets. This significantly speeds up loading.
       next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
-      sheet.parse_headers!
+      begin
+        sheet.parse_headers!
+      rescue Xsv::DuplicateHeaders => e
+        puts "Error while processing headers for sheet #{sheet.name}: #{e.message}"
+      end
       output[sheet.name] = sheet.to_a
     end
     output
@@ -222,7 +226,11 @@ module TabularIo
       workbook = Xsv::Workbook.open(abs_path.to_s)
       headers = {}
       workbook.sheets.each do |sheet|
-        sheet.parse_headers!
+        begin
+          sheet.parse_headers!
+        rescue Xsv::DuplicateHeaders => e
+          puts "Error while processing headers for sheet #{sheet.name}: #{e.message}"
+        end
         headers[sheet.name] = sheet.headers
       end
       return headers
