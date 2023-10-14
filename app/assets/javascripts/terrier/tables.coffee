@@ -37,11 +37,21 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
       rows = table.find('tbody tr')
       rows.sort (a, b) ->
         aCol = $(a).find(".col-#{col}, .column-#{col}")
-        aVal = aCol.data('col-value') || aCol.data('column-value')
+        aVal = if aCol.data('col-value')? and parseFloat aCol.data('col-value')
+          parseFloat aCol.data('col-value')
+        else if aCol.data('col-value')?
+          aCol.data('col-value')
+        else
+          aCol.data('column-value')
         unless aVal?
           aVal = aCol.text()
         bCol = $(b).find(".col-#{col}, .column-#{col}")
-        bVal = bCol.data('col-value') || bCol.data('column-value')
+        bVal = if bCol.data('col-value')? and parseFloat bCol.data('col-value')
+          parseFloat bCol.data('col-value')
+        else if bCol.data('col-value')?
+          bCol.data('col-value')
+        else
+          bCol.data('column-value')
         unless bVal?
           bVal = bCol.text()
         comp = if aVal > bVal
