@@ -158,7 +158,7 @@ end
 class ColumnRef < QueryModel
   attr_accessor :name, :alias, :grouped, :function, :errors
 
-  AGG_FUNCTIONS = %w[count sum min max]
+  AGG_FUNCTIONS = %w[count sum average min max]
   
   def to_select(table, builder)
     s = "#{table.alias}.#{name}"
