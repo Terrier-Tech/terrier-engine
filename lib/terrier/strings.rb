@@ -234,6 +234,22 @@ class Array
     end
   end
 
+  def sort_by_key(key)
+    self.sort_by do |v|
+      if v.nil?
+        raise "Can't sort nil element"
+      end
+      unless v.is_a?(Hash) && v.has_key?(key)
+        raise "Element is a #{v.class.name} and does not have a #{key} value"
+      end
+      v[key]
+    end
+  end
+
+  def map_key(key)
+    self.map{|v| v[key]}
+  end
+
 end
 
 

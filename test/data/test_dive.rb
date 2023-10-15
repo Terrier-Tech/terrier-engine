@@ -134,6 +134,7 @@ module TestDive
     {
       id: 'order_summary',
       name: 'Order Summary',
+      columns: ["location_number", "status", "month", "count", "user_name"],
       from: {
         model: 'WorkOrder',
         columns: [
@@ -145,7 +146,8 @@ module TestDive
           },
           {
             name: 'id',
-            function: 'count'
+            function: 'count',
+            alias: "count"
           },
           {
             name: 'status',

@@ -2,9 +2,11 @@
 require 'coderay'
 
 class QueryModel
-  # @param attrs [Hash]
+  # @param attrs [Hash|String|ActionController::Parameters]
   def initialize(engine, attrs={})
     @engine = engine
+    attrs = JSON.parse(attrs) if attrs.is_a?(String)
+    attrs = attrs.to_unsafe_hash if attrs.is_a?(ActionController::Parameters)
     attrs.each do |k, v|
       raise "Unknown attribute '#{k}' for #{self.class.name}" unless self.respond_to? k
       self.send "#{k}=", v
@@ -56,7 +58,7 @@ class TableRef < QueryModel
       col.to_select self, builder
     end
     if col_selects.present?
-      builder.select col_selects.join(', ')
+      builder.select col_selects
     end
 
     # filters
@@ -197,10 +199,7 @@ class ColumnRef < QueryModel
     if table.prefix.present?
       a = [table.prefix, a].compact.join
     end
-    unless a == s
-      s = "#{s} as \"#{a}\""
-    end
-    s
+    "#{s} as \"#{a}\"" # always use the alias so that they're consistent and we can determine the resulting name when sorting
   end
 
   # @return [ColumnMetadata]
@@ -293,18 +292,27 @@ class Filter < QueryModel
   end
 end
 
+class Query < QueryModel
+
+  attr_accessor :id, :name, :from, :columns, :order_by
+
+  def initialize(engine, attrs)
+    super
+
+    @from = FromTableRef.new engine, @from
+  end
+
+end
+
 class DataDive::QueryEngine
   include Loggable
 
   attr_reader :query
 
-  def initialize(query)
-    query = JSON.parse(query) if query.is_a?(String)
-    query = query.to_unsafe_hash if query.is_a?(ActionController::Parameters)
-    query = OpenStruct.new(query) if query.is_a?(Hash)
-    @query = query
+  def initialize(raw_query)
     @alias_counts = {}
-    @from = FromTableRef.new self, query.from
+    @query = Query.new self, raw_query
+    @from = @query.from
   end
 
   def execute!(params={})
@@ -319,12 +327,27 @@ class DataDive::QueryEngine
     }
   end
 
+  # Re-orders the builder's select statements to match the query's _columns_ array
+  # @param builder [SqlBuilder]
+  def apply_column_sort(builder)
+    return false unless @query.columns.present?
+    col_orders = {}
+    @query.columns.each_with_index{|c, i| col_orders[c] = i}
+    builder.selects = builder.selects.map do |s|
+      name = s.gsub(/"$/, '').split('"').last
+      index = col_orders[name]
+      next unless index
+      {select: s, name: name, index: index}
+    end.compact.sort_by_key(:index).map_key :select
+  end
+
   def to_sql_builder(params={})
     builder = SqlBuilder.new.as_raw
     if params[:limit].present?
       builder.limit params[:limit].to_i
     end
     @from.build_from builder, params
+    apply_column_sort builder
     builder
   end
 
