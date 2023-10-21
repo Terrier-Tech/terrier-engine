@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   get 'icons/glyps'
   get 'icons/hub'
+  get 'icons/badges'
 
   get 'rendering/exception'
 

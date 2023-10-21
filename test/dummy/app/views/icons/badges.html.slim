@@ -1,0 +1,5 @@
+.badges-preview
+	- Badges.all.each do |badge|
+		.icon
+			== Badges.image(badge)
+			span= Badges.title(badge)

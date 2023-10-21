@@ -1,26 +1,26 @@
 <?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="c1" x1="50%" x2="50%" y1="0%" y2="100%">
+    <linearGradient id="cproposals1" x1="50%" x2="50%" y1="0%" y2="100%">
       <stop offset="0%" stop-color="#EEE"/>
       <stop offset="100%" stop-color="#D8D8D8"/>
     </linearGradient>
-    <filter id="a1" width="135%" height="125%" x="-17.5%" y="-8.9%" filterUnits="objectBoundingBox">
+    <filter id="aproposals1" width="135%" height="125%" x="-17.5%" y="-8.9%" filterUnits="objectBoundingBox">
       <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
       <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
       <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.33 0"/>
     </filter>
-    <path id="b1" d="M6 2h10a2 2 0 0 1 1.414.586l6 6A2 2 0 0 1 24 10v18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/>
+    <path id="bproposals1" d="M6 2h10a2 2 0 0 1 1.414.586l6 6A2 2 0 0 1 24 10v18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z"/>
   </defs>
   <g fill="none" fill-rule="evenodd">
-    <use xlink:href="#b1" fill="#000" filter="url(#a1)"/>
-    <use xlink:href="#b1" fill="#FFF"/>
-    <path fill="url(#c1)" d="M6 4v24h16V10l-6-6z"/>
+    <use xlink:href="#bproposals1" fill="#000" filter="url(#aproposals1)"/>
+    <use xlink:href="#bproposals1" fill="#FFF"/>
+    <path fill="url(#cproposals1)" d="M6 4v24h16V10l-6-6z"/>
     <path fill="#CACACA" d="M16 4v6h6z"/>
     <path fill="#01A7B1" fill-rule="nonzero" d="M14 11a6 6 0 1 1 0 12 6 6 0 0 1 0-12Zm0 1.333a4.667 4.667 0 1 0 0 9.334 4.667 4.667 0 0 0 0-9.334Zm2.676 1.762a.667.667 0 0 1 .265.846l-.036.069-3 5a.667.667 0 0 1-.983.181l-.06-.053-2-2a.667.667 0 0 1 .88-.998l.063.055 1.396 1.396 2.56-4.267a.667.667 0 0 1 .915-.229Z"/>
   </g>
   <defs>
-    <filter id="b2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
+    <filter id="bhandling2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
       <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
       <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
       <feColorMatrix in="shadowInnerInner1" result="shadowMatrixInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
@@ -32,20 +32,20 @@
         <feMergeNode in="shadowMatrixInner2"/>
       </feMerge>
     </filter>
-    <filter id="d2" width="105%" height="104.8%" x="-2.5%" y="-2.4%" filterUnits="objectBoundingBox">
+    <filter id="dhandling2" width="105%" height="104.8%" x="-2.5%" y="-2.4%" filterUnits="objectBoundingBox">
       <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
       <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
       <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
     </filter>
-    <circle id="a2" cx="24" cy="24" r="8"/>
-    <path id="c2" d="M26.207 19.74a1.5 1.5 0 0 1 2.586 1.52l-4 7.5a1.5 1.5 0 0 1-2.354.3l-3-3a1.5 1.5 0 0 1 2.122-2.12l1.629 1.63 3.017-5.83Z"/>
+    <circle id="ahandling2" cx="24" cy="24" r="8"/>
+    <path id="chandling2" d="M26.207 19.74a1.5 1.5 0 0 1 2.586 1.52l-4 7.5a1.5 1.5 0 0 1-2.354.3l-3-3a1.5 1.5 0 0 1 2.122-2.12l1.629 1.63 3.017-5.83Z"/>
   </defs>
   <g fill="none" fill-rule="evenodd">
-    <use xlink:href="#a2" fill="#EFA234"/>
-    <use xlink:href="#a2" fill="#000" filter="url(#b2)"/>
+    <use xlink:href="#ahandling2" fill="#EFA234"/>
+    <use xlink:href="#ahandling2" fill="#000" filter="url(#bhandling2)"/>
     <g fill-rule="nonzero">
-      <use xlink:href="#c2" fill="#FFF"/>
-      <use xlink:href="#c2" fill="#000" filter="url(#d2)"/>
+      <use xlink:href="#chandling2" fill="#FFF"/>
+      <use xlink:href="#chandling2" fill="#000" filter="url(#dhandling2)"/>
     </g>
   </g>
 </svg>

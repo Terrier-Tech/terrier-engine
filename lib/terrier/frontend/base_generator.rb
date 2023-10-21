@@ -101,7 +101,8 @@ class BaseGenerator
     count = 0
     in_docs = in_paths.map do |path|
       count += 1
-      Nokogiri::XML namespace_svg_ids(File.read(path), count.to_s)
+      namespace = path.scan(/(\w+).svg/)[0].first + count.to_s
+      Nokogiri::XML namespace_svg_ids(File.read(path), namespace)
     end
     out_doc = in_docs.first.dup
     out_content = out_doc.at_css('svg')

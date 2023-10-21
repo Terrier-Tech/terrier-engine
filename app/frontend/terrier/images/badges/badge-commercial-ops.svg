@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32" viewBox="0 0 32 32">
   <defs>
-    <linearGradient id="c1" x1="0%" x2="100%" y1="37.5%" y2="62.5%">
+    <linearGradient id="ccommercial1" x1="0%" x2="100%" y1="37.5%" y2="62.5%">
       <stop offset="0%" stop-color="#FFF" stop-opacity=".5"/>
       <stop offset="100%" stop-color="#9BFBFF" stop-opacity=".5"/>
     </linearGradient>
-    <linearGradient id="d1" x1="0%" x2="100%" y1="27.778%" y2="72.222%">
+    <linearGradient id="dcommercial1" x1="0%" x2="100%" y1="27.778%" y2="72.222%">
       <stop offset="0%" stop-color="#FFF" stop-opacity=".5"/>
       <stop offset="100%" stop-color="#9BFBFF" stop-opacity=".5"/>
     </linearGradient>
-    <filter id="a1" width="125%" height="125%" x="-12.5%" y="-8.9%" filterUnits="objectBoundingBox">
+    <filter id="acommercial1" width="125%" height="125%" x="-12.5%" y="-8.9%" filterUnits="objectBoundingBox">
       <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
       <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="1"/>
       <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.33 0"/>
     </filter>
-    <path id="b1" d="M16 2c1.105 0 2.105.448 2.828 1.172A3.987 3.987 0 0 1 20 6v8h6.154c1.079 0 2.065.46 2.775 1.23A4.08 4.08 0 0 1 30 18v10a2 2 0 0 1-2 2l-10-.001L4 30a2 2 0 0 1-2-2V6c0-1.105.448-2.105 1.172-2.828A3.987 3.987 0 0 1 6 2h10Z"/>
+    <path id="bcommercial1" d="M16 2c1.105 0 2.105.448 2.828 1.172A3.987 3.987 0 0 1 20 6v8h6.154c1.079 0 2.065.46 2.775 1.23A4.08 4.08 0 0 1 30 18v10a2 2 0 0 1-2 2l-10-.001L4 30a2 2 0 0 1-2-2V6c0-1.105.448-2.105 1.172-2.828A3.987 3.987 0 0 1 6 2h10Z"/>
   </defs>
   <g fill="none" fill-rule="evenodd">
-    <use xlink:href="#b1" fill="#000" filter="url(#a1)"/>
-    <use xlink:href="#b1" fill="#FFF"/>
+    <use xlink:href="#bcommercial1" fill="#000" filter="url(#acommercial1)"/>
+    <use xlink:href="#bcommercial1" fill="#FFF"/>
     <path fill="#CECECE" fill-rule="nonzero" d="M16 4a2 2 0 0 1 2 2v9.999l8.154.001c1.02 0 1.846.895 1.846 2v10l-10-.001L4 28V6a2 2 0 0 1 2-2h10Z"/>
-    <path fill="url(#c1)" fill-rule="nonzero" d="M6 6h4v2H6zM12 6h4v2h-4zM6 10.002h4v2H6zM12 10.002h4v2h-4zM6 14.003h4v2H6zM12 14.003h4v2h-4zM6 18.005h4v2H6zM12 18.005h4v2h-4zM6 22.006h4v2H6zM12 22.006h4v2h-4z"/>
-    <path fill="url(#d1)" fill-rule="nonzero" d="M18 17.997h3v2h-3zM23 17.997h3v2h-3zM18 21.998h3v2h-3zM23 21.998h3v2h-3z"/>
+    <path fill="url(#ccommercial1)" fill-rule="nonzero" d="M6 6h4v2H6zM12 6h4v2h-4zM6 10.002h4v2H6zM12 10.002h4v2h-4zM6 14.003h4v2H6zM12 14.003h4v2h-4zM6 18.005h4v2H6zM12 18.005h4v2h-4zM6 22.006h4v2H6zM12 22.006h4v2h-4z"/>
+    <path fill="url(#dcommercial1)" fill-rule="nonzero" d="M18 17.997h3v2h-3zM23 17.997h3v2h-3zM18 21.998h3v2h-3zM23 21.998h3v2h-3z"/>
     <path fill="#AEAEAE" d="M8 25h6v3H8zM19 25h6v3h-6z"/>
   </g>
   <defs>
-    <filter id="b2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
+    <filter id="bops2" width="103.1%" height="103.1%" x="-1.6%" y="-1.6%" filterUnits="objectBoundingBox">
       <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
       <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
       <feColorMatrix in="shadowInnerInner1" result="shadowMatrixInner1" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.25 0"/>
@@ -37,20 +37,20 @@
         <feMergeNode in="shadowMatrixInner2"/>
       </feMerge>
     </filter>
-    <filter id="d2" width="104.2%" height="106.2%" x="-2.1%" y="-3.1%" filterUnits="objectBoundingBox">
+    <filter id="dops2" width="104.2%" height="106.2%" x="-2.1%" y="-3.1%" filterUnits="objectBoundingBox">
       <feOffset dy=".5" in="SourceAlpha" result="shadowOffsetInner1"/>
       <feComposite in="shadowOffsetInner1" in2="SourceAlpha" k2="-1" k3="1" operator="arithmetic" result="shadowInnerInner1"/>
       <feColorMatrix in="shadowInnerInner1" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.1 0"/>
     </filter>
-    <circle id="a2" cx="24" cy="24" r="8"/>
-    <path id="c2" d="M23.5 19.5V22a.5.5 0 1 0 1 0v-2.5h.958c.248 0 .46.154.544.372L26 22.5a.5.5 0 1 0 1 0l.001-1.957c1.286.825 2.125 2.286 2.496 4.35l.01.064.343.336a.5.5 0 0 1 .148.313l.002.044v.9a.5.5 0 0 1-.393.489c-1.158.252-2.618.4-4.384.446l-.398.008-.407.005a51.15 51.15 0 0 1-.836 0l-.407-.005-.398-.008c-1.766-.046-3.226-.194-4.384-.446A.5.5 0 0 1 18 26.55v-.9a.5.5 0 0 1 .15-.357l.342-.336.032-.177c.382-2.005 1.213-3.428 2.476-4.237V22.5a.5.5 0 1 0 1 0l-.001-2.63a.584.584 0 0 1 .543-.37h.958Zm4.292 5.125h-7.584a.583.583 0 1 0 0 1.167h7.584a.583.583 0 0 0 0-1.167Z"/>
+    <circle id="aops2" cx="24" cy="24" r="8"/>
+    <path id="cops2" d="M23.5 19.5V22a.5.5 0 1 0 1 0v-2.5h.958c.248 0 .46.154.544.372L26 22.5a.5.5 0 1 0 1 0l.001-1.957c1.286.825 2.125 2.286 2.496 4.35l.01.064.343.336a.5.5 0 0 1 .148.313l.002.044v.9a.5.5 0 0 1-.393.489c-1.158.252-2.618.4-4.384.446l-.398.008-.407.005a51.15 51.15 0 0 1-.836 0l-.407-.005-.398-.008c-1.766-.046-3.226-.194-4.384-.446A.5.5 0 0 1 18 26.55v-.9a.5.5 0 0 1 .15-.357l.342-.336.032-.177c.382-2.005 1.213-3.428 2.476-4.237V22.5a.5.5 0 1 0 1 0l-.001-2.63a.584.584 0 0 1 .543-.37h.958Zm4.292 5.125h-7.584a.583.583 0 1 0 0 1.167h7.584a.583.583 0 0 0 0-1.167Z"/>
   </defs>
   <g fill="none" fill-rule="evenodd">
-    <use xlink:href="#a2" fill="#EFA234"/>
-    <use xlink:href="#a2" fill="#000" filter="url(#b2)"/>
+    <use xlink:href="#aops2" fill="#EFA234"/>
+    <use xlink:href="#aops2" fill="#000" filter="url(#bops2)"/>
     <g fill-rule="nonzero">
-      <use xlink:href="#c2" fill="#FFF"/>
-      <use xlink:href="#c2" fill="#000" filter="url(#d2)"/>
+      <use xlink:href="#cops2" fill="#FFF"/>
+      <use xlink:href="#cops2" fill="#000" filter="url(#dops2)"/>
     </g>
   </g>
 </svg>
