@@ -1,5 +1,7 @@
 // noinspection JSAnnotator,ES6UnusedImports,TypeScriptCheckImport,TypeScriptValidateTypes,TypeScriptUnresolvedFunction,TypeScriptUnresolvedVariable
 
+import inflection from "inflection"
+
 const allBadges = [
 <% all_badges.each do|badge| %>
     '<%= badge %>',
@@ -8,7 +10,7 @@ const allBadges = [
 
 export type Badge = typeof allBadges[number]
 
-const BadgeTitles = {
+const BadgeTitles: Record<string, string> = {
 <% badge_titles.each do|badge,title| %>
     '<%= badge %>': "<%= title %>",
 <% end %>
@@ -18,8 +20,8 @@ const BadgeTitles = {
  * @param badge
  * @return the title for the given badge
  */
-function title(badge: Badge): string {
-    return BadgeTitles[badge]
+function title(badge: string): string {
+    return BadgeTitles[badge] || inflection.titleize(badge)
 }
 
 <% badge_vars.each do |badge, var| %>
@@ -31,13 +33,13 @@ import <%= var %> from '../images/badges/badge-<%= badge %>.svg'
  * @param badge
  * @return the image source path for the given badge
  */
-function imageSource(badge: Badge): string {
+function imageSource(badge: string): string {
     switch (badge) {
 <% badge_vars.each do |badge, var| %>
     case '<%= badge %>': return <%= var %>
 <% end %>
     default:
-        throw `Invalid badge '${badge}'`
+        return InformationTechnologyadmin
     }
 }
 
