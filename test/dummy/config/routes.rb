@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get 'reports' => 'scripts#reports'
 
   get 'frontend/platform_demo'
-  get 'frontend/list_detail_demo'
+  get 'frontend/list_viewer_demo'
   get 'frontend/streaming'
 
   mount Terrier::Engine, at: "/"

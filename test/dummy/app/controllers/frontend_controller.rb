@@ -6,9 +6,9 @@ class FrontendController < ApplicationController
     @entrypoint = 'platform-demo'
   end
 
-  def list_detail_demo
-    @title = "List/Detail Demo"
-    @entrypoint = "list-detail-demo"
+  def list_viewer_demo
+    @title = "List Viewer Demo"
+    @entrypoint = "list-viewer-demo"
   end
 
   def streaming

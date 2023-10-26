@@ -1,11 +1,18 @@
+@import "terrier/tt-mixins";
 
 .tt-demo {
 	--demo-border-color: #ccc;
 	--demo-border-radius: 6px;
+	@include tt-absolute-fill;
 
 	.tt-page-part {
+		@include tt-absolute-fill;
 		.tt-toolbar {
 
+		}
+		.full-width-page {
+			flex: 1 1 auto;
+			position: relative;
 		}
 	}
 

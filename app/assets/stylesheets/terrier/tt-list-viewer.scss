@@ -1,0 +1,53 @@
+@import "tt-mixins";
+
+
+.tt-list-viewer {
+	@include tt-absolute-fill;
+	display: flex;
+	//gap: var(--tt-gap);
+	> div {
+		padding: var(--tt-pad);
+	}
+	--list-width: #{$max-fixed-width};
+	.tt-list-viewer-list {
+		display: flex;
+		flex-direction: column;
+		gap: var(--tt-gap);
+		a.tt-list-viewer-item {
+			display: flex;
+			padding: var(--tt-pad);
+			@include panel-like;
+			.title {
+				font-weight: bold;
+			}
+		}
+	}
+	.tt-list-viewer-details-container {
+		padding: var(--tt-pad);
+		.tt-list-viewer-details {
+			@include panel-like;
+			padding: var(--tt-pad);
+		}
+	}
+}
+
+// Phone
+@media only screen and (max-width: $phone-breakpoint) {
+
+}
+
+// Desktop/Tablet
+@media only screen and (min-width: $phone-breakpoint) {
+	.tt-list-viewer {
+		.tt-list-viewer-list {
+			flex: 0 0 var(--list-width);
+			overflow-y: scroll;
+		}
+		.tt-list-viewer-details-container {
+
+			flex: 1 1 auto;
+		}
+	}
+}
+
+
