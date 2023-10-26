@@ -19,6 +19,7 @@ $arrow-size: 16px;
 		padding: var(--tt-pad);
 		gap: var(--tt-gap);
 		overflow-x: visible;
+		overflow-y: scroll;
 		a.tt-list-viewer-item {
 			display: flex;
 			padding: var(--tt-pad);
@@ -39,15 +40,10 @@ $arrow-size: 16px;
 				&::after {
 					content: "";
 					position: absolute;
-					right: -$arrow-size/2;
 					width: $arrow-size;
 					height: $arrow-size;
 					background-color: var(--tt-panel-background);
-					top: 50%;
-					transform: translate(0, -50%) rotate(45deg);
 					@include tt-box-shadow-45;
-					// clip the square at a 45 degree angle but leave room on the outside for the drop shadow
-					clip-path: polygon(-100% -100%, 200% 200%, 200% -100%);
 				}
 			}
 		}
@@ -76,7 +72,16 @@ $arrow-size: 16px;
 	.tt-list-viewer {
 		.tt-list-viewer-list {
 			flex: 1 1 auto;
-			overflow-y: scroll;
+			a.tt-list-viewer-item {
+				&.current {
+					&::after {
+						bottom: -$arrow-size/2;
+						left: 50%;
+						transform: translate(-50%, 0) rotate(45deg);
+						clip-path: polygon(200% -100%, 200% 200%, -100% 200%);
+					}
+				}
+			}
 		}
 		.tt-list-viewer-details-container {
 			display: none;
@@ -92,7 +97,17 @@ $arrow-size: 16px;
 	.tt-list-viewer {
 		.tt-list-viewer-list {
 			flex: 0 0 var(--list-width);
-			overflow-y: scroll;
+			max-width: 40%;
+			a.tt-list-viewer-item {
+				&.current {
+					&::after {
+						right: -$arrow-size/2;
+						top: 50%;
+						transform: translate(0, -50%) rotate(45deg);
+						clip-path: polygon(-100% -100%, 200% 200%, 200% -100%);
+					}
+				}
+			}
 		}
 		.tt-list-viewer-details-container {
 			flex: 1 1 auto;
