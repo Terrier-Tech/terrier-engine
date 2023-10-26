@@ -10,7 +10,7 @@ const log = new Logger("Terrier PagePart")
 /**
  * Whether some content should be constrained to a reasonable width or span the entire screen.
  */
-export type ContentWidth = "normal" | "wide"
+export type ContentWidth = "normal" | "wide" | "fill"
 
 /// Toolbar fields
 
