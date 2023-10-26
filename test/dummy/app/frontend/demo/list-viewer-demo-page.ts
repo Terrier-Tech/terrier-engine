@@ -2,14 +2,17 @@ import {PartTag} from "tuff-core/parts"
 import {DemoPage} from "./demo-app"
 import {ListViewerPart} from "@terrier/list-viewer"
 import Arrays from "tuff-core/arrays"
+import Ids from "@terrier/ids"
 
 type DemoItem = {
+    id: string
     title: string
     details: string
 }
 
 const demoItems: DemoItem[] = Arrays.range(0, 50).map((i) => {
     return {
+        id: Ids.makeUuid(),
         title: `Item ${i}`,
         details: `Item ${i} details...`
     }
