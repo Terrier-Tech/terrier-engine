@@ -15,7 +15,7 @@ type ListItem<T extends {}> = {
     id: string
 }
 
-const detailsSelector = '.tt-list-viewer-details-container'
+const detailsSelector = '.tt-list-viewer-details'
 
 export abstract class ListViewerPart<T extends {}> extends TerrierPart<any> {
 
@@ -67,7 +67,9 @@ export abstract class ListViewerPart<T extends {}> extends TerrierPart<any> {
                 }).emitClick(this.itemClickedKey, {id: item.id})
             }
         })
-        parent.div(detailsSelector)
+        parent.div('.tt-list-viewer-details-container', detailsView => {
+            detailsView.div(detailsSelector)
+        })
     }
     abstract renderListItem(parent: PartTag, item: T): any
 
@@ -84,10 +86,9 @@ export abstract class ListViewerPart<T extends {}> extends TerrierPart<any> {
         const container = this.element!.querySelector(detailsSelector)
         if (container) {
             const detailsView = Html.createElement('div', div => {
-                div.class('tt-list-viewer-details')
                 this.renderItemDetail(div, item.data)
             })
-            container.innerHTML = detailsView.outerHTML
+            container.innerHTML = detailsView.innerHTML
         }
         else {
             log.warn(`Tried to show item ${id} but there was no ${detailsSelector}`)

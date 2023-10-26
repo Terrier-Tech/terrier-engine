@@ -1,14 +1,15 @@
 @import "tt-mixins";
 
+////////////////////////////////////////////////////////////////////////////////
+// Global
+////////////////////////////////////////////////////////////////////////////////
 
 .tt-list-viewer {
 	@include tt-absolute-fill;
 	display: flex;
-	//gap: var(--tt-gap);
-	> div {
-		padding: var(--tt-pad);
-	}
+	gap: var(--tt-gap);
 	--list-width: #{$max-fixed-width};
+	justify-content: stretch;
 	.tt-list-viewer-list {
 		display: flex;
 		flex-direction: column;
@@ -16,6 +17,8 @@
 		a.tt-list-viewer-item {
 			display: flex;
 			padding: var(--tt-pad);
+			--tt-scale-push-factor: 0.02;
+			@include tt-scale-push;
 			@include panel-like;
 			.title {
 				font-weight: bold;
@@ -23,28 +26,48 @@
 		}
 	}
 	.tt-list-viewer-details-container {
+		position: relative;
+	}
+	.tt-list-viewer-details {
+		@include tt-inset-box;
+		@include tt-inset-box-shadow;
 		padding: var(--tt-pad);
-		.tt-list-viewer-details {
-			@include panel-like;
-			padding: var(--tt-pad);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Phone
+////////////////////////////////////////////////////////////////////////////////
+
+@media only screen and (max-width: $phone-breakpoint) {
+	.tt-list-viewer {
+		padding: 0 var(--tt-pad); // no vertical padding so that the items can be seen while scrolling offscreen
+		.tt-list-viewer-list {
+			flex: 1 1 auto;
+			overflow-y: scroll;
+			padding: var(--tt-pad) 0;
+		}
+		.tt-list-viewer-details-container {
+			display: none;
 		}
 	}
 }
 
-// Phone
-@media only screen and (max-width: $phone-breakpoint) {
-
-}
-
+////////////////////////////////////////////////////////////////////////////////
 // Desktop/Tablet
+////////////////////////////////////////////////////////////////////////////////
+
 @media only screen and (min-width: $phone-breakpoint) {
 	.tt-list-viewer {
+		padding: 0 var(--tt-pad); // no vertical padding so that the items can be seen while scrolling offscreen
+		> div {
+			padding: var(--tt-pad) 0;
+		}
 		.tt-list-viewer-list {
 			flex: 0 0 var(--list-width);
 			overflow-y: scroll;
 		}
 		.tt-list-viewer-details-container {
-
 			flex: 1 1 auto;
 		}
 	}
