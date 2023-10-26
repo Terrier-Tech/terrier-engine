@@ -3,6 +3,9 @@ import {DemoPage} from "./demo-app"
 import {ListViewerPart} from "@terrier/list-viewer"
 import Arrays from "tuff-core/arrays"
 import Ids from "@terrier/ids"
+import {Logger} from "tuff-core/logging"
+
+const log = new Logger('List Viewer Demo')
 
 type DemoItem = {
     id: string
@@ -45,6 +48,10 @@ export default class ListViewerDemoPage extends DemoPage {
         this.setTitle("List Viewer Demo")
 
         this.listDetail = this.makePart(DemoListDetailPart, {})
+
+        this.listenMessage(this.listDetail.detailsShownKey, m => {
+            log.info(`Details shown for item ${m.data.id}`)
+        })
     }
 
     renderContent(parent: PartTag): void {

@@ -19,6 +19,11 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
 
     itemClickedKey = Messages.typedKey<{id: string}>()
 
+    /**
+     * A message with this key gets emitted whenever the details are shown.
+     */
+    detailsShownKey = Messages.typedKey<{ id: string }>()
+
     async init() {
         await super.init()
 
@@ -101,6 +106,9 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
             })
             container.innerHTML = detailsView.innerHTML
             this.arrangeDetails(id, container as HTMLElement)
+
+            // let the world know
+            this.emitMessage(this.detailsShownKey, {id})
         }
         else {
             log.warn(`Tried to show item ${id} but there was no ${detailsSelector}`)
@@ -129,6 +137,9 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
                     detailsContainer.append(detailsView)
                 }
             }
+        }
+        else {
+            log.warn(`No item view for ${id}`)
         }
     }
 
