@@ -1,11 +1,4 @@
-import {Part} from "tuff-core/parts"
 import DemoApp from "../demo/demo-app"
+import PlatformDemoPage from "../demo/platform-demo-page"
 
-const container = document.getElementById('demo-container')
-if (container) {
-    Part.mount(DemoApp, container, {}, {
-        capturePath: '/hub'
-    })
-} else {
-    alert("No #demo-container!")
-}
+DemoApp.mountPage(PlatformDemoPage)
