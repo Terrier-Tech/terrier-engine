@@ -8,6 +8,11 @@ const log = new Logger('List Viewer')
 
 const detailsSelector = '.tt-list-viewer-details'
 
+export type ListItemRenderOptions = {
+    style?: 'panel' | 'header'
+    clickable?: boolean
+}
+
 /**
  * Part for viewing a list of items and the details associated with them.
  * Each item must have an `id` so that they can be distinguished.
@@ -58,16 +63,22 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
     render(parent: PartTag): any {
         parent.div('.tt-list-viewer-list', list => {
             for (const item of this.items) {
-                list.a('.tt-list-viewer-item', {id: `item-${item.id}`}, itemView => {
-                    this.renderListItem(itemView, item)
-                }).emitClick(this.itemClickedKey, {id: item.id})
+                list.div('.tt-list-viewer-item', {id: `item-${item.id}`}, itemView => {
+                    const opts = this.renderListItem(itemView, item)
+                    const style = opts?.style || 'panel'
+                    itemView.class(style)
+                    if (opts?.clickable) {
+                        itemView.class('clickable')
+                        itemView.emitClick(this.itemClickedKey, {id: item.id})
+                    }
+                })
             }
         })
         parent.div('.tt-list-viewer-details-container', detailsView => {
             detailsView.div(detailsSelector)
         })
     }
-    abstract renderListItem(parent: PartTag, item: T): any
+    abstract renderListItem(parent: PartTag, item: T): ListItemRenderOptions | void
 
     abstract renderItemDetail(parent: PartTag, item: T): any
 
@@ -76,7 +87,7 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
 
     private setCurrent(id: string) {
         // clear any existing current item
-        const existingCurrents = this.element!.querySelectorAll('.tt-list-viewer-list a.current')
+        const existingCurrents = this.element!.querySelectorAll('.tt-list-viewer-list .current')
         existingCurrents.forEach((elem) => {
             elem.classList.remove('current')
         })
