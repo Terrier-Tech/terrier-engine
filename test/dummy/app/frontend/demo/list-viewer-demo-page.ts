@@ -1,9 +1,10 @@
 import {PartTag} from "tuff-core/parts"
 import {DemoPage} from "./demo-app"
-import {ListViewerPart} from "@terrier/list-viewer"
+import {ListViewerDetailsContext, ListViewerPart} from "@terrier/list-viewer"
 import Arrays from "tuff-core/arrays"
 import Ids from "@terrier/ids"
 import {Logger} from "tuff-core/logging"
+import TerrierPart from "@terrier/parts/terrier-part";
 
 const log = new Logger('List Viewer Demo')
 
@@ -38,7 +39,16 @@ const demoItems: DemoItem[] = Arrays.range(0, 50).map((i) => {
     }
 })
 
-class DemoListDetailPart extends ListViewerPart<DemoItem> {
+class DemoDetailPart extends TerrierPart<DemoPanelItem> {
+    render(parent: PartTag) {
+        parent.h2().text(this.state.title)
+        parent.div('.details').text(this.state.details)
+    }
+
+}
+
+
+class DemoListViewer extends ListViewerPart<DemoItem> {
     async fetchItems(): Promise<DemoItem[]> {
         return Promise.resolve(demoItems);
     }
@@ -57,12 +67,16 @@ class DemoListDetailPart extends ListViewerPart<DemoItem> {
         }
     }
 
+    renderDetails(context: ListViewerDetailsContext<DemoItem>) {
+        context.makePart(DemoDetailPart, context.item as DemoPanelItem)
+    }
+
 }
 
 
 export default class ListViewerDemoPage extends DemoPage {
 
-    listDetail!: DemoListDetailPart
+    listDetail!: DemoListViewer
 
     async init() {
         await super.init()
@@ -70,7 +84,7 @@ export default class ListViewerDemoPage extends DemoPage {
         this.setIcon('glyp-items')
         this.setTitle("List Viewer Demo")
 
-        this.listDetail = this.makePart(DemoListDetailPart, {})
+        this.listDetail = this.makePart(DemoListViewer, {})
 
         this.listenMessage(this.listDetail.detailsShownKey, m => {
             log.info(`Details shown for item ${m.data.id}`)

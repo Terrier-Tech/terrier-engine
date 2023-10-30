@@ -1,23 +1,61 @@
 import TerrierPart from "./parts/terrier-part"
-import {PartTag} from "tuff-core/parts"
+import {NoState, Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
-import Html from "tuff-core/html"
 
 const log = new Logger('List Viewer')
 
-const detailsSelector = '.tt-list-viewer-details'
+const detailsSelector = '.tt-list-viewer-details-container'
 
 export type ListItemRenderOptions = {
     style?: 'panel' | 'header'
     clickable?: boolean
 }
 
+export class ListViewerDetailsContext<T extends {id: string}> {
+
+    part?: StatelessPart
+
+    constructor(readonly viewer: ListViewerPart<T>, readonly item: T) {
+    }
+
+    makePart<PartType extends Part<StateType>, StateType>(partType: PartConstructor<PartType, StateType>, state: StateType) {
+        this.part = this.viewer.detailsContainer.makePart(partType, state)
+        this.viewer.detailsContainer.replacePart(this.part)
+    }
+}
+
+class DetailsContainerPart extends Part<NoState> {
+
+    part?: StatelessPart
+
+    replacePart(newPart: StatelessPart) {
+        if (this.part) {
+            this.removeChild(this.part)
+        }
+        this.part = newPart
+    }
+
+    get parentClasses(): Array<string> {
+        return ['tt-list-viewer-details']
+    }
+
+    render(parent: PartTag) {
+        if (this.part) {
+            parent.part(this.part)
+        }
+    }
+
+}
+
+
 /**
  * Part for viewing a list of items and the details associated with them.
  * Each item must have an `id` so that they can be distinguished.
  */
 export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart<any> {
+
+    detailsContainer!: DetailsContainerPart
 
     items: T[] = []
     itemMap: Record<string, T> = {}
@@ -31,6 +69,8 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
 
     async init() {
         await super.init()
+
+        this.detailsContainer = this.makePart(DetailsContainerPart, {})
 
         await this.reload()
 
@@ -74,13 +114,13 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
                 })
             }
         })
-        parent.div('.tt-list-viewer-details-container', detailsView => {
-            detailsView.div(detailsSelector)
-        })
+        parent.div(detailsSelector).part(this.detailsContainer)
     }
     abstract renderListItem(parent: PartTag, item: T): ListItemRenderOptions | void
 
     abstract renderItemDetail(parent: PartTag, item: T): any
+
+    abstract renderDetails(context: ListViewerDetailsContext<T>): any
 
 
     // Details
@@ -109,29 +149,42 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
         if (!item) {
             throw `No item ${id}`
         }
-        const container = this.element!.querySelector(detailsSelector)
-        if (container) {
-            // render the details
-            const detailsView = Html.createElement('div', div => {
-                this.renderItemDetail(div, item)
-            })
-            container.innerHTML = detailsView.innerHTML
-            this.arrangeDetails(id, container as HTMLElement)
 
-            // let the world know
-            this.emitMessage(this.detailsShownKey, {id})
+        const context = new ListViewerDetailsContext(this, item)
+        this.renderDetails(context)
+
+        if (context.part) {
         }
-        else {
-            log.warn(`Tried to show item ${id} but there was no ${detailsSelector}`)
-        }
+
+        this.arrangeDetails(id)
+
+        // let the world know
+        this.emitMessage(this.detailsShownKey, {id})
+
+        // const container = this.element!.querySelector(detailsSelector)
+        // if (container) {
+        //
+        //     // // render the details
+        //     // const detailsView = Html.createElement('div', div => {
+        //     //     this.renderItemDetail(div, item)
+        //     // })
+        //     // container.innerHTML = detailsView.innerHTML
+        //     this.arrangeDetails(id, container as HTMLElement)
+        //
+        //     // let the world know
+        //     this.emitMessage(this.detailsShownKey, {id})
+        // }
+        // else {
+        //     log.warn(`Tried to show item ${id} but there was no ${detailsSelector}`)
+        // }
     }
 
     /**
      * If necessary, move the details next to the item
      * @param id the item id
-     * @param detailsView
      */
-    arrangeDetails(id: string, detailsView: HTMLElement) {
+    arrangeDetails(id: string) {
+        const detailsView = this.element!.querySelector(detailsSelector)!
         const itemView = this.element!.querySelector(`#item-${id}`)
         if (itemView) {
             // const listView = itemIVew.parentElement

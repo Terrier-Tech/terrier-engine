@@ -22,7 +22,6 @@ $arrow-size: 16px;
 		overflow-y: scroll;
 		.tt-list-viewer-item {
 			display: flex;
-			padding: var(--tt-pad);
 			position: relative;
 			z-index: 0;
 			--tt-scale-push-factor: 0.01;
@@ -35,6 +34,7 @@ $arrow-size: 16px;
 			}
 			&.panel {
 				@include panel-like;
+				padding: var(--tt-pad);
 			}
 			.title {
 				font-weight: bold;
