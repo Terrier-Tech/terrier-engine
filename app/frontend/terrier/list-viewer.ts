@@ -1,48 +1,151 @@
 import TerrierPart from "./parts/terrier-part"
-import {NoState, Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
+import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
+import {DivTag} from "tuff-core/html";
+import {PageBreakpoints} from "./parts/page-part";
 
 const log = new Logger('List Viewer')
 
-const detailsSelector = '.tt-list-viewer-details-container'
-
+/**
+ * Optional values to return from rendering a list item that control
+ * its rendering behavior.
+ */
 export type ListItemRenderOptions = {
     style?: 'panel' | 'header'
     clickable?: boolean
 }
 
-export class ListViewerDetailsContext<T extends {id: string}> {
+/**
+ * All list items should have an `id` value so that we can distinguish them.
+ */
+export type ListItem = {id: string}
 
+/**
+ * One of these gets created for each item in the list.
+ */
+class ListItemPart<T extends ListItem> extends Part<T> {
+
+    viewer!: ListViewerPart<T>
+
+    render(parent: PartTag) {
+        const isCurrent = this.viewer.detailsContext?.id == this.state.id
+
+        parent.div('.tt-list-viewer-item', itemView => {
+            const opts = this.viewer.renderListItem(itemView, this.state)
+            const style = opts?.style || 'panel'
+            itemView.class(style)
+            if (opts?.clickable) {
+                itemView.class('clickable')
+                itemView.emitClick(this.viewer.itemClickedKey, {id: this.state.id})
+            }
+            if (isCurrent) {
+                itemView.class('current')
+            }
+        }).id(`item-${this.state.id}`)
+
+        // render the details if this is the current item and it's supposed to be rendered inline
+        if (isCurrent && this.viewer.detailsLocation == 'inline') {
+            if (this.viewer.currentDetailsPart) {
+                parent.part(this.viewer.currentDetailsPart)
+            }
+            else if (this.viewer.currentDetailsDiv) {
+                parent.div().append(this.viewer.currentDetailsDiv)
+            }
+        }
+    }
+
+}
+
+/**
+ * Allows ListViewerPart subclasses to either directly render content for
+ * the list details or make a part to do it.
+ */
+export class ListViewerDetailsContext<T extends ListItem> {
+
+    /**
+     * The item id for which this context is representing the details.
+     */
+    get id(): string {
+        return this.item.id
+    }
+
+    /**
+     * The part created by `makePart()` to render the details.
+     */
     part?: StatelessPart
+
+    /**
+     * The part representing this item in the list.
+     */
+    itemPart?: ListItemPart<T>
+
+    /**
+     * The tag rendered by `renderDirect()` to represent the details until
+     * the details part renders (if that happens at all).
+     */
+    directDiv?: DivTag
 
     constructor(readonly viewer: ListViewerPart<T>, readonly item: T) {
     }
 
+    /**
+     * Make a part to render the details for the list item.
+     * @param partType
+     * @param state
+     */
     makePart<PartType extends Part<StateType>, StateType>(partType: PartConstructor<PartType, StateType>, state: StateType) {
-        this.part = this.viewer.detailsContainer.makePart(partType, state)
-        this.viewer.detailsContainer.replacePart(this.part)
+        this.part = this.viewer.makePart(partType, state)
+    }
+
+    /**
+     * Render the content for the details directly.
+     * This will be replaced by the part made by `makePart()`.
+     * @param fn the render function for the content
+     */
+    renderDirect(fn: (parent: DivTag) => any) {
+        this.directDiv = new DivTag("div")
+        fn(this.directDiv)
+        return this.directDiv
+    }
+
+    /**
+     * Ensure that the rendered part is disposed and the related item part is marked dirty.
+     */
+    clear() {
+        if (this.part) {
+            this.viewer.removeChild(this.part)
+            this.part = undefined
+        }
+        if (this.itemPart) {
+            this.itemPart.dirty()
+        }
     }
 }
 
-class DetailsContainerPart extends Part<NoState> {
+/**
+ * This part sits permanently on the side and will render the details if
+ * the viewer's detailsLocation = 'side'.
+ */
+class SideContainerPart extends Part<{viewer: ListViewerPart<any>}> {
 
-    part?: StatelessPart
+    viewer!: ListViewerPart<any>
 
-    replacePart(newPart: StatelessPart) {
-        if (this.part) {
-            this.removeChild(this.part)
-        }
-        this.part = newPart
+    async init() {
+        this.viewer = this.state.viewer
     }
 
     get parentClasses(): Array<string> {
-        return ['tt-list-viewer-details']
+        return ['tt-list-viewer-side-details']
     }
 
     render(parent: PartTag) {
-        if (this.part) {
-            parent.part(this.part)
+        if (this.viewer.detailsLocation == 'side') {
+            if (this.viewer.currentDetailsPart) {
+                parent.part(this.viewer.currentDetailsPart)
+            } else if (this.viewer.currentDetailsDiv) {
+                parent.div().append(this.viewer.currentDetailsDiv)
+            }
         }
     }
 
@@ -53,14 +156,25 @@ class DetailsContainerPart extends Part<NoState> {
  * Part for viewing a list of items and the details associated with them.
  * Each item must have an `id` so that they can be distinguished.
  */
-export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart<any> {
+export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any> {
 
-    detailsContainer!: DetailsContainerPart
+    sideContainerPart!: SideContainerPart
+
+    detailsContext?: ListViewerDetailsContext<T>
+    detailsLocation: 'inline' | 'side' = 'inline'
+
+    get currentDetailsPart(): StatelessPart | undefined  {
+        return this.detailsContext?.part
+    }
+
+    get currentDetailsDiv(): DivTag | undefined  {
+        return this.detailsContext?.directDiv
+    }
 
     items: T[] = []
-    itemMap: Record<string, T> = {}
+    itemPartMap: Record<string, ListItemPart<T>> = {}
 
-    itemClickedKey = Messages.typedKey<{id: string}>()
+    itemClickedKey = Messages.typedKey<ListItem>()
 
     /**
      * A message with this key gets emitted whenever the details are shown.
@@ -70,7 +184,8 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
     async init() {
         await super.init()
 
-        this.detailsContainer = this.makePart(DetailsContainerPart, {})
+        this.computeDetailsLocation()
+        this.sideContainerPart = this.makePart(SideContainerPart, {viewer: this})
 
         await this.reload()
 
@@ -83,12 +198,22 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
 
     /// Fetching
 
+    /**
+     * Subclasses must implement this to provide a list of items to render.
+     */
     abstract fetchItems(): Promise<T[]>
 
+    /**
+     * Fetches the items with `fetchItems()` and re-renders the list.
+     */
     async reload() {
         this.items = await this.fetchItems()
-        this.items.forEach((item) => {
-            this.itemMap[item.id] = item
+        this.assignCollection('items', ListItemPart, this.items)
+        this.getCollectionParts('items').forEach(itemPart => {
+            // HACK
+            (itemPart as ListItemPart<T>).viewer = this
+            log.info(`Adding item part ${itemPart.state.id}`, itemPart)
+            this.itemPartMap[itemPart.state.id] = (itemPart as ListItemPart<T>)
         })
         this.dirty()
     }
@@ -102,40 +227,37 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
 
     render(parent: PartTag): any {
         parent.div('.tt-list-viewer-list', list => {
-            for (const item of this.items) {
-                list.div('.tt-list-viewer-item', {id: `item-${item.id}`}, itemView => {
-                    const opts = this.renderListItem(itemView, item)
-                    const style = opts?.style || 'panel'
-                    itemView.class(style)
-                    if (opts?.clickable) {
-                        itemView.class('clickable')
-                        itemView.emitClick(this.itemClickedKey, {id: item.id})
-                    }
-                })
-            }
+            this.renderCollection(list, 'items')
         })
-        parent.div(detailsSelector).part(this.detailsContainer)
+        parent.part(this.sideContainerPart)
     }
+
+    /**
+     * Subclasses must override this to render the content of an item.
+     * @param parent
+     * @param item
+     */
     abstract renderListItem(parent: PartTag, item: T): ListItemRenderOptions | void
 
-    abstract renderItemDetail(parent: PartTag, item: T): any
-
+    /**
+     * Subclasses must implement this to render an item details or provide a part to do so.
+     * @param context
+     */
     abstract renderDetails(context: ListViewerDetailsContext<T>): any
 
 
     // Details
 
-    private setCurrent(id: string) {
-        // clear any existing current item
-        const existingCurrents = this.element!.querySelectorAll('.tt-list-viewer-list .current')
-        existingCurrents.forEach((elem) => {
-            elem.classList.remove('current')
-        })
-
-        // add .current to the new item
-        const itemView = this.element!.querySelector(`#item-${id}`)
-        if (itemView) {
-            itemView.classList.add('current')
+    /**
+     * Determine whether the details should be shown inline with the list or
+     * off to the side, based on screen size.
+     */
+    computeDetailsLocation() {
+        if (window.innerWidth > PageBreakpoints.phone) {
+            this.detailsLocation = 'side'
+        }
+        else {
+            this.detailsLocation = 'inline'
         }
     }
 
@@ -144,67 +266,24 @@ export abstract class ListViewerPart<T extends {id: string}> extends TerrierPart
      * @param id
      */
     showDetails(id: string) {
-        this.setCurrent(id)
-        const item = this.itemMap[id]
-        if (!item) {
-            throw `No item ${id}`
+        this.detailsContext?.clear()
+
+        const itemPart = this.itemPartMap[id]
+        if (!itemPart) {
+            log.info(`${Object.keys(this.itemPartMap).length} item parts: `, this.itemPartMap)
+            throw `No item part ${id}`
         }
 
-        const context = new ListViewerDetailsContext(this, item)
-        this.renderDetails(context)
-
-        if (context.part) {
-        }
-
-        this.arrangeDetails(id)
+        this.detailsContext = new ListViewerDetailsContext(this, itemPart.state)
+        this.renderDetails(this.detailsContext)
+        this.sideContainerPart.dirty()
+        this.detailsContext.itemPart = itemPart
+        itemPart.dirty()
 
         // let the world know
         this.emitMessage(this.detailsShownKey, {id})
 
-        // const container = this.element!.querySelector(detailsSelector)
-        // if (container) {
-        //
-        //     // // render the details
-        //     // const detailsView = Html.createElement('div', div => {
-        //     //     this.renderItemDetail(div, item)
-        //     // })
-        //     // container.innerHTML = detailsView.innerHTML
-        //     this.arrangeDetails(id, container as HTMLElement)
-        //
-        //     // let the world know
-        //     this.emitMessage(this.detailsShownKey, {id})
-        // }
-        // else {
-        //     log.warn(`Tried to show item ${id} but there was no ${detailsSelector}`)
-        // }
     }
 
-    /**
-     * If necessary, move the details next to the item
-     * @param id the item id
-     */
-    arrangeDetails(id: string) {
-        const detailsView = this.element!.querySelector(detailsSelector)!
-        const itemView = this.element!.querySelector(`#item-${id}`)
-        if (itemView) {
-            // const listView = itemIVew.parentElement
-            log.info(`Item is ${itemView.clientWidth} wide and the window is ${window.innerWidth} wide`)
-            // crude but effective way to determine if the list is collapsed due to the media breakpoint
-            if (itemView.clientWidth > window.innerWidth * 0.8) {
-                // move the details to right after the list item
-                itemView.after(detailsView)
-            }
-            else {
-                // move the details back to the container
-                const detailsContainer = this.element!.querySelector(`.tt-list-viewer-details-container`)
-                if (detailsContainer) {
-                    detailsContainer.append(detailsView)
-                }
-            }
-        }
-        else {
-            log.warn(`No item view for ${id}`)
-        }
-    }
 
 }

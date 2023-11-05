@@ -12,6 +12,16 @@ const log = new Logger("Terrier PagePart")
  */
 export type ContentWidth = "normal" | "wide" | "fill"
 
+/**
+ * The width breakpoints for various device classes used by the styles.
+ */
+export const PageBreakpoints = {
+    phone: 550,
+    mobile: 850,
+    tablet: 1050,
+    fixed: 320
+}
+
 /// Toolbar fields
 
 type BaseFieldDef = { name: string } & ToolbarFieldDefOptions

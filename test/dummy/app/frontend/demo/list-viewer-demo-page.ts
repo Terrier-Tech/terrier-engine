@@ -53,12 +53,6 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
         return Promise.resolve(demoItems);
     }
 
-    renderItemDetail(parent: PartTag, item: DemoItem) {
-        if (item.type == 'panel') {
-            parent.div().text(item.details)
-        }
-    }
-
     renderListItem(parent: PartTag, item: DemoItem) {
         parent.div().text(item.title)
         return {
@@ -68,7 +62,11 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
     }
 
     renderDetails(context: ListViewerDetailsContext<DemoItem>) {
-        context.makePart(DemoDetailPart, context.item as DemoPanelItem)
+        context.renderDirect(parent => {
+            parent.h2().text(`Placeholder for item ${context.id}: ${context.item.title}`)
+        })
+
+        // context.makePart(DemoDetailPart, context.item as DemoPanelItem)
     }
 
 }

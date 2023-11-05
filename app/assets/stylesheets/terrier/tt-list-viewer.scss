@@ -14,12 +14,19 @@ $arrow-size: 16px;
 	--current-color: var(--tt-primary-color);
 	justify-content: stretch;
 	.tt-list-viewer-list {
-		display: flex;
-		flex-direction: column;
-		padding: var(--tt-pad);
-		gap: var(--tt-gap);
 		overflow-x: visible;
 		overflow-y: scroll;
+		> div {
+			display: flex;
+			flex-direction: column;
+			padding: var(--tt-pad);
+			gap: var(--tt-gap);
+			> div {
+				display: flex;
+				flex-direction: column;
+				gap: var(--tt-gap);
+			}
+		}
 		.tt-list-viewer-item {
 			display: flex;
 			position: relative;
@@ -56,18 +63,7 @@ $arrow-size: 16px;
 			}
 		}
 	}
-	.tt-list-viewer-details-container {
-		position: relative;
-		padding: var(--tt-pad);
-		display: flex;
-		flex-direction: column;
-		> div {
-			flex: 1 1 auto;
-		}
-	}
-	.tt-list-viewer-details {
-		@include tt-inset-box;
-		@include tt-inset-box-shadow;
+	.tt-list-viewer-side-details {
 		padding: var(--tt-pad);
 	}
 }
@@ -91,7 +87,7 @@ $arrow-size: 16px;
 				}
 			}
 		}
-		.tt-list-viewer-details-container {
+		.tt-list-viewer-side-details {
 			display: none;
 		}
 	}
@@ -116,9 +112,6 @@ $arrow-size: 16px;
 					}
 				}
 			}
-		}
-		.tt-list-viewer-details-container {
-			flex: 1 1 auto;
 		}
 	}
 }
