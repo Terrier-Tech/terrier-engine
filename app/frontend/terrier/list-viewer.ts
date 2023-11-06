@@ -46,7 +46,7 @@ class ListItemPart<T extends ListItem> extends Part<T> {
 
         // render the details if this is the current item and it's supposed to be rendered inline
         if (isCurrent && this.viewer.detailsLocation == 'inline') {
-            if (this.viewer.currentDetailsPart) {
+            if (this.viewer.currentDetailsPart?.isInitialized) {
                 parent.part(this.viewer.currentDetailsPart)
             }
             else if (this.viewer.currentDetailsDiv) {
@@ -141,7 +141,7 @@ class SideContainerPart extends Part<{viewer: ListViewerPart<any>}> {
 
     render(parent: PartTag) {
         if (this.viewer.detailsLocation == 'side') {
-            if (this.viewer.currentDetailsPart) {
+            if (this.viewer.currentDetailsPart?.isInitialized) {
                 parent.part(this.viewer.currentDetailsPart)
             } else if (this.viewer.currentDetailsDiv) {
                 parent.div().append(this.viewer.currentDetailsDiv)

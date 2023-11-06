@@ -4,7 +4,8 @@ import {ListViewerDetailsContext, ListViewerPart} from "@terrier/list-viewer"
 import Arrays from "tuff-core/arrays"
 import Ids from "@terrier/ids"
 import {Logger} from "tuff-core/logging"
-import TerrierPart from "@terrier/parts/terrier-part";
+import TerrierPart from "@terrier/parts/terrier-part"
+import Time from "tuff-core/time"
 
 const log = new Logger('List Viewer Demo')
 
@@ -40,6 +41,12 @@ const demoItems: DemoItem[] = Arrays.range(0, 50).map((i) => {
 })
 
 class DemoDetailPart extends TerrierPart<DemoPanelItem> {
+
+    async init() {
+        await Time.wait(100)
+        this.dirty()
+    }
+
     render(parent: PartTag) {
         parent.h2().text(this.state.title)
         parent.div('.details').text(this.state.details)
