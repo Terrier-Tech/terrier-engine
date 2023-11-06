@@ -66,7 +66,7 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
             parent.h2().text(`Placeholder for item ${context.id}: ${context.item.title}`)
         })
 
-        // context.makePart(DemoDetailPart, context.item as DemoPanelItem)
+        context.makePart(DemoDetailPart, context.item as DemoPanelItem)
     }
 
 }
