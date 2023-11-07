@@ -386,7 +386,6 @@ class DataDive::QueryEngine
 
     info "Generated SQL:\n#{sql}"
     res = {
-      query: @query,
       sql: sql,
       sql_html: CodeRay.scan(sql, :sql).html
     }
