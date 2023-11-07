@@ -294,7 +294,7 @@ end
 
 class Query < QueryModel
 
-  attr_accessor :id, :name, :from, :columns, :order_by
+  attr_accessor :id, :name, :from, :columns, :order_by, :notes
 
   def initialize(engine, attrs)
     super

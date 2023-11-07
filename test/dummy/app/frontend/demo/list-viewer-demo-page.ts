@@ -44,6 +44,7 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
 
     async init() {
         await Time.wait(100)
+        log.info(`DemoDetailPart ${this.state.id} dirty`)
         this.dirty()
     }
 
