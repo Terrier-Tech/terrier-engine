@@ -44,13 +44,14 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
 
     async init() {
         await Time.wait(100)
-        log.info(`DemoDetailPart ${this.state.id} dirty`)
+        log.info(`DemoDetailPart ${this.state.id} init`)
         this.dirty()
     }
 
     render(parent: PartTag) {
         parent.h2().text(this.state.title)
         parent.div('.details').text(this.state.details)
+        log.info(`DemoDetailPart ${this.state.id} render`, this.element)
     }
 
 }
@@ -70,10 +71,6 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
     }
 
     renderDetails(context: ListViewerDetailsContext<DemoItem>) {
-        context.renderDirect(parent => {
-            parent.h2().text(`Placeholder for item ${context.id}: ${context.item.title}`)
-        })
-
         context.makePart(DemoDetailPart, context.item as DemoPanelItem)
     }
 

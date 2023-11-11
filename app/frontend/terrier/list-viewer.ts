@@ -2,10 +2,10 @@ import TerrierPart from "./parts/terrier-part"
 import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
-import {DivTag} from "tuff-core/html";
-import {PageBreakpoints} from "./parts/page-part";
+import {PageBreakpoints} from "./parts/page-part"
 
 const log = new Logger('List Viewer')
+Logger.level = 'debug'
 
 /**
  * Optional values to return from rendering a list item that control
@@ -45,12 +45,10 @@ class ListItemPart<T extends ListItem> extends Part<T> {
         }).id(`item-${this.state.id}`)
 
         // render the details if this is the current item and it's supposed to be rendered inline
-        if (isCurrent && this.viewer.detailsLocation == 'inline') {
-            if (this.viewer.currentDetailsPart?.isInitialized) {
+        if (isCurrent && this.viewer.layout == 'inline') {
+            log.debug(`ListItemPart: rendering inline item details`)
+            if (this.viewer.currentDetailsPart) {
                 parent.part(this.viewer.currentDetailsPart)
-            }
-            else if (this.viewer.currentDetailsDiv) {
-                parent.div().append(this.viewer.currentDetailsDiv)
             }
         }
     }
@@ -80,12 +78,6 @@ export class ListViewerDetailsContext<T extends ListItem> {
      */
     itemPart?: ListItemPart<T>
 
-    /**
-     * The tag rendered by `renderDirect()` to represent the details until
-     * the details part renders (if that happens at all).
-     */
-    directDiv?: DivTag
-
     constructor(readonly viewer: ListViewerPart<T>, readonly item: T) {
     }
 
@@ -95,18 +87,12 @@ export class ListViewerDetailsContext<T extends ListItem> {
      * @param state
      */
     makePart<PartType extends Part<StateType>, StateType>(partType: PartConstructor<PartType, StateType>, state: StateType) {
-        this.part = this.viewer.makePart(partType, state)
-    }
-
-    /**
-     * Render the content for the details directly.
-     * This will be replaced by the part made by `makePart()`.
-     * @param fn the render function for the content
-     */
-    renderDirect(fn: (parent: DivTag) => any) {
-        this.directDiv = new DivTag("div")
-        fn(this.directDiv)
-        return this.directDiv
+        if (this.viewer.layout == 'side') {
+            this.part = this.viewer.sideContainerPart.makePart(partType, state)
+        }
+        else {
+            this.part = this.viewer.currentItemPart?.makePart(partType, state)
+        }
     }
 
     /**
@@ -140,12 +126,12 @@ class SideContainerPart extends Part<{viewer: ListViewerPart<any>}> {
     }
 
     render(parent: PartTag) {
-        if (this.viewer.detailsLocation == 'side') {
-            if (this.viewer.currentDetailsPart?.isInitialized) {
-                parent.part(this.viewer.currentDetailsPart)
-            } else if (this.viewer.currentDetailsDiv) {
-                parent.div().append(this.viewer.currentDetailsDiv)
-            }
+        if (this.viewer.currentDetailsPart) {
+            log.debug(`[SideContainerPart] Rendering details part`, this.viewer.currentDetailsPart)
+            parent.part(this.viewer.currentDetailsPart)
+        }
+        else {
+            log.debug(`[SideContainerPart] No details part to render`)
         }
     }
 
@@ -161,14 +147,14 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     sideContainerPart!: SideContainerPart
 
     detailsContext?: ListViewerDetailsContext<T>
-    detailsLocation: 'inline' | 'side' = 'inline'
+    layout: 'inline' | 'side' = 'side'
 
     get currentDetailsPart(): StatelessPart | undefined  {
         return this.detailsContext?.part
     }
 
-    get currentDetailsDiv(): DivTag | undefined  {
-        return this.detailsContext?.directDiv
+    get currentItemPart(): StatelessPart | undefined  {
+        return this.detailsContext?.itemPart
     }
 
     items: T[] = []
@@ -184,13 +170,12 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     async init() {
         await super.init()
 
-        this.computeDetailsLocation()
         this.sideContainerPart = this.makePart(SideContainerPart, {viewer: this})
 
         await this.reload()
 
         this.onClick(this.itemClickedKey, m => {
-            log.info(`Clicked on list item ${m.data.id}`, m)
+            log.debug(`Clicked on list item ${m.data.id}`, m)
             this.showDetails(m.data.id)
         })
     }
@@ -212,9 +197,22 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
         this.getCollectionParts('items').forEach(itemPart => {
             // HACK
             (itemPart as ListItemPart<T>).viewer = this
-            log.info(`Adding item part ${itemPart.state.id}`, itemPart)
+            // log.debug(`Adding item part ${itemPart.state.id}`, itemPart)
             this.itemPartMap[itemPart.state.id] = (itemPart as ListItemPart<T>)
         })
+        this.relayout()
+    }
+
+    /**
+     * Determine whether the details should be shown inline with the list or
+     * off to the side, based on screen size.
+     */
+    relayout() {
+        if (window.innerWidth > PageBreakpoints.phone) {
+            this.layout = 'side'
+        } else {
+            this.layout = 'inline'
+        }
         this.dirty()
     }
 
@@ -226,10 +224,14 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     }
 
     render(parent: PartTag): any {
+        log.debug(`Rendering the viewer`)
         parent.div('.tt-list-viewer-list', list => {
             this.renderCollection(list, 'items')
         })
-        parent.part(this.sideContainerPart)
+        if (this.layout == 'side') {
+            log.debug(`Rendering sideContainerPart inside the viewer`)
+            parent.part(this.sideContainerPart)
+        }
     }
 
     /**
@@ -249,19 +251,6 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     // Details
 
     /**
-     * Determine whether the details should be shown inline with the list or
-     * off to the side, based on screen size.
-     */
-    computeDetailsLocation() {
-        if (window.innerWidth > PageBreakpoints.phone) {
-            this.detailsLocation = 'side'
-        }
-        else {
-            this.detailsLocation = 'inline'
-        }
-    }
-
-    /**
      * Show the details view for the item with the given id
      * @param id
      */
@@ -270,14 +259,16 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
 
         const itemPart = this.itemPartMap[id]
         if (!itemPart) {
-            log.info(`${Object.keys(this.itemPartMap).length} item parts: `, this.itemPartMap)
+            log.debug(`${Object.keys(this.itemPartMap).length} item parts: `, this.itemPartMap)
             throw `No item part ${id}`
         }
 
         this.detailsContext = new ListViewerDetailsContext(this, itemPart.state)
-        this.renderDetails(this.detailsContext)
-        this.sideContainerPart.dirty()
         this.detailsContext.itemPart = itemPart
+        this.renderDetails(this.detailsContext)
+        if (this.layout == 'side') {
+            this.sideContainerPart.dirty()
+        }
         itemPart.dirty()
 
         // let the world know
