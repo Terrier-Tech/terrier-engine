@@ -3,23 +3,20 @@ import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import {PageBreakpoints} from "./parts/page-part"
+import { parseQueryParams } from "tuff-core/urls"
 
 const log = new Logger('List Viewer')
 Logger.level = 'debug'
 
 /**
- * Optional values to return from rendering a list item that control
- * its rendering behavior.
+ * All list items should have an `listId` value so that we can distinguish them.
+ * The rest are optional fields to control how the items are rendered and interacted with.
  */
-export type ListItemRenderOptions = {
-    style?: 'panel' | 'header'
-    clickable?: boolean
+export type ListItem = {
+    listId: string
+    listClickable?: boolean
+    listStyle?: 'none' | 'panel' | 'header'
 }
-
-/**
- * All list items should have an `id` value so that we can distinguish them.
- */
-export type ListItem = {id: string}
 
 /**
  * One of these gets created for each item in the list.
@@ -29,20 +26,20 @@ class ListItemPart<T extends ListItem> extends Part<T> {
     viewer!: ListViewerPart<T>
 
     render(parent: PartTag) {
-        const isCurrent = this.viewer.detailsContext?.id == this.state.id
+        const isCurrent = this.viewer.detailsContext?.id == this.state.listId
 
         parent.div('.tt-list-viewer-item', itemView => {
-            const opts = this.viewer.renderListItem(itemView, this.state)
-            const style = opts?.style || 'panel'
+            this.viewer.renderListItem(itemView, this.state)
+            const style = this.state.listStyle || 'none'
             itemView.class(style)
-            if (opts?.clickable) {
+            if (this.state.listClickable) {
                 itemView.class('clickable')
-                itemView.emitClick(this.viewer.itemClickedKey, {id: this.state.id})
+                itemView.emitClick(this.viewer.itemClickedKey, {listId: this.state.listId})
             }
             if (isCurrent) {
                 itemView.class('current')
             }
-        }).id(`item-${this.state.id}`)
+        }).id(`item-${this.state.listId}`)
 
         // render the details if this is the current item and it's supposed to be rendered inline
         if (isCurrent && this.viewer.layout == 'inline') {
@@ -65,7 +62,7 @@ export class ListViewerDetailsContext<T extends ListItem> {
      * The item id for which this context is representing the details.
      */
     get id(): string {
-        return this.item.id
+        return this.item.listId
     }
 
     /**
@@ -175,8 +172,8 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
         await this.reload()
 
         this.onClick(this.itemClickedKey, m => {
-            log.debug(`Clicked on list item ${m.data.id}`, m)
-            this.showDetails(m.data.id)
+            log.debug(`Clicked on list item ${m.data.listId}`, m)
+            this.showDetails(m.data.listId)
         })
     }
 
@@ -197,8 +194,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
         this.getCollectionParts('items').forEach(itemPart => {
             // HACK
             (itemPart as ListItemPart<T>).viewer = this
-            // log.debug(`Adding item part ${itemPart.state.id}`, itemPart)
-            this.itemPartMap[itemPart.state.id] = (itemPart as ListItemPart<T>)
+            this.itemPartMap[itemPart.state.listId] = (itemPart as ListItemPart<T>)
         })
         this.relayout()
     }
@@ -214,6 +210,26 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
             this.layout = 'inline'
         }
         this.dirty()
+    }
+
+    load() {
+        super.load()
+
+        const params = parseQueryParams(location.search)
+        const id = params.get('listId')
+        if (id?.length && this.itemPartMap[id]) {
+            log.info(`Showing item specified in params: ${id}`)
+            this.showDetails(id)
+        }
+        else {
+            const firstClickable = this.items.filter(item => item.listClickable)[0]
+            if (firstClickable) {
+                log.info(`Showing first clickable item`)
+                this.showDetails(firstClickable.listId)
+            } else {
+                log.info(`No clickable items to show`)
+            }
+        }
     }
 
 
@@ -239,7 +255,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
      * @param parent
      * @param item
      */
-    abstract renderListItem(parent: PartTag, item: T): ListItemRenderOptions | void
+    abstract renderListItem(parent: PartTag, item: T): any
 
     /**
      * Subclasses must implement this to render an item details or provide a part to do so.
@@ -259,8 +275,8 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
 
         const itemPart = this.itemPartMap[id]
         if (!itemPart) {
-            log.debug(`${Object.keys(this.itemPartMap).length} item parts: `, this.itemPartMap)
-            throw `No item part ${id}`
+            log.warn(`No item part ${id}, ${Object.keys(this.itemPartMap).length} item parts: `, this.itemPartMap)
+            return
         }
 
         this.detailsContext = new ListViewerDetailsContext(this, itemPart.state)
@@ -270,6 +286,12 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
             this.sideContainerPart.dirty()
         }
         itemPart.dirty()
+
+        // update the url
+        const params = parseQueryParams(location.search)
+        params.raw['listId'] = id
+        const url = location.pathname + '?' + params.serialize()
+        history.replaceState(null, '', url)
 
         // let the world know
         this.emitMessage(this.detailsShownKey, {id})
