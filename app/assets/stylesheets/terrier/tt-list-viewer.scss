@@ -25,6 +25,12 @@ $arrow-size: 16px;
 				display: flex;
 				flex-direction: column;
 				gap: var(--tt-gap);
+				&:has(.current) {
+					position: sticky; // make it stick to the top and bottom
+					z-index: 1;
+					top: 0;
+					bottom: 0;
+				}
 			}
 		}
 		.tt-list-viewer-item {
@@ -48,10 +54,6 @@ $arrow-size: 16px;
 			}
 			&.current {
 				border-left: 5px solid var(--current-color);
-				position: sticky; // make it stick to the top and bottom
-				z-index: 1;
-				top: 0;
-				bottom: 0;
 				&::after {
 					content: "";
 					position: absolute;

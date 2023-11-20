@@ -71,3 +71,31 @@ a.tt-flex {
 	}
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Container Breakpoints
+////////////////////////////////////////////////////////////////////////////////
+
+// Apply this to parents of .flex elements for whom you'd like to
+// use the container-based collapsible classes below
+.breakpoint-container {
+	container-type: inline-size;
+}
+
+@container (max-width: #{$tablet-breakpoint}) {
+	.tt-flex.container-tablet-collapsible {
+		flex-direction: column;
+	}
+}
+
+@container (max-width: #{$mobile-breakpoint}) {
+	.tt-flex.container-mobile-collapsible {
+		flex-direction: column;
+	}
+}
+
+@container (max-width: #{$phone-breakpoint}) {
+	.tt-flex.container-phone-collapsible {
+		flex-direction: column;
+	}
+}
