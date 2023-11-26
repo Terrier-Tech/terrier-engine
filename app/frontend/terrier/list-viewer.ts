@@ -170,6 +170,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
         this.sideContainerPart = this.makePart(SideContainerPart, {viewer: this})
 
         await this.reload()
+        this.dirty()
 
         this.onClick(this.itemClickedKey, m => {
             log.debug(`Clicked on list item ${m.data.listId}`, m)
@@ -178,7 +179,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     }
 
 
-    /// Fetching
+    /// Fetching and Loading
 
     /**
      * Subclasses must implement this to provide a list of items to render.
@@ -196,25 +197,19 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
             (itemPart as ListItemPart<T>).viewer = this
             this.itemPartMap[itemPart.state.listId] = (itemPart as ListItemPart<T>)
         })
-        this.relayout()
-    }
 
-    /**
-     * Determine whether the details should be shown inline with the list or
-     * off to the side, based on screen size.
-     */
-    relayout() {
+        // Determine whether the details should be shown inline with the list or off to the side, based on screen size
         if (window.innerWidth > PageBreakpoints.phone) {
             this.layout = 'side'
         } else {
             this.layout = 'inline'
         }
-        this.dirty()
     }
 
     load() {
         super.load()
 
+        // load the item specified by the listId param
         const params = parseQueryParams(location.search)
         const id = params.get('listId')
         if (id?.length && this.itemPartMap[id]) {

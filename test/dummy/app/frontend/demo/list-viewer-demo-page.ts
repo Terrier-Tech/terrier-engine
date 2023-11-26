@@ -5,6 +5,7 @@ import Arrays from "tuff-core/arrays"
 import {Logger} from "tuff-core/logging"
 import TerrierPart from "@terrier/parts/terrier-part"
 import Time from "tuff-core/time"
+import dayjs from "dayjs"
 
 const log = new Logger('List Viewer Demo')
 
@@ -46,7 +47,7 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
 
     render(parent: PartTag) {
         parent.h2().text(this.state.title)
-        parent.div('.details').text(this.state.details)
+        parent.div('.details').text(this.state.details + ` at ${dayjs().format('h:mm:ss A')}`)
         log.info(`DemoDetailPart ${this.state.listId} render`, this.element)
     }
 
@@ -54,6 +55,20 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
 
 
 class DemoListViewer extends ListViewerPart<DemoItem> {
+
+    async init() {
+        await super.init()
+
+        // make the list reload periodically
+        setInterval(
+            () => {
+                log.info(`Reloading at ${dayjs().format('h:mm:ss A')}`)
+                this.reload()
+            },
+            10000
+        )
+    }
+
     async fetchItems(): Promise<DemoItem[]> {
         return Promise.resolve(demoItems);
     }
@@ -82,7 +97,7 @@ export default class ListViewerDemoPage extends DemoPage {
         this.listDetail = this.makePart(DemoListViewer, {})
 
         this.listenMessage(this.listDetail.detailsShownKey, m => {
-            log.info(`Details shown for item ${m.data.id}`)
+            log.info(`Details shown for item ${m.data.id} at ${dayjs().format('h:mm:ss A')}`)
         })
     }
 
