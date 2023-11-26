@@ -2,7 +2,7 @@
 require 'benchmark'
 
 # prefer HubIcons.all
-HUB_ICON_NAMES = %i[active admin archive arrow_down arrow_left arrow_right arrow_up assign attachment back badge board branch bug calculator checkmark close clypboard comment complete dashboard data_pull data_update database day delete documentation edit existing_child existing_parent feature flex forward github history home image inbox info internal issue lane lane_asap lane_days lane_hours lane_weeks lanes_board level_complete level_highway level_on_ramp level_parking metrics minus new_child new_parent night origin pending plus post posts pr_closed pr_merged pr_open prioritized project question reaction read_mail recent refresh related_posts request settings status step_deploy step_develop step_investigate step_review step_test steps steps_board subscribe support terrier thumbs_up type unprioritized upload user users week]
+HUB_ICON_NAMES = %i[active admin archive arrow_down arrow_left arrow_right arrow_up assign attachment back badge board branch bug calculator checkmark close clypboard comment complete dashboard data_pull data_update database day delete documentation edit existing_child existing_parent feature flex forward github history home image inbox info internal issue lane lane_asap lane_days lane_hours lane_weeks lanes_board level_complete level_highway level_on_ramp level_parking list_view metrics minus new_child new_parent night origin pending plus post posts pr_closed pr_merged pr_open prioritized project question reaction read_mail recent refresh related_posts request settings split_view status step_deploy step_develop step_investigate step_review step_test steps steps_board subscribe support terrier thumbs_up type unprioritized upload user users week]
 
 HUB_ICONS = {}
 
