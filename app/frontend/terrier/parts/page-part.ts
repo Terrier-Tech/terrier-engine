@@ -59,13 +59,13 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
 
     /// Breadcrumbs
 
-    private _breadcrumbs = Array<Action>()
+    protected _breadcrumbs = Array<Action>()
 
     addBreadcrumb(crumb: Action) {
         this._breadcrumbs.push(crumb)
     }
 
-    private _titleHref?: string
+    protected _titleHref?: string
 
     /**
      * Adds an href to the title (last) breadcrumb.
@@ -77,8 +77,8 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
 
     /// Toolbar Fields
 
-    private _toolbarFieldsOrder: string[] = []
-    private _toolbarFields: Record<string, ToolbarFieldDef> = {}
+    protected _toolbarFieldsOrder: string[] = []
+    protected _toolbarFields: Record<string, ToolbarFieldDef> = {}
 
     protected get hasToolbarFields() {
         return this._toolbarFieldsOrder.length > 0
@@ -104,7 +104,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
         this.addToolbarFieldDef({ type, name, ...opts })
     }
 
-    private addToolbarFieldDef(def: ToolbarFieldDef) {
+    protected addToolbarFieldDef(def: ToolbarFieldDef) {
         this._toolbarFieldsOrder.push(def.name)
         this._toolbarFields[def.name] = def
     }
@@ -119,6 +119,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
         parent.div(`.tt-page-part.content-width-${this.mainContentWidth}`, page => {
             page.div('.tt-toolbar', toolbar => {
                 toolbar.class(...this.toolbarClasses)
+                this.renderCustomPreToolbar(toolbar)
                 this.renderBreadcrumbs(toolbar)
                 this.renderCustomToolbar(toolbar)
                 if (this.hasToolbarFields) this.renderToolbarFields(toolbar)
@@ -167,6 +168,11 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
 
             this.app.theme.renderActions(h1, crumbs)
         })
+    }
+
+
+    protected renderCustomPreToolbar(_parent: PartTag): void {
+
     }
 
     protected renderCustomToolbar(_parent: PartTag): void {
