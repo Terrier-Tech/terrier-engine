@@ -25,12 +25,6 @@ $arrow-size: 16px;
 				display: flex;
 				flex-direction: column;
 				gap: var(--tt-gap);
-				&:has(.current) {
-					position: sticky; // make it stick to the top and bottom
-					z-index: 1;
-					top: 0;
-					bottom: 0;
-				}
 			}
 		}
 		.tt-list-viewer-item {
@@ -104,6 +98,14 @@ $arrow-size: 16px;
 		.tt-list-viewer-list {
 			flex: 0 0 var(--list-width);
 			max-width: 40%;
+			> div > div {
+				&:has(.current) {
+					position: sticky; // make it stick to the top and bottom
+					z-index: 1;
+					top: 0;
+					bottom: 0;
+				}
+			}
 			.tt-list-viewer-item {
 				&.panel.current {
 					&::after {

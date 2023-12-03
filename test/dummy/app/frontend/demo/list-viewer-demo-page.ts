@@ -6,6 +6,7 @@ import {Logger} from "tuff-core/logging"
 import TerrierPart from "@terrier/parts/terrier-part"
 import Time from "tuff-core/time"
 import dayjs from "dayjs"
+import Fragments from "@terrier/fragments"
 
 const log = new Logger('List Viewer Demo')
 
@@ -46,8 +47,13 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
     }
 
     render(parent: PartTag) {
-        parent.h2().text(this.state.title)
-        parent.div('.details').text(this.state.details + ` at ${dayjs().format('h:mm:ss A')}`)
+        Fragments.panel(this.theme)
+            .title(this.state.title)
+            .content(panel => {
+                panel.class('padded')
+                panel.div('.details').text(this.state.details + ` at ${dayjs().format('h:mm:ss A')}`)
+            })
+            .render(parent)
         log.info(`DemoDetailPart ${this.state.listId} render`, this.element)
     }
 
