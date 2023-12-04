@@ -106,7 +106,7 @@ module TabularIo
         if headers
           record = {}
           row.each_with_index do |val, i|
-            record[headers[i]] = val
+            record[headers[i].to_s] = val
           end
           data << record
         else
@@ -162,7 +162,7 @@ module TabularIo
         if headers
           record = {}
           row.each_with_index do |val, i|
-            record[headers[i]] = val
+            record[headers[i].to_s] = val
           end
           data << record
         else
@@ -217,8 +217,8 @@ module TabularIo
         else
           consecutive_blank_rows = 0
           row_hash = {}
-          sheet.headers.each_with_index do |header, index|
-            row_hash[header] = row[index]
+          sheet.headers.each do |header|
+            row_hash[header.to_s] = row[header]
           end
           output[sheet.name] << row_hash
         end
@@ -255,7 +255,7 @@ module TabularIo
           consecutive_blank_rows = 0
           record = {}
           row.each_with_index do |val, i|
-            record[headers[i]] = val
+            record[headers[i].to_s] = val
           end
           data << record
         end
