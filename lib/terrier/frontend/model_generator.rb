@@ -46,7 +46,7 @@ class ModelGenerator < BaseGenerator
       models[model.name] = {
         columns: model.columns,
         reflections: model.reflections,
-        belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id")},
+        belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
         has_manies: model.reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
         enum_fields: enum_fields,
         attachments: attachments,
