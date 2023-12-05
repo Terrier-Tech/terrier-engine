@@ -45,6 +45,9 @@ a.demo-link {
     display: block;
     font-size: 20px;
     padding: 8px;
+	&::before {
+		margin-right: 0.5em;
+	}
 }
 
 .demo-link-grid {
