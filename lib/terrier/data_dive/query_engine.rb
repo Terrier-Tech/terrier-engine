@@ -140,7 +140,7 @@ class JoinedTableRef < TableRef
     raise "Invalid join type '#{type}'" unless %w[inner left].include?(type)
     fk = "#{@belongs_to}_id"
     builder.send "#{type}_join", @table_name, @alias, "#{@alias}.id = #{left_table.alias}.#{fk}"
-    self.build_recursive builder
+    self.build_recursive builder, params
   end
 end
 
