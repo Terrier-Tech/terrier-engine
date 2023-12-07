@@ -80,10 +80,10 @@ class ModelGenerator < BaseGenerator
         name: ref_name,
         model: ref_type
       }
-      if ref.class.name.include?('BelongsTo')
+      if model[:columns].map(&:name).include?("#{ref.name}_id")
         raw_ref[:optional] = ref.options[:optional] || false
         belongs_to[ref_name] = raw_ref
-      else
+      elsif ref_type.constantize.column_names.include?("#{model[:table_name].singularize}_id")
         has_many[ref_name] = raw_ref
       end
     end
