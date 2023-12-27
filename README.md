@@ -116,6 +116,7 @@ To set up the dummy application:
 cd dummy
 bundle
 rails db:create
+rails db:schema:load
 rails db:migrate
 ```
 
