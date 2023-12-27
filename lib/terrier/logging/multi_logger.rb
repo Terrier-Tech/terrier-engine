@@ -14,6 +14,9 @@ class MultiLogger
     @logger = opts[:logger]
     @use_stdout = opts[:use_stdout]
     @use_rails = opts[:use_rails]
+    @file_logger = Logger.new(opts[:file_path]) if opts[:file_path]
+    @indent_level = opts[:indent_level] || 0
+    @indent_str = opts[:indent_str] || "  "
 
     # if a specific logger is passed in, use_stdout and use_rails are opt-in (off by default)
     # if a specific logger is not passed in, use_stdout and use_rails are opt-out (on by default)
@@ -34,11 +37,6 @@ class MultiLogger
     return unless @stream
     @stream.write '{}]'
     @stream.close
-  end
-
-  # Setter method to change the log level
-  def level=(new_level)
-    @level = new_level
   end
 
   def debug(message, *args)
@@ -97,23 +95,41 @@ class MultiLogger
     end
   end
 
+  def indent(amount = 1)
+    duplicate opts: {indent_level: @indent_level + amount}
+  end
+
+  def duplicate(prefix: @prefix, opts: {})
+    default_opts = {
+      logger: @logger,
+      use_stdout: @use_stdout,
+      use_rails: @use_rails,
+      file_path: @file_logger.instance_variable_get(:@logdev)&.filename,
+      indent_level: @indent_level,
+      indent_str: @indent_str
+    }
+    self.class.new prefix, default_opts.merge(opts)
+  end
 
   private
-
 
   # writes directly to the appropriate outputs
   def write(level, s)
     logger_level = %w(separator success).index(level) ? 'info' : level
-    logger_message = "#{@prefix} #{s}"
+    logger_message = "#{@indent_str * @indent_level}#{@prefix} #{s}"
     if @logger
       @logger.send logger_level, logger_message
+    end
+
+    if @file_logger
+      @file_logger.send logger_level, logger_message
     end
 
     if Rails&.logger && @use_rails
       Rails.logger.send logger_level, logger_message
     end
 
-    stdout_message = "#{level.upcase} -- #{@prefix} #{s}"
+    stdout_message = "#{level.upcase} -- #{@indent_str * @indent_level}#{@prefix} #{s}"
     if @use_stdout
       puts stdout_message
     end
