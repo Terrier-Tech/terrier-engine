@@ -22,6 +22,8 @@ Rails.application.routes.draw do
 
   get 'logging' => 'client_side#logging'
 
+  get 'sorting' => 'sorting#index'
+
   get 'reports' => 'scripts#reports'
 
   get 'frontend/platform_demo'
