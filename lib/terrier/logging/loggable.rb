@@ -15,9 +15,23 @@ module Loggable
   end
 
   # Wraps the given inner logger with a MultiLogger, prefixed with the class name.
+  #
+  # @param opts [Hash]
+  # @option opts [Boolean] :override_prefixes Removes previous MultiLogger nested prefixes
+  # @option opts [Boolean] :demodulize Removes full module path from prefix [Module::Class] => [Class]
   def wrap_logger(inner_logger, **opts)
     return if inner_logger.nil?
-    @logger = MultiLogger.new "[#{self.class.name}]", logger: inner_logger, **opts
+    if opts[:override_prefixes]
+      while inner_logger.is_a?(MultiLogger)
+        if inner_logger.logger.nil?
+          inner_logger = inner_logger.duplicate(prefix: "")
+          break
+        end
+        inner_logger = inner_logger.logger
+      end
+    end
+    prefix = opts[:demodulize] ? "[#{self.class.name.demodulize}]" : "[#{self.class.name}]"
+    @logger = MultiLogger.new prefix, logger: inner_logger, **opts
   end
 
   # Logs a message with the given level and calls the set callback if available.
