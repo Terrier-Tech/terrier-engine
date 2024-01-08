@@ -25,6 +25,7 @@ export type Query = {
     name: string
     notes: string
     from: TableRef
+    columns?: string[]
 }
 
 

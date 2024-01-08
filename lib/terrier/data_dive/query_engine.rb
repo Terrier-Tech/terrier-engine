@@ -321,9 +321,18 @@ class DataDive::QueryEngine
       return {rows: [], columns: []}
     end
     rows = builder.exec
+
+    # sort the columns appropriately
+    columns = self.compute_column_metadata.values
+    if @query.columns.present?
+      col_orders = {}
+      @query.columns.each_with_index { |c, i| col_orders[c] = i }
+      columns = columns.sort_by{|c| col_orders[c.select_name]}
+    end
+
     {
       rows: rows,
-      columns: self.compute_column_metadata.values.map(&:as_json)
+      columns: columns.map(&:as_json)
     }
   end
 

@@ -4,7 +4,7 @@
   "files": [
     "*"
   ],
-  "version": "4.10.16",
+  "version": "4.11.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/Terrier-Tech/terrier-engine"
@@ -19,6 +19,7 @@
     "dayjs": "^1.11.7",
     "inflection": "^2.0.1",
     "tuff-core": "latest",
+    "tuff-sortable": "^0.3.6",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {

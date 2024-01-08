@@ -422,3 +422,42 @@ table.dd-query-result {
 		}
 	}
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Sorting Lists
+////////////////////////////////////////////////////////////////////////////////
+
+.dive-query-columns, .dive-query-rows {
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
+	padding: 1em;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Column Order Modal
+////////////////////////////////////////////////////////////////////////////////
+
+.dive-column-sort-zone {
+	display: flex;
+	flex: 1 1 auto;
+	gap: 1em;
+	padding: 1em;
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
+	.column {
+		flex: 0 0 auto;
+		display: block;
+		cursor: move;
+	}
+	.tuff-sortable-dragging {
+		//transform: scale(1.25);
+		font-weight: bold;
+	}
+	.tuff-sortable-drop-cursor {
+		background-color: var(--tt-primary-color);
+		opacity: 0.5;
+		@include tt-rounded-corners;
+	}
+}
