@@ -13,14 +13,18 @@ window.tables.initSortable = (ui = $(document), col = null, dir = null) ->
 			window.tables.sortByColLink($(link), col, dir)
 
 # computes the sorting value using input values, data-column attributes, or the text of the cell
-_computeColumnValue = (col) ->
-	if col.is('input') || col.is('select')
-		return col.val()
-	val = col.data('col-value') || col.data('column-value')
+_computeCellValue = (cell) ->
+	if cell.is 'select'
+		return cell.find('option:selected').text() # sort based on the selected option's text, not it's raw value
+	if cell.is 'input'
+		if cell[0].type == 'checkbox'
+			return cell[0].checked
+		return cell.val()
+	val = cell.data('col-value') || cell.data('column-value')
 	if val?
 		val
 	else
-		col.text()
+		cell.text()
 
 window.tables.sortByColLink = (link, col = null, dir = null) ->
 	if window.setLinkLoading?
@@ -47,9 +51,9 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 			rows = table.find('tbody tr')
 			rows.sort (a, b) ->
 				aCol = $(a).find(".col-#{col}, .column-#{col}")
-				aVal = _computeColumnValue aCol
+				aVal = _computeCellValue aCol
 				bCol = $(b).find(".col-#{col}, .column-#{col}")
-				bVal = _computeColumnValue bCol
+				bVal = _computeCellValue bCol
 				comp = if aVal > bVal
 					1
 				else
