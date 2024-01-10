@@ -1,0 +1,24 @@
+.padded
+	p This table is sortable:
+
+	table.sortable.demo
+		thead
+			tr
+				th
+					a data-column="name" Name
+				th
+					a data-column="input" Input
+				th
+					a data-column="select" Select
+				th
+					a data-column="date" Date
+		tbody
+			- 1.upto(1000) do |i|
+				tr
+					td.col-name == "Name #{i}"
+					td
+						input.col-input type='text' value=random_string(8)
+					td
+						select.col-select == options_for_select(@select_options, @select_options.sample)
+					- date = Date.today - (rand * 365).to_i.days
+					td.col-date.text-center data-column-value=date.to_s == date.strftime(SHORT_DATE_FORMAT)

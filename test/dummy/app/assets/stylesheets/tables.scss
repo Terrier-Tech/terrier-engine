@@ -1,0 +1,21 @@
+
+// specifically for the demo table at /tables, not tables in general
+table.demo {
+	border-collapse: collapse;
+	width: 100%;
+	th {
+		border-bottom: 1px solid var(--tt-link-color);
+	}
+	input, select {
+		margin: 0;
+	}
+	td, th {
+		padding: 0.5em;
+	}
+	tr:nth-child(even) td {
+		background-color: #fff;
+	}
+	tr:nth-child(odd) {
+		background-color: #f8f8f8;
+	}
+}
