@@ -18,13 +18,21 @@ _computeCellValue = (cell) ->
 		return cell.find('option:selected').text() # sort based on the selected option's text, not it's raw value
 	if cell.is 'input'
 		if cell[0].type == 'checkbox'
-			return cell[0].checked
-		return cell.val()
+			return (if cell[0].checked then '0' else '1') # reverse behavior for checkboxes so that checked appear first when ascending
+		return cell.val()?.toString() || ''
 	val = cell.data('col-value') || cell.data('column-value')
 	if val?
-		val
+		val.toString()
 	else
 		cell.text()
+
+# return a string likely to be sorted last if the value is blank
+# this is crude but it seems simpler than trying to mess with the sorting logic itself
+_blanksLast = (s) ->
+	if s?.length
+		s
+	else
+		'zzzzzzzz'
 
 window.tables.sortByColLink = (link, col = null, dir = null) ->
 	if window.setLinkLoading?
@@ -51,9 +59,9 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 			rows = table.find('tbody tr')
 			rows.sort (a, b) ->
 				aCol = $(a).find(".col-#{col}, .column-#{col}")
-				aVal = _computeCellValue aCol
+				aVal = _blanksLast _computeCellValue aCol
 				bCol = $(b).find(".col-#{col}, .column-#{col}")
-				bVal = _computeCellValue bCol
+				bVal = _blanksLast _computeCellValue bCol
 				comp = if aVal > bVal
 					1
 				else

@@ -19,7 +19,7 @@
 				tr
 					td.col-name == "Name #{i}"
 					td
-						input.col-input type='text' value=random_string(8)
+						input.col-input type='text' value=(i % 10 == 0 ? '' : random_string(8))
 					td
 						select.col-select == options_for_select(@select_options, @select_options.sample.last)
 					td
