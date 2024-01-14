@@ -12,6 +12,10 @@ module TestDive
     {
       id: 'order_details',
       name: 'Order Details',
+      order_by: [
+        {column: "location_id", dir: "asc"},
+        {column: "time", dir: "desc"}
+      ],
       from: {
         model: 'WorkOrder',
         columns: [

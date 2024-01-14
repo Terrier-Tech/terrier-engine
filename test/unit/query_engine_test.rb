@@ -17,6 +17,7 @@ class QueryEngineTest < ActiveSupport::TestCase
     end_date = start_date + 1.year
     assert_equal ["work_order.id as \"id\"", "work_order.time as \"time\"", "work_order.notes as \"Order Notes\"", "work_order.price as \"Order Price\"", "work_order.status as \"status\"", "location.number as \"location_number\"", "location.display_name as \"location_name\"", "created_by.email as \"Created By E-Mail\"", "u.first_name as \"First Name\"", "u.last_name as \"Last Name\"", "u.email as \"Tech E-Mail\"", "target.name as \"Target\""], builder.selects
     assert_equal ["work_order.time >= '#{start_date}'", "work_order.time < '#{end_date}'", "work_order.status in ('active','complete')", "location.zip <> '55122'", "target.name = 'Rodents'"], builder.clauses
+    assert_equal ["location_id asc", "time desc"], builder.order_bys
   end
 
   test "order_summary" do

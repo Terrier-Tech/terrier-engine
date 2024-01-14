@@ -316,10 +316,13 @@ class DataDive::QueryEngine
   end
 
   def execute!(params={})
+    # generate the query
     builder = self.to_sql_builder params
     if builder.selects.empty?
       return {rows: [], columns: []}
     end
+
+    # execute the query
     rows = builder.exec
 
     # sort the columns appropriately
@@ -350,12 +353,23 @@ class DataDive::QueryEngine
     end.compact.sort_by_key(:index).map_key :select
   end
 
+  # Generates the order_by clauses for the given query builder
+  def build_order_by(builder)
+    order_bys = self.query.order_by.presence || []
+    order_bys.each do |ob|
+      col = ob['column'] || ob[:column] || raise("No column specified for order_by statement #{ob.inspect}")
+      dir = ob['dir'].presence || ob[:dir].presence || 'asc'
+      builder.order_by "#{col} #{dir}"
+    end.join(", ")
+  end
+
   def to_sql_builder(params={})
     builder = SqlBuilder.new.as_raw
     if params[:limit].present?
       builder.limit params[:limit].to_i
     end
     @from.build_from builder, params
+    build_order_by builder
     apply_column_sort builder
     builder
   end
