@@ -518,7 +518,7 @@ table.dd-query-result {
 		}
 	}
 	.tuff-sortable-dragging {
-		font-weight: bold;
+		--tt-shadow-spread: 12px;
 	}
 	.tuff-sortable-drop-cursor {
 		background-color: var(--tt-primary-color);
