@@ -11,6 +11,7 @@ import {TabContainerPart} from "../../terrier/tabs"
 import Messages from "tuff-core/messages"
 import Validation, {QueryClientValidation} from "./validation"
 import ColumnOrderModal from "./column-order-modal"
+import RowOrderModal from "./row-order-modal"
 
 const log = new Logger("QueryEditor")
 
@@ -78,8 +79,18 @@ class SortingPart extends ContentPart<SubEditorState> {
         })
 
         this.onClick(this.sortRowsKey, _ => {
-            this.showToast("I said it was coming soon!", {color: 'alert', icon: 'glyp-developer'})
+            log.info("Sorting rows")
+            this.app.showModal(RowOrderModal, {
+                query: this.state.query,
+                onSorted: (newOrderBys) =>  {
+                    log.info(`New row sort order`, newOrderBys)
+                    this.state.query.order_by = newOrderBys
+                    this.state.editor.dirty()
+                    this.emitMessage(DiveEditor.diveChangedKey, {})
+                }
+            })
         })
+
     }
 
     renderContent(parent: PartTag): void {
@@ -104,8 +115,19 @@ class SortingPart extends ContentPart<SubEditorState> {
             })
             row.div(".tt-flex.gap.column.full-height", col => {
                 col.h3(".glyp-rows").text("Rows")
-                col.div(".dive-query-columns.stretch", orderList => {
-                    orderList.div(".text-center").text("Coming Soon")
+                col.div(".dive-query-order-bys.stretch", orderList => {
+                    if (query.order_by?.length) {
+                        for (const orderBy of query.order_by) {
+                            orderList.div('.order-by', line => {
+                                line.div(".column").text(orderBy.column)
+                                const dir = orderBy.dir == 'asc' ? 'ascending' : 'descending'
+                                line.div(`.dir.glyp-${dir}`).text(dir)
+                            })
+                        }
+                    }
+                    else {
+                        orderList.div(".text-center").text("Unspecified")
+                    }
                 })
                 col.a(".tt-button.shrink", button => {
                     button.i(".glyp-edit")

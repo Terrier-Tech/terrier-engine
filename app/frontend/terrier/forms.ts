@@ -12,6 +12,26 @@ import Strings from "tuff-core/strings"
 const log = new Logger("TerrierForms")
 
 ////////////////////////////////////////////////////////////////////////////////
+// Utilities
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Get the value of the checked radio with the given selector.
+ * @param container contains the radios
+ * @param selector the CSS selector used to select the radios from the container
+ */
+function getRadioValue(container: HTMLElement, selector: string): string | undefined {
+    let value: string | undefined = undefined
+    container.querySelectorAll<HTMLInputElement>(selector).forEach(radio => {
+        if (radio.checked) {
+            value = radio.value
+        }
+    })
+    return value
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Options
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -112,7 +132,8 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
 ////////////////////////////////////////////////////////////////////////////////
 
 const Forms = {
-    titleizeOptions
+    titleizeOptions,
+    getRadioValue
 }
 
 export default Forms

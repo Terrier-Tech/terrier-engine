@@ -428,10 +428,30 @@ table.dd-query-result {
 // Sorting Lists
 ////////////////////////////////////////////////////////////////////////////////
 
-.dive-query-columns, .dive-query-rows {
+.dive-query-columns {
 	@include tt-inset-box;
 	@include tt-inset-box-shadow;
 	padding: 1em;
+}
+
+.dive-query-order-bys {
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	.order-by {
+		display: flex;
+		align-items: center;
+		.column {
+			flex: 1 1 auto;
+			font-weight: bold;
+		}
+		.dir::before {
+			margin-right: 0.5em;
+		}
+	}
 }
 
 
@@ -452,7 +472,52 @@ table.dd-query-result {
 		cursor: move;
 	}
 	.tuff-sortable-dragging {
-		//transform: scale(1.25);
+		font-weight: bold;
+	}
+	.tuff-sortable-drop-cursor {
+		background-color: var(--tt-primary-color);
+		opacity: 0.5;
+		@include tt-rounded-corners;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Row Order Modal
+////////////////////////////////////////////////////////////////////////////////
+
+.dive-row-sort-zone {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 auto;
+	gap: 1em;
+	padding: 1em;
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
+	.order-by {
+		display: flex;
+		gap: 1em;
+		padding: 1em;
+		align-items: center;
+		@include panel-like;
+		select {
+			flex: 1 1 auto;
+		}
+		label {
+			flex: 0 0 auto;
+		}
+		a {
+			display: block;
+			font-size: 18px;
+			@include tt-scale-push;
+			@include tt-inset-text;
+			color: var(--tt-border-color);
+			&:hover {
+				color: var(--tt-secondary-color);
+			}
+		}
+	}
+	.tuff-sortable-dragging {
 		font-weight: bold;
 	}
 	.tuff-sortable-drop-cursor {
