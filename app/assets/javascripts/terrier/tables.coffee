@@ -30,9 +30,10 @@ _computeCellValue = (cell) ->
 	else
 		val = cell.data('col-value')
 
-	# return float if this value is numeric (only contains numbers or decimal point)
-	if !_.isNaN(parseFloat(val)) and val.toString().match(_numberRegex)
-		return parseFloat(val)
+	# return float if this value is numeric (starts with numbers or decimal point)
+	floatVal = parseFloat(val)
+	if !_.isNaN(floatVal) and val.toString().match(_numberRegex)
+		return floatVal
 
 	# use string data value or c) use raw text
 	return _blanksLast(val || cell.text())
