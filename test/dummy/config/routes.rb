@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   get 'icons/glyps'
   get 'icons/hub'
+  get 'icons/badges'
 
   get 'rendering/exception'
 
@@ -21,9 +22,12 @@ Rails.application.routes.draw do
 
   get 'logging' => 'client_side#logging'
 
+  get 'tables' => 'client_side#tables'
+
   get 'reports' => 'scripts#reports'
 
   get 'frontend/platform_demo'
+  get 'frontend/list_viewer_demo'
   get 'frontend/streaming'
 
   mount Terrier::Engine, at: "/"

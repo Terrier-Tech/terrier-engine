@@ -158,11 +158,13 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                     join_type: 'inner',
                     belongs_to: belongsTo.name
                 }
-                const callback = (newTable: JoinedTableRef) => {
-                    log.info(`Creating joined table`, newTable)
-                    this.table.joins ||= {}
-                    this.table.joins[newTable.belongs_to] = newTable
-                    this.updateJoinedViews()
+                const callback = (newTable: JoinedTableRef | null) => {
+                    if (newTable) {
+                        log.info(`Creating joined table`, newTable)
+                        this.table.joins ||= {}
+                        this.table.joins[newTable.belongs_to] = newTable
+                        this.updateJoinedViews()
+                    }
                 }
                 this.app.showModal(JoinedTableEditorModal, {table, belongsTo, callback, parentTable: this.state.table as TableRef})
             }
@@ -179,6 +181,13 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         this.assignCollection('joined', JoinedTableView, states)
         for (const part of this.getCollectionParts('joined')) {
             (part as JoinedTableView).parentView = this
+        }
+    }
+
+    removeJoinedTable(joinedTable: JoinedTableRef) {
+        if (this.table?.joins) {
+            delete this.table.joins[joinedTable.belongs_to]
+            this.updateJoinedViews()
         }
     }
 
@@ -332,11 +341,17 @@ export class JoinedTableView extends TableView<JoinedTableRef> {
                 log.info(`Editing join table ${this.displayName}`)
                 const parentModel = this.parentView.modelDef
                 const belongsTo = parentModel.belongs_to[this.table.belongs_to]
-                const callback = (newTable: JoinedTableRef) => {
-                    log.info(`Updated joined table ${this.displayName}`, newTable)
-                    this.parentView!.table.joins[newTable.belongs_to] = newTable
-                    this.table = newTable
-                    this.parentView?.dirty()
+                const callback = (newTable: JoinedTableRef | null) => {
+                    if (newTable) {
+                        log.info(`Updated joined table ${this.displayName}`, newTable)
+                        this.parentView!.table.joins[newTable.belongs_to] = newTable
+                        this.table = newTable
+                        this.parentView?.dirty()
+                    }
+                    else {
+                        log.info(`Deleted joined table ${this.displayName}`)
+                        this.parentView!.removeJoinedTable(this.table)
+                    }
                 }
                 this.app.showModal(JoinedTableEditorModal, {
                     table: this.table,
@@ -362,7 +377,7 @@ type JoinedTableEditorState = {
     table: JoinedTableRef
     readonly parentTable: TableRef
     belongsTo: BelongsToDef
-    callback: (tableRef: JoinedTableRef) => any
+    callback: (tableRef: JoinedTableRef | null) => any
 }
 
 /**
@@ -409,6 +424,7 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
 
     form!: JoinedTableEditorForm
     applyKey = Messages.untypedKey()
+    deleteKey = Messages.untypedKey()
 
     async init() {
         this.form = this.makePart(JoinedTableEditorForm, this.state.table)
@@ -429,6 +445,23 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
             this.emitMessage(DiveEditor.diveChangedKey, {})
             this.pop()
         })
+
+        const parentJoins = this.state.parentTable!.joins
+        if (parentJoins && parentJoins[this.state.table.belongs_to]) {
+            // don't show the delete action if the join isn't already in the parent
+            this.addAction({
+                title: "Delete",
+                icon: "glyp-delete",
+                click: {key: this.deleteKey},
+                classes: ['alert']
+            }, 'secondary')
+
+            this.onClick(this.deleteKey, async _ => {
+                this.state.callback(null)
+                this.emitMessage(DiveEditor.diveChangedKey, {})
+                this.pop()
+            })
+        }
     }
 
     renderContent(parent: PartTag) {

@@ -6,6 +6,11 @@ class FrontendController < ApplicationController
     @entrypoint = 'platform-demo'
   end
 
+  def list_viewer_demo
+    @title = "List Viewer Demo"
+    @entrypoint = "list-viewer-demo"
+  end
+
   def streaming
     stream_response do |stream|
       20.times do |i|

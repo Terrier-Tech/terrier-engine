@@ -1,13 +1,9 @@
+@import "terrier/tt-mixins";
 
 .tt-demo {
 	--demo-border-color: #ccc;
 	--demo-border-radius: 6px;
-
-	.tt-page-part {
-		.tt-toolbar {
-
-		}
-	}
+	@include tt-absolute-fill;
 
 	.annotated {
 		position: relative;

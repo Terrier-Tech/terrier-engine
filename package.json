@@ -4,7 +4,7 @@
   "files": [
     "*"
   ],
-  "version": "4.8.2",
+  "version": "4.13.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/Terrier-Tech/terrier-engine"
@@ -19,6 +19,7 @@
     "dayjs": "^1.11.7",
     "inflection": "^2.0.1",
     "tuff-core": "latest",
+    "tuff-sortable": "^0.3.6",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
@@ -26,6 +27,8 @@
     "glyphs2font": "^1.2.4",
     "prettier": "^2.8.8",
     "svgo": "^3.0.2",
+    "vite": "^5.0.0",
+    "vite-plugin-ruby": "^5.0.0",
     "vitest": "^0.31.1"
   }
 }

@@ -46,6 +46,14 @@ export class LogListPart extends TerrierPart<NoState> {
         this.dirty()
     }
 
+    /**
+     * Clears the list.
+     */
+    clear() {
+        this.entries = []
+        this.dirty()
+    }
+
     success(message: string, prefix: string | undefined) {
         this.push({message, prefix, level: "success"})
     }

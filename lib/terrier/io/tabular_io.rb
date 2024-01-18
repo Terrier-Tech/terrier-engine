@@ -86,18 +86,32 @@ module TabularIo
 
 
   def self.load_csv(rel_path, options={})
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
     abs_path = self.rel_to_abs_path rel_path
     headers = nil
     data = []
+    consecutive_blank_rows = 0
     CSV.open(abs_path, 'r:bom|utf-8').each do |row|
-      if headers
-        record = {}
-        row.each_with_index do |val, i|
-          record[headers[i]] = val
+      if row.compact.empty?
+        # Increment blank row counter
+        consecutive_blank_rows += 1
+        # Break if exceeding allowed blank rows
+        if consecutive_blank_rows > n_blank_allowed
+          puts "Stopping processing after encountering #{consecutive_blank_rows} consecutive blank rows."
+          break
         end
-        data << record
       else
-        headers = self.sanitize_csv_header row
+        consecutive_blank_rows = 0  # Reset counter if row is not blank
+
+        if headers
+          record = {}
+          row.each_with_index do |val, i|
+            record[headers[i].to_s] = val
+          end
+          data << record
+        else
+          headers = self.sanitize_csv_header(row)
+        end
       end
     end
     data
@@ -127,20 +141,36 @@ module TabularIo
   end
 
   # same as load_csv, but works on a raw string of csv instead of from a file
-  def self.parse_csv(raw)
+  def self.parse_csv(raw, options = {})
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
     headers = nil
     data = []
+    consecutive_blank_rows = 0
+
     CSV.parse(raw).each do |row|
-      if headers
-        record = {}
-        row.each_with_index do |val, i|
-          record[headers[i]] = val
+      if row.compact.empty?
+        # Increment blank row counter
+        consecutive_blank_rows += 1
+        # Break if exceeding allowed blank rows
+        if consecutive_blank_rows > n_blank_allowed
+          puts "Stopping processing after encountering #{consecutive_blank_rows} consecutive blank rows."
+          break
         end
-        data << record
       else
-        headers = self.sanitize_csv_header row
+        consecutive_blank_rows = 0  # Reset counter if row is not blank
+
+        if headers
+          record = {}
+          row.each_with_index do |val, i|
+            record[headers[i].to_s] = val
+          end
+          data << record
+        else
+          headers = self.sanitize_csv_header(row)
+        end
       end
     end
+
     data
   end
 
@@ -161,37 +191,79 @@ module TabularIo
     x = Xsv::Workbook.open(abs_path.to_s)
     output = {}
     sheets_to_import = options[:sheets]
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+
     x.sheets.each do |sheet|
-      # Offer the option to skip importing unneeded sheets. This significantly speeds up loading.
       next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
+
       begin
         sheet.parse_headers!
       rescue Xsv::DuplicateHeaders => e
         puts "Error while processing headers for sheet #{sheet.name}: #{e.message}"
       end
-      output[sheet.name] = sheet.to_a
+
+      output[sheet.name] = []
+      consecutive_blank_rows = 0
+
+      sheet.each_row do |row|
+        # Check if the row is blank
+        if row.compact.empty?
+          consecutive_blank_rows += 1
+          # Log and break if the number of consecutive blank rows exceeds the limit
+          if consecutive_blank_rows > n_blank_allowed
+            puts "Stopping processing of sheet '#{sheet.name}' after encountering #{consecutive_blank_rows} consecutive blank rows."
+            break
+          end
+        else
+          consecutive_blank_rows = 0
+          row_hash = {}
+          sheet.headers.each do |header|
+            row_hash[header.to_s] = row[header]
+          end
+          output[sheet.name] << row_hash
+        end
+      end
     end
+
     output
   end
 
-  def self.load_xls(rel_path, options={})
-    abs_path = self.rel_to_abs_path rel_path
-    book = Spreadsheet.open abs_path
+  def self.load_xls(rel_path, options = {})
+    abs_path = self.rel_to_abs_path(rel_path)
+    book = Spreadsheet.open(abs_path)
     output = {}
     sheets_to_import = options[:sheets]
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+
     book.worksheets.each do |sheet|
       next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
-      headers = self.sanitize_csv_header sheet.row(0)
+
+      headers = self.sanitize_csv_header(sheet.row(0))
       data = []
+      consecutive_blank_rows = 0
+
       sheet.each(1) do |row|
-        record = {}
-        row.each_with_index do |val, i|
-          record[headers[i]] = val
+        # Check if the row is blank
+        if row.all?(&:nil?)
+          consecutive_blank_rows += 1
+          # Log and break if the number of consecutive blank rows exceeds the limit
+          if consecutive_blank_rows > n_blank_allowed
+            puts "Stopping processing of sheet '#{sheet.name}' after encountering #{consecutive_blank_rows} consecutive blank rows."
+            break
+          end
+        else
+          consecutive_blank_rows = 0
+          record = {}
+          row.each_with_index do |val, i|
+            record[headers[i].to_s] = val
+          end
+          data << record
         end
-        data << record
       end
+
       output[sheet.name] = data
     end
+
     output
   end
 

@@ -12,6 +12,10 @@ module TestDive
     {
       id: 'order_details',
       name: 'Order Details',
+      order_by: [
+        {column: "location_id", dir: "asc"},
+        {column: "time", dir: "desc"}
+      ],
       from: {
         model: 'WorkOrder',
         columns: [
@@ -134,6 +138,7 @@ module TestDive
     {
       id: 'order_summary',
       name: 'Order Summary',
+      columns: ["location_number", "status", "month", "count", "user_name"],
       from: {
         model: 'WorkOrder',
         columns: [
@@ -145,7 +150,8 @@ module TestDive
           },
           {
             name: 'id',
-            function: 'count'
+            function: 'count',
+            alias: "count"
           },
           {
             name: 'status',

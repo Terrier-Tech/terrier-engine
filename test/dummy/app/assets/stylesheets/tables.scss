@@ -1,0 +1,43 @@
+//noinspection CssUnknownTarget
+@import "terrier/glyps-meta";
+
+// specifically for the demo table at /tables, not tables in general
+table.demo {
+	border-collapse: collapse;
+	width: 100%;
+	th {
+		border-bottom: 1px solid var(--tt-link-color);
+		a {
+			display: block;
+			position: relative;
+		}
+		a.asc::after, a.desc::after {
+			@include glyps-font;
+			position: absolute;
+			right: 2px;
+			top: 2px;
+			font-size: 14px;
+			color: var(--tt-link-color);
+		}
+
+		a.asc::after {
+			content: $glyp-chevron_down;
+		}
+
+		a.desc::after {
+			content: $glyp-chevron_up;
+		}
+	}
+	input, select {
+		margin: 0;
+	}
+	td, th {
+		padding: 0.5em;
+	}
+	tr:nth-child(even) td {
+		background-color: #fff;
+	}
+	tr:nth-child(odd) {
+		background-color: #f8f8f8;
+	}
+}

@@ -20,11 +20,18 @@ const log = new Logger("Queries")
 // Query
 ////////////////////////////////////////////////////////////////////////////////
 
+export type OrderBy = {
+    column: string
+    dir: string
+}
+
 export type Query = {
     id: string
     name: string
     notes: string
     from: TableRef
+    columns?: string[]
+    order_by?: OrderBy[]
 }
 
 

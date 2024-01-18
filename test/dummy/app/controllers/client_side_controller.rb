@@ -1,4 +1,5 @@
 class ClientSideController < ApplicationController
+  include ApplicationHelper
 
   def modals
     @title = 'Modals'
@@ -28,6 +29,13 @@ class ClientSideController < ApplicationController
 
   def logging
     @title = 'Logging'
+  end
+
+  def tables
+    @title = 'Tables'
+    @select_options = %w[one two three four].map do |s|
+      [s, random_string(8)] # create a random id so that the values are not the same as the titles
+    end
   end
 
   def tt_styles

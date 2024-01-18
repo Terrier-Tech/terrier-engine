@@ -1,5 +1,7 @@
 // This file was automatically generated, DO NOT EDIT IT MANUALLY!
 
+import inflection from "inflection"
+
 const allBadges = [
 
     'accounts_payable-handling',
@@ -160,7 +162,7 @@ const allBadges = [
 
 export type Badge = typeof allBadges[number]
 
-const BadgeTitles = {
+const BadgeTitles: Record<string, string> = {
 
     'accounts_payable-handling': "Accounts Payable Handling",
 
@@ -322,8 +324,8 @@ const BadgeTitles = {
  * @param badge
  * @return the title for the given badge
  */
-function title(badge: Badge): string {
-    return BadgeTitles[badge]
+function title(badge: string): string {
+    return BadgeTitles[badge] || inflection.titleize(badge)
 }
 
 
@@ -563,7 +565,7 @@ import Wildlifesales from '../images/badges/badge-wildlife-sales.svg'
  * @param badge
  * @return the image source path for the given badge
  */
-function imageSource(badge: Badge): string {
+function imageSource(badge: string): string {
     switch (badge) {
 
     case 'accounts_payable-handling': return AccountsPayablehandling
@@ -721,7 +723,7 @@ function imageSource(badge: Badge): string {
     case 'wildlife-sales': return Wildlifesales
 
     default:
-        throw `Invalid badge '${badge}'`
+        return InformationTechnologyadmin
     }
 }
 

@@ -199,6 +199,9 @@ body.with-modal {
 			font-weight: bold;
 			text-align: center;
 			margin-bottom: 1em;
+			&.glyp-spacing {
+				line-height: 1.4;
+			}
 			&:last-child {
 				margin-bottom: 0;
 			}

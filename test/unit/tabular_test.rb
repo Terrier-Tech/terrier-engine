@@ -154,4 +154,15 @@ CSV
     end
   end
 
+  test 'optional n_blank_allowed parameter works at default of 0' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      data = TabularIo.load "/test/input/missing_row_#{ ext }.#{ ext }", output: :standardized
+      sheet_name, sheet = data.first
+      expected = 1  # Expected number of rows before encountering blank rows
+      actual = sheet.size
+      assert_equal expected, actual,  "Test failed for #{ ext.upcase } file. Expected #{ expected } row(s), but found #{ actual } row(s)."
+    end
+  end
+
+
 end

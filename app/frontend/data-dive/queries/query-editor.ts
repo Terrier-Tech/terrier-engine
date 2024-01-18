@@ -10,6 +10,8 @@ import ContentPart from "../../terrier/parts/content-part"
 import {TabContainerPart} from "../../terrier/tabs"
 import Messages from "tuff-core/messages"
 import Validation, {QueryClientValidation} from "./validation"
+import ColumnOrderModal from "./column-order-modal"
+import RowOrderModal from "./row-order-modal"
 
 const log = new Logger("QueryEditor")
 
@@ -53,6 +55,90 @@ class SettingsPart extends ContentPart<SubEditorState> {
 
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Sorting Part
+////////////////////////////////////////////////////////////////////////////////
+
+class SortingPart extends ContentPart<SubEditorState> {
+    sortColumnsKey = Messages.untypedKey()
+    sortRowsKey = Messages.untypedKey()
+
+    async init() {
+        this.onClick(this.sortColumnsKey, _ => {
+            log.info("Sorting columns")
+            this.app.showModal(ColumnOrderModal, {
+                query: this.state.query,
+                onSorted: (newColumns) =>  {
+                    this.state.query.columns = newColumns
+                    this.state.editor.dirty()
+                    this.emitMessage(DiveEditor.diveChangedKey, {})
+                }
+            })
+        })
+
+        this.onClick(this.sortRowsKey, _ => {
+            log.info("Sorting rows")
+            this.app.showModal(RowOrderModal, {
+                query: this.state.query,
+                onSorted: (newOrderBys) =>  {
+                    log.info(`New row sort order`, newOrderBys)
+                    this.state.query.order_by = newOrderBys
+                    this.state.editor.dirty()
+                    this.emitMessage(DiveEditor.diveChangedKey, {})
+                }
+            })
+        })
+
+    }
+
+    renderContent(parent: PartTag): void {
+        const query = this.state.query
+        parent.div(".tt-flex.gap.collapsible.tt-typography", row => {
+            row.div(".tt-flex.gap.column.full-height", col => {
+                col.h3(".glyp-columns").text("Columns")
+                col.div(".dive-query-columns.stretch", colList => {
+                    if (query.columns?.length) {
+                        for (const c of query.columns) {
+                            colList.div().text(c)
+                        }
+                    }
+                    else {
+                        colList.div(".text-center").text("Unspecified")
+                    }
+                })
+                col.a(".tt-button.shrink", button => {
+                    button.i(".glyp-edit")
+                    button.span().text("Sort Columns")
+                }).emitClick(this.sortColumnsKey)
+            })
+            row.div(".tt-flex.gap.column.full-height", col => {
+                col.h3(".glyp-rows").text("Rows")
+                col.div(".dive-query-order-bys.stretch", orderList => {
+                    if (query.order_by?.length) {
+                        for (const orderBy of query.order_by) {
+                            orderList.div('.order-by', line => {
+                                line.div(".column").text(orderBy.column)
+                                const dir = orderBy.dir == 'asc' ? 'ascending' : 'descending'
+                                line.div(`.dir.glyp-${dir}`).text(dir)
+                            })
+                        }
+                    }
+                    else {
+                        orderList.div(".text-center").text("Unspecified")
+                    }
+                })
+                col.a(".tt-button.shrink", button => {
+                    button.i(".glyp-edit")
+                    button.span().text("Sort Rows")
+                }).emitClick(this.sortRowsKey)
+            })
+        })
+    }
+
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -167,6 +253,7 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
     tableEditor!: FromTableView
     tabs!: TabContainerPart
     settingsPart!: SettingsPart
+    sortingPart!: SortingPart
     sqlPart!: SqlPart
     previewPart!: PreviewPart
     clientValidation!: QueryClientValidation
@@ -182,6 +269,9 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         this.tabs = this.makePart(TabContainerPart, {side: 'left'})
         this.settingsPart = this.tabs.upsertTab({key: 'settings', title: 'Settings', icon: 'glyp-settings'},
             SettingsPart, {editor: this, query})
+
+        this.sortingPart = this.tabs.upsertTab({key: 'sorting', title: 'Sorting', icon: 'glyp-sort'},
+            SortingPart, {editor: this, query})
 
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {

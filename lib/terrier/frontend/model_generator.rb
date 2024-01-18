@@ -46,8 +46,8 @@ class ModelGenerator < BaseGenerator
       models[model.name] = {
         columns: model.columns,
         reflections: model.reflections,
-        belongs_tos: model.reflections.select { |_, ref| ref.class.name.include?('BelongsTo') },
-        has_manies: model.reflections.select { |_, ref| ref.class.name.include?('HasMany') },
+        belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
+        has_manies: model.reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
         enum_fields: enum_fields,
         attachments: attachments,
         model_class: model,
@@ -80,10 +80,10 @@ class ModelGenerator < BaseGenerator
         name: ref_name,
         model: ref_type
       }
-      if ref.class.name.include?('BelongsTo')
+      if model[:columns].map(&:name).include?("#{ref.name}_id")
         raw_ref[:optional] = ref.options[:optional] || false
         belongs_to[ref_name] = raw_ref
-      else
+      elsif ref_type.constantize.column_names.include?("#{model[:table_name].singularize}_id")
         has_many[ref_name] = raw_ref
       end
     end

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-split_view</title>
+    <g id="icon-split_view" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" x="5" y="5" width="22" height="22"></rect>
+        <rect id="Rectangle" fill="#000000" x="7" y="8" width="8" height="3" rx="1"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="7" y="12.3333333" width="8" height="3" rx="1"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="7" y="16.6666667" width="8" height="3" rx="1"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" x="7" y="21" width="8" height="3" rx="1"></rect>
+        <rect id="Rectangle" fill-opacity="0.25" fill="#000000" fill-rule="nonzero" x="16" y="7" width="9" height="18" rx="1"></rect>
+    </g>
+</svg>

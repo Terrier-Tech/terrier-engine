@@ -2,9 +2,11 @@
 require 'coderay'
 
 class QueryModel
-  # @param attrs [Hash]
+  # @param attrs [Hash|String|ActionController::Parameters]
   def initialize(engine, attrs={})
     @engine = engine
+    attrs = JSON.parse(attrs) if attrs.is_a?(String)
+    attrs = attrs.to_unsafe_hash if attrs.is_a?(ActionController::Parameters)
     attrs.each do |k, v|
       raise "Unknown attribute '#{k}' for #{self.class.name}" unless self.respond_to? k
       self.send "#{k}=", v
@@ -56,7 +58,7 @@ class TableRef < QueryModel
       col.to_select self, builder
     end
     if col_selects.present?
-      builder.select col_selects.join(', ')
+      builder.select col_selects
     end
 
     # filters
@@ -138,7 +140,7 @@ class JoinedTableRef < TableRef
     raise "Invalid join type '#{type}'" unless %w[inner left].include?(type)
     fk = "#{@belongs_to}_id"
     builder.send "#{type}_join", @table_name, @alias, "#{@alias}.id = #{left_table.alias}.#{fk}"
-    self.build_recursive builder
+    self.build_recursive builder, params
   end
 end
 
@@ -158,7 +160,7 @@ end
 class ColumnRef < QueryModel
   attr_accessor :name, :alias, :grouped, :function, :errors
 
-  AGG_FUNCTIONS = %w[count sum min max]
+  AGG_FUNCTIONS = %w[count sum average min max]
   
   def to_select(table, builder)
     s = "#{table.alias}.#{name}"
@@ -197,10 +199,7 @@ class ColumnRef < QueryModel
     if table.prefix.present?
       a = [table.prefix, a].compact.join
     end
-    unless a == s
-      s = "#{s} as \"#{a}\""
-    end
-    s
+    "#{s} as \"#{a}\"" # always use the alias so that they're consistent and we can determine the resulting name when sorting
   end
 
   # @return [ColumnMetadata]
@@ -293,30 +292,75 @@ class Filter < QueryModel
   end
 end
 
+class Query < QueryModel
+
+  attr_accessor :id, :name, :from, :columns, :order_by, :notes
+
+  def initialize(engine, attrs)
+    super
+
+    @from = FromTableRef.new engine, @from
+  end
+
+end
+
 class DataDive::QueryEngine
   include Loggable
 
   attr_reader :query
 
-  def initialize(query)
-    query = JSON.parse(query) if query.is_a?(String)
-    query = query.to_unsafe_hash if query.is_a?(ActionController::Parameters)
-    query = OpenStruct.new(query) if query.is_a?(Hash)
-    @query = query
+  def initialize(raw_query)
     @alias_counts = {}
-    @from = FromTableRef.new self, query.from
+    @query = Query.new self, raw_query
+    @from = @query.from
   end
 
   def execute!(params={})
+    # generate the query
     builder = self.to_sql_builder params
     if builder.selects.empty?
       return {rows: [], columns: []}
     end
+
+    # execute the query
     rows = builder.exec
+
+    # sort the columns appropriately
+    columns = self.compute_column_metadata.values
+    if @query.columns.present?
+      col_orders = {}
+      @query.columns.each_with_index { |c, i| col_orders[c] = i }
+      columns = columns.sort_by{|c| col_orders[c.select_name]}
+    end
+
     {
       rows: rows,
-      columns: self.compute_column_metadata.values.map(&:as_json)
+      columns: columns.map(&:as_json)
     }
+  end
+
+  # Re-orders the builder's select statements to match the query's _columns_ array
+  # @param builder [SqlBuilder]
+  def apply_column_sort(builder)
+    return false unless @query.columns.present?
+    col_orders = {}
+    @query.columns.each_with_index{|c, i| col_orders[c] = i}
+    builder.selects = builder.selects.map do |s|
+      name = s.gsub(/"$/, '').split('"').last
+      index = col_orders[name]
+      next unless index
+      {select: s, name: name, index: index}
+    end.compact.sort_by_key(:index).map_key :select
+  end
+
+  # Generates the order_by clauses for the given query builder
+  def build_order_by(builder)
+    order_bys = self.query.order_by.presence || []
+    order_bys.each do |ob|
+      col = ob['column'] || ob[:column] || raise("No column specified for order_by statement #{ob.inspect}")
+      dir = ob['dir'].presence || ob[:dir].presence || 'asc'
+      builder.order_by "#{col} #{dir}"
+    end.join(", ")
   end
 
   def to_sql_builder(params={})
@@ -325,6 +369,8 @@ class DataDive::QueryEngine
       builder.limit params[:limit].to_i
     end
     @from.build_from builder, params
+    build_order_by builder
+    apply_column_sort builder
     builder
   end
 
@@ -363,7 +409,6 @@ class DataDive::QueryEngine
 
     info "Generated SQL:\n#{sql}"
     res = {
-      query: @query,
       sql: sql,
       sql_html: CodeRay.scan(sql, :sql).html
     }

@@ -24,7 +24,7 @@ const log = new Logger("Columns")
 /**
  * Possible functions used to aggregate a column.
  */
-const AggFunctions = ['count', 'sum', 'min', 'max'] as const
+const AggFunctions = ['count', 'sum', 'average', 'min', 'max'] as const
 
 export type AggFunction = typeof AggFunctions[number]
 

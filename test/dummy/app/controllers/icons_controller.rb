@@ -8,4 +8,8 @@ class IconsController < ApplicationController
     @title = 'Hub Icons'
   end
 
+  def badges
+    @title = 'Badges'
+  end
+
 end

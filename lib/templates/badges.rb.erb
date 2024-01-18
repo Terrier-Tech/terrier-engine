@@ -4,6 +4,8 @@ BADGE_TITLES = <%= badge_titles.to_s %>
 
 BADGES = BADGE_TITLES.keys
 
+BADGE_IMAGES = {}
+
 # Badge metadata and helpers
 module Badges
 
@@ -11,4 +13,21 @@ module Badges
     BADGES
   end
 
+  def self.image(badge)
+    BADGE_IMAGES[badge]
+  end
+
+  def self.title(badge)
+    BADGE_TITLES[badge] || badge.titleize
+  end
+
+end
+
+# abort if there are no images (we're generating them)
+if Dir[Terrier::Engine.root.join("app/frontend/terrier/images/badges/*").to_s].count == 0
+  return
+end
+
+BADGES.each do |badge|
+  BADGE_IMAGES[badge] = File.read Terrier::Engine.root.join("app/frontend/terrier/images/badges/badge-#{badge}.svg")
 end

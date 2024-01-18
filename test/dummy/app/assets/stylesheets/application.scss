@@ -15,6 +15,8 @@
  *= require_self
  */
 
+@import "terrier/tt-mixins";
+
 
 $bar-height: 50px;
 
@@ -39,10 +41,17 @@ a {
     text-align: center;
 }
 
+.padded {
+	padding: 1em;
+}
+
 a.demo-link {
     display: block;
     font-size: 20px;
     padding: 8px;
+	&::before {
+		margin-right: 0.5em;
+	}
 }
 
 .demo-link-grid {
@@ -222,8 +231,14 @@ button {
 ////////////////////////////////////////////////////////////////////////////////
 
 .tt-page-part {
-	--tt-inset-background: var(--tt-page-background);
+	@include tt-absolute-fill;
+
 	.lighting { display: none; }
+
+	.full-width-page {
+		flex: 1 1 auto;
+		position: relative;
+	}
 
 	> .tt-toolbar {
 		color: var(--tt-page-background);
