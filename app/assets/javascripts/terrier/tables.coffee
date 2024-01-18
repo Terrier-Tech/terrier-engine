@@ -1,5 +1,7 @@
 window.tables = {}
 
+_numberRegex = /^(?=.)([+-]?([0-9]*)(\.([0-9]+))?)$/g # pos/neg integer/float
+
 ################################################################################
 # Sortable
 ################################################################################
@@ -12,19 +14,29 @@ window.tables.initSortable = (ui = $(document), col = null, dir = null) ->
 		ui.find("table.sortable th a[data-column=#{col}]").each (_, link) ->
 			window.tables.sortByColLink($(link), col, dir)
 
-# computes the sorting value using input values, data-column attributes, or the text of the cell
+# computes the sorting value using a) input values, b) data-column attributes, or c) the text of the cell
 _computeCellValue = (cell) ->
+# a) use input value
 	if cell.is 'select'
 		return cell.find('option:selected').text() # sort based on the selected option's text, not it's raw value
 	if cell.is 'input'
 		if cell[0].type == 'checkbox'
 			return (if cell[0].checked then '0' else '1') # reverse behavior for checkboxes so that checked appear first when ascending
 		return cell.val()?.toString() || ''
-	val = cell.data('col-value') || cell.data('column-value')
-	if val?
-		val.toString()
+
+	# b) use col-value or column-value data attributes
+	if typeof cell.data('column-value') != 'undefined'
+		val = cell.data('column-value')
 	else
-		cell.text()
+		val = cell.data('col-value')
+
+	# return float if this value is numeric (starts with numbers or decimal point)
+	floatVal = parseFloat(val)
+	if !_.isNaN(floatVal) and val.toString().match(_numberRegex)
+		return floatVal
+
+	# use string data value or c) use raw text
+	return _blanksLast(val || cell.text())
 
 # return a string likely to be sorted last if the value is blank
 # this is crude but it seems simpler than trying to mess with the sorting logic itself
@@ -59,9 +71,9 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 			rows = table.find('tbody tr')
 			rows.sort (a, b) ->
 				aCol = $(a).find(".col-#{col}, .column-#{col}")
-				aVal = _blanksLast _computeCellValue aCol
+				aVal = _computeCellValue aCol
 				bCol = $(b).find(".col-#{col}, .column-#{col}")
-				bVal = _blanksLast _computeCellValue bCol
+				bVal = _computeCellValue bCol
 				comp = if aVal > bVal
 					1
 				else
