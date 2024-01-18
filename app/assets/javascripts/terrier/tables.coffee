@@ -1,5 +1,7 @@
 window.tables = {}
 
+_numberRegex = /^(?=.)([+-]?([0-9]*)(\.([0-9]+))?)$/g # pos/neg integer/float
+
 ################################################################################
 # Sortable
 ################################################################################
@@ -30,7 +32,7 @@ _computeCellValue = (cell) ->
 
 	# return float if this value is numeric (starts with numbers or decimal point)
 	floatVal = parseFloat(val)
-	if !_.isNaN(floatVal)
+	if !_.isNaN(floatVal) and val.toString().match(_numberRegex)
 		return floatVal
 
 	# use string data value or c) use raw text
