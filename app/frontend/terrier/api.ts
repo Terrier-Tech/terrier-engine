@@ -1,5 +1,5 @@
-import { Logger } from "tuff-core/logging"
-import { QueryParams } from "tuff-core/urls"
+import {Logger} from "tuff-core/logging"
+import {QueryParams} from "tuff-core/urls"
 import {LogEntry} from "./logging"
 
 const log = new Logger('Api')
@@ -27,9 +27,37 @@ export class ApiException extends Error {
     }
 }
 
-async function request<ResponseType>(url: string, config: RequestInit): Promise<ResponseType> {
+export type RequestFunc = <ResponseType>(url: string, config: RequestInit) => Promise<ResponseType>
+
+/**
+ * Decorates all API requests made by the `Api` module with the given decorator method.
+ *
+ * This can be dangerous and should be used sparingly! You can't remove a decorator once it has been added,
+ * and decorators apply to _all_ API requests. It is most appropriate for adding ubiquitous parameters and headers,
+ * such as authentication tokens.
+ *
+ * @param decorator a function that takes a request function and returns a decorated request function
+ *
+ * @example
+ * // adds a decorator that logs the request parameters and response for every request.
+ * Api.addRequestDecorator((inner) => async (url: string, config: RequestInit) => {
+ *     console.log("before request:", url, config)
+ *     const res = await inner(url, config)
+ *     console.log("after request:", res)
+ *     return res
+ * })
+ */
+function addRequestDecorator(decorator: (inner: RequestFunc) => RequestFunc) {
+    _decoratedRequest = decorator(_decoratedRequest)
+}
+
+let _decoratedRequest: RequestFunc = async <RequestType>(url: string, config: RequestInit) => {
     const response = await fetch(url, config)
-    return await response.json()
+    return await response.json() as RequestType
+}
+
+async function request<ResponseType>(url: string, config: RequestInit): Promise<ResponseType> {
+    return await _decoratedRequest(url, config)
 }
 
 async function apiRequest<ResponseType>(url: string, config: RequestInit): Promise<ApiResponse & ResponseType> {
@@ -216,6 +244,7 @@ const Api = {
     safeGet,
     safePost,
     post,
-    stream
+    stream,
+    addRequestDecorator,
 }
 export default Api
