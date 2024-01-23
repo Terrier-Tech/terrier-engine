@@ -378,8 +378,8 @@ $color-diff: 0.08;
 		}
 	}
 	i {
+		font-size: var(--iconSize);
 		display: block;
-		transform: scale(1.25);
 	}
 
 	.title, span {
@@ -396,9 +396,16 @@ $color-diff: 0.08;
 	}
 
 	&.circle {
-		width: var(--tt-button-height);
-		height: var(--tt-button-height);
-		padding: calc((var(--tt-button-height) - var(--tt-icon-size)) / 2) 0;
+		min-height: var(--tt-button-height);
+		height: calc(var(--iconSize) + 12px);
+		aspect-ratio: 1;
+		padding: 0;
+		border-radius: 50%;
+
+		&.compact {
+			min-height: unset;
+			height: var(--iconSize);
+		}
 	}
 
 	&.inline {
