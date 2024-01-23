@@ -247,7 +247,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
                         tbody.tr(tr => {
                             tr.td('.name').text(colDef.name)
                             tr.td('.description').text(colDef.metadata?.description || '')
-                            tr.td().a('.add-column.tt-button.secondary.circle.inline', a => {
+                            tr.td().a('.add-column.tt-button.secondary.circle.compact.inline', a => {
                                 a.i('.glyp-plus')
                             }).emitClick(addSingleKey, {name: colDef.name})
                         })
