@@ -161,6 +161,23 @@ $color-names: ['link', 'primary', 'secondary', 'active', 'pending', 'success', '
 	input[type=text].shrink {
 		width: initial;
 	}
+
+	> .align-self-center {
+		align-self: center;
+	}
+
+	> .align-self-start {
+		align-self: flex-start;
+	}
+
+	> .align-self-end {
+		align-self: flex-end;
+	}
+
+	> .align-self-stretch {
+		align-self: stretch;
+	}
+
 }
 
 
