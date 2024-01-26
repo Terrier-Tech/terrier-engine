@@ -16,7 +16,7 @@ const log = new Logger('Lightbox')
  * @param containerClass
  */
 function init(root: HTMLElement, app: TerrierApp<any>, containerClass: string) {
-    log.info("Init", root)
+    log.debug("Init", root)
     root.addEventListener("click", evt => {
         if (!(evt.target instanceof HTMLElement) || evt.target.tagName != 'IMG') {
             return

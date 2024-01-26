@@ -40,7 +40,6 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
     }
 
     update(root: HTMLElement) {
-        log.info(`Update`, root)
         Tooltips.init(root)
         Lightbox.init(root, this, 'body-content')
     }

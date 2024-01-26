@@ -38,10 +38,10 @@ function onLeave(target: HTMLElement) {
  * @param root the root of the DOM over which tooltips listeners should be handled
  */
 function init(root: HTMLElement) {
-    log.info("Init", root)
+    log.debug("Init", root)
     root.addEventListener("click", evt => {
         if (container && container.classList.contains('show')) {
-            log.info("Hiding tooltip", evt)
+            log.debug("Hiding tooltip", evt)
             container.classList.remove('show')
         }
     }, {capture: true})
