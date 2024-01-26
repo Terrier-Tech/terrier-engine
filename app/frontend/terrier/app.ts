@@ -14,7 +14,6 @@ import Sheets, {AlertSheetState, ConfirmSheetState, Sheet, SheetState} from "./s
 
 
 const log = new Logger('App')
-Logger.level = 'info'
 
 /**
  * Main application part that renders the entire page.

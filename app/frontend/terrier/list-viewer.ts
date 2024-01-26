@@ -6,7 +6,6 @@ import {PageBreakpoints} from "./parts/page-part"
 import { parseQueryParams } from "tuff-core/urls"
 
 const log = new Logger('List Viewer')
-Logger.level = 'debug'
 
 /**
  * All list items should have an `listId` value so that we can distinguish them.

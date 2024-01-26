@@ -3,7 +3,6 @@ import Html from "tuff-core/html"
 import Overlays from "./overlays"
 
 const log = new Logger('Tooltips')
-Logger.level = 'info'
 
 let container: HTMLElement | null = null
 
