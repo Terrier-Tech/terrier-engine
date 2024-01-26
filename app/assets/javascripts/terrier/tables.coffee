@@ -22,10 +22,10 @@ _computeCellValue = (cell) ->
 	if cell.is 'input'
 		if cell[0].type == 'checkbox'
 			return (if cell[0].checked then '0' else '1') # reverse behavior for checkboxes so that checked appear first when ascending
-		return cell.val()?.toString() || ''
+		val = cell.val()?.toString() || ''
 
 	# b) use col-value or column-value data attributes
-	if typeof cell.data('column-value') != 'undefined'
+	else if typeof cell.data('column-value') != 'undefined'
 		val = cell.data('column-value')
 	else
 		val = cell.data('col-value')
