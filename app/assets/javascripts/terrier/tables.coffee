@@ -44,7 +44,7 @@ _blanksLast = (s) ->
 	if s?.length
 		s
 	else
-		'zzzzzzzz'
+		Number.MAX_SAFE_INTEGER.toString()
 
 window.tables.sortByColLink = (link, col = null, dir = null) ->
 	if window.setLinkLoading?
