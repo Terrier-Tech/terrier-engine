@@ -6,9 +6,11 @@ import {Action, ColorName} from "@terrier/theme"
 import PanelPart from "@terrier/parts/panel-part"
 import Tabs, { TabContainerPart } from "@terrier/tabs"
 import {Logger} from "tuff-core/logging"
-import Api from "@terrier/api";
+import Api from "@terrier/api"
+import {ApiSubscriber, PollingSubscriber, StreamingSubscriber} from "@terrier/api-subscriber"
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
+import { LogEntry } from "@terrier/logging"
 
 const log = new Logger("Demo Parts")
 
@@ -16,6 +18,8 @@ const openModalKey = Messages.untypedKey()
 const toastKey = Messages.typedKey<{color: ColorName}>()
 const dropdownKey = Messages.typedKey<{message: string}>()
 const streamingKey = Messages.untypedKey()
+const subscriptionDropdownKey = Messages.untypedKey()
+const subscriptionModalKey = Messages.typedKey<{ subType: 'polling' | 'streaming' }>()
 const sheetKey = Messages.typedKey<{type: 'confirm'}>()
 
 
@@ -28,6 +32,12 @@ class Panel extends PanelPart<NoState> {
             title: 'Streaming',
             icon: 'glyp-download',
             click: {key: streamingKey}
+        })
+
+        this.addAction({
+            title: "Subscription",
+            icon: 'glyp-recent',
+            click: {key: subscriptionDropdownKey}
         })
 
         this.addAction({
@@ -90,6 +100,27 @@ class Panel extends PanelPart<NoState> {
 
         this.onClick(streamingKey, _ => {
             this.app.showModal(StreamingModal, {})
+        })
+
+        this.onClick(subscriptionDropdownKey, m => {
+            const subscriptionOptions = [
+                { title: "Polling", click: { key: subscriptionModalKey, data: { subType: 'polling' } } },
+                { title: "Streaming", click: { key: subscriptionModalKey, data: { subType: 'streaming' } } },
+            ]
+            this.toggleDropdown(ActionsDropdown, subscriptionOptions, m.event.target)
+        })
+
+        this.onClick(subscriptionModalKey, m => {
+            let subscriber: ApiSubscriber<TimeResult, {}>
+            if (m.data.subType == 'polling') {
+                subscriber = new PollingSubscriber('/frontend/time', {}, 1000)
+            } else if (m.data.subType == 'streaming') {
+                subscriber = new StreamingSubscriber('/frontend/stream_time', {})
+            } else {
+                throw new Error(`Unknown subscriber type ${m.data.subType}`)
+            }
+
+            this.app.showModal(SubscriptionModal, { subscriber })
         })
     }
 
@@ -220,6 +251,72 @@ class StreamingModal extends ModalPart<NoState> {
                 }
             })
         })
+    }
+
+}
+
+type TimeResult = { time: string }
+
+class SubscriptionModal extends ModalPart<{ subscriber: ApiSubscriber<TimeResult, {}> }> {
+
+    logger = new Logger("SubscriptionModal")
+
+    logs: LogEntry[] = []
+    results: TimeResult[] = []
+
+    async init() {
+        this.setTitle("Subscription")
+        this.setIcon('glyp-recent')
+
+        this.logger.level = 'debug'
+
+        this.state.subscriber
+            .on<FooEvent>('foo', fooEvent => {
+                this.logger.info("A foo happened!", fooEvent)
+            })
+            .onResult(result => {
+                this.results.push(result)
+                this.logger.debug("Got result event!", result)
+                this.dirty()
+                return true
+            })
+            .onError(error => {
+                this.logger.error("Got error event!", error)
+                return true
+            })
+            .onLog(log => {
+                this.logs.push(log)
+                this.logger.debug("Got log event!", log)
+                this.dirty()
+            })
+            .onUnsubscribe(() => {
+                this.logger.debug("Unsubscribed from subscriber because the modal is closing probably")
+            })
+            .subscribe()
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.gap.padded', row => {
+            row.div('.stretch.tt-flex.column', col => {
+                for (const log of this.logs) {
+                    col.div(logLine => {
+                        logLine.span(log.level, { text: log.level })
+                        logLine.span({ text: log.message })
+                    })
+                }
+            })
+            row.div('.stretch.tt-flex.column', col => {
+                for (const result of this.results) {
+                    col.div({ text: JSON.stringify(result) })
+                }
+            })
+        })
+    }
+
+    onRemoved() {
+        // When we're removed from the page, unsubscribe from the subscriber so
+        // it doesn't keep going in the background
+        this.state.subscriber.unsubscribe()
     }
 
 }
