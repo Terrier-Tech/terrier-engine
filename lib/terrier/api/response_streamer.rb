@@ -38,6 +38,10 @@ class ResponseStreamer
     @sse.write body, event: type
   end
 
+  def result(body)
+    write('_result', body)
+  end
+
   def error(exception)
     backtrace = exception.backtrace.filter_backtrace
     body = {

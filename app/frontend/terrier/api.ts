@@ -1,6 +1,7 @@
 import {Logger} from "tuff-core/logging"
 import {QueryParams} from "tuff-core/urls"
 import {LogEntry} from "./logging"
+import {ErrorEvent} from "./api-subscriber"
 
 const log = new Logger('Api')
 
@@ -151,14 +152,6 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
 // Event Streams
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Type of error events from a streaming response.
- */
-export type ErrorEvent = {
-    prefix?: string
-    message: string
-    backtrace: string[]
-}
 
 /**
  * Configure a `Streamer`.
@@ -167,7 +160,7 @@ export type StreamOptions = {
     keepAlive?: boolean
 }
 
-type noArgListener = () => any
+export type noArgListener = () => any
 
 type StreamLifecycle = 'close'
 
@@ -181,13 +174,13 @@ export class Streamer {
         close: []
     }
 
-    constructor(readonly url: string, readonly options: StreamOptions) {
+    constructor(readonly url: string, readonly options: StreamOptions | undefined = undefined) {
         this.sse = new EventSource(url)
 
         // this is a special event sent by the ResponseStreamer on the server
         // to tell us that the request is done
         this.sse.addEventListener('_close', evt => {
-            if (!this.options.keepAlive) {
+            if (!this.options?.keepAlive) {
                 log.debug(`Closing Streamer at ${url}`, evt)
                 this.sse.close()
                 for (const listener of this.lifecycleListeners['close']) {
@@ -229,10 +222,9 @@ export class Streamer {
 
     onClose(listener: noArgListener) {
         this.lifecycleListeners['close'].push(listener)
+        return this
     }
 }
-
-
 
 /**
  * Creates a streaming response for the given endpoint.
