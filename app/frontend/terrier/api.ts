@@ -1,10 +1,9 @@
 import {Logger} from "tuff-core/logging"
 import {QueryParams} from "tuff-core/urls"
 import {LogEntry} from "./logging"
+import {ErrorEvent} from "./api-subscriber"
 
 const log = new Logger('Api')
-log.level = 'debug'
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Basic Requests
@@ -79,21 +78,32 @@ async function apiRequest<ResponseType>(url: string, config: RequestInit): Promi
  * @param params a set of parameters that will be added to the URL as a query string
  */
 async function safeGet<ResponseType>(url: string, params: QueryParams | Record<string, string | undefined>): Promise<ResponseType> {
+    const response = await get<ApiResponse & ResponseType>(url, params)
+    if (response.status == 'error') {
+        throw new ApiException(response.message)
+    }
+    return response
+}
+
+/**
+ * Performs a GET request for the given datatype.
+ * Unlike `safeGet`, this will return the result regardless of the response status.
+ * `ResponseType` does not need to include the `status` or `message` fields, this is handled automatically.
+ * @param url the base URL for the request
+ * @param params a set of parameters that will be added to the URL as a query string
+ */
+async function get<ResponseType>(url: string, params: QueryParams | Record<string, string | undefined>): Promise<ResponseType> {
     if (!params.raw) {
         params = new QueryParams(params as Record<string, string>)
     }
     const fullUrl = (params as QueryParams).serialize(url)
-    log.debug(`Safe getting ${fullUrl}`)
-    const response = await apiRequest<ResponseType>(fullUrl, {
+    log.debug(`Getting ${fullUrl}`)
+    return await apiRequest<ResponseType>(fullUrl, {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
         }
     })
-    if (response.status == 'error') {
-        throw new ApiException(response.message)
-    }
-    return response
 }
 
 /**
@@ -142,14 +152,6 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
 // Event Streams
 ////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Type of error events from a streaming response.
- */
-export type ErrorEvent = {
-    prefix?: string
-    message: string
-    backtrace: string[]
-}
 
 /**
  * Configure a `Streamer`.
@@ -158,7 +160,7 @@ export type StreamOptions = {
     keepAlive?: boolean
 }
 
-type noArgListener = () => any
+export type noArgListener = () => any
 
 type StreamLifecycle = 'close'
 
@@ -172,13 +174,13 @@ export class Streamer {
         close: []
     }
 
-    constructor(readonly url: string, readonly options: StreamOptions) {
+    constructor(readonly url: string, readonly options: StreamOptions | undefined = undefined) {
         this.sse = new EventSource(url)
 
         // this is a special event sent by the ResponseStreamer on the server
         // to tell us that the request is done
         this.sse.addEventListener('_close', evt => {
-            if (!this.options.keepAlive) {
+            if (!this.options?.keepAlive) {
                 log.debug(`Closing Streamer at ${url}`, evt)
                 this.sse.close()
                 for (const listener of this.lifecycleListeners['close']) {
@@ -220,10 +222,9 @@ export class Streamer {
 
     onClose(listener: noArgListener) {
         this.lifecycleListeners['close'].push(listener)
+        return this
     }
 }
-
-
 
 /**
  * Creates a streaming response for the given endpoint.
@@ -242,6 +243,7 @@ function stream(url: string, options: StreamOptions={}): Streamer {
 
 const Api = {
     safeGet,
+    get,
     safePost,
     post,
     stream,
