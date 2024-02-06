@@ -2,6 +2,8 @@ import {Logger} from "tuff-core/logging"
 import {QueryParams} from "tuff-core/urls"
 import {LogEntry} from "./logging"
 import {ErrorEvent} from "./api-subscriber"
+import Strings from "tuff-core/strings";
+import dayjs from "dayjs";
 
 const log = new Logger('Api')
 
@@ -147,6 +149,28 @@ async function post<ResponseType>(url: string, body: Record<string, unknown> | F
     return await request<ResponseType & ApiResponse>(url, config)
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Query Params
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Transforms the given object to a QueryParams compatible object.
+ */
+function objectToQueryParams(object: Record<string, unknown>, snakifyKeys: boolean = false): Record<string, string> {
+    const raw: Record<string, string> = {}
+    for (const [key, value] of Object.entries(object)) {
+        const paramKey = snakifyKeys ? Strings.splitWords(key).map(w => w.toLowerCase()).join("_") : key
+
+        if (dayjs.isDayjs(value)) {
+            raw[paramKey] = value.format()
+        } else if (value == undefined) {
+            raw[paramKey] = ""
+        } else {
+            raw[paramKey] = value?.toString()
+        }
+    }
+    return raw
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Event Streams
@@ -248,5 +272,6 @@ const Api = {
     post,
     stream,
     addRequestDecorator,
+    objectToQueryParams,
 }
 export default Api
