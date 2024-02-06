@@ -11,8 +11,14 @@ export type SubscriptionOptions = {
     keepAlive?: boolean
 }
 
+/** Options specific to Subscribers that use GET HTTP requests */
+export type GetSubscriberOptions = {
+    /** If true, keys in the params object will be snakified before being sent to the server */
+    snakifyKeys?: boolean
+}
+
 /** Parameters to send with the subscription request */
-export type SubscriptionParams = Record<string, string>
+export type SubscriptionParams = Record<string, unknown>
 
 export type SubscriptionEventHandlers<TResult> = {
     onResult: resultListener<TResult>[]
@@ -206,7 +212,7 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
         public url: string,
         public params: TParams,
         public interval: number | duration.Duration,
-        public options: SubscriptionOptions | undefined = undefined
+        public options: (SubscriptionOptions & GetSubscriberOptions) | undefined = undefined
     ) {
         super()
     }
@@ -247,7 +253,8 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
     }
 
     protected request(): Promise<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })> {
-        return Api.get<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })>(this.url, this.params)
+        const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
+        return Api.get<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })>(this.url, params)
     }
 
     protected handleEvent(event: SubscriptionEvent<TResult>): boolean {
@@ -341,7 +348,7 @@ export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> ex
     constructor(
         public url: string,
         public params: TParams,
-        public options: SubscriptionOptions | undefined = undefined,
+        public options: (SubscriptionOptions & GetSubscriberOptions) | undefined = undefined,
     ) {
         super()
     }
@@ -367,8 +374,9 @@ export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> ex
     }
 
     protected subscribeImpl(): void {
-        const paramsString = new URLSearchParams(this.params).toString()
-        const streamer = new Streamer(`${this.url}?${paramsString}`, this.options ?? {})
+        const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
+        const fullUrl = new URLSearchParams(params).toString()
+        const streamer = new Streamer(fullUrl, this.options ?? {})
 
         this.eventHandlers.onResult.forEach(handler => streamer.on<ResultEvent<TResult>>('_result', this.wrapHandler(handler)))
         this.eventHandlers.onError.forEach(handler => streamer.on<ErrorEvent>('_error', this.wrapHandler(handler)))
