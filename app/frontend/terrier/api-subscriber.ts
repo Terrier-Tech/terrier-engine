@@ -2,6 +2,7 @@ import Api, {ApiResponse, noArgListener, Streamer} from "./api"
 import {LogEntry} from "./logging"
 import dayjs from "dayjs"
 import duration from "dayjs/plugin/duration"
+import {Logger} from "tuff-core/logging";
 
 dayjs.extend(duration)
 
@@ -73,16 +74,24 @@ export type CloseEvent = BaseSubscriptionEvent & { _type: '_close' }
  * Each subclass is responsible for providing a constructor with whatever dependencies are required, but all subclasses
  * must implement `params` and `options` properties and handle them appropriately.
  */
-export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams> {
-
-    public abstract params: TParams
-    public abstract options?: SubscriptionOptions
+export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams, TOptions extends SubscriptionOptions = SubscriptionOptions> {
 
     protected isSubscribed: boolean = false
 
     protected eventHandlers: SubscriptionEventHandlers<TResult> = { onResult: [], onError: [], onLog: [] }
     protected lifecycleHandlers: SubscriptionLifecycleHandlers = { onSubscribe: [], onUnsubscribe: [], onClose: [] }
     protected otherHandlers: Record<string, ((event: unknown) => boolean | void)[]> = {}
+
+    /**
+     * @param params   parameters sent with subscription requests to customize server-side behavior
+     * @param options  options that customize client-side behavior of the subscriber
+     * @param logger
+     * @protected
+     */
+    protected constructor(public params: TParams, public options?: TOptions, public logger?: Logger) {
+        this.options ??= {} as TOptions
+        this.logger ??= new Logger(this.constructor.name)
+    }
 
     // Handler registration
 
@@ -174,6 +183,7 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
     protected notifyLifecycle(key: keyof SubscriptionLifecycleHandlers): void
     protected notifyLifecycle(key: 'onClose', reason: string | undefined): void
     protected notifyLifecycle(key: keyof SubscriptionLifecycleHandlers, reason: string | undefined = undefined): void {
+        this.logNotification(key, reason)
         if (key == 'onClose') {
             this.lifecycleHandlers[key].forEach(handler => handler(reason))
         } else {
@@ -182,6 +192,7 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
     }
 
     protected notifyResult(event: ResultEvent<TResult>) {
+        this.logNotification('_result', event)
         const shouldContinue = this.eventHandlers.onResult
             .map(handler => handler(event))
             .every(b => b)
@@ -189,6 +200,7 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
     }
 
     protected notifyError(event: ErrorEvent) {
+        this.logNotification('_error', event)
         const shouldContinue = this.eventHandlers.onError
             .map(handler => handler(event))
             .every(b => b)
@@ -196,14 +208,24 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
     }
 
     protected notifyLog(event: LogEvent) {
+        this.logNotification('_log', event)
         this.eventHandlers.onLog.forEach(handler => handler(event))
     }
 
     protected notifyOther(key: string, event: any) {
+        this.logNotification(key, event)
         const shouldContinue = this.otherHandlers[key]
             .map(handler => handler(event) !== false)
             .every(b => b)
         if (!shouldContinue) this.unsubscribe()
+    }
+
+    protected logNotification(key: string, event: any) {
+        if (event === undefined) {
+            this.logger?.debug('notify', key)
+        } else {
+            this.logger?.debug('notify', key, event)
+        }
     }
 
     /** Subclasses implement this method to start the subscription */
@@ -217,10 +239,12 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
 // Polling Subscriber
 ////////////////////////////////////////////////////////////////////////////////
 
+type PollingResponse<TResult> = (ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] }
+
 /**
  * An implementation of ApiSubscriber that uses polling to periodically make a request to the server
  */
-export class PollingSubscriber<TResult, TParams extends SubscriptionParams> extends ApiSubscriber<TResult, TParams> {
+export class PollingSubscriber<TResult, TParams extends SubscriptionParams> extends ApiSubscriber<TResult, TParams, (SubscriptionOptions & GetSubscriberOptions)> {
 
     // used to ensure we only schedule one interval at a time and allows for cancellation.
     private timeoutHandle: NodeJS.Timeout | null = null
@@ -230,14 +254,16 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
      * @param params params to use to make the request.
      * @param interval the interval on which to poll. Either a number of milliseconds or a dayjs Duration.
      * @param options extra subscription options
+     * @param logger a specific logger to use
      */
     constructor(
         public url: string,
-        public params: TParams,
         public interval: number | duration.Duration,
-        public options: (SubscriptionOptions & GetSubscriberOptions) | undefined = undefined
+        params: TParams,
+        options?: (SubscriptionOptions & GetSubscriberOptions),
+        logger?: Logger
     ) {
-        super()
+        super(params, options, logger)
     }
 
     subscribeImpl() {
@@ -270,10 +296,14 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
         })
     }
 
-    protected request(): Promise<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })> {
+    protected async request(): Promise<PollingResponse<TResult>> {
         const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
+
+        // Add _polling param so that the server-side can adjust behavior based on whether it is being polled or requested normally.
         params._polling = true.toString()
-        return Api.get<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })>(this.url, params)
+        const result = await Api.get<PollingResponse<TResult>>(this.url, params);
+        this.logger?.debug("polling request", params, result)
+        return result
     }
 
     protected handleEvent(event: SubscriptionEvent<TResult>) {
@@ -309,6 +339,9 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
         if (!this.isSubscribed) return
         if (this.timeoutHandle) return
         const intervalMs = (dayjs.isDuration(this.interval)) ? this.interval.asMilliseconds() : this.interval
+
+        this.logger?.debug("polling in", intervalMs, "milliseconds")
+
         this.timeoutHandle = setTimeout(this.makeRequest.bind(this), intervalMs)
     }
 }
@@ -325,11 +358,12 @@ export class CableSubscriber<TResult, TParams extends SubscriptionParams> extend
 
     constructor(
         public channelName: string,
-        public params: TParams,
-        public options: SubscriptionOptions | undefined = undefined
+        params: TParams,
+        options?: SubscriptionOptions,
+        logger?: Logger,
     ) {
         throw new Error("Method not implemented.")
-        super()
+        super(params, options, logger)
     }
 
     public updateParams(_newParams: TParams): void {
@@ -347,16 +381,17 @@ export class CableSubscriber<TResult, TParams extends SubscriptionParams> extend
 // Event Stream Subscriber
 ////////////////////////////////////////////////////////////////////////////////
 
-export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> extends ApiSubscriber<TResult, TParams> {
+export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> extends ApiSubscriber<TResult, TParams, (SubscriptionOptions & GetSubscriberOptions)> {
 
     private streamer?: Streamer
 
     constructor(
         public url: string,
-        public params: TParams,
-        public options: (SubscriptionOptions & GetSubscriberOptions) | undefined = undefined,
+        params: TParams,
+        options?: (SubscriptionOptions & GetSubscriberOptions),
+        logger?: Logger
     ) {
-        super()
+        super(params, options, logger)
     }
 
     public on<EventType>(eventType: string, handler: (event: EventType) => boolean | void): this {

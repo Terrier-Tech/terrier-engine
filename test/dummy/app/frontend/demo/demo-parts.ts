@@ -113,7 +113,7 @@ class Panel extends PanelPart<NoState> {
         this.onClick(subscriptionModalKey, m => {
             let subscriber: ApiSubscriber<TimeResult, {}>
             if (m.data.subType == 'polling') {
-                subscriber = new PollingSubscriber('/frontend/time', {}, 1000)
+                subscriber = new PollingSubscriber('/frontend/time', 1000, {})
             } else if (m.data.subType == 'streaming') {
                 subscriber = new StreamingSubscriber('/frontend/stream_time', {})
             } else {
