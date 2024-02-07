@@ -153,9 +153,7 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
 
     /** Stops the subscription and closes the connection. */
     public unsubscribe(): void {
-        if (!this.isSubscribed) {
-            throw new Error("Can't unsubscribe from a un-started subscription!")
-        }
+        if (!this.isSubscribed) return
         this.unsubscribeImpl()
         this.isSubscribed = false
         this.notifyLifecycle('onUnsubscribe')
@@ -183,10 +181,35 @@ export abstract class ApiSubscriber<TResult, TParams extends SubscriptionParams>
         }
     }
 
+    protected notifyResult(event: ResultEvent<TResult>) {
+        const shouldContinue = this.eventHandlers.onResult
+            .map(handler => handler(event))
+            .every(b => b)
+        if (!shouldContinue) this.unsubscribe()
+    }
+
+    protected notifyError(event: ErrorEvent) {
+        const shouldContinue = this.eventHandlers.onError
+            .map(handler => handler(event))
+            .every(b => b)
+        if (!shouldContinue) this.unsubscribe()
+    }
+
+    protected notifyLog(event: LogEvent) {
+        this.eventHandlers.onLog.forEach(handler => handler(event))
+    }
+
+    protected notifyOther(key: string, event: any) {
+        const shouldContinue = this.otherHandlers[key]
+            .map(handler => handler(event) !== false)
+            .every(b => b)
+        if (!shouldContinue) this.unsubscribe()
+    }
+
     /** Subclasses implement this method to start the subscription */
     protected abstract subscribeImpl(): void
 
-    /** Subclasses imlpement this method to end the subscription */
+    /** Subclasses implement this method to end the subscription */
     protected abstract unsubscribeImpl(): void
 }
 
@@ -234,63 +257,45 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
     private makeRequest() {
         this.clearTimeout()
         this.request().then(response => {
-            let shouldContinuePolling = true
             if ('events' in response) {
                 for (const event of response.events) {
-                    shouldContinuePolling &&= this.handleEvent(event)
+                   this.handleEvent(event)
                 }
             } else {
                 if (response.status == 'error') response._type = '_error'
-                shouldContinuePolling = this.handleEvent(response)
+                this.handleEvent(response)
             }
 
-            if (shouldContinuePolling) {
-                this.startTimeout()
-            } else {
-                this.unsubscribe()
-            }
+            this.startTimeout()
         })
     }
 
     protected request(): Promise<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })> {
         const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
+        params._polling = true.toString()
         return Api.get<((ApiResponse & SubscriptionEvent<TResult>) | { events: SubscriptionEvent<TResult>[] })>(this.url, params)
     }
 
-    protected handleEvent(event: SubscriptionEvent<TResult>): boolean {
-        let shouldContinuePolling = true
-
+    protected handleEvent(event: SubscriptionEvent<TResult>) {
         switch (event._type) {
             case '_result':
             case undefined:
-                for (const handler of this.eventHandlers.onResult) {
-                    const r = handler(event)
-                    shouldContinuePolling &&= r
-                }
+                this.notifyResult(event)
                 break
             case '_error':
-                for (const handler of this.eventHandlers.onError) {
-                    const r = handler(event)
-                    shouldContinuePolling &&= r
-                }
+                this.notifyError(event)
                 break
             case '_log':
-                this.eventHandlers.onLog.forEach(handler => handler(event))
+                this.notifyLog(event)
                 break
             case '_close':
                 this.notifyLifecycle('onClose')
                 this.close()
-                shouldContinuePolling = this.options?.keepAlive ?? false
                 break
             default:
                 const otherEvent = event as any
-                for (const handler of this.otherHandlers[otherEvent._type]) {
-                    const r = handler(otherEvent) ?? true
-                    shouldContinuePolling &&= r
-                }
+                this.notifyOther(otherEvent._type, otherEvent)
         }
-
-        return shouldContinuePolling
     }
 
     protected clearTimeout() {
@@ -301,6 +306,7 @@ export class PollingSubscriber<TResult, TParams extends SubscriptionParams> exte
     }
 
     protected startTimeout() {
+        if (!this.isSubscribed) return
         if (this.timeoutHandle) return
         const intervalMs = (dayjs.isDuration(this.interval)) ? this.interval.asMilliseconds() : this.interval
         this.timeoutHandle = setTimeout(this.makeRequest.bind(this), intervalMs)
@@ -354,47 +360,10 @@ export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> ex
     }
 
     public on<EventType>(eventType: string, handler: (event: EventType) => boolean | void): this {
-        this.streamer?.on(eventType, handler)
+        if (!(eventType in this.otherHandlers) && this.streamer) {
+            this.listenOther(eventType, this.streamer)
+        }
         return super.on(eventType, handler)
-    }
-
-    public onResult(handler: (result: ResultEvent<TResult>) => boolean): this {
-        this.streamer?.on<ResultEvent<TResult>>('_result', handler)
-        return super.onResult(handler)
-    }
-
-    public onError(handler: (error: ErrorEvent) => boolean): this {
-        this.streamer?.on<ErrorEvent>('_error', handler)
-        return super.onError(handler)
-    }
-
-    public onLog(handler: (logEntry: LogEvent) => void): this {
-        this.streamer?.on<LogEvent>('_log', handler)
-        return super.onLog(handler)
-    }
-
-    protected subscribeImpl(): void {
-        const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
-        const fullUrl = new URLSearchParams(params).toString()
-        const streamer = new Streamer(fullUrl, this.options ?? {})
-
-        this.eventHandlers.onResult.forEach(handler => streamer.on<ResultEvent<TResult>>('_result', this.wrapHandler(handler)))
-        this.eventHandlers.onError.forEach(handler => streamer.on<ErrorEvent>('_error', this.wrapHandler(handler)))
-        this.eventHandlers.onLog.forEach(handler => streamer.on<LogEvent>('_log', handler))
-        this.lifecycleHandlers.onClose.forEach(handler => streamer.onClose(handler))
-        streamer.onClose(() => {
-            this.close()
-        })
-        Object.entries(this.otherHandlers)
-            .forEach(([key, handlers]) =>
-                handlers.forEach(handler => streamer.on(key, this.wrapHandler(handler)))
-            )
-
-        this.streamer = streamer
-    }
-    protected unsubscribeImpl(): void {
-        this.streamer?.sse.close()
-        this.streamer = undefined
     }
 
     public updateParams(newParams: TParams): void {
@@ -403,10 +372,33 @@ export class StreamingSubscriber<TResult, TParams extends SubscriptionParams> ex
         this.subscribeImpl()
     }
 
-    private wrapHandler<T>(handler: (param: T) => boolean | void): (param: T) => void {
-        return (param: T) => {
-            const shouldContinue = handler(param) ?? true
-            if (!shouldContinue) this.unsubscribe()
-        }
+    protected subscribeImpl(): void {
+        const params = Api.objectToQueryParams(this.params, this.options?.snakifyKeys)
+        const paramsString = new URLSearchParams(params).toString()
+        const streamer = new Streamer(`${this.url}?${paramsString}`, this.options ?? {})
+
+        streamer
+            .on<ResultEvent<TResult>>('_result', this.notifyResult.bind(this))
+            .on<ErrorEvent>('_error', this.notifyError.bind(this))
+            .on<LogEvent>('_log', this.notifyLog.bind(this))
+            .onClose(() => {
+                this.close()
+                this.notifyLifecycle('onClose')
+            })
+
+        Object.keys(this.otherHandlers).forEach(key => {
+            this.listenOther(key, streamer)
+        })
+
+        this.streamer = streamer
+    }
+
+    protected unsubscribeImpl(): void {
+        this.streamer?.sse.close()
+        this.streamer = undefined
+    }
+
+    protected listenOther(key: string, streamer: Streamer) {
+        streamer.on(key, (event) => this.notifyOther(key, event))
     }
 }
