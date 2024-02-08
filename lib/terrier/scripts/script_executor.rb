@@ -39,7 +39,11 @@ class ScriptExecutor
     script_run = ScriptRun.new script_id: @script.id, status: 'running', created_at: Time.now, duration: 0
 
     if script_run.respond_to?(:fields)
-      script_run.fields = @field_values
+      csv_fields = @script
+                     .script_fields
+                     .select { |field| field.field_type == 'csv' }
+                     .map(&:name)
+      script_run.fields = @field_values.reject { |k, _| csv_fields.include?(k) }
     end
 
     script_run

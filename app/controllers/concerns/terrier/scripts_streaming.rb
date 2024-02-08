@@ -58,30 +58,17 @@ module Terrier::ScriptsStreaming
         # initialize the run
         run = executor.init_run
 
-        # do not serialize and save csv files with run in case file is huge
-        csv_fields = @script
-          .script_fields
-          .select { |field| field.field_type == 'csv' }
-          .to_h do |field|
-          [field.name, run.fields[field.name]]
-        end
-        csv_fields.keys.each { |name| run.fields.delete name }
-
         # save the run before actually running to mark it as running such that no one else
         save_run? run if @script.persisted?
 
         # actually run the script
-        csv_fields.each { |name, values| run.fields[name] = values }
         executor.run run, response.stream
 
         # set its body to match the script it ran
         run.script_body = @script.body.strip.force_encoding(Encoding::UTF_8)
 
         # now save it again since the run has been completed
-        csv_fields.keys.each { |name| run.fields.delete name }
         save_run? run if @script.persisted?
-
-        csv_fields.each { |name, values| run.fields[name] = values }
       rescue => ex
         is_cancelled = ex.message.index('client disconnected')
 
