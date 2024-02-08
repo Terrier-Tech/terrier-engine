@@ -69,7 +69,6 @@ module Terrier::ScriptsStreaming
 
         # now save it again since the run has been completed
         save_run? run if @script.persisted?
-
       rescue => ex
         is_cancelled = ex.message.index('client disconnected')
 
