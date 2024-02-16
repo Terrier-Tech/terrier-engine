@@ -581,6 +581,9 @@ table.script-runs {
 	.key {
 		opacity: 0.8;
 	}
+	.field {
+		max-width: 16em;
+	}
 	a.clear-run {
 		font-weight: bold;
 		color: $alert-color;
