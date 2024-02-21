@@ -12,6 +12,8 @@ import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
 import Arrays from "tuff-core/arrays"
 import {ColumnRef} from "./columns"
+import Ids from "../../terrier/ids";
+import Objects from "tuff-core/objects";
 
 const log = new Logger("Queries")
 
@@ -83,6 +85,17 @@ function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
  */
 function eachColumn(query: Query, fn: ColumnFunction) {
     eachColumnForTable(query.from, fn)
+}
+
+/**
+ * Duplicates a query, including all of the nested data structures.
+ * @param query the query to duplicate
+ * @return a completely new query
+ */
+function duplicate(query: Query): Query {
+    const newQuery = Objects.deepCopy(query)
+    newQuery.id = Ids.makeUuid()
+    return newQuery
 }
 
 
@@ -319,6 +332,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 const Queries = {
     eachColumn,
     eachTable,
+    duplicate,
     validate,
     preview,
     renderPreview

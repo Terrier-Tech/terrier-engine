@@ -1,7 +1,7 @@
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {PartTag} from "tuff-core/parts"
 import Dives from "./dives"
-import {Query, QueryModelPicker} from "../queries/queries"
+import Queries, {Query, QueryModelPicker} from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
@@ -17,6 +17,8 @@ import {DiveRunModal} from "./dive-runs"
 import Nav from "tuff-core/nav"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
+import {FormFields} from "tuff-core/forms";
+import Fragments from "../../terrier/fragments";
 
 const log = new Logger("DiveEditor")
 
@@ -36,6 +38,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     tabs!: TabContainerPart
 
     newQueryKey = Messages.untypedKey()
+    duplicateQueryKey = Messages.untypedKey()
 
     static readonly diveChangedKey = Messages.untypedKey()
 
@@ -55,14 +58,21 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             click: {key: this.newQueryKey}
         })
         this.tabs.addAfterAction({
+            icon: 'glyp-copy',
+            classes: ['duplicate-query'],
+            tooltip: "Duplicate this query",
+            click: {key: this.duplicateQueryKey}
+        })
+        this.tabs.addAfterAction({
             icon: 'glyp-plus_outline',
             classes: ['new-query'],
+            tooltip: "Add a new query to this Dive",
             click: {key: this.newQueryKey}
         })
 
         this.queries = this.state.dive.query_data?.queries || []
         for (const query of this.queries) {
-            this.addQueryTag(query)
+            this.addQueryTab(query)
         }
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {
@@ -73,6 +83,26 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         this.onClick(this.newQueryKey, _ => {
             this.app.showModal(NewQueryModal, {editor: this as DiveEditor, schema: this.state.schema})
+        })
+
+        this.onClick(this.duplicateQueryKey, _ => {
+            const id = this.tabs.currentTagKey
+            if (id?.length) {
+                const query = this.queries.find(q => q.id == id)
+                if (query) {
+                    this.app.showModal(DuplicateQueryModal, {
+                        editor: this as DiveEditor,
+                        schema: this.state.schema,
+                        query
+                    })
+                }
+                else {
+                    this.app.alertToast(`No query with id ${id}`, 'glyp-alert')
+                }
+            }
+            else {
+                this.app.alertToast("No query shown", 'glyp-alert')
+            }
         })
 
         this.onClick(DiveEditor.deleteQueryKey, m => {
@@ -88,14 +118,14 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      */
     addQuery(query: Query) {
         this.queries.push(query)
-        this.addQueryTag(query)
+        this.addQueryTab(query)
     }
 
     /**
      * Adds a tab for an existing query.
      * @param query
      */
-    private addQueryTag(query: Query) {
+    private addQueryTab(query: Query) {
         const state = {...this.state, query}
         this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
     }
@@ -125,6 +155,10 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Editor Page
+////////////////////////////////////////////////////////////////////////////////
 
 export class DiveEditorPage extends PagePart<{id: string}> {
 
@@ -304,4 +338,56 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         this.pop()
     }
 
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Duplicate Query Modal
+////////////////////////////////////////////////////////////////////////////////
+
+
+type DuplicateQueryState = {
+    editor: DiveEditor
+    schema: SchemaDef
+    query: Query
+}
+
+class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
+
+    dupKey = Messages.untypedKey()
+    fields!: FormFields<Query>
+
+    async init() {
+        this.setIcon('glyp-data_dive_query')
+        this.setTitle("Duplicate Query")
+
+        const newQuery = {...this.state.query, name: `${this.state.query.name} Copy`}
+        this.fields = new FormFields<Query>(this, newQuery)
+
+        this.addAction({
+            title: "Duplicate",
+            icon: 'glyp-checkmark',
+            click: {key: this.dupKey}
+        })
+
+        this.onClick(this.dupKey, async _ => {
+            await this.save()
+        })
+    }
+
+    async save() {
+        const newName = this.fields.data.name
+        const query = {...Queries.duplicate(this.state.query), name: newName}
+        this.state.editor.addQuery(query)
+        this.state.editor.tabs.showTab(query.id)
+        this.pop()
+        this.app.successToast("Duplicated Query", 'glyp-copy')
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div(".tt-flex.column.padded.gap", col => {
+            Fragments.simpleHeading(col, this.theme, "Name")
+            this.fields.textInput(col, 'name')
+        })
+    }
 }

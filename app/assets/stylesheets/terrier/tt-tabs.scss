@@ -18,6 +18,10 @@
 				display: block;
 				transform: scale(1.2);
 			}
+			&.icon-only {
+				@include tt-scale-push;
+				padding: 0.5em;
+			}
 		}
 
 		.spacer {

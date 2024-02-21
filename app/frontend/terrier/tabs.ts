@@ -116,6 +116,13 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.dirty()
     }
 
+    /**
+     * Gets the current tab key.
+     */
+    get currentTagKey(): string | undefined {
+        return this.state.currentTab || Object.keys(this.tabs)[0]
+    }
+
 
     _beforeActions: Action[] = []
 
