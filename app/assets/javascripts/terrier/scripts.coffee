@@ -669,6 +669,9 @@ class FieldsControls
 			view.find('.field-default_value').toggle(fieldType != 'csv')
 			view.find('.field-values').toggle(fieldType == 'select')
 
+		@list.on 'dragend', '.script-field', (evt) =>
+			this.updateOutput()
+
 		new Sortable @list[0]
 
 	addField: ->
