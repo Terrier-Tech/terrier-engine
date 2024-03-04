@@ -669,7 +669,11 @@ class FieldsControls
 			view.find('.field-default_value').toggle(fieldType != 'csv')
 			view.find('.field-values').toggle(fieldType == 'select')
 
-		new Sortable @list[0]
+		new Sortable @list[0], {
+			onSort: =>
+				this.updateOutput()
+				@editor.onChanged()
+		}
 
 	addField: ->
 		@list.append tinyTemplate(=> _fieldPartial({}, @constants))
