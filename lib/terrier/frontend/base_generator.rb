@@ -70,7 +70,7 @@ class BaseGenerator
   # Uses Prettier to format a file
   # @param path [String] the absolute path to the file
   def prettier_file(path)
-    cmd = "npx --no-install prettier --write --no-semi #{path}"
+    cmd = "npx --no-install prettier --print-width 200 --write --no-semi #{path}"
     info "Formatting file with #{cmd.bold}"
     system cmd
   end

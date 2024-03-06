@@ -43,8 +43,9 @@ class ModelGenerator < BaseGenerator
         end
       end
       attachments = @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : []
+      columns_to_exclude = model.try(:exclude_columns_from_frontend) || Set.new
       models[model.name] = {
-        columns: model.columns,
+        columns: model.columns.reject { |c| c.name.in?(columns_to_exclude) },
         reflections: model.reflections,
         belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
         has_manies: model.reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
