@@ -4,6 +4,7 @@
 	--demo-border-color: #ccc;
 	--demo-border-radius: 6px;
 	@include tt-absolute-fill;
+	overflow-y: auto;
 
 	.annotated {
 		position: relative;

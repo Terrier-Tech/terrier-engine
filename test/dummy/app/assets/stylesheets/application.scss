@@ -127,6 +127,10 @@ a.demo-link {
 	display: flex;
 	flex-direction: column;
 	position: relative;
+
+	&:has(.tt-demo) {
+		overflow-y: hidden;
+	}
 }
 
 #main-actions {
