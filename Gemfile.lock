@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.18.1)
+    terrier-engine (4.19.0)
       amazing_print
       coderay
       colorize
@@ -206,7 +206,7 @@ GEM
       timeout
     net-smtp (0.4.0.1)
       net-protocol
-    nio4r (2.7.0)
+    nio4r (2.7.1)
     nkf (0.2.0)
     nokogiri (1.16.2)
       mini_portile2 (~> 2.8.2)
