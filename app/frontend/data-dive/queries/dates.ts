@@ -1,4 +1,4 @@
-import inflection from "inflection"
+import * as inflection from "inflection"
 import dayjs from "dayjs"
 import {Dropdown} from "../../terrier/dropdowns"
 import {PartTag} from "tuff-core/parts"

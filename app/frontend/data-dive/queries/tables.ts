@@ -1,6 +1,6 @@
 import {PartTag} from "tuff-core/parts"
 import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import inflection from "inflection"
+import * as inflection from "inflection"
 import Filters, {Filter, FilterInput, FiltersEditorModal} from "./filters"
 import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
 import {Logger} from "tuff-core/logging"

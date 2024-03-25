@@ -1,6 +1,6 @@
 // This file was automatically generated, DO NOT EDIT IT MANUALLY!
 
-import inflection from "inflection"
+import * as inflection from "inflection"
 
 const allBadges = [
 

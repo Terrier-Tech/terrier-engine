@@ -12,7 +12,7 @@ import Dives from "./dives"
 import {Logger} from "tuff-core/logging";
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {TerrierFormFields} from "../../terrier/forms"
-import inflection from "inflection"
+import * as inflection from "inflection"
 import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, LiteralDateRange} from "../queries/dates"
 import dayjs from "dayjs"
 import {ProgressBarPart} from "../../terrier/progress";

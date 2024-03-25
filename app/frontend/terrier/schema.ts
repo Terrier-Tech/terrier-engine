@@ -1,5 +1,5 @@
 import Api from "./api"
-import inflection from "inflection"
+import * as inflection from "inflection"
 
 ////////////////////////////////////////////////////////////////////////////////
 // Schema Definitions

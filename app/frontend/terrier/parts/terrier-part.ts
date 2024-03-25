@@ -4,7 +4,7 @@ import Loading from "../loading"
 import Theme, {IconName} from "../theme"
 import Toasts, {ToastOptions} from "../toasts"
 import {DbErrors} from "../db-client"
-import inflection from "inflection";
+import * as inflection from "inflection"
 
 /**
  * Base class for ALL parts in a Terrier application.
