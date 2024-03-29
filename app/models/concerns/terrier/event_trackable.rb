@@ -9,7 +9,7 @@
 #   end
 #   => [<User name="Alice"...>]
 #
-module EventTrackable
+module Terrier::EventTrackable
   extend ActiveSupport::Concern
 
   included do

@@ -18,7 +18,7 @@ class EventTrackableTest < ActiveSupport::TestCase
   end
 
   class MockModel < ApplicationRecord
-    include EventTrackable
+    include Terrier::EventTrackable
   end
 
   # @return [Tempfile]
@@ -170,7 +170,7 @@ class EventTrackableTest < ActiveSupport::TestCase
       MockModel.new(name: "Name 2").save_by! "System"
     end
 
-    actual = EventTrackable.tracked_to_s(tracked, :name, :created_by_name)
+    actual = Terrier::EventTrackable.tracked_to_s(tracked, :name, :created_by_name)
 
     expected = <<~STR.strip
       +--------------------------+
