@@ -4,13 +4,14 @@ require_relative "../../../app/models/concerns/terrier/event_trackable"
 class EventTrackableTest < ActiveSupport::TestCase
 
   def setup
-    create_mock_model_table
+    create_mock_table :mock_models
   end
 
-  def create_mock_model_table
+  # @param table_name [Symbol]
+  def create_mock_table(table_name)
     ActiveRecord::Migration.suppress_messages do
       ActiveRecord::Schema.define do
-        create_model :mock_models do |table|
+        create_model table_name do |table|
           table.text :name, default: "Name"
         end
       end
@@ -18,6 +19,10 @@ class EventTrackableTest < ActiveSupport::TestCase
   end
 
   class MockModel < ApplicationRecord
+    include Terrier::EventTrackable
+  end
+
+  class OtherModel < ApplicationRecord
     include Terrier::EventTrackable
   end
 
@@ -86,6 +91,12 @@ class EventTrackableTest < ActiveSupport::TestCase
       model.name = "New Name"
       model.save_by!
     end
+    assert_equal [], tracked
+  end
+
+  test "does not track events on other models" do
+    create_mock_table :other_models
+    tracked = MockModel.track_events { OtherModel.new.save_by! }
     assert_equal [], tracked
   end
 
