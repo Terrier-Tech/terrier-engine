@@ -21,6 +21,7 @@ class ApplicationRecord < ActiveRecord::Base
     self.updated_by_name = user
     self.save!
   end
+  alias save_by! save_by_user!
 
   def save_if_needed!(change_user)
     return false unless self.changed?
