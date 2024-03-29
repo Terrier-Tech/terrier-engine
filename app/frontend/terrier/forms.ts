@@ -1,7 +1,7 @@
 import {Field, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
-import {InputTag, InputTagAttrs, SelectTag, SelectTagAttrs} from "tuff-core/html"
+import {InputTag, InputTagAttrs, SelectTag, SelectTagAttrs, TextAreaTag, TextAreaTagAttrs} from "tuff-core/html"
 import TerrierPart from "./parts/terrier-part"
 import GlypPicker from "./parts/glyp-picker"
 import Glyps from "./glyps"
@@ -104,6 +104,15 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
             attrs.classes.push('error')
         }
         return super.select(parent, name, options, attrs);
+    }
+
+    textArea<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, attrs: TextAreaTagAttrs={}): TextAreaTag {
+        if (this.errors && this.errors[name]) {
+            attrs ||= {}
+            attrs.classes ||= []
+            attrs.classes.push('error')
+        }
+        return super.textArea(parent, name, attrs);
     }
 
     /**
