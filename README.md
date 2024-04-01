@@ -131,6 +131,14 @@ Terrier engine consists of two components that must be published separately:
 the gem (contains .rb, .rake, .coffee, and .scss files)
 and the npm package (contains .ts files and hub .svg icons).
 
+In general, updates to the version number should happen on master, rather than in a specific PR.
+If there are multiple PRs that update the version number simultaneously, they could cause conflicts.
+This can be avoided by merging PRs without changes to the version number,
+then updating the version number immediately prior to publishing the new version.
+
+Even if you are only merging a single PR and publishing it immediately, for consistency we should
+always follow the same publishing process.
+
 ### The Gem
 
 Publishing a new version of the gem is very simple:
