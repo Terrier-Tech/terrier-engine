@@ -38,7 +38,8 @@
 
 .tt-actions-dropdown {
 	.tt-dropdown-content {
-		@include scroll-y;
+		overflow-y: scroll;
+		&::-webkit-scrollbar { width: 0 !important }
 	}
 	a, .header {
 		display: flex;
