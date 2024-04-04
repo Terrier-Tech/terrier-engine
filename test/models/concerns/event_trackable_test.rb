@@ -174,25 +174,4 @@ class EventTrackableTest < ActiveSupport::TestCase
     [file_1, file_2].each(&:close)
     [file_1, file_2].each(&:unlink)
   end
-
-  test "returns tracked table string" do
-    tracked = MockModel.track_events do
-      MockModel.new(name: "Name 1").save_by! "System"
-      MockModel.new(name: "Name 2").save_by! "System"
-    end
-
-    actual = Terrier::EventTrackable.tracked_to_s(tracked, :name, :created_by_name)
-
-    expected = <<~STR.strip
-      +--------------------------+
-      |      Tracked Events      |
-      +--------+-----------------+
-      | Name   | Created By Name |
-      +--------+-----------------+
-      | Name 1 | System          |
-      | Name 2 | System          |
-      +--------+-----------------+
-    STR
-    assert_equal expected, actual
-  end
 end

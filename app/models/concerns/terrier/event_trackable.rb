@@ -36,22 +36,6 @@ module Terrier::EventTrackable
     end
   end
 
-  class << self
-    # Provides a way to visualize tracked models in pretty table format. Assumes all models are the same.
-    # @param tracked [Array<ActiveRecord::Base>] models
-    # @param keys [Array<Symbol>] attributes to display
-    # @return [String] pretty table
-    def tracked_to_s(tracked, *keys)
-      Terminal::Table.new do |table|
-        table.title = "Tracked Events"
-        table.headings = keys.map { _1.to_s.titleize }
-        tracked.each do |event|
-          table.add_row keys.map { event.send _1 }
-        end
-      end.to_s
-    end
-  end
-
   private
 
   def track_event
