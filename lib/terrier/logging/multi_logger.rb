@@ -8,6 +8,7 @@ class MultiLogger
   attr_accessor :use_stdout, :use_rails, :logger, :stream, :level, :prefix, :messages
 
   LEVELS = %w(debug info success separator warn error)
+  MAX_LOG_LEVEL_LENGTH = LEVELS.map(&:length).max
 
   def initialize(prefix, opts={})
     @prefix = prefix
@@ -36,11 +37,6 @@ class MultiLogger
     @stream.close
   end
 
-  # Setter method to change the log level
-  def level=(new_level)
-    @level = new_level
-  end
-
   def debug(message, *args)
     log 'debug', message, *args
   end
@@ -62,6 +58,10 @@ class MultiLogger
   end
 
   def error(ex, *args)
+    if ex.is_a?(String)
+      log 'error', ex, *args
+      return
+    end
     message = ex.message
     unless ex.backtrace.nil?
       ex.backtrace[0..20].each do |line|
@@ -73,7 +73,7 @@ class MultiLogger
 
   def log(level, message, *args)
     return if LEVELS.index(@level) > LEVELS.index(level)
-    if level == 'separator'
+    if level == 'separator' && message !~ /==== .* ====/
       message = "==== #{message} ===="
     end
     write level, message
@@ -104,7 +104,7 @@ class MultiLogger
   # writes directly to the appropriate outputs
   def write(level, s)
     logger_level = %w(separator success).index(level) ? 'info' : level
-    logger_message = "#{@prefix} #{s}"
+    logger_message = "#{@prefix.blank? ? "" : @prefix + " "}#{s}"
     if @logger
       @logger.send logger_level, logger_message
     end
@@ -113,7 +113,7 @@ class MultiLogger
       Rails.logger.send logger_level, logger_message
     end
 
-    stdout_message = "#{level.upcase} -- #{@prefix} #{s}"
+    stdout_message = level.upcase.rjust(MAX_LOG_LEVEL_LENGTH) + " " + logger_message
     if @use_stdout
       puts stdout_message
     end
