@@ -163,6 +163,8 @@ class ModelGenerator < BaseGenerator
   # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
     case col.type
+    when :boolean, :bool
+      'boolean'
     when :integer, :float
       'number'
     when :json, :jsonb
