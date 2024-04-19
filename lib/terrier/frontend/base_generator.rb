@@ -61,7 +61,7 @@ class BaseGenerator
     File.open abs_path, 'wt' do |f|
       raw = template.result context
       lines = raw.split("\n")[1..-1] # remove the noinspection line at the top
-      lines.prepend "#{comment_prefix} This file was automatically generated, DO NOT EDIT IT MANUALLY!"
+      lines.prepend "#{comment_prefix} This file was automatically generated on #{Time.now}, DO NOT EDIT IT MANUALLY!"
       f.write lines.join("\n")
     end
     abs_path
