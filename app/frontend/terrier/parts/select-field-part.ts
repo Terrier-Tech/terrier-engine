@@ -1,9 +1,9 @@
 import {SelectOption, SelectOptions} from "tuff-core/forms"
-import ContentPart from "./content-part"
 import Messages, { TypedKey } from "tuff-core/messages"
 import {PartTag} from "tuff-core/parts"
 import {Dropdown} from "../dropdowns"
 import Overlays, {AnchorResult} from "../overlays"
+import TerrierPart from "./terrier-part";
 
 /**
  * Replacement part for a 'select' field that retrieves its options from a centralized data source
@@ -19,7 +19,7 @@ export type SelectFieldState = {
     selected_option: SelectOption
 }
 
-export class SelectFieldPart<T extends SelectFieldState> extends ContentPart<T> {
+export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> {
     _toggleDropdownKey = Messages.untypedKey()
 
     selectedOptionKey = Messages.typedKey<{ selected_option: SelectOption }>()
