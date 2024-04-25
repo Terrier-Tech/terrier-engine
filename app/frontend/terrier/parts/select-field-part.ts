@@ -9,13 +9,12 @@ import TerrierPart from "./terrier-part";
  * Replacement part for a 'select' field that retrieves its options from a centralized data source
  * rather than appending them to the DOM. When there are multiple select fields on the same page
  * with the same set of options, this is more efficient than the standard 'select' field.
- * @param options the options to add
- * @param value the currently selected option value
- * @param select_key the
  */
 
 export type SelectFieldState = {
+    /** the options to add */
     options: SelectOptions
+    /** the currently selected option value */
     selected_option: SelectOption
 }
 
@@ -44,11 +43,10 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
     }
 
     onOptionSelected(selectedOption: SelectOption) {
-        this.state.selected_option = selectedOption
-        this.dirty()
+        this.assignState({ ...this.state, selected_option: selectedOption })
     }
 
-    renderContent(parent: PartTag) {
+    render(parent: PartTag) {
         parent.div({ text: this.state.selected_option.title })
         parent.emitClick(this._toggleDropdownKey)
     }
@@ -137,11 +135,7 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
         }
 
         // how far down the select options list we need to scroll
-        let scrollAmount = (selectOptionSize.height * (selectedOptionIndex))
-        const hasOptGroups = this.state.options.find((o) => 'group' in o)
-        if (hasOptGroups) {
-            scrollAmount -= selectOptionSize.height
-        }
+        let scrollAmount = selectedElement.offsetTop
 
         let scrollTop = scrollAmount - anchorRect.top
         let dropdownIsShrunk = false
@@ -158,7 +152,7 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
                 dropdownIsShrunk = true
             }
         } else {
-            if (hasOptGroups) {
+            if (this.state.options.find((o) => 'group' in o)) {
                 result.top += selectOptionSize.height
             }
         }
