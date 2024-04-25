@@ -156,7 +156,7 @@ class OverlayLayer<PartType extends Part<StateType>, StateType extends {}> exten
 // Anchoring
 ////////////////////////////////////////////////////////////////////////////////
 
-type AnchorResult = {
+export type AnchorResult = {
     left: number
     top: number
     width?: number,
@@ -337,7 +337,6 @@ function centerElement(elem: HTMLElement) {
     elem.setAttribute('style', styleString)
 }
 
-
 ////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
@@ -345,6 +344,9 @@ function centerElement(elem: HTMLElement) {
 const Overlays = {
     anchorElement,
     centerElement,
+    getWindowSize,
+    getElementSize,
+    clampAnchorResult,
     anchorBox
 }
 
