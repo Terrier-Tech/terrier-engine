@@ -23,39 +23,46 @@
 	}
 }
 
-.tt-select-options-dropdown {
+.tt-select-options-dropdown-container {
 	.tt-dropdown-content {
 		transition: none;
 		@include scroll-y;
-		padding: 4px;
-		font-weight: bold;
-		background-color: rgba(50, 50, 50, .75);
-		backdrop-filter: blur(10px);
-		div {
-			padding: 2px 4px 2px 32px;
+		margin: 4px 0px;
+		background: none;
+		box-shadow: none;
+		height: calc(100vh - 8px);
+		.tt-select-options-dropdown {
+			font-weight: bold;
+			background-color: rgba(50, 50, 50, .75);
+			backdrop-filter: blur(10px);
 			border-radius: 4px;
-			cursor: default;
-			@include single-line;
-			&.tt-select-options-group-header {
-				color: #ccc;
-				padding-left: 16px;
-			}
-			&:not(.tt-select-options-group-header) {
-				&.hover, &:hover {
-					background-color: #5288e9;
+			padding: 4px;
+			div {
+				padding: 2px 4px 2px 32px;
+				border-radius: 4px;
+				cursor: default;
+				@include single-line;
+				&.tt-select-options-group-header {
+					color: #ccc;
+					padding-left: 16px;
 				}
-				height: 28px;
+				&:not(.tt-select-options-group-header) {
+					&.hover, &:hover {
+						background-color: #f1940f; // darker primary color
+					}
+					height: 28px;
+				}
+				&.selected::before {
+					@include glyps-font;
+					content: $glyp-checkmark;
+					position: absolute;
+					left: 8px;
+				}
 			}
-			&.selected::before {
-				@include glyps-font;
-				content: $glyp-checkmark;
-				position: absolute;
-				left: 8px;
-			}
-		}
-		&:has(.tt-select-options-group-header) {
-			div:not(.tt-select-options-group-header) {
-				padding-left: 32px;
+			&:has(.tt-select-options-group-header) {
+				div:not(.tt-select-options-group-header) {
+					padding-left: 32px;
+				}
 			}
 		}
 	}

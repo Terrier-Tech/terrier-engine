@@ -34,7 +34,6 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
             }, this.element)
         })
         this.listenMessage(this.selectedOptionKey, m => {
-            console.log('heard option selected')
             this.onOptionSelected(m.data.selected_option)
         }, { attach: "passive" })
     }
@@ -86,39 +85,48 @@ export type SelectFieldDropdownState = SelectFieldState & {
 }
 export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
     _clickedOptionKey = Messages.typedKey<{ selected_option: SelectOption }>()
+    _clearDropdownKey = Messages.untypedKey()
 
     async init() {
         await super.init()
         this.onClick(this._clickedOptionKey, m => {
-            this.emitMessage(this.state.select_key, { selected_option: m.data.selected_option })
+            this.emitMessage(this.state.select_key, {selected_option: m.data.selected_option})
+            this.clear()
+        })
+
+        this.onClick(this._clearDropdownKey, _ => {
             this.clear()
         })
     }
+
     get autoClose(): boolean {
         return true
     }
 
     get parentClasses(): Array<string> {
-        return ['tt-select-options-dropdown', ...super.parentClasses]
+        return ['tt-select-options-dropdown-container', ...super.parentClasses]
     }
 
     renderContent(parent: PartTag) {
-        for (const opt of this.state.options) {
-            if ('group' in opt) {
-                parent.div('.tt-select-options-group-header', { text: opt.group } )
-                for (const groupOpt of opt.options) {
-                    this.renderOption(parent, groupOpt)
+        parent.div('.tt-select-options-dropdown', dropdown => {
+            for (const opt of this.state.options) {
+                if ('group' in opt) {
+                    dropdown.div('.tt-select-options-group-header', {text: opt.group})
+                    for (const groupOpt of opt.options) {
+                        this.renderOption(dropdown, groupOpt)
+                    }
+                } else {
+                    this.renderOption(dropdown, opt)
                 }
-            } else {
-                this.renderOption(parent, opt)
             }
-        }
+        })
+        parent.emitClick(this._clearDropdownKey)
     }
 
     renderOption(parent: PartTag, opt: SelectOption) {
-        parent.div({ text: opt.title }, option => {
+        parent.div({text: opt.title}, option => {
             if (this.state.selected_option.value == opt.value) option.class('selected')
-        }).emitClick(this._clickedOptionKey, { selected_option: opt })
+        }).emitClick(this._clickedOptionKey, {selected_option: opt})
     }
 
     update(elem: HTMLElement) {
@@ -138,8 +146,9 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
      * @param selectField the anchor select field
      * @param selectedElement the selected option that will be positioned directly above the select field
      */
-    anchorSelectDropdown(dropdown: HTMLElement, selectField: HTMLElement, selectedElement: HTMLElement) {
-        const dropdownSize = Overlays.getElementSize(dropdown)
+    anchorSelectDropdown(dropdownContainer: HTMLElement, selectField: HTMLElement, selectedElement: HTMLElement) {
+        const dropdown = dropdownContainer.querySelector('.tt-select-options-dropdown') as HTMLElement
+        const dropdownContainerSize = Overlays.getElementSize(dropdownContainer)
         const selectOptionSize = Overlays.getElementSize(selectedElement)
 
         const selectedOptionIndex = Array.prototype.indexOf.call(dropdown.childNodes, selectedElement)
@@ -148,35 +157,32 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
         const win = Overlays.getWindowSize()
 
         const result: AnchorResult = {
-            top: anchorRect.y - (selectOptionSize.height * selectedOptionIndex),
+            top: 0,
             left: anchorRect.x,
             valid: true
         }
 
-        Overlays.clampAnchorResult(result, dropdownSize, win)
+        Overlays.clampAnchorResult(result, dropdownContainerSize, win)
 
-        if (dropdownSize.width < anchorRect.width) {
+        if (dropdownContainerSize.width < anchorRect.width) {
             result.width = anchorRect.width
         }
 
-        // how far down the select options list we need to scroll
-        let scrollAmount = selectedElement.offsetTop
+        let scrollAmount = selectedElement.offsetTop - anchorRect.top
+        let scrollTop = anchorRect.y + (anchorRect.height / 2) - (selectOptionSize.height / 2)
 
-        let scrollTop = scrollAmount - anchorRect.top
-        let dropdownIsShrunk = false
-
-        if (dropdownSize.height > win.height - anchorRect.top) { // attempting to fill the whole window height with the dropdown, so we may need to adjust placement of dropdown
-            if (scrollAmount < anchorRect.top) { // need space above the dropdown
-                result.top = anchorRect.top - scrollAmount
-                result.height = win.height - result.top
+        if (dropdown.offsetHeight > win.height - anchorRect.top) { // attempting to fill the whole window height with the dropdownContainer, so we need to adjust scroll of dropdownContainer
+            if (scrollAmount < 0) { // space above the dropdown
+                dropdown.style.marginTop = `${-scrollAmount}px`
                 scrollTop = 0
-                dropdownIsShrunk = true
-            } else if (dropdownSize.height - scrollAmount < win.height) { // need space below the dropdown
-                result.height = dropdownSize.height - scrollAmount + anchorRect.top
+            } else if (dropdown.offsetHeight - scrollAmount < win.height) { // space below the dropdown
+                dropdown.style.marginBottom = `${win.height - (dropdown.offsetHeight - scrollAmount) - 8}px`
                 scrollTop = scrollAmount
-                dropdownIsShrunk = true
+            } else { // fills the whole screen
+                scrollTop = scrollAmount
             }
-        } else {
+        } else { // dropdown is less tall than the window
+            result.top = anchorRect.y - (selectOptionSize.height * selectedOptionIndex) - 4
             if (this.state.options.find((o) => 'group' in o)) {
                 result.top += selectOptionSize.height
             }
@@ -189,45 +195,11 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
             }
         }
 
-        dropdown.setAttribute('style', styleString)
-        dropdown.scrollTo({ top: scrollTop })
+        dropdownContainer.setAttribute('style', styleString)
+        dropdownContainer.scrollTo({top: scrollTop})
 
-        dropdown.classList.add('show')
+        dropdownContainer.classList.add('show')
         selectedElement.classList.add('hover')
         selectedElement.addEventListener('mouseleave', () => selectedElement.classList.remove('hover'))
-
-        // if the dropdown has been temporarily shrunk, increase the size as we scroll
-        if (dropdownIsShrunk) {
-            let currentHeight = dropdown.clientHeight
-            let currentScrollTop = dropdown.scrollTop
-            dropdown.addEventListener('scroll', _ => {
-                const newScrollTop = dropdown.scrollTop; // Get scroll position
-                const scrollDiff = currentScrollTop - newScrollTop
-
-                if (scrollDiff > 0) { // scrolling up
-                    // Calculate new height based on scroll amount
-                    const newHeight = Math.min(currentHeight + scrollDiff, window.innerHeight) // Don't exceed window height
-
-                    // Update the element's height
-                    dropdown.style.height = `${newHeight}px`
-
-                    currentHeight = newHeight
-                    currentScrollTop = newScrollTop
-                } else if (scrollDiff < 0) { // scrolling down
-                    // if there is space above the dropdown, also adjust the top
-                    const newHeight = Math.min(currentHeight - scrollDiff, window.innerHeight)
-                    dropdown.style.height = `${newHeight}px`
-
-                    const newTop = window.innerHeight - newHeight
-                    dropdown.style.top = `${newTop}px`
-
-                    if (newTop > 0) {
-                        dropdown.scrollTo({ top: currentScrollTop })
-                    }
-
-                    currentHeight = newHeight
-                }
-            })
-        }
     }
 }
