@@ -25,6 +25,7 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
 
     async init() {
         await super.init()
+        this.state.selected_option = this.populateOptionIfBlank(this.state.selected_option)
         this.onClick(this._toggleDropdownKey, () => {
             this.toggleDropdown(SelectOptionsDropdown, {
                 options: this.state.options,
@@ -44,6 +45,30 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
 
     onOptionSelected(selectedOption: SelectOption) {
         this.assignState({ ...this.state, selected_option: selectedOption })
+    }
+
+    assignState(state: T) {
+        if (state == this.state) {
+            return false
+        }
+        this.state = state
+        this.state.selected_option = this.populateOptionIfBlank(this.state.selected_option)
+        this.dirty()
+        return true
+    }
+
+    populateOptionIfBlank(option: SelectOption) {
+        let newValue = option.value
+        let newTitle = option.title
+
+        if (option.value == '' && option.title === undefined) {
+            newValue = null
+            newTitle = ''
+        } else if (option.value == null && option.title === undefined) {
+            newValue = ''
+            newTitle = ''
+        }
+        return { title: newTitle, value: newValue }
     }
 
     render(parent: PartTag) {
