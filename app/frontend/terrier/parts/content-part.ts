@@ -1,6 +1,5 @@
 import {Action, IconName} from "../theme"
-import {PartParent, PartTag} from "tuff-core/parts"
-import {Dropdown} from "../dropdowns"
+import {PartTag} from "tuff-core/parts"
 import TerrierPart from "./terrier-part"
 
 export type PanelActions = {
@@ -138,49 +137,4 @@ export default abstract class ContentPart<TState> extends TerrierPart<TState> {
     hasActions(level: ActionLevel): boolean {
         return this._actions[level].length > 0
     }
-
-
-    /// Dropdowns
-
-    /**
-     * Shows the given dropdown part on the page.
-     * It's generally better to call `toggleDropdown` instead so that the dropdown will be
-     * hidden upon a subsequent click on the target.
-     * @param constructor a constructor for a dropdown part
-     * @param state the dropdown's state
-     * @param target the target element around which to show the dropdown
-     */
-    makeDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
-        constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
-        state: DropdownStateType,
-        target: EventTarget | null) {
-        const dropdown = this.app.addOverlay(constructor, state, 'dropdown')
-        dropdown.parentPart = this
-        if (target && target instanceof HTMLElement) {
-            dropdown.anchor(target)
-            this.app.lastDropdownTarget = target
-        }
-    }
-
-    clearDropdowns() {
-        this.app.clearDropdowns()
-    }
-
-    /**
-     * Calls `makeDropdown` only if there's not a dropdown currently originating from the target.
-     * @param constructor a constructor for a dropdown part
-     * @param state the dropdown's state
-     * @param target the target element around which to show the dropdown
-     */
-    toggleDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
-        constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
-        state: DropdownStateType,
-        target: EventTarget | null) {
-        if (target && target instanceof HTMLElement && target == this.app.lastDropdownTarget) {
-            this.clearDropdowns()
-        } else {
-            this.makeDropdown(constructor, state, target)
-        }
-    }
-
 }

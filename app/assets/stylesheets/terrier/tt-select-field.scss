@@ -1,0 +1,69 @@
+@import 'tt-mixins';
+@import 'scripts';
+@import 'glyps-meta';
+
+.tt-select-field {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	transition: background-color 0.2s ease;
+	padding: 0.5em 1.6em 0.5em 0.5em;
+	background-color: #fff;
+	font-size: 16px;
+	height: 40px;
+	min-width: 145px;
+	@include single-line;
+	display: flex;
+	align-items: center;
+	background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSdibGFjaycgaGVpZ2h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0JyB3aWR0aD0nMjQnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zyc+PHBhdGggZD0nTTcgMTBsNSA1IDUtNXonLz48cGF0aCBkPSdNMCAwaDI0djI0SDB6JyBmaWxsPSdub25lJy8+PC9zdmc+);
+	background-repeat: no-repeat;
+	background-position-x: right;
+	background-position-y: 8px;
+	div {
+		cursor: default;
+	}
+}
+
+.tt-select-options-dropdown-container {
+	.tt-dropdown-content {
+		transition: none;
+		@include scroll-y;
+		margin: 4px 0px;
+		background: none;
+		box-shadow: none;
+		height: calc(100vh - 8px);
+		.tt-select-options-dropdown {
+			font-weight: bold;
+			background-color: rgba(50, 50, 50, .75);
+			backdrop-filter: blur(10px);
+			border-radius: 4px;
+			padding: 4px;
+			div {
+				padding: 2px 4px 2px 32px;
+				border-radius: 4px;
+				cursor: default;
+				@include single-line;
+				&.tt-select-options-group-header {
+					color: #ccc;
+					padding-left: 16px;
+				}
+				&:not(.tt-select-options-group-header) {
+					&.hover, &:hover {
+						background-color: #f1940f; // darker primary color
+					}
+					height: 28px;
+				}
+				&.selected::before {
+					@include glyps-font;
+					content: $glyp-checkmark;
+					position: absolute;
+					left: 8px;
+				}
+			}
+			&:has(.tt-select-options-group-header) {
+				div:not(.tt-select-options-group-header) {
+					padding-left: 32px;
+				}
+			}
+		}
+	}
+}
