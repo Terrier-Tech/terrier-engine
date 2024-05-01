@@ -57,17 +57,23 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
     }
 
     populateOptionIfBlank(option: SelectOption) {
-        let newValue = option.value
-        let newTitle = option.title
+        if (option.title === undefined) {
+            // consider option groups and flatten the options
+            const options = this.state.options.flatMap((option) => {
+                if ('group' in option) {
+                    return option.options
+                } else return option
+            })
 
-        if (option.value == '' && option.title === undefined) {
-            newValue = null
-            newTitle = ''
-        } else if (option.value == null && option.title === undefined) {
-            newValue = ''
-            newTitle = ''
+            // find the option where title is empty and use that as the blank option value
+            return options.find((opt) => {
+                if ('title' in opt) {
+                    return opt.title == ''
+                } else return false
+            }) || option
+        } else {
+            return option
         }
-        return { title: newTitle, value: newValue }
     }
 
     render(parent: PartTag) {
