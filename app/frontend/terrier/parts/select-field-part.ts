@@ -171,7 +171,7 @@ export class SelectOptionsDropdown extends Dropdown<SelectFieldDropdownState> {
         let scrollAmount = selectedElement.offsetTop - anchorRect.top
         let scrollTop = anchorRect.y + (anchorRect.height / 2) - (selectOptionSize.height / 2)
 
-        if (dropdown.offsetHeight > win.height - anchorRect.top) { // attempting to fill the whole window height with the dropdownContainer, so we need to adjust scroll of dropdownContainer
+        if (dropdown.offsetHeight > win.height - anchorRect.top || anchorRect.top - dropdown.offsetHeight < 0) { // attempting to fill the whole window height with the dropdownContainer, so we need to adjust scroll of dropdownContainer
             if (scrollAmount < 0) { // space above the dropdown
                 dropdown.style.marginTop = `${-scrollAmount}px`
                 scrollTop = 0
