@@ -21,6 +21,9 @@
 	div {
 		cursor: default;
 	}
+	&.disabled {
+		background: #fafafa linear-gradient(white, whitesmoke);
+	}
 }
 
 .tt-select-options-dropdown-container {
