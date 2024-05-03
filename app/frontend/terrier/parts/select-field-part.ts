@@ -26,7 +26,9 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
     async init() {
         await super.init()
         this.state.selected_option = this.populateOptionIfBlank(this.state.selected_option)
-        this.onClick(this._toggleDropdownKey, () => {
+        this.onClick(this._toggleDropdownKey, m => {
+            const target = m.event.currentTarget as HTMLElement
+            if (target.classList.contains('disabled')) return
             this.toggleDropdown(SelectOptionsDropdown, {
                 options: this.state.options,
                 selected_option: this.state.selected_option,
