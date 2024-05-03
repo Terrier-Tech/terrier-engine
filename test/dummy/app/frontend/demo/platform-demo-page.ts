@@ -19,6 +19,7 @@ export default class PlatformDemoPage extends DemoPage {
 
         this.makePart(DemoParts.Panel, {}, 'panel')
         this.makePart(DemoParts.DemoTabs, {side: 'top'}, 'tabs')
+        this.makePart(DemoParts.CircleProgressPanel, {}, 'circle-progress')
 
         this.addAction({
             title: "Primary",
@@ -47,6 +48,7 @@ export default class PlatformDemoPage extends DemoPage {
         parent.div('.tt-flex.column.gap.padded', col => {
             col.part(this.namedChild('panel')!)
             col.part(this.namedChild('tabs')!)
+            col.part(this.namedChild('circle-progress')!)
         })
     }
 

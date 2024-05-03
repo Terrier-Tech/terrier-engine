@@ -4,13 +4,15 @@ import Toasts from "@terrier/toasts"
 import {ActionsDropdown} from "@terrier/dropdowns"
 import {Action, ColorName} from "@terrier/theme"
 import PanelPart from "@terrier/parts/panel-part"
-import Tabs, { TabContainerPart } from "@terrier/tabs"
+import Tabs, {TabContainerPart} from "@terrier/tabs"
 import {Logger} from "tuff-core/logging"
 import Api from "@terrier/api"
 import {ApiSubscriber, PollingSubscriber, StreamingSubscriber} from "@terrier/api-subscriber"
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
-import { LogEntry } from "@terrier/logging"
+import {LogEntry} from "@terrier/logging"
+import MultiCircularProgressBarPart, { MultiCircularProgressState } from "@terrier/multi-circular-progress";
+import Time from "tuff-core/time"
 
 const log = new Logger("Demo Parts")
 
@@ -321,11 +323,65 @@ class SubscriptionModal extends ModalPart<{ subscriber: ApiSubscriber<TimeResult
 
 }
 
+class CircleProgressPanel extends PanelPart<NoState> {
+
+    mouseEnterKey = Messages.typedKey<{ index: number }>()
+
+    circles!: MultiCircularProgressBarPart[]
+
+    async init() {
+        this.setTitle("Circular Progress Demo")
+
+        const states: MultiCircularProgressState[] = [
+            { total: 100, progress: 25, options: { color: 'red', outerDiameter: '200px', thickness: '10%', backgroundColor: 'var(--tt-pending-color)' } },
+            { total: 100, progress: 50, options: { color: 'green', outerDiameter: '185px', thickness: '20%', transitionDuration: '1s', transitionTimingFunction: 'linear' } },
+            { total: 100, progress: 75, options: { color: 'blue', outerDiameter: '215px', thickness: '7px', transitionDuration: '500ms' } },
+            { total: 100, progress: [15, 30, 15, 0, 5], options: { color: ['magenta', 'cyan', 'yellow', 'lime', 'orange'], outerDiameter: '200px', thickness: '20px', transitionDuration: '550ms', transitionTimingFunction: 'linear' } },
+        ]
+
+        this.circles = states.map(s => this.makePart(MultiCircularProgressBarPart, s))
+
+        Time.wait(0).then(async () => {
+            let increasing = true
+            while (increasing) {
+                await Time.wait(500)
+
+                increasing = false
+
+                for (let i = 0; i < this.circles.length; i++) {
+                    const circle = this.circles[i]
+                    if (typeof circle.state.progress == "number") {
+                        if (circle.state.progress + 5 <= 100) {
+                            circle.updateProgress(circle.state.progress + 5)
+                            increasing = true
+                        }
+                    } else {
+                        if (circle.state.progress.reduce((acc, next) => acc + next) + 5 <= 100) {
+                            circle.updateProgress(circle.state.progress.map(n => n + 1) as [number, number, number, number, number])
+                            increasing = true
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div('.padded.tt-flex.gap.shrink-items.justify-space-evenly.align-center', row => {
+            for (let i = 0; i < this.circles.length; i++) {
+                row.part(this.circles[i])
+            }
+        })
+    }
+
+}
+
 
 const DemoParts = {
     Panel,
     Modal,
     DemoTabs,
+    CircleProgressPanel,
     openModalKey
 }
 
