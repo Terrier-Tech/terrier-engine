@@ -411,6 +411,14 @@ $color-diff: 0.08;
 		gap: calc(var(--tt-gap) / 2);
 		--iconSize: calc(var(--tt-icon-size) * 2);
 	}
+	&.xx-large {
+		gap: calc(var(--tt-gap) / 2);
+		--iconSize: calc(var(--tt-icon-size) * 3);
+	}
+	&.xxx-large {
+		gap: calc(var(--tt-gap) / 2);
+		--iconSize: calc(var(--tt-icon-size) * 4);
+	}
 
 	&.circle {
 		min-height: var(--tt-button-height);
@@ -422,6 +430,15 @@ $color-diff: 0.08;
 		&.compact {
 			min-height: unset;
 			height: var(--iconSize);
+		}
+		&.spacious {
+			i {
+				font-size: calc(var(--iconSize) * .8);
+			}
+			img, svg {
+				width: calc(var(--iconSize) * .8);
+				height: calc(var(--iconSize) * .8);
+			}
 		}
 	}
 
