@@ -16,3 +16,60 @@
 		min-width: var(--height);
 	}
 }
+
+// adding these @property blocks makes these properties animatable
+@property --progress-0-value {
+	syntax: '<percentage>';
+	initial-value: 0%;
+	inherits: false;
+}
+@property --progress-1-value {
+	syntax: '<percentage>';
+	initial-value: 0%;
+	inherits: false;
+}
+@property --progress-2-value {
+	syntax: '<percentage>';
+	initial-value: 0%;
+	inherits: false;
+}
+@property --progress-3-value {
+	syntax: '<percentage>';
+	initial-value: 0%;
+	inherits: false;
+}
+@property --progress-4-value {
+	syntax: '<percentage>';
+	initial-value: 0%;
+	inherits: false;
+}
+
+.tt-circle-progress {
+	width: var(--size, 100%);
+	aspect-ratio: 1;
+	// masks out a ring shape that is --thickness thick
+	mask: radial-gradient(closest-side,
+			#0000 calc(100% - var(--thickness, 10px) - 1px),
+			#000 calc(100% - var(--thickness, 10px)),
+			#000 calc(100% - 1px),
+			#0000 100%
+	);
+
+	// renders up to 5 values
+	background: conic-gradient(
+		var(--progress-0-color, black) var(--progress-0-value, 0%),
+		var(--progress-1-color, black) var(--progress-0-value, 0%),
+		var(--progress-1-color, black) var(--progress-1-value, 0%),
+		var(--progress-2-color, black) var(--progress-1-value, 0%),
+		var(--progress-2-color, black) var(--progress-2-value, 0%),
+		var(--progress-3-color, black) var(--progress-2-value, 0%),
+		var(--progress-3-color, black) var(--progress-3-value, 0%),
+		var(--progress-4-color, black) var(--progress-3-value, 0%),
+		var(--progress-4-color, black) var(--progress-4-value, 0%),
+		var(--background-color, var(--tt-inactive-color)) var(--progress-4-value, 0%),
+	);
+
+	transition-timing-function: var(--transition-timing-function);
+	transition-duration: var(--transition-duration, var(--tt-animation-duration));
+	transition-property: --progress-0-value, --progress-1-value, --progress-2-value, --progress-3-value, --progress-4-value;
+}
