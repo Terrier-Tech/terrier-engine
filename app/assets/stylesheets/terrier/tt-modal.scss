@@ -29,17 +29,6 @@
 		position: relative;
 	}
 
-	.modal-part {
-		@include tt-absolute-fill;
-		margin: 0 auto;
-
-		&:last-child {
-			transform: scale(0);
-		}
-
-		transition: transform 0.2s ease;
-	}
-
 	// very minimal show/hide so that the actual modals can animate
 	pointer-events: none;
 
@@ -56,6 +45,8 @@
 .tt-modal-stack .modal-part {
 	@include tt-rounded-corners;
 	@include tt-box-shadow;
+	@include tt-absolute-fill;
+	margin: 0 auto;
 	background: var(--tt-panel-background);
 	display: flex;
 	flex-direction: column;
@@ -130,6 +121,17 @@
 		overflow-y: scroll;
 		overflow-x: hidden;
 	}
+
+	&.v-shrink {
+		top: unset;
+		bottom: unset;
+	}
+
+	&:last-child {
+		transform: scale(0);
+	}
+
+	transition: transform 0.2s ease;
 
 	// fan out the models based on their position in the stack
 	&.show {
