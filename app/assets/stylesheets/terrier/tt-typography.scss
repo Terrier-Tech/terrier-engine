@@ -83,3 +83,11 @@
 .tt-padded {
 	padding: var(--tt-pad);
 }
+
+.tt-h-padded {
+	padding: 0 var(-tt-pad);
+}
+
+.tt-v-padded {
+	padding: var(-tt-pad) 0;
+}
