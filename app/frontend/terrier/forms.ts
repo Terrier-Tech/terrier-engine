@@ -39,7 +39,7 @@ function getRadioValue(container: HTMLElement, selector: string): string | undef
  * Computes a `SelectOptions` array by titleizing the values in a plain string array.
  * @param opts
  */
-function titleizeOptions(opts: string[], blank?: string): SelectOptions {
+function titleizeOptions(opts: readonly string[], blank?: string): SelectOptions {
     const out = opts.map(c => {
         return {value: c, title: Strings.titleize(c)}
     })
