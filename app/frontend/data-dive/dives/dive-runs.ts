@@ -100,7 +100,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
                     log.info(`Picked date range for ${m.data.input_key}`, newRange)
                     this.inputFields.data[`${m.data.input_key}-min`] = newRange.min
                     this.inputFields.data[`${m.data.input_key}-max`] = dayjs(newRange.max).subtract(1, 'day').format(Dates.literalFormat)
-                    this.updateFilters()
+                    // this.updateFilters()
                     this.dirty()
                 }} as DatePeriodPickerState,
                 m.event.target

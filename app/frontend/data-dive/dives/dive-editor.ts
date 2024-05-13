@@ -17,8 +17,8 @@ import {DiveRunModal} from "./dive-runs"
 import Nav from "tuff-core/nav"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
-import {FormFields} from "tuff-core/forms";
-import Fragments from "../../terrier/fragments";
+import {FormFields} from "tuff-core/forms"
+import Fragments from "../../terrier/fragments"
 
 const log = new Logger("DiveEditor")
 

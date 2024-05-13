@@ -71,6 +71,9 @@
 
 	border: 1px solid var(--tt-field-border-color);
 
+	> *:not(:first-child) {
+		border-left: 1px solid var(--tt-field-border-color);
+	}
 	> *:not(:last-child) {
 		border-right: 1px solid var(--tt-field-border-color);
 	}
