@@ -12,6 +12,7 @@ namespace :scripts do
       if script.schedule_contains_day? day
         puts "Running script #{script.id}: #{script.title}"
         executor = ScriptExecutor.new script, ModelCache.new
+        executor.set_field_values({})
         executor.me = "#{time.titleize} Runner"
         run = executor.init_run
         executor.run run, nil
@@ -38,6 +39,6 @@ namespace :scripts do
 
   desc 'Runs all hourly scheduled scripts for today'
   task run_hourly: :environment do
-    run_time Time.now.strftime('%-k')
+    run_time Time.parse("9:00").strftime('%-k')
   end
 end
