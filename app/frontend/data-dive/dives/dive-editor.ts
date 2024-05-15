@@ -19,6 +19,8 @@ import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
+import {DiveDeliveryForm} from "./dive-delivery";
+import {DivePlotsForm} from "./dive-plots";
 
 const log = new Logger("DiveEditor")
 
@@ -35,7 +37,8 @@ export type DiveEditorState = {
 
 export default class DiveEditor extends ContentPart<DiveEditorState> {
 
-    tabs!: TabContainerPart
+    queryTabs!: TabContainerPart
+    settingsTabs!: TabContainerPart
 
     newQueryKey = Messages.untypedKey()
     duplicateQueryKey = Messages.untypedKey()
@@ -45,25 +48,26 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     queries = new Array<Query>()
 
     async init() {
-        this.tabs = this.makePart(TabContainerPart, {side: 'top'})
+        this.queryTabs = this.makePart(TabContainerPart, {side: 'top'})
+        this.settingsTabs = this.makePart(TabContainerPart, {side: 'top'})
 
-        this.tabs.addBeforeAction({
+        this.queryTabs.addBeforeAction({
             title: 'Queries:',
             icon: 'glyp-data_dive_query'
         })
-        this.tabs.addAfterAction({
+        this.queryTabs.addAfterAction({
             title: "Add Another Query",
             classes: ['dd-hint', 'arrow-right', 'glyp-hint'],
             tooltip: "Each query represents a separate tab in the resulting spreadsheet",
             click: {key: this.newQueryKey}
         })
-        this.tabs.addAfterAction({
+        this.queryTabs.addAfterAction({
             icon: 'glyp-copy',
             classes: ['duplicate-query'],
             tooltip: "Duplicate this query",
             click: {key: this.duplicateQueryKey}
         })
-        this.tabs.addAfterAction({
+        this.queryTabs.addAfterAction({
             icon: 'glyp-plus_outline',
             classes: ['new-query'],
             tooltip: "Add a new query to this Dive",
@@ -78,7 +82,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         this.listenMessage(QueryForm.settingsChangedKey, m => {
             const query = m.data
             log.info(`Query settings changed`, query)
-            this.tabs.updateTab({key: query.id, title: query.name})
+            this.queryTabs.updateTab({key: query.id, title: query.name})
         })
 
         this.onClick(this.newQueryKey, _ => {
@@ -86,7 +90,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         })
 
         this.onClick(this.duplicateQueryKey, _ => {
-            const id = this.tabs.currentTagKey
+            const id = this.queryTabs.currentTagKey
             if (id?.length) {
                 const query = this.queries.find(q => q.id == id)
                 if (query) {
@@ -110,6 +114,9 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
                 this.deleteQuery(m.data.id)
             })
         })
+
+        this.settingsTabs.upsertTab({key: 'delivery', title: "Delivery", icon: "glyp-email"}, DiveDeliveryForm, this.state)
+        this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotsForm, this.state)
     }
 
     /**
@@ -127,23 +134,28 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      */
     private addQueryTab(query: Query) {
         const state = {...this.state, query}
-        this.tabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
+        this.queryTabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
     }
 
     deleteQuery(id: string) {
         log.info(`Deleting query ${id}`)
         if (Arrays.deleteIf(this.queries, q => q.id == id) > 0) {
-            this.tabs.removeTab(id)
+            this.queryTabs.removeTab(id)
             this.dirty()
         }
     }
 
     get parentClasses(): Array<string> {
-        return ['dd-dive-editor']
+        return ['dd-dive-editor', 'tt-flex']
     }
 
     renderContent(parent: PartTag) {
-        parent.part(this.tabs)
+        parent.div(".stretch", col => {
+            col.part(this.queryTabs)
+        })
+        parent.div(".shrink", col => {
+            col.part(this.settingsTabs)
+        })
     }
 
     static readonly deleteQueryKey = Messages.typedKey<{ id: string }>()
@@ -334,7 +346,7 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         }
         const query = {...settings, id: Ids.makeUuid(), from: {model: model.name}}
         this.state.editor.addQuery(query)
-        this.state.editor.tabs.showTab(query.id)
+        this.state.editor.queryTabs.showTab(query.id)
         this.pop()
     }
 
@@ -379,7 +391,7 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         const newName = this.fields.data.name
         const query = {...Queries.duplicate(this.state.query), name: newName}
         this.state.editor.addQuery(query)
-        this.state.editor.tabs.showTab(query.id)
+        this.state.editor.queryTabs.showTab(query.id)
         this.pop()
         this.app.successToast("Duplicated Query", 'glyp-copy')
     }

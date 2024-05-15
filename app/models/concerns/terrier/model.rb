@@ -268,6 +268,11 @@ module Terrier::Model
       end
     end
 
+    # Provides basic e-mail validation for a text column containing one or more e-mail addresses separated by spaces/commans/semicolons.
+    def email_field(name, options={})
+      validates name, email_list: true
+    end
+
 
     ## Frontend
 

@@ -14,8 +14,14 @@
 		}
 		.dd-dive-editor {
 			@include tt-absolute-fill;
-			display: flex;
-			flex-direction: column;
+			padding: var(--tt-pad);
+			gap: var(--tt-gap);
+			> div {
+				position: relative;
+				> div {
+					height: 100%;
+				}
+			}
 		}
 		.tt-tab-container {
 			flex: 1 1 auto;
@@ -25,8 +31,7 @@
 			}
 			&.top {
 				// kinda hacky but we need the main tab container to fill the window
-				@include tt-absolute-fill;
-				padding-top: var(--tt-border-radius);
+				height: 100%;
 			}
 		}
 		.page-actions {
