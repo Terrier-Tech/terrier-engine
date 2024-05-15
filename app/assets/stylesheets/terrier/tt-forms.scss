@@ -182,3 +182,18 @@
 		@include tt-right-rounded-corners;
 	}
 }
+
+// Used to indicate to the user that an element has changed
+.tt-changed::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	border-radius: var(--tt-border-radius);
+	border: 2px var(--tt-changed-color, var(--tt-pending-color)) solid;
+	background-color: color-mix(
+					in srgb,
+					var(--tt-changed-color, var(--tt-pending-color)) var(--tt-changed-glow-intensity, 3%),
+					transparent
+	);
+	pointer-events: none;
+}
