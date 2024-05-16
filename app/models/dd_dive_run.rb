@@ -1,18 +1,21 @@
 # Columns
-# +------------------+--------------+----------+
-# | created_at       | timestamp(6) | required |
-# | created_by_id    | uuid         | indexed  |
-# | created_by_name  | text         | required |
-# | dd_dive_id       | uuid         | indexed  |
-# | extern_id        | text         | indexed  |
-# | input_data       | jsonb        |          |
-# | output_data      | jsonb        |          |
-# | output_file_data | jsonb        |          |
-# | status           | text         | required |
-# | updated_at       | timestamp(6) | required |
-# | updated_by_id    | uuid         | indexed  |
-# | updated_by_name  | text         |          |
-# +------------------+--------------+----------+
+# +---------------------+--------------+----------+
+# | created_at          | timestamp(6) | required |
+# | created_by_id       | uuid         | indexed  |
+# | created_by_name     | text         | required |
+# | dd_dive_id          | uuid         | indexed  |
+# | delivery_data       | jsonb        |          |
+# | delivery_mode       | text         |          |
+# | delivery_recipients | text[]       | indexed  |
+# | extern_id           | text         | indexed  |
+# | input_data          | jsonb        |          |
+# | output_data         | jsonb        |          |
+# | output_file_data    | jsonb        |          |
+# | status              | text         | required |
+# | updated_at          | timestamp(6) | required |
+# | updated_by_id       | uuid         | indexed  |
+# | updated_by_name     | text         |          |
+# +---------------------+--------------+----------+
 # 
 # Associations
 # +------------+------------+--------+
@@ -39,5 +42,14 @@ class DdDiveRun < ApplicationRecord
   json_field :output_data
 
   include SpreadsheetUploader::Attachment(:output_file)
+
+
+  ## Delivery
+
+  enum_field :delivery_mode, DdDive.delivery_modes, optional: true
+
+  emails_field :recipients
+
+  json_field :delivery_data
 
 end

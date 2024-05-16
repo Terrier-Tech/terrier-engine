@@ -268,9 +268,29 @@ module Terrier::Model
       end
     end
 
-    # Provides basic e-mail validation for a text column containing one or more e-mail addresses separated by spaces/commans/semicolons.
-    def email_field(name, options={})
+    # Provides basic e-mail validation for a text array column containing e-mail addresses
+    def emails_field(name, options={})
       validates name, email_list: true
+
+      define_method "#{name}_s" do
+        s = self.send(name)
+        if s
+          s.join('; ')
+        else
+          ''
+        end
+      end
+
+      define_method "#{name}_s=" do |s|
+        if s.present?
+          val = s.split(EMAIL_SPLIT_REGEX).map do |comp|
+            comp.strip.downcase
+          end
+          self.send "#{name}=", val
+        else
+          self.send("#{name}=", [])
+        end
+      end
     end
 
 

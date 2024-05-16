@@ -5,7 +5,7 @@
 # | created_by_name     | text         | required              |
 # | dd_dive_group_id    | uuid         | indexed               |
 # | delivery_mode       | text         |                       |
-# | delivery_recipients | text         |                       |
+# | delivery_recipients | text[]       |                       |
 # | delivery_schedule   | jsonb        |                       |
 # | description_html    | text         |                       |
 # | description_raw     | text         |                       |
@@ -58,13 +58,17 @@ class DdDive < ApplicationRecord
 
   ## Delivery
 
-  enum_field :delivery_mode, %w[always present], optional: true
+  DELIVERY_MODES = %w[always present]
 
-  email_field :recipients
+  def self.delivery_modes
+    DELIVERY_MODES
+  end
+
+  enum_field :delivery_mode, DELIVERY_MODES, optional: true
+
+  emails_field :recipients
 
   json_field :delivery_schedule
-
-  has_many :dd_dive_deliveries, dependent: :restrict_with_error
 
 
 end
