@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import {DiveEditorState} from "./dive-editor"
+import DiveEditor, {DiveEditorState} from "./dive-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import {RegularSchedule, RegularScheduleForm} from "../../terrier/schedules"
 import {Logger} from "tuff-core/logging"
@@ -18,6 +18,11 @@ export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
     async init() {
         const schedule = this.state.dive.delivery_schedule || {schedule_type: 'none'}
         this.scheduleForm = this.makePart(RegularScheduleForm, schedule)
+
+        this.listen('datachanged', this.scheduleForm.dataChangedKey, m => {
+            log.info(`Schedule form data changed`, m.data)
+            this.emitMessage(DiveEditor.diveChangedKey, {})
+        })
     }
 
 
@@ -26,9 +31,10 @@ export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
     }
 
     render(parent: PartTag): any {
-        parent.h3(".glyp-setup.text-center").text("Schedule")
+        parent.h3(".glyp-setup").text("Schedule")
         parent.part(this.scheduleForm)
-        parent.h3(".glyp-users.text-center").text("Recipients")
+        // parent.div('.separator')
+        parent.h3(".glyp-users").text("Recipients")
     }
 
     /**

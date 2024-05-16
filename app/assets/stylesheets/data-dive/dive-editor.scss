@@ -73,5 +73,8 @@
 .dd-dive-tool {
 	h1, h2, h3, h4 {
 		color: var(--tt-secondary-color);
+		justify-content: center;
+		border-bottom: 1px solid var(--tt-border-color);
+		padding: 0.25em 0;
 	}
 }
