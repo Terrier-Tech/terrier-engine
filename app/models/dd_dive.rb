@@ -64,5 +64,7 @@ class DdDive < ApplicationRecord
 
   json_field :delivery_schedule
 
+  has_many :dd_dive_deliveries, dependent: :restrict_with_error
+
 
 end
