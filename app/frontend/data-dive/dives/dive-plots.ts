@@ -5,7 +5,7 @@ import {PartTag} from "tuff-core/parts"
 
 export class DivePlotsForm extends TerrierFormPart<DiveEditorState> {
     render(parent: PartTag): any {
-        parent.div().text("Coming Soon")
+        parent.h3(".coming-soon.glyp-developer").text("Coming Soon")
     }
 
 }

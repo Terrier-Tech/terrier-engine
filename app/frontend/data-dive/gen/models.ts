@@ -1,4 +1,4 @@
-// This file was automatically generated, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-05-16 13:17:01 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -6,9 +6,11 @@ import { DdUser } from "../dd-user"
 
 import { FilterInput } from "../queries/filters"
 
-import { OptionalProps } from "tuff-core/types"
-
 import { Attachment } from "../../terrier/attachments"
+
+import { RegularSchedule } from "../../terrier/schedules"
+
+import { OptionalProps } from "tuff-core/types"
 
 export type DdDive = {
     id: string
@@ -29,6 +31,8 @@ export type DdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_recipients?: string[]
+    delivery_schedule?: RegularSchedule
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
@@ -55,6 +59,8 @@ export type UnpersistedDdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_recipients?: string[]
+    delivery_schedule?: RegularSchedule
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
@@ -123,6 +129,8 @@ export type DdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_recipients?: string[]
+    delivery_data?: object
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive
@@ -144,6 +152,8 @@ export type UnpersistedDdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_recipients?: string[]
+    delivery_data?: object
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive

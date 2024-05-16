@@ -57,4 +57,21 @@
 			}
 		}
 	}
+
+
+	h3.coming-soon {
+		text-align: center;
+		opacity: 0.25;
+		&::before {
+			display: block;
+			font-size: 3em;
+		}
+	}
+}
+
+// individual tool panels inside the dive editor
+.dd-dive-tool {
+	h1, h2, h3, h4 {
+		color: var(--tt-secondary-color);
+	}
 }

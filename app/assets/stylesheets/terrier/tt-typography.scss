@@ -15,6 +15,11 @@
 	}
 	label {
 		font-size: var(--tt-label-font-size);
+		text-transform: none;
+		margin-bottom: 0;
+		display: flex;
+		align-items: center;
+		gap: 0.5em;
 	}
 	h1, h2, h3, h4, h5 {
 		display: flex;
@@ -27,7 +32,7 @@
 			transform: scale(1.25);
 		}
 		@include tt-flex-utils;
-		&.centered {
+		&.centered, &.text-center {
 			justify-content: center;
 		}
 		&.large-top-padding {
@@ -42,10 +47,6 @@
 	}
 	h3 {
 		font-size: 18px;
-	}
-	label {
-		text-transform: none;
-		margin-bottom: 0;
 	}
 
 	// override clypboard's default icon margin

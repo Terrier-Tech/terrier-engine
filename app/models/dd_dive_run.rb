@@ -5,7 +5,6 @@
 # | created_by_name     | text         | required |
 # | dd_dive_id          | uuid         | indexed  |
 # | delivery_data       | jsonb        |          |
-# | delivery_mode       | text         |          |
 # | delivery_recipients | text[]       | indexed  |
 # | extern_id           | text         | indexed  |
 # | input_data          | jsonb        |          |
@@ -46,9 +45,7 @@ class DdDiveRun < ApplicationRecord
 
   ## Delivery
 
-  enum_field :delivery_mode, DdDive.delivery_modes, optional: true
-
-  emails_field :recipients
+  emails_field :delivery_recipients
 
   json_field :delivery_data
 

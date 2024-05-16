@@ -71,7 +71,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.jsonb "output_file_data"
     t.text "status", null: false
     t.text "delivery_recipients", array: true
-    t.text "delivery_mode"
     t.jsonb "delivery_data"
     t.index ["_state"], name: "index_dd_dive_runs_on__state"
     t.index ["created_by_id"], name: "index_dd_dive_runs_on_created_by_id"
@@ -101,7 +100,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.text "dive_types", default: [], null: false, array: true
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
-    t.text "delivery_mode"
     t.index ["_state"], name: "index_dd_dives_on__state"
     t.index ["created_by_id"], name: "index_dd_dives_on_created_by_id"
     t.index ["dd_dive_group_id"], name: "index_dd_dives_on_dd_dive_group_id"

@@ -19,8 +19,8 @@ import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
-import {DiveDeliveryForm} from "./dive-delivery";
-import {DivePlotsForm} from "./dive-plots";
+import {DiveDeliveryForm} from "./dive-delivery"
+import {DivePlotsForm} from "./dive-plots"
 
 const log = new Logger("DiveEditor")
 
@@ -39,6 +39,10 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     queryTabs!: TabContainerPart
     settingsTabs!: TabContainerPart
+
+    deliveryForm!: DiveDeliveryForm
+
+    plotsForm!: DivePlotsForm
 
     newQueryKey = Messages.untypedKey()
     duplicateQueryKey = Messages.untypedKey()
@@ -115,8 +119,9 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             })
         })
 
-        this.settingsTabs.upsertTab({key: 'delivery', title: "Delivery", icon: "glyp-email"}, DiveDeliveryForm, this.state)
-        this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotsForm, this.state)
+        this.deliveryForm = this.settingsTabs.upsertTab({key: 'delivery', title: "Delivery", icon: "glyp-email"}, DiveDeliveryForm, this.state)
+
+        this.plotsForm = this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotsForm, this.state)
     }
 
     /**
@@ -162,7 +167,15 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     async serialize(): Promise<DdDive> {
         const queries = this.queries
-        return {...this.state.dive, query_data: {queries}}
+
+        const deliverySettings = await this.deliveryForm.serialize()
+
+        return {
+            ...this.state.dive,
+            delivery_schedule: deliverySettings.delivery_schedule,
+            delivery_recipients: deliverySettings.delivery_recipients,
+            query_data: {queries}
+        }
     }
 
 }
