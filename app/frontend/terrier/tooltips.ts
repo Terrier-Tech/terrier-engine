@@ -17,6 +17,15 @@ function ensureContainer(): HTMLElement {
     return container
 }
 
+/**
+ * Hides the current tooltip.
+ */
+function clear() {
+    if (container) {
+        container.classList.remove('show')
+    }
+}
+
 function onEnter(target: HTMLElement) {
     log.debug("Mouse enter", target)
     const container = ensureContainer()
@@ -27,9 +36,7 @@ function onEnter(target: HTMLElement) {
 
 function onLeave(target: HTMLElement) {
     log.debug("Mouse leave", target)
-    if (container) {
-        container.classList.remove('show')
-    }
+    clear()
 }
 
 /**
@@ -58,7 +65,8 @@ function init(root: HTMLElement) {
 }
 
 const Tooltips = {
-    init
+    init,
+    clear
 }
 
 export default Tooltips

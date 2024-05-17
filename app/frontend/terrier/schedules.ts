@@ -78,7 +78,7 @@ export type CombinedRegularSchedule = {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Fields
+// Form
 ////////////////////////////////////////////////////////////////////////////////
 
 export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule> {
@@ -93,7 +93,7 @@ export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule
     }
 
     get parentClasses(): Array<string> {
-        return ['tt-flex', 'column', 'gap', 'regular-schedule-fields', 'tt-form']
+        return ['tt-flex', 'column', 'gap', 'regular-schedule-form', 'tt-form']
     }
 
 
