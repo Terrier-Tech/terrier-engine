@@ -71,11 +71,16 @@
 
 	border: 1px solid var(--tt-field-border-color);
 
-	> *:not(:first-child) {
-		border-left: 1px solid var(--tt-field-border-color);
-	}
 	> *:not(:last-child) {
 		border-right: 1px solid var(--tt-field-border-color);
+	}
+
+	// checkboxes and radios can't have a right border like everything else,
+	// so add a left border to the element after it
+	> input[type=checkbox], > input[type=radio] {
+		& + * {
+			border-left: 1px solid var(--tt-field-border-color);
+		}
 	}
 
 	&.inline {
@@ -103,11 +108,21 @@
 		&:last-child {
 			@include tt-right-rounded-corners;
 		}
+
+		&:not(:last-child) {
+			border-right: 1px solid var(--tt-field-border-color);
+		}
 	}
 
 	input[type=checkbox], input[type=radio] {
 		align-self: center;
 		margin: 0 14px; // can't use padding on checkbox/radio, but we need space. so margin
+		flex: 1 1 auto;
+
+		&.shrink {
+			flex: 0 1 auto;
+			width: initial;
+		}
 	}
 
 	ul {
@@ -166,4 +181,19 @@
 	.field_with_errors:last-child > * {
 		@include tt-right-rounded-corners;
 	}
+}
+
+// Used to indicate to the user that an element has changed
+.tt-changed::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	border-radius: var(--tt-border-radius);
+	border: 2px var(--tt-changed-color, var(--tt-pending-color)) solid;
+	background-color: color-mix(
+					in srgb,
+					var(--tt-changed-color, var(--tt-pending-color)) var(--tt-changed-glow-intensity, 3%),
+					transparent
+	);
+	pointer-events: none;
 }

@@ -86,9 +86,9 @@
 }
 
 .tt-h-padded {
-	padding: 0 var(-tt-pad);
+	padding: 0 var(--tt-pad);
 }
 
 .tt-v-padded {
-	padding: var(-tt-pad) 0;
+	padding: var(--tt-pad) 0;
 }
