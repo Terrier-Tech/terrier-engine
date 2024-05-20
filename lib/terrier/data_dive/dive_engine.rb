@@ -4,13 +4,13 @@ class DataDive::DiveEngine
   def initialize(dive, change_user)
     @dive = dive
     @change_user = change_user
+    @stream = nil
   end
 
-  # Run the dive and stream the results to the client.
-  # @param stream [ResponseStreamer]
+  # Run the dive
   # @param run [DdDiveRun]
   # @param params [Hash] hopefully contains the input values
-  def stream_run!(stream, run, params)
+  def run!(run, params)
     data = {}
 
     # get the queries from the run
@@ -20,7 +20,7 @@ class DataDive::DiveEngine
     # estimate the number of steps that will be streamed
     # 3 steps per query + 1 for creating the run and 1 for writing the file
     total_steps = queries.count * 3 + 2
-    stream.write 'init_run', {total_steps: total_steps}
+    @stream&.write 'init_run', { total_steps: total_steps }
 
     # copy the filter input values into the params
     filters = input_data['filters'] || []
@@ -41,9 +41,9 @@ class DataDive::DiveEngine
         query_output = qe.execute! p
         rows = query_output[:rows]
         columns = query_output[:columns]
-        column_map = columns.index_by{|col| col[:select_name]}
+        column_map = columns.index_by { |col| col[:select_name] }
         dt_exec = Time.now - t
-        stream.info "Executed '#{query['name']}' in #{dt_exec.to_ms}ms"
+        info "Executed '#{query['name']}' in #{dt_exec.to_ms}ms"
 
         # format the output using the column metadata
         t = Time.now
@@ -54,11 +54,11 @@ class DataDive::DiveEngine
           end
         end
         dt_format = Time.now - t
-        stream.info "Formatted values for '#{query['name']}' in #{dt_format.to_ms}ms"
+        info "Formatted values for '#{query['name']}' in #{dt_format.to_ms}ms"
 
         data[qe.query.name] = rows
         dt = dt_exec + dt_format
-        stream.write 'query_result', {
+        @stream&.write 'query_result', {
           id: qe.query.id,
           time: Time.now,
           status: 'success',
@@ -66,7 +66,7 @@ class DataDive::DiveEngine
         }
       rescue => ex
         error ex
-        stream.write 'query_result', {
+        @stream&.write 'query_result', {
           id: qe.query.id,
           time: Time.now,
           status: 'error',
@@ -82,7 +82,7 @@ class DataDive::DiveEngine
       col_type = filter['column_type']
       val = format_value val, col_type
       info "Computed #{filter['input_key']} value: #{val} (#{col_type})"
-      computed_inputs << {key: filter['input_key'], value: val}
+      computed_inputs << { key: filter['input_key'], value: val }
     end
     data['Inputs'] = computed_inputs
 
@@ -91,18 +91,28 @@ class DataDive::DiveEngine
     path = PublicTempFile.new "dive-#{@dive.name.slugify}-#{Time.now.strftime(TIMESTAMP_FORMAT)}.xlsx"
     TabularIo.save_xlsx data, path.abs_path
     dt_save = Time.now - t
-    stream.info "Wrote #{@dive.name} output to #{path.abs_path} in #{dt_save.to_ms}ms"
+    @stream&.info "Wrote #{@dive.name} output to #{path.abs_path} in #{dt_save.to_ms}ms"
 
     # copy the output to the run
     run.output_file = File.open(path.abs_path)
     run.status = 'success'
     run.save_by_user! @change_user
+  end
+
+  # Run the dive and stream the results to the client.
+  # @param stream [ResponseStreamer]
+  # @param run [DdDiveRun]
+  # @param params [Hash] hopefully contains the input values
+  def stream_run!(stream, run, params)
+    @stream = stream
+
+    run! run, params
+
     stream.write 'file_output', {
       name: run.output_file.metadata['filename'],
       size: run.output_file.metadata['size'],
       url: run.output_file_url
     }
-
   end
 
   # formats a raw value for output based on the column type
