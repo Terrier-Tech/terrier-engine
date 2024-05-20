@@ -52,4 +52,24 @@ class RegularSchedule
     times
   end
 
+  # @return [Boolean] true if the schedule occurs with the given day
+  def is_this_day?(date=Date.today)
+    case @schedule_type
+    when 'daily'
+      true
+    when 'weekly'
+      date.strftime('%A').downcase == @day_of_week
+    when 'monthly'
+      date.strftime('%e').strip.to_i == @day_of_month
+    else
+      false
+    end
+  end
+
+  # @param [Time] time the time in question
+  # @return [Boolean] true if the schedule occurs within the same hour as the given time
+  def is_this_hour?(time=Time.now)
+    is_this_day?(time.to_date) && time.strftime('%H').to_i == @hour_of_day
+  end
+
 end
