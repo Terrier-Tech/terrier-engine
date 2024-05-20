@@ -1,7 +1,7 @@
 # Validates a text array column containing e-mail addresses
 class EmailListValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    return if value.empty?
+    return if value.blank?
 
     value.reject(&:blank?).each do |email|
       unless valid_email?(email)

@@ -78,8 +78,7 @@ class DatePeriod
     "#{self.start_date.strftime(SHORT_DATE_FORMAT)} - #{(self.end_date - 1.day).strftime(SHORT_DATE_FORMAT)}"
   end
 
-  # @param raw [String, DatePeriod, Hash] can have the following formats:
-  # @param today [Date, String, NilClass] the anchor date to use if the period is a virtual range
+  # @param [String, DatePeriod, Hash] raw can have the following formats:
   # year: YYYY
   # year range: YYYY:YYYY
   # month: YYYY-MM
@@ -87,6 +86,8 @@ class DatePeriod
   # explicit range: YYYY-MM-DD:YYYY-MM-DD
   # literal hash: {min: YYYY-MM-DD, max: YYYY-MM-DD}
   # virtual hash: {period: 'day'|'week'|'month'|'year', relative: Integer}
+  # @param [Date, String, NilClass] today the anchor date to use if the period is a virtual range
+  # @return [DatePeriod]
   def self.parse(raw, today=nil)
     # pass through existing periods
     if raw.is_a? DatePeriod

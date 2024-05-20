@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.integer "sort_order"
     t.jsonb "query_data"
     t.text "dive_types", default: [], null: false, array: true
+    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
     t.index ["_state"], name: "index_dd_dives_on__state"
@@ -130,8 +131,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "_state", default: 0, null: false
     t.uuid "created_by_id"
     t.text "created_by_name", null: false
@@ -160,8 +161,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
   end
 
   create_table "script_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "_state", default: 0, null: false
     t.uuid "created_by_id"
     t.text "created_by_name", null: false
@@ -175,7 +176,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.string "log_file_name"
     t.string "log_content_type"
     t.bigint "log_file_size"
-    t.datetime "log_updated_at"
+    t.datetime "log_updated_at", precision: nil
     t.string "status", default: "success", null: false
     t.uuid "script_id", null: false
     t.text "org_id"
@@ -188,8 +189,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
   end
 
   create_table "scripts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "_state", default: 0, null: false
     t.uuid "created_by_id"
     t.text "created_by_name", null: false
@@ -235,8 +236,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "_state", default: 0, null: false
     t.uuid "created_by_id"
     t.text "created_by_name", null: false
@@ -255,7 +256,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.text "notes_raw"
     t.text "password_digest", null: false
     t.text "password_reset_token"
-    t.datetime "password_reset_token_expires_at"
+    t.datetime "password_reset_token_expires_at", precision: nil
     t.text "role", null: false
     t.text "state"
     t.text "tags", default: [], null: false, array: true

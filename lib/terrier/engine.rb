@@ -7,6 +7,7 @@ require 'terrier/system/top'
 
 require 'terrier/time/time_overrides'
 require 'terrier/time/date_period'
+require 'terrier/time/regular_schedule'
 
 require 'terrier/io/tabular_io'
 require 'terrier/io/public_temp_file'
