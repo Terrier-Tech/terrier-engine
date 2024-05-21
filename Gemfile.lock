@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.24.0)
+    terrier-engine (4.24.1)
       amazing_print
       coderay
       colorize
