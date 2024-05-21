@@ -166,6 +166,32 @@ export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule
 
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// Display
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Generate an english description of the given regular schedule.
+ * @param schedule
+ */
+function describeRegular(schedule: CombinedRegularSchedule): string {
+    const timeString = dayjs().hour(parseInt(schedule.hour_of_day || '0')).format('h A')
+    switch (schedule.schedule_type) {
+        case 'none':
+            return "Unscheduled"
+        case 'daily':
+            return `Daily at ${timeString}`
+        case 'weekly':
+            return `Every ${inflection.titleize(schedule.day_of_week || 'sunday')} at ${timeString}`
+        case 'monthly':
+            return `Every ${inflection.ordinalize(schedule.day_of_month || '1')} of the month at ${timeString}`
+        default:
+            throw `Invalid schedule type: ${schedule.schedule_type}`
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Export
 ////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +199,8 @@ export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule
 const Schedules = {
     DaysOfWeek,
     DaysOfMonth,
-    HoursOfDay
+    HoursOfDay,
+    describeRegular
 }
 export default Schedules
 

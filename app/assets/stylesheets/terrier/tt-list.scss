@@ -16,6 +16,9 @@
 		align-items: center;
 		gap: 0.5em;
 		padding: 0.5em var(--tt-pad);
+		.name, .title {
+			flex: 1 1 auto;
+		}
 	}
 
 	a {

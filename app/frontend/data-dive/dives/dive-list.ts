@@ -14,6 +14,8 @@ import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import {DiveRunModal} from "./dive-runs"
+import * as inflection from "inflection"
+import Schedules from "../../terrier/schedules"
 
 const log = new Logger("DiveList")
 
@@ -112,7 +114,7 @@ export class DiveListPart extends TerrierPart<DiveListState> {
 
         const groupedDives = Arrays.groupBy(this.result.dives, 'dd_dive_group_id')
 
-        parent.div('.dd-group-grid', grid => {
+        parent.div('.dd-group-grid.tt-typography', grid => {
             const groups = Arrays.sortBy(Object.values(this.groupMap), 'name')
             for (const group of groups) {
                 this.renderGroupPanel(grid, group, groupedDives[group.id] || [])
@@ -156,7 +158,8 @@ export class DiveListPart extends TerrierPart<DiveListState> {
                         a.i('.glyp-data_dive')
                             .data({tooltip: "Public Dive"})
                     }
-                    a.span().text(dive.name)
+                    a.div('.name').text(dive.name)
+                    this.renderDiveSchedule(a, dive)
                 }).data({tooltip: "Open Editor"})
                 row.a('.icon-only', a => {
                     a.i('.glyp-settings')
@@ -173,12 +176,26 @@ export class DiveListPart extends TerrierPart<DiveListState> {
                         a.i('.glyp-data_dive')
                             .data({tooltip: "Public Dive"})
                     }
-                    a.span().text(dive.name)
+                    a.div('.name').text(dive.name)
+                    this.renderDiveSchedule(a, dive)
                 })
                     .data({tooltip: "Run Dive"})
                     .emitClick(this.runDiveKey, {id: dive.id})
             }
         })
+    }
+
+    renderDiveSchedule(row: PartTag, dive: DdDive) {
+        log.info(`Rendering dive schedule: ${dive.delivery_schedule?.schedule_type}`, dive.delivery_schedule)
+        if (!dive.delivery_schedule || dive.delivery_schedule.schedule_type == 'none') {
+            return
+        }
+        let description = Schedules.describeRegular(dive.delivery_schedule)
+        if (dive.delivery_recipients?.length) {
+            description += ` to:<br>${dive.delivery_recipients.join('<br>')}`
+        }
+        row.div(".glyp-setup.with-icon").text(inflection.titleize(dive.delivery_schedule.schedule_type))
+            .data({tooltip: description})
     }
 
 }

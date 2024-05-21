@@ -102,7 +102,6 @@
 		display: flex;
 		align-items: center;
 		border-top: 1px solid var(--tt-border-color);
-		background-color: var(--tt-border-color);
 		@include tt-bottom-rounded-corners;
 		gap: 1px;
 		.primary-actions, .secondary-actions {
@@ -136,10 +135,10 @@
 					color: var(--tt-pending-color);
 				}
 				&:hover {
-					filter: brightness(1.05);
+					filter: brightness(1.1);
 				}
 				&:active {
-					filter: brightness(0.95);
+					filter: brightness(0.9);
 				}
 			}
 		}
