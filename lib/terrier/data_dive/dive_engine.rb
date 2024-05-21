@@ -10,12 +10,16 @@ class DataDive::DiveEngine
   # Run the dive
   # @param run [DdDiveRun]
   # @param params [Hash] hopefully contains the input values
+  # @return [DdDiveRun]
   def run!(run, params)
     data = {}
 
+    params = params.to_unsafe_hash if params.is_a?(ActionController::Parameters)
+
     # get the queries from the run
+    # allow the queries to be specified in the run if we're running unpersisted dive changes
     input_data = run.safe_input_data
-    queries = input_data['queries'] || []
+    queries = input_data['queries'] || @dive.safe_query_data['queries']
 
     # estimate the number of steps that will be streamed
     # 3 steps per query + 1 for creating the run and 1 for writing the file
@@ -28,6 +32,7 @@ class DataDive::DiveEngine
       info "Using filter input #{filter['input_key']} = #{filter['input_value']}"
       params[filter['input_key']] = filter['input_value']
     end
+    actual_filters = []
 
     # execute the queries and collect the results
     queries.each do |query|
@@ -36,14 +41,16 @@ class DataDive::DiveEngine
 
         # execute the query
         t = Time.now
-        p = params.to_unsafe_hash
-        p[:limit] = 1_000_000
-        query_output = qe.execute! p
+        params[:limit] = 1_000_000
+        query_output = qe.execute! params
         rows = query_output[:rows]
         columns = query_output[:columns]
         column_map = columns.index_by { |col| col[:select_name] }
         dt_exec = Time.now - t
         info "Executed '#{query['name']}' in #{dt_exec.to_ms}ms"
+
+        # collect the filters for output
+        actual_filters += qe.filters
 
         # format the output using the column metadata
         t = Time.now
@@ -77,12 +84,12 @@ class DataDive::DiveEngine
 
     # get the computed filter inputs back from the params
     computed_inputs = []
-    filters.each do |filter|
-      val = params[filter['input_key']]
-      col_type = filter['column_type']
+    actual_filters.each do |filter|
+      val = params[filter.input_key]
+      col_type = filter.column_type
       val = format_value val, col_type
-      info "Computed #{filter['input_key']} value: #{val} (#{col_type})"
-      computed_inputs << { key: filter['input_key'], value: val }
+      info "Computed #{filter.input_key} value: #{val} (#{col_type})"
+      computed_inputs << { key: filter.input_key, value: val }
     end
     data['Inputs'] = computed_inputs
 
@@ -91,12 +98,14 @@ class DataDive::DiveEngine
     path = PublicTempFile.new "dive-#{@dive.name.slugify}-#{Time.now.strftime(TIMESTAMP_FORMAT)}.xlsx"
     TabularIo.save_xlsx data, path.abs_path
     dt_save = Time.now - t
-    @stream&.info "Wrote #{@dive.name} output to #{path.abs_path} in #{dt_save.to_ms}ms"
+    info "Wrote #{@dive.name} output to #{path.abs_path} in #{dt_save.to_ms}ms"
 
     # copy the output to the run
     run.output_file = File.open(path.abs_path)
     run.status = 'success'
     run.save_by_user! @change_user
+
+    run
   end
 
   # Run the dive and stream the results to the client.

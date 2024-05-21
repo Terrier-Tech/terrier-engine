@@ -37,6 +37,9 @@ class TableRef < QueryModel
     else
       @filters = []
     end
+    @filters.each do |filter|
+      engine.filters << filter
+    end
   end
 
   # this needs to be called at the end of the subclass constructors since
@@ -229,6 +232,9 @@ end
 class Filter < QueryModel
   attr_accessor :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
 
+  # computed
+  attr_reader :input_key, :input_value
+
   # this should match the implementation of `Filters.toInput` on the frontend
   def compute_input_key(table)
     key = "#{table.model}.#{@column}"
@@ -267,24 +273,24 @@ class Filter < QueryModel
 
   def build(builder, table, params={})
     # possibly override the value from the params
-    input_key = compute_input_key table
-    input_value = params[input_key]
+    @input_key = compute_input_key table
+    @input_value = params[input_key]
 
     case @filter_type
     when 'direct'
       op = sql_operator
-      val = input_value.presence || @value
-      params[input_key] = val
+      val = @input_value.presence || @value
+      params[@input_key] = val
       builder.where "#{table.alias}.#{@column} #{op} ?", val
     when 'date_range'
-      period = DatePeriod.parse(input_value.presence || @range)
-      params[input_key] = period.to_s
+      period = DatePeriod.parse(@input_value.presence || @range)
+      params[@input_key] = period.to_s
       builder.where "#{table.alias}.#{@column} >= ?", period.start_date
       builder.where "#{table.alias}.#{@column} < ?", period.end_date
     when 'inclusion'
-      val = input_value.presence || @in
+      val = @input_value.presence || @in
       val = val.split(',').map(&:strip) if val.is_a?(String)
-      params[input_key] = val.join(', ')
+      params[@input_key] = val.join(', ')
       builder.where "#{table.alias}.#{@column} in ?", val
     else
       raise "Unknown filter type '#{@filter_type}'"
@@ -307,10 +313,11 @@ end
 class DataDive::QueryEngine
   include Loggable
 
-  attr_reader :query
+  attr_reader :query, :filters
 
   def initialize(raw_query)
     @alias_counts = {}
+    @filters = []
     @query = Query.new self, raw_query
     @from = @query.from
   end

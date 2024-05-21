@@ -62,4 +62,12 @@ class DdDive < ApplicationRecord
   json_field :delivery_schedule, {}, 'RegularSchedule'
 
 
+  ## Run
+
+  def run!(params={}, change_user='DdDive#run')
+    engine = DataDive::DiveEngine.new self, change_user
+    run = DdDiveRun.new dd_dive_id: self.id
+    engine.run! run, params
+  end
+
 end

@@ -4,9 +4,10 @@ namespace :data_dive do
   task :run, [:id] => [:environment] do |t, args|
     id = args[:id].presence || raise("Must pass a dive id")
     dive = DdDive.find id
-    engine = DataDive::DiveEngine.new dive, 'data_dive:run'
-    run = DdDiveRun.new dd_dive_id: dive.id
-    engine.run! run, {}
+    puts "Running dive #{dive.name.bold}"
+    run = dive.run!({}, 'data_dive:run')
+    ap run
+    puts "https://terrier-engine.test#{run.output_file.url}"
   end
 
 end
