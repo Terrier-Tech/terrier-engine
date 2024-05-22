@@ -4,6 +4,7 @@ import {PartTag} from "tuff-core/parts"
 import {optionsForSelect, SelectOptions} from "tuff-core/forms"
 import {UntypedKey} from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
+import {InputTagAttrs, SelectTagAttrs} from "tuff-core/html"
 
 const log = new Logger("Terrier PagePart")
 
@@ -35,10 +36,10 @@ type ToolbarFieldDefOptions = {
     icon?: IconName
 }
 
-type ToolbarSelectDef = { type: 'select', options: SelectOptions } & BaseFieldDef
+type ToolbarSelectDef = { type: 'select', options: SelectOptions, attrs?: SelectTagAttrs } & BaseFieldDef
 
 type ValuedInputType = 'text' | 'color' | 'date' | 'datetime-local' | 'email' | 'hidden' | 'month' | 'number' | 'password' | 'search' | 'tel' | 'time' | 'url' | 'week' | 'checkbox'
-type ToolbarValuedInputDef = { type: ValuedInputType } & BaseFieldDef
+type ToolbarValuedInputDef = { type: ValuedInputType, attrs?: InputTagAttrs } & BaseFieldDef
 
 /**
  * Defines a field to be rendered in the page's toolbar
@@ -90,7 +91,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
      * @param selectOptions an array of select options
      * @param opts
      */
-    addToolbarSelect(name: string, selectOptions: SelectOptions, opts?: ToolbarFieldDefOptions) {
+    addToolbarSelect(name: string, selectOptions: SelectOptions, opts?: ToolbarFieldDefOptions & { attrs?: SelectTagAttrs }) {
         this.addToolbarFieldDef({ type: 'select', name, options: selectOptions, ...opts })
     }
 
@@ -100,7 +101,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
      * @param type the type attribute of the input field
      * @param opts
      */
-    addToolbarInput(name: string, type: ValuedInputType, opts?: ToolbarFieldDefOptions) {
+    addToolbarInput(name: string, type: ValuedInputType, opts?: ToolbarFieldDefOptions & { attrs?: InputTagAttrs }) {
         this.addToolbarFieldDef({ type, name, ...opts })
     }
 
@@ -203,6 +204,10 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                         })
                         if (def.onChangeKey) select.emitChange(def.onChangeKey)
                         if (def.onInputKey) select.emitInput(def.onInputKey)
+
+                        if (def.attrs) select.attrs(def.attrs)
+
+                        select.dataAttr('toolbar-field-name', name)
                     } else {
                         const input = label.input({name: def.name, type: def.type, value: def.defaultValue})
                         if (def.type == 'checkbox' && def.defaultValue?.length) {
@@ -210,8 +215,11 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                         }
                         if (def.onChangeKey) input.emitChange(def.onChangeKey)
                         if (def.onInputKey) input.emitInput(def.onInputKey)
-                    }
 
+                        if (def.attrs) input.attrs(def.attrs)
+
+                        input.dataAttr('toolbar-field-name', name)
+                    }
 
                     if (def.tooltip?.length) label.dataAttr('tooltip', def.tooltip)
                 })
