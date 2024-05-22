@@ -1,4 +1,4 @@
-class DiveSchedules < ActiveRecord::Migration[7.1]
+class DiveSchedules < ActiveRecord::Migration[7.0]
   def change
 
     add_column :dd_dives, :delivery_recipients, :text, array: true
