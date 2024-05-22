@@ -2,6 +2,7 @@ import {PartTag} from "tuff-core/parts"
 import {GlypName} from "./glyps"
 import HubIcons, {HubIconName} from "./gen/hub-icons"
 import {Key} from "tuff-core/messages"
+import Hints, {Hint, HintRenderOptions} from "./hints";
 
 export interface ThemeType {
     readonly icons: string
@@ -38,6 +39,10 @@ export type Action = {
     classes?: string[]
     click?: Packet
     badge?: string
+    hint?: {
+        hint: Hint
+        options?: HintRenderOptions
+    }
 }
 
 /**
@@ -114,6 +119,10 @@ export default class Theme {
                 if (action.badge?.length) {
                     const badgeColor = options?.badgeColor || 'alert'
                     a.div(`.badge.${badgeColor}`, {text: action.badge})
+                }
+
+                if (action.hint) {
+                    Hints.renderHint(this, a, action.hint.hint, action.hint.options)
                 }
             })
         }
