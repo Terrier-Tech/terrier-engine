@@ -184,7 +184,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             // inputs and outputs row
             col.div('.tt-flex.collapsible.gap.tt-form', row => {
                 // inputs
-                row.div('.tt-flex.column.shrink.dd-dive-run-inputs', col => {
+                row.div('.tt-flex.column.dd-dive-run-inputs', col => {
                     for (const filter of this.filters) {
                         this.renderInput(col, filter)
                     }
@@ -229,23 +229,24 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         const res = this.queryResults[query.id]
         const status = res?.status || 'pending'
 
-        parent.div('.query-run', status, row => {
-            row.i(statusIcons[status])
-            row.div('.name').text(query.name)
+        parent.div('.query-run', status, runView => {
+            runView.div('.tt-flex.gap.align-center', row => {
+                row.i(statusIcons[status])
+                row.div('.name').text(query.name)
+            })
             if (res?.status == 'error') {
-                row.div('.tt-bubble.alert').text(res.message || "Error!")
+                runView.div('.tt-bubble.alert').text(res.message || "Error!")
             }
             else if (res?.message?.length) {
-                row.div('.details').text(res.message)
+                runView.div('.details').text(res.message)
             }
         })
     }
 
     renderFileOutput(parent: DivTag, fileOutput: RunFileOutput) {
         parent.a('.file-output', {href: fileOutput.url}, row => {
-            row.i('.glyp-file_spreadsheet')
-            row.div('.name').text(fileOutput.name)
-            row.div('.details.glyp-download').text("Click to download")
+            row.div('.name.glyp-file_spreadsheet.with-icon').text(fileOutput.name)
+            row.div('.details.glyp-download.with-icon').text("Click to download")
         })
     }
 

@@ -16,6 +16,7 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 1em;
+		min-width: 1em;
 	}
 }
 
@@ -35,27 +36,22 @@
 		@include panel-like;
 		padding: var(--tt-pad);
 		display: flex;
-		flex-wrap: wrap;
+		flex-direction: column;
 		gap: 1em;
-		row-gap: 0.5em;
-		align-items: center;
+		//align-items: center;
 
 		i {
 			font-size: 200%;
 			flex: 0 0 auto;
 		}
 		.name {
-			//color: var(--tt-secondary-color);
-			//font-weight: bold;
 			font-size: 125%;
-			flex: 0 0 auto;
+			//flex: 1 1 auto;
+			//word-break: break-word;
 		}
 		.details {
-			flex: 1 1 auto;
+			//flex: 1 1 100%;
 			text-align: right;
-			&::before {
-				margin-right: 0.5em;
-			}
 		}
 		&.pending i {
 			color: var(--tt-pending-color);
@@ -75,4 +71,8 @@
 			@include tt-active-box-shadow;
 		}
 	}
+}
+
+.tt-flex > .dd-dive-run-output {
+	min-width: initial;
 }

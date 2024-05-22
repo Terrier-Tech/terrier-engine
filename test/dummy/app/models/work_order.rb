@@ -34,7 +34,7 @@ class WorkOrder < ApplicationRecord
   belongs_to :location
   belongs_to :user
 
-  enum_field :status, %w[active complete cancelled]
+  enum_field :status, %w[active complete cancelled followup on_demand paused in_progress]
 
   cents_field :price
 
