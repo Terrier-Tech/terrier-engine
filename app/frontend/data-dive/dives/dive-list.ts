@@ -186,7 +186,6 @@ export class DiveListPart extends TerrierPart<DiveListState> {
     }
 
     renderDiveSchedule(row: PartTag, dive: DdDive) {
-        log.info(`Rendering dive schedule: ${dive.delivery_schedule?.schedule_type}`, dive.delivery_schedule)
         if (!dive.delivery_schedule || dive.delivery_schedule.schedule_type == 'none') {
             return
         }
@@ -194,7 +193,7 @@ export class DiveListPart extends TerrierPart<DiveListState> {
         if (dive.delivery_recipients?.length) {
             description += ` to:<br>${dive.delivery_recipients.join('<br>')}`
         }
-        row.div(".glyp-setup.with-icon").text(inflection.titleize(dive.delivery_schedule.schedule_type))
+        row.div(".glyp-setup.with-icon.tt-flex.align-center").text(inflection.titleize(dive.delivery_schedule.schedule_type))
             .data({tooltip: description})
     }
 

@@ -7,15 +7,15 @@
 	> div {
 		display: flex;
 		align-items: center;
-		gap: 1em;
 		border-top: 1px solid var(--tt-border-color);
+		padding: calc(var(--tt-pad)/2) var(--tt-pad);
+		gap: var(--tt-pad);
 	}
 	a, > .tt-list-item {
 		flex: 1 1 auto;
 		display: flex;
 		align-items: center;
 		gap: 0.5em;
-		padding: 0.5em var(--tt-pad);
 		.name, .title {
 			flex: 1 1 auto;
 		}
