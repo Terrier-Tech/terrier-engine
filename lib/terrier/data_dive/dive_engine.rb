@@ -13,6 +13,7 @@ class DataDive::DiveEngine
   # @return [DdDiveRun]
   def run!(run, params)
     data = {}
+    query_data = []
 
     params = params.to_unsafe_hash if params.is_a?(ActionController::Parameters)
 
@@ -37,6 +38,8 @@ class DataDive::DiveEngine
     # execute the queries and collect the results
     queries.each do |query|
       qe = DataDive::QueryEngine.new query
+      qd = query.dup
+      query_data << qd
       begin
 
         # execute the query
@@ -63,6 +66,10 @@ class DataDive::DiveEngine
         dt_format = Time.now - t
         info "Formatted values for '#{query['name']}' in #{dt_format.to_ms}ms"
 
+        # store some facts about the query's run
+        qd['exec_time'] = dt_format + dt_exec
+        qd['count'] = rows.count
+
         data[qe.query.name] = rows
         dt = dt_exec + dt_format
         @stream&.write 'query_result', {
@@ -73,6 +80,8 @@ class DataDive::DiveEngine
         }
       rescue => ex
         error ex
+        qd['error'] = ex.message
+        qd['backtrace'] = ex.backtrace
         @stream&.write 'query_result', {
           id: qe.query.id,
           time: Time.now,
@@ -103,6 +112,12 @@ class DataDive::DiveEngine
     # copy the output to the run
     run.output_file = File.open(path.abs_path)
     run.status = 'success'
+
+    # write some data to the output
+    run.output_data = {
+      queries: query_data
+    }
+
     run.save_by_user! @change_user
 
     run
