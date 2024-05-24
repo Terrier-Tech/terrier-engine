@@ -1,0 +1,131 @@
+@import 'tt-mixins';
+
+*:has(> .tt-hint[data-tt-hint-side]) {
+	position: relative;
+}
+
+a .tt-hint {
+	cursor: inherit;
+}
+
+.tt-hint {
+	@include tt-rounded-corners;
+	@include tt-inset-white-text;
+	@include tt-box-shadow;
+
+	// use hint color if provided, otherwise fall back to docs color
+	background-color: var(--tt-hint-color, var(--tt-docs-color));
+	font-size: var(--tt-caption-font-size);
+	line-height: 1;
+	font-weight: normal;
+	cursor: help;
+
+	display: flex;
+	align-items: center;
+	align-self: center;
+	width: max-content;
+	max-width: 250px;
+	gap: calc(var(--tt-gap) / 2);
+	padding: calc(var(--tt-pad) / 2);
+
+	> i, > .icon {
+		font-size: var(--tt-caption-font-size);
+		transform: scale(1.3);
+	}
+
+	.tt-hint-title {
+		padding: 0;
+	}
+
+	&[data-tt-hint-side] {
+		position: absolute;
+
+		&::before {
+			position: absolute;
+			content: "";
+			width: var(--tt-hint-arrow-size, 16px);
+			height: calc(var(--tt-hint-arrow-size, 16px) / 2);
+			clip-path: polygon(0 0, 100% 0, 50% 100%);
+			transform-origin: 50% 0;
+			background-color: inherit;
+		}
+	}
+	&[data-tt-hint-side^=inline] {
+		position: relative;
+	}
+
+	&[data-tt-hint-side=top] {
+		top: 0;
+		left: 50%;
+		translate: -50% calc(-100% - var(--tt-pad) * 3/4);
+
+	}
+	&[data-tt-hint-side$=top] {
+		margin-bottom: calc(var(--tt-pad) * 3/4);
+		&::before {
+			bottom: 0;
+			left: 50%;
+			translate: -50% calc(100% - 1px);
+		}
+	}
+
+	&[data-tt-hint-side=right] {
+		top: 50%;
+		right: 0;
+		translate: calc(100% + var(--tt-pad) * 3/4) -50%;
+
+	}
+	&[data-tt-hint-side$=right] {
+		margin-left: calc(var(--tt-pad) * 3/4);
+		&::before {
+			left: 0;
+			top: 50%;
+			translate: calc(-50% + 1px) 0;
+			rotate: 90deg;
+		}
+	}
+
+	&[data-tt-hint-side=bottom] {
+		bottom: 0;
+		left: 50%;
+		translate: -50% calc(100% + var(--tt-pad) * 3 / 4);
+	}
+	&[data-tt-hint-side$=bottom] {
+		margin-top: calc(var(--tt-pad) * 3/4);
+		&::before {
+			top: 0;
+			left: 50%;
+			translate: -50% 1px;
+			rotate: 180deg;
+		}
+	}
+
+	&[data-tt-hint-side=left] {
+		top: 50%;
+		left: 0;
+		translate: calc(-100% - var(--tt-pad) * 3/4) -50%;
+	}
+	&[data-tt-hint-side$=left] {
+		margin-right: calc(var(--tt-pad) * 3/4);
+		&::before {
+			right: 0;
+			top: 50%;
+			translate: calc(50% - 1px) 0;
+			rotate: 270deg;
+		}
+	}
+}
+
+.tt-button .tt-hint {
+	--iconSize: var(--tt-caption-font-size);
+}
+
+.tt-button.circle.spacious .tt-hint i {
+	font-size: var(--tt-caption-font-size);
+}
+
+.tt-hints-hidden {
+	.tt-hint {
+		display: none !important;
+	}
+}

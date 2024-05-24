@@ -2,6 +2,7 @@ import {PartTag} from 'tuff-core/parts'
 import {Logger} from "tuff-core/logging"
 import DemoParts from "./demo-parts"
 import {DemoPage} from "./demo-app"
+import Hints from "@terrier/hints"
 
 
 const log = new Logger('DemoApp')
@@ -30,6 +31,8 @@ export default class PlatformDemoPage extends DemoPage {
             title: "Secondary",
             classes: ['secondary']
         }, "secondary")
+
+        Hints.addHintToggle(this, 'demo')
 
         this.addAction({
             icon: 'glyp-open',

@@ -1,4 +1,4 @@
-import {NoState, Part, PartTag} from "tuff-core/parts"
+import {NoState, PartTag} from "tuff-core/parts"
 import {ModalPart, modalPopKey} from "@terrier/modals"
 import Toasts from "@terrier/toasts"
 import {ActionsDropdown} from "@terrier/dropdowns"
@@ -13,6 +13,8 @@ import Strings from "tuff-core/strings"
 import {LogEntry} from "@terrier/logging"
 import MultiCircularProgressBarPart, { MultiCircularProgressState } from "@terrier/multi-circular-progress";
 import Time from "tuff-core/time"
+import Hints from "@terrier/hints"
+import TerrierPart from "@terrier/parts/terrier-part"
 
 const log = new Logger("Demo Parts")
 
@@ -39,7 +41,16 @@ class Panel extends PanelPart<NoState> {
         this.addAction({
             title: "Subscription",
             icon: 'glyp-recent',
-            click: {key: subscriptionDropdownKey}
+            click: {key: subscriptionDropdownKey},
+            hint: {
+                hint: {
+                    title: "Action Hint",
+                    tooltip: "This hint belongs on a panel action. " +
+                        "Action hints can go on any kind of action that gets rendered with <code>Theme#renderActions</code>, " +
+                        "Including panels, pages, and modals."
+                },
+                options: { side: 'bottom' }
+            }
         })
 
         this.addAction({
@@ -152,7 +163,11 @@ class Modal extends ModalPart<NoState> {
         this.addAction({
             title: "Push",
             icon: 'glyp-arrow_right',
-            click: {key: openModalKey}
+            click: {key: openModalKey},
+            hint: {
+                hint: { title: "Modal Action Hint!" },
+                options: { side: 'left' },
+            }
         }, "primary")
 
         this.addAction({
@@ -170,7 +185,7 @@ class Modal extends ModalPart<NoState> {
 }
 
 
-class DummyTab extends Part<{container: DemoTabs, title: string, content: string }> {
+class DummyTab extends TerrierPart<{container: DemoTabs, title: string, content: string }> {
 
 
     get parentClasses(): Array<string> {
@@ -178,7 +193,9 @@ class DummyTab extends Part<{container: DemoTabs, title: string, content: string
     }
 
     render(parent: PartTag) {
-        parent.h2({text: this.state.title})
+        parent.h2({text: this.state.title}, heading => {
+            Hints.renderHint(this.theme, heading, { title: "Hint!", tooltip: "This is a tooltip for the tab heading! This one is rendered inline." })
+        })
         for (const text of this.state.content.split("\n")) {
             parent.p({text})
         }
@@ -368,8 +385,13 @@ class CircleProgressPanel extends PanelPart<NoState> {
 
     renderContent(parent: PartTag): void {
         parent.div('.padded.tt-flex.gap.shrink-items.justify-space-evenly.align-center', row => {
+            const sides = ['top', 'right', 'bottom', 'left'] as const
             for (let i = 0; i < this.circles.length; i++) {
-                row.part(this.circles[i])
+                row.div(div => {
+                    div.part(this.circles[i])
+                    const side = sides[i]
+                    Hints.renderHint(this.theme, div, { title: Strings.titleize(side), tooltip: `A hint floating to the ${side} of it's parent!` }, { side })
+                })
             }
         })
     }
