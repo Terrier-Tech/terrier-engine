@@ -1,4 +1,4 @@
-import {DivTag, HtmlParentTag} from "tuff-core/html"
+import Html, {DivTag, HtmlParentTag} from "tuff-core/html"
 import Messages from "tuff-core/messages"
 import {PartPlugin} from "tuff-core/plugins"
 import Theme, {IconName} from "./theme"
@@ -32,6 +32,20 @@ function renderHint(theme: Theme, parent: HtmlParentTag, hint: Hint, options?: H
     if (hint.title) hintTag.span('.tt-hint-title').text(hint.title)
 
     return hintTag
+}
+
+function injectHint(theme: Theme, parentElement: Element, hint: Hint, options?: HintRenderOptions, insertPosition: InsertPosition = 'beforeend'): HTMLDivElement {
+    const elem = Html.createElement('div', div => renderHint(theme, div, hint, options)).firstElementChild as HTMLDivElement
+    parentElement.insertAdjacentElement(insertPosition, elem)
+    return elem
+}
+
+export type DynamicHint = {
+    selector: string
+    hint: Hint
+    options?: HintRenderOptions
+    insertPosition?: InsertPosition
+    onlyFirstMatch?: boolean // only add a hint to the first element that matches the selector
 }
 
 function addHintToggle(part: PagePart<any>, hintKey: string) {
@@ -83,6 +97,7 @@ class HintTogglePlugin extends PartPlugin<{ hintKey: string }> {
 
 const Hints = {
     renderHint,
+    injectHint,
     addHintToggle,
 }
 
