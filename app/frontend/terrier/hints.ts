@@ -17,6 +17,13 @@ export type HintRenderOptions = {
     hideIcon?: boolean
 }
 
+/**
+ * Render a hint into the given tag
+ * @param theme the theme to render the hint icon with
+ * @param parent the parent tag to render the hint into
+ * @param hint the hint to render
+ * @param options options to modify how the hint is rendered
+ */
 function renderHint(theme: Theme, parent: HtmlParentTag, hint: Hint, options?: HintRenderOptions): DivTag {
     const hintTag = parent.div('.tt-hint')
 
@@ -35,6 +42,14 @@ function renderHint(theme: Theme, parent: HtmlParentTag, hint: Hint, options?: H
     return hintTag
 }
 
+/**
+ * Add a hint element to the given parent element
+ * @param theme the theme to render the hint icon with
+ * @param parentElement the element to add the hint element to
+ * @param hint the hint to add
+ * @param options options to modify how the hint is rendered
+ * @param insertPosition specify where to insert the hint relative to the parent element
+ */
 function injectHint(theme: Theme, parentElement: Element, hint: Hint, options?: HintRenderOptions, insertPosition: InsertPosition = 'beforeend'): HTMLDivElement {
     const elem = Html.createElement('div', div => renderHint(theme, div, hint, options)).firstElementChild as HTMLDivElement
     parentElement.insertAdjacentElement(insertPosition, elem)
@@ -49,6 +64,11 @@ export type DynamicHint = {
     onlyFirstMatch?: boolean // only add a hint to the first element that matches the selector
 }
 
+/**
+ * Adds dynamic hints to a given part. Dynamic hints will detect changes to the DOM to update where they are rendered
+ * @param part the part to add dynamic hints to. Dynamic hints will only be added to matching elements under the part's root element
+ * @param hints the hints to add.
+ */
 function addDynamicHints(part: TerrierPart<any>, hints: DynamicHint[]) {
     part.makePlugin(DynamicHintsPlugin, hints)
 }
@@ -100,6 +120,11 @@ class DynamicHintsPlugin extends PartPlugin<DynamicHint[]> {
     }
 }
 
+/**
+ * Adds a hints toggle checkbox to a page's toolbar and handles persisting the state of the checkbox between visits.
+ * @param part the page to add a checkbox to
+ * @param hintKey a key for this page so that the checkbox state can be persisted
+ */
 function addHintToggle(part: PagePart<any>, hintKey: string) {
     part.makePlugin(HintTogglePlugin, { hintKey })
 }
