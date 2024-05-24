@@ -3,6 +3,7 @@ import Messages from "tuff-core/messages"
 import {PartPlugin} from "tuff-core/plugins"
 import Theme, {IconName} from "./theme"
 import PagePart from "./parts/page-part"
+import TerrierPart from "./parts/terrier-part"
 
 export type Hint = {
     title?: string
@@ -46,6 +47,57 @@ export type DynamicHint = {
     options?: HintRenderOptions
     insertPosition?: InsertPosition
     onlyFirstMatch?: boolean // only add a hint to the first element that matches the selector
+}
+
+function addDynamicHints(part: TerrierPart<any>, hints: DynamicHint[]) {
+    part.makePlugin(DynamicHintsPlugin, hints)
+}
+
+class DynamicHintsPlugin extends PartPlugin<DynamicHint[]> {
+    observer: MutationObserver = new MutationObserver(this.handleMutations.bind(this))
+
+    async init() {
+        if (!('theme' in this.part)) throw new Error("DynamicHintsPlugin requires a TerrierPart")
+    }
+
+    update(elem: HTMLElement) {
+        super.update(elem)
+
+        this.addDynamicHints(elem)
+        this.observer.disconnect()
+        this.observer.observe(elem, { childList: true, subtree: true })
+    }
+
+    private handleMutations(mutations: MutationRecord[], _observer: MutationObserver): void {
+        // Ignore mutations that added hint elements (prevents infinite recursion)
+        const addedHints = mutations.some(m =>
+            Array.from(m.addedNodes).some(n => n instanceof HTMLElement && n.dataset.hintSource === 'DynamicHintsPlugin')
+        )
+        if (addedHints) return
+        if (!this.part.element) return
+        this.addDynamicHints(this.part.element)
+    }
+
+    private addDynamicHints(elem: HTMLElement) {
+        const theme = (this.part as TerrierPart<any>).theme
+
+        elem.querySelectorAll('.tt-hint[data-hint-source=DynamicHintsPlugin]').forEach(e => e.remove())
+
+        for (const dynamicHint of this.state) {
+            const matches = elem.querySelectorAll(dynamicHint.selector)
+            if (!matches.length) continue
+            if (dynamicHint.onlyFirstMatch) {
+                this.addDynamicHint(theme, matches[0], dynamicHint)
+            } else {
+                matches.forEach(match => this.addDynamicHint(theme, match, dynamicHint))
+            }
+        }
+    }
+
+    private addDynamicHint(theme: Theme, elem: Element, hint: DynamicHint) {
+        const hintElement = injectHint(theme, elem, hint.hint, hint.options, hint.insertPosition ?? 'beforeend')
+        hintElement.dataset.hintSource = 'DynamicHintsPlugin'
+    }
 }
 
 function addHintToggle(part: PagePart<any>, hintKey: string) {
@@ -98,6 +150,7 @@ class HintTogglePlugin extends PartPlugin<{ hintKey: string }> {
 const Hints = {
     renderHint,
     injectHint,
+    addDynamicHints,
     addHintToggle,
 }
 
