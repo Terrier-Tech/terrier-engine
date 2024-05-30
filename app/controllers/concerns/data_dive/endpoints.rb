@@ -69,6 +69,16 @@ module DataDive::Endpoints
       end
     end
 
+    # a dedicated endpoint to download the output of a run with an arbitrary file name
+    def download_run
+      id = required_param :id
+      filename = required_param :filename
+      filename += '.xlsx' unless filename.ends_with? '.xlsx'
+      run = DdDiveRun.find id
+      output = run.output_file.download
+      send_file output, filename: filename, type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    end
+
   end
 
 end

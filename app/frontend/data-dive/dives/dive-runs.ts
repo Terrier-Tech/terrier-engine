@@ -15,11 +15,17 @@ import {TerrierFormFields} from "../../terrier/forms"
 import * as inflection from "inflection"
 import Dates, {DateLiteral, DatePeriodPickerPart, DatePeriodPickerState, LiteralDateRange} from "../queries/dates"
 import dayjs from "dayjs"
-import {ProgressBarPart} from "../../terrier/progress";
-import {LogListPart} from "../../terrier/logging";
+import {ProgressBarPart} from "../../terrier/progress"
+import {LogListPart} from "../../terrier/logging"
 import Messages from "tuff-core/messages"
+import Format from "../../terrier/format"
 
 const log = new Logger("DiveRuns")
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Run Modal
+////////////////////////////////////////////////////////////////////////////////
 
 type RunQueryResult = {
     id: string
@@ -310,3 +316,33 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     }
 
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Utilities
+////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Generates a relative URL to download the output of the given run with an optional custom file name.
+ * @param run
+ * @param filename
+ */
+function outputUrl(run: DdDiveRun, filename?: string): string {
+    if (!filename?.length) {
+        const nameComps: string[] = []
+        const dive = run.dd_dive
+        if (dive) {
+            nameComps.push(inflection.underscore(dive.name))
+        }
+        const d = dayjs(run.created_at)
+        nameComps.push(d.format('YYYY-MM-DD_HHmmss'))
+        filename = nameComps.join('_') + '.xlsx'
+    }
+    return `/data_dive/download_run/${run.id}/${filename}?t=${dayjs().format(Format.timestamp)}`
+}
+
+const DiveRuns = {
+    outputUrl
+}
+export default DiveRuns
+

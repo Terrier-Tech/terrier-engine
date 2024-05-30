@@ -67,6 +67,30 @@
 			font-size: 3em;
 		}
 	}
+
+	.dive-delivery-list {
+		.run {
+			display: flex;
+			gap: var(--tt-gap);
+			align-items: center;
+			padding: var(--tt-pad);
+			border-bottom: 1px solid var(--tt-border-color);
+		}
+		.recipients {
+			flex: 1 1 auto;
+		}
+		.datetime {
+			flex: 0 0 auto;
+			text-align: center;
+			.time {
+				font-size: var(--tt-label-font-size);
+			}
+		}
+		a {
+			@include tt-scale-push;
+			font-size: 125%;
+		}
+	}
 }
 
 // individual tool panels inside the dive editor

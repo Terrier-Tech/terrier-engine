@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     get 'data_dive/test_dive'
     post 'data_dive/validate_query'
     post 'data_dive/preview_query'
+    get 'data_dive/download_run/:id/:filename' => 'data_dive#download_run'
     get 'data_dive/stream_run/:run_id' => 'data_dive#stream_run'
     get 'data_dive' => 'data_dive#entrypoint'
     get 'data_dive/*rel' => 'data_dive#entrypoint'
