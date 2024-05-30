@@ -18,6 +18,9 @@ module Dummy
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your layout.
 
+    # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+    config.force_ssl = true
+
     config.autoload_paths << Terrier::Engine.root.join("lib/terrier")
 
     # custom error handling for all environments
