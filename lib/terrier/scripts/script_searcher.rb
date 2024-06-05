@@ -11,7 +11,7 @@ class ScriptSearcher
     t = Time.now
     results = query.exec
     total= results.present? ? results.first['total'] : 0
-    ids= results.present? ? results.pluck('id') : []
+    ids = results.present? ? results.to_a.pluck('id') : []
     dt = Time.now - t
 
     OpenStruct.new({
