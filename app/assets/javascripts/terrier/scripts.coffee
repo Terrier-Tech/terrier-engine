@@ -1277,7 +1277,7 @@ _runsTemplate = tinyTemplate (runs) ->
 											a '.with-icon.clear-run', title: 'Clears the status of this run, allowing the script to be run again.', ->
 												icon '.glyp-cancelled.lyph-close'
 												span '', 'Clear'
-										else if run.log_file_name?.length
+										else if run.log_url?.length
 											a '.with-icon', href: run.log_url, target: '_blank', ->
 												icon '.glyp-items.lyph-list'
 												span '', 'Log'
