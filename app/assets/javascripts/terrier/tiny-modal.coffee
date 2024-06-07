@@ -116,9 +116,6 @@ _layoutRow = (row) ->
 	row.parents('#modal-window').css 'max-height', "#{maxHeight}px"
 	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
 
-	# ensure that each column isn't wider than the window
-	row.children('.modal-column').css 'max-width', $('#modal-window').width()
-
 _actionPartial = (action) ->
 	sel = '.action'
 	if action.icon?.length
