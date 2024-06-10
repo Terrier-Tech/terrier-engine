@@ -12,6 +12,7 @@ namespace :scripts do
       if script.schedule_contains_day? day
         puts "Running script #{script.id}: #{script.title}"
         executor = ScriptExecutor.new script, ModelCache.new
+        executor.set_field_values({})
         executor.me = "#{time.titleize} Runner"
         run = executor.init_run
         executor.run run, nil
