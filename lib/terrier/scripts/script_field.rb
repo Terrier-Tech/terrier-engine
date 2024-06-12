@@ -12,7 +12,9 @@ class ScriptField
   enum_field :field_type, %w(date string select csv hidden)
 
   def self.compute_date_value(s)
-    if s =~ /\d{4}-\d{2}-\d{2}/
+    if s.nil?
+      s
+    elsif s =~ /\d{4}-\d{2}-\d{2}/
       Time.parse s
     else
       eval(s)
