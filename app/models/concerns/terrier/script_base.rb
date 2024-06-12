@@ -33,7 +33,7 @@ module Terrier::ScriptBase
         if field.is_a? Hash
           field = ScriptField.new field
         end
-        raw_value = raw_values[field.name] || field.default_value
+        raw_value = raw_values[field.name] || field.default_value.presence
         values[field.name] = ScriptField.compute_value field.field_type, raw_value
       end
       values
