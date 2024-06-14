@@ -42,6 +42,8 @@ class Invoice < ApplicationRecord
 
   string_array_field :lines
 
+  exclude_columns_from_frontend! :extern_id
+
   def self.metadata
     {
       description: "Holds charges for work performed at a location",

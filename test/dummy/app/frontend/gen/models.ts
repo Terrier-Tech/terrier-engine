@@ -1,4 +1,4 @@
-// This file was automatically generated, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-06-14 10:19:04 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -51,7 +51,6 @@ export type Invoice = {
     _state: number
     created_by_id?: string
     created_by_name: string
-    extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
     date: string
@@ -72,7 +71,6 @@ export type UnpersistedInvoice = {
     _state?: number
     created_by_id?: string
     created_by_name?: string
-    extern_id?: string
     updated_by_id?: string
     updated_by_name?: string
     date: string
@@ -390,7 +388,7 @@ export type WorkOrder = {
     updated_by_id?: string
     updated_by_name?: string
     time?: string
-    status: "active" | "complete" | "cancelled"
+    status: "active" | "complete" | "cancelled" | "followup" | "on_demand" | "paused" | "in_progress"
     price: number
     location_id: string
     user_id: string
@@ -416,7 +414,7 @@ export type UnpersistedWorkOrder = {
     updated_by_id?: string
     updated_by_name?: string
     time?: string
-    status: "active" | "complete" | "cancelled"
+    status: "active" | "complete" | "cancelled" | "followup" | "on_demand" | "paused" | "in_progress"
     price: number
     location_id: string
     user_id: string
@@ -432,7 +430,7 @@ export type UnpersistedWorkOrder = {
 }
 
 export const WorkOrderEnumFields = {
-    status: ["active", "complete", "cancelled"] as const,
+    status: ["active", "complete", "cancelled", "followup", "on_demand", "paused", "in_progress"] as const,
 }
 
 /**
