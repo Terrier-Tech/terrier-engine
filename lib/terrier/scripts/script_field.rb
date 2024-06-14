@@ -17,7 +17,7 @@ class ScriptField
     elsif s =~ /\d{4}-\d{2}-\d{2}/
       Time.parse s
     else
-      eval(s)
+      eval(s).to_time
     end
   end
 
