@@ -91,9 +91,14 @@ class ModelGenerator < BaseGenerator
     model[:belongs_to] = belongs_to
     model[:has_many] = has_many
 
+    columns_to_exclude = model[:excluded_columns] || Set.new
+    info "Excluding #{columns_to_exclude.count} #{model[:name]} columns: #{columns_to_exclude.to_a.join(', ')}"
+
     # make the columns into a map
     raw_cols = {}
     model[:columns].each do |col|
+      next if col.name.in?(columns_to_exclude)
+
       enum_field = model[:enum_fields][col.name.to_sym]
       type = enum_field ? 'enum' : model[:type_map][col.name.to_sym] || col.type
       raw_col = {
@@ -154,6 +159,7 @@ class ModelGenerator < BaseGenerator
         name: model.name,
         table_name: model.table_name,
         type_map: model.type_map || {},
+        excluded_columns: model.exclude_columns_from_frontend,
         metadata: model.respond_to?(:metadata) ? model.metadata : nil
       }
     end
