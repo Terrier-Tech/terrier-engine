@@ -34,6 +34,11 @@ module Terrier::Model
 
     ## Upserting (Instance Methods)
 
+    # called before the record and all of its provided relations have been upserted
+    def before_upsert!
+      nil
+    end
+
     # called after the record and all of its provided relations have been upserted
     def after_upsert!(change_user)
       nil
@@ -351,6 +356,7 @@ module Terrier::Model
       attrs.delete 'created_at'
       attrs.delete 'updated_at'
       record.assign_attributes attrs
+      record.before_upsert!
       unless record.valid?
         raise ValidationError.new("#{self.name} is not valid", record.errors)
       end
