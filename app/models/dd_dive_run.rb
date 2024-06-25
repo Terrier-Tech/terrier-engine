@@ -23,6 +23,7 @@
 # | Belongs To | updated_by | User   |
 # +------------+------------+--------+
 class DdDiveRun < ApplicationRecord
+  include Terrier::Model
 
   def self.metadata
     {
