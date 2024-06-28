@@ -385,9 +385,9 @@ class LoadOnScrollDemoModal extends ModalPart<{}> {
         heading.textContent = `Latest Element: ${this.latestElement}`
     }
 
-    async loadNextElement(): Promise<number | undefined> {
+    async loadNextElement(): Promise<number[] | undefined> {
         await Time.wait(100)
-        return ++this.latestElement
+        return [++this.latestElement]
     }
 }
 

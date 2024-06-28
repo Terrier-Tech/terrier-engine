@@ -10,7 +10,7 @@ export type LoadOnScrollOptions<TState> = {
     // The type of parts in the collection
     collectionPartType: PartConstructor<Part<TState>, TState>
     // Called to load the next state. If undefined is returned, no more states will be loaded
-    loadNextState: (existingStates: TState[]) => Promise<TState | undefined>
+    loadNextStates: (existingStates: TState[]) => Promise<TState[] | undefined>
 }
 
 /**
@@ -56,7 +56,7 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
 
     private async loadNextState() {
         const partStates = this.part.getCollectionParts(this.state.collectionName).map(p => p.state) as TState[]
-        const nextState = await this.state.loadNextState(partStates)
+        const nextState = await this.state.loadNextStates(partStates)
         if (nextState === undefined) {
             // No more states to load; remove the plugin to avoid additional loads
             this.observer?.disconnect()
@@ -64,7 +64,7 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
             this.part.removePlugin(this.id)
             return
         }
-        partStates.push(nextState)
+        partStates.push(...nextState)
         this.part.assignCollection(this.state.collectionName, this.state.collectionPartType, partStates)
         this.part.stale()
     }
