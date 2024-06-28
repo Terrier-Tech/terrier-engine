@@ -11,14 +11,16 @@ import {ApiSubscriber, PollingSubscriber, StreamingSubscriber} from "@terrier/ap
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
 import {LogEntry} from "@terrier/logging"
-import MultiCircularProgressBarPart, { MultiCircularProgressState } from "@terrier/multi-circular-progress";
+import MultiCircularProgressBarPart, {MultiCircularProgressState} from "@terrier/multi-circular-progress";
 import Time from "tuff-core/time"
 import Hints from "@terrier/hints"
 import TerrierPart from "@terrier/parts/terrier-part"
+import LoadOnScrollPlugin, {LoadOnScrollOptions} from "@terrier/plugins/load-on-scroll-plugin";
 
 const log = new Logger("Demo Parts")
 
 const openModalKey = Messages.untypedKey()
+const openLoadOnScrollKey = Messages.untypedKey()
 const toastKey = Messages.typedKey<{color: ColorName}>()
 const dropdownKey = Messages.typedKey<{message: string}>()
 const streamingKey = Messages.untypedKey()
@@ -51,6 +53,12 @@ class Panel extends PanelPart<NoState> {
                 },
                 options: { side: 'bottom' }
             }
+        })
+
+        this.addAction({
+            title: "Load on Scroll",
+            icon: 'glyp-align_horizontal',
+            click: {key: openLoadOnScrollKey},
         })
 
         this.addAction({
@@ -134,6 +142,10 @@ class Panel extends PanelPart<NoState> {
             }
 
             this.app.showModal(SubscriptionModal, { subscriber })
+        })
+
+        this.onClick(openLoadOnScrollKey, _ => {
+            this.app.showModal(LoadOnScrollDemoModal, {})
         })
     }
 
@@ -340,6 +352,57 @@ class SubscriptionModal extends ModalPart<{ subscriber: ApiSubscriber<TimeResult
 
 }
 
+class LoadOnScrollDemoModal extends ModalPart<{}> {
+    latestElement!: number
+
+    async init() {
+        this.setTitle("Load on Scroll Demo")
+
+        const initialElements = [0, 1, 2, 3, 4, 5, 6]
+        this.latestElement = initialElements[initialElements.length - 1]
+
+        this.assignCollection('element-collection', LoadOnScrollDemoElement, initialElements)
+
+        const state: LoadOnScrollOptions<number> = {
+            collectionName: 'element-collection',
+            collectionPartType: LoadOnScrollDemoElement,
+            loadNextState: (_) => this.loadNextElement(),
+        }
+        this.makePlugin(LoadOnScrollPlugin<number>, state)
+    }
+
+    renderContent(parent: PartTag): void {
+        parent.div('.tt-flex.column.gap.padded', container => {
+            container.h1('.latest-element').text(`Latest Element: ${this.latestElement}`)
+            this.renderCollection(container, 'element-collection')
+                .class('tt-flex', 'column', 'gap')
+        })
+    }
+
+    update(elem: HTMLElement) {
+        const heading = elem.querySelector('.latest-element')
+        if (!heading) return
+        heading.textContent = `Latest Element: ${this.latestElement}`
+    }
+
+    async loadNextElement(): Promise<number | undefined> {
+        await Time.wait(100)
+        return ++this.latestElement
+    }
+}
+
+class LoadOnScrollDemoElement extends TerrierPart<number> {
+
+    get parentClasses() {
+        return [...super.parentClasses, 'tt-panel', 'padded']
+    }
+
+    render(parent: PartTag) {
+        parent.div().text(this.state.toString())
+    }
+}
+
+
 class CircleProgressPanel extends PanelPart<NoState> {
 
     mouseEnterKey = Messages.typedKey<{ index: number }>()
@@ -404,7 +467,7 @@ const DemoParts = {
     Modal,
     DemoTabs,
     CircleProgressPanel,
-    openModalKey
+    openModalKey,
 }
 
 export default DemoParts
