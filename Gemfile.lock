@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.28.0)
+    terrier-engine (4.29.0)
       amazing_print
       coderay
       colorize
@@ -108,8 +108,8 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
-    addressable (2.8.6)
-      public_suffix (>= 2.0.2, < 6.0)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
     amazing_print (1.6.0)
     ast (2.4.2)
     base64 (0.2.0)
@@ -158,7 +158,7 @@ GEM
       http-cookie (~> 1.0)
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.5.0)
-    http-cookie (1.0.5)
+    http-cookie (1.0.6)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     i18n (1.14.4)
@@ -197,7 +197,7 @@ GEM
     mini_portile2 (2.8.5)
     minitest (5.22.3)
     mutex_m (0.2.0)
-    net-imap (0.4.11)
+    net-imap (0.4.14)
       date
       net-protocol
     net-pop (0.1.2)
@@ -219,13 +219,13 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (3.3.1.0)
+    parser (3.3.3.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.6)
     psych (5.1.2)
       stringio
-    public_suffix (5.0.5)
+    public_suffix (6.0.0)
     puma (6.4.2)
       nio4r (~> 2.0)
     racc (1.7.3)
@@ -277,8 +277,8 @@ GEM
       connection_pool
     reline (0.4.3)
       io-console (~> 0.5)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.1)
+      strscan
     ruby-ole (1.2.13.1)
     rubyzip (2.3.2)
     sassc (2.4.0)
@@ -330,7 +330,7 @@ GEM
     vite_rails (3.0.17)
       railties (>= 5.1, < 8)
       vite_ruby (~> 3.0, >= 3.2.2)
-    vite_ruby (3.5.0)
+    vite_ruby (3.6.0)
       dry-cli (>= 0.7, < 2)
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
