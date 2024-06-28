@@ -366,7 +366,7 @@ class LoadOnScrollDemoModal extends ModalPart<{}> {
         const state: LoadOnScrollOptions<number> = {
             collectionName: 'element-collection',
             collectionPartType: LoadOnScrollDemoElement,
-            loadNextState: (_) => this.loadNextElement(),
+            loadNextStates: (_) => this.loadNextElement(),
         }
         this.makePlugin(LoadOnScrollPlugin<number>, state)
     }
@@ -387,7 +387,9 @@ class LoadOnScrollDemoModal extends ModalPart<{}> {
 
     async loadNextElement(): Promise<number[] | undefined> {
         await Time.wait(100)
-        return [++this.latestElement]
+        const elements = [++this.latestElement, ++this.latestElement, ++this.latestElement]
+        log.info("Loading elements", elements)
+        return elements
     }
 }
 

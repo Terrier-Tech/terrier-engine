@@ -4,6 +4,9 @@ import {Part, PartConstructor} from "tuff-core/parts"
 
 const log = new Logger('LoadOnScrollPlugin')
 
+type MarginUnit = '%' | 'px'
+type MarginLength = `${number}${MarginUnit}`
+type MarginString = `${MarginLength} ${MarginLength} ${MarginLength} ${MarginLength}`
 export type LoadOnScrollOptions<TState> = {
     // The name of the collection to load on scroll
     collectionName: string
@@ -11,6 +14,15 @@ export type LoadOnScrollOptions<TState> = {
     collectionPartType: PartConstructor<Part<TState>, TState>
     // Called to load the next state. If undefined is returned, no more states will be loaded
     loadNextStates: (existingStates: TState[]) => Promise<TState[] | undefined>
+    // Percentage of the last item in the collection that must be visible before the next state is loaded.
+    // If not provided, a default value of 25% is used. Must be between 0 and 1
+    // See: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#threshold
+    intersectThreshold?: number
+    // Defines a margin on the document that shifts when the last element is intersecting.
+    // See: https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#rootmargin
+    intersectRootMargin?: MarginString
+    // Configure the intersection observer
+    configureIntersect?: (builder: IntersectionObserverBuilder, partElem: HTMLElement) => any
 }
 
 /**
@@ -20,8 +32,12 @@ export type LoadOnScrollOptions<TState> = {
 export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollOptions<TState>> {
     private observer?: IntersectionObserver
 
+    private isLoading = false
+
     update(elem: HTMLElement) {
         super.update(elem)
+
+        if (this.isLoading) return
 
         const collectionParts = this.part.getCollectionParts(this.state.collectionName)
 
@@ -34,27 +50,30 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
             return
         }
 
-        const collectionContainer = this.part.getCollectionContainer(this.state.collectionName)
-        if (this.observer == undefined || this.observer.root != collectionContainer) {
-            // The old observer is referencing an old collection container so we need to create a new one
-            this.observer = new IntersectionObserver(this.onIntersect.bind(this), {
-                root: collectionContainer,
-                threshold: 0.25,
-            })
-        } else {
+        this.observer?.disconnect()
+        if (this.observer) {
             this.observer.disconnect()
+        } else {
+            const builder = new IntersectionObserverBuilder(this.onIntersect.bind(this))
+            builder.rootMargin(this.state.intersectRootMargin ?? '0px 0px 0px 0px')
+            builder.threshold(this.state.intersectThreshold ?? 0.25)
+            if (this.state.configureIntersect) {
+                this.state.configureIntersect(builder, elem)
+            }
+            this.observer = builder.build()
         }
         this.observer.observe(lastElement)
     }
 
     private onIntersect(entries: IntersectionObserverEntry[], obs: IntersectionObserver) {
-        if (entries.length && entries[0].isIntersecting) {
-            obs.unobserve(entries[0].target)
-            this.loadNextState().then()
-        }
+        if (this.isLoading) return
+        if (entries.length == 0 || !entries[0].isIntersecting) return
+        obs.disconnect()
+        this.loadNextState().then()
     }
 
     private async loadNextState() {
+        this.isLoading = true
         const partStates = this.part.getCollectionParts(this.state.collectionName).map(p => p.state) as TState[]
         const nextState = await this.state.loadNextStates(partStates)
         if (nextState === undefined) {
@@ -66,6 +85,36 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
         }
         partStates.push(...nextState)
         this.part.assignCollection(this.state.collectionName, this.state.collectionPartType, partStates)
+        this.isLoading = false
         this.part.stale()
+    }
+}
+
+export class IntersectionObserverBuilder {
+    private readonly callback: IntersectionObserverCallback
+    private readonly config: IntersectionObserverInit
+
+    constructor(callback: IntersectionObserverCallback) {
+        this.callback = callback
+        this.config = {}
+    }
+
+    root(root: Element | Document | undefined): IntersectionObserverBuilder {
+        this.config.root = root
+        return this
+    }
+
+    rootMargin(margin: MarginString): IntersectionObserverBuilder {
+        this.config.rootMargin = margin
+        return this
+    }
+
+    threshold(threshold: number): IntersectionObserverBuilder {
+        this.config.threshold = threshold
+        return this
+    }
+
+    build() : IntersectionObserver {
+        return new IntersectionObserver(this.callback, this.config)
     }
 }
