@@ -117,7 +117,10 @@ _layoutRow = (row) ->
 	row.find('.modal-column').css 'max-height', "#{maxHeight}px"
 
 	# ensure that each column isn't wider than the window
-	row.children('.modal-column').css 'max-width', '94vw'
+	if $('#modal-window').hasClass('expanded')
+		row.children('.modal-column').css 'max-width', '96vw'
+	else
+		row.children('.modal-column').css 'max-width', '94vw'
 
 _actionPartial = (action) ->
 	sel = '.action'
