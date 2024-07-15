@@ -9,6 +9,7 @@ import Db from "../dd-db"
 import dayjs from "dayjs"
 import Dates from "../queries/dates"
 import DiveRuns from "./dive-runs";
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("Dive Delivery")
 
@@ -98,9 +99,22 @@ class DiveDeliveryList extends TerrierPart<DiveEditorState> {
     }
 
     render(parent: PartTag) {
+        Arrays.range(0, 50).forEach(() => {
+            this.runs.push(this.runs[0])
+        })
         for (const run of this.runs) {
             parent.div(".run", view => {
-                view.div(".recipients.glyp-users.with-icon").text(run.delivery_recipients?.join("; ") || "No Recipients")
+                view.div(".recipients", recipientsList => {
+                    if (run.delivery_recipients?.length) {
+                        run.delivery_recipients.forEach((recipient) => {
+                            recipientsList.div(".recipient.glyp-users.with-icon").text(recipient)
+                        })
+                    }
+                    else {
+                        // no recipients
+                        recipientsList.div().text("No Recipients")
+                    }
+                })
                 view.div('.datetime', dateTimeView => {
                     const d = dayjs(run.created_at)
                     dateTimeView.div(".date").text(d.format(Dates.displayFormat))
