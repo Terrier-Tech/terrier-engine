@@ -44,7 +44,7 @@ class DatePeriodTest < ActiveSupport::TestCase
   end
 
   test 'parse date range' do
-    p = DatePeriod.parse '2022-10-13:2022-10-22'
+    p = DatePeriod.parse '2022-10-13:2022-10-23'
     assert_equal '2022-10-13', p.start_date.to_s
     assert_equal '2022-10-23', p.end_date.to_s
     assert_equal '2022-10-13:2022-10-22', p.to_s
@@ -83,7 +83,7 @@ class DatePeriodTest < ActiveSupport::TestCase
   end
 
   test 'each' do
-    period = DatePeriod.parse '2022-10-01:2022-11-14'
+    period = DatePeriod.parse '2022-10-01:2022-11-15'
 
     # months
     months = period.each 1.month do |mp|

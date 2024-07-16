@@ -8,8 +8,7 @@ import {DdDiveRun} from "../gen/models"
 import Db from "../dd-db"
 import dayjs from "dayjs"
 import Dates from "../queries/dates"
-import DiveRuns from "./dive-runs";
-import Arrays from "tuff-core/arrays"
+import DiveRuns from "./dive-runs"
 
 const log = new Logger("Dive Delivery")
 

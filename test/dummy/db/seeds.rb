@@ -11,7 +11,7 @@ skip_orders = false
 
 # by default, existing work orders will keep their times
 # set this to true for them to be updated to current
-update_times = false
+update_times = true
 
 # define how many of each thing should be created
 totals = {

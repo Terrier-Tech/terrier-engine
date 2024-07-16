@@ -111,7 +111,7 @@ class DatePeriod
     if raw =~ /^\d{4}-\d{2}-\d{2}:\d{4}-\d{2}-\d{2}$/
       comps = raw.split ':'
       start_date = comps.first
-      end_date = Date.parse(comps.second) + 1.day
+      end_date = comps.second
     elsif raw =~ /^\d{4}:\d{4}$/
       years = raw.split(':').map &:to_i
       start_date = "#{years.first}-01-01"
