@@ -99,9 +99,6 @@ class DiveDeliveryList extends TerrierPart<DiveEditorState> {
     }
 
     render(parent: PartTag) {
-        Arrays.range(0, 50).forEach(() => {
-            this.runs.push(this.runs[0])
-        })
         for (const run of this.runs) {
             parent.div(".run", view => {
                 view.div(".recipients", recipientsList => {
