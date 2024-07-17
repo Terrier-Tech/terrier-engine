@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -101,6 +101,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_15_125522) do
     t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
+    t.jsonb "plot_data"
     t.index ["_state"], name: "index_dd_dives_on__state"
     t.index ["created_by_id"], name: "index_dd_dives_on_created_by_id"
     t.index ["dd_dive_group_id"], name: "index_dd_dives_on_dd_dive_group_id"

@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-05-16 13:17:01 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-07-17 09:10:17 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -9,6 +9,8 @@ import { FilterInput } from "../queries/filters"
 import { Attachment } from "../../terrier/attachments"
 
 import { RegularSchedule } from "../../terrier/schedules"
+
+import { DivePlot } from "../dives/dive-plots"
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -31,8 +33,10 @@ export type DdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
+    plot_data?: { plots: DivePlot[] }
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup
@@ -59,8 +63,10 @@ export type UnpersistedDdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
+    plot_data?: { plots: DivePlot[] }
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_group?: DdDiveGroup

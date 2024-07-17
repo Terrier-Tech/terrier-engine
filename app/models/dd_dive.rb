@@ -62,6 +62,13 @@ class DdDive < ApplicationRecord
   json_field :delivery_schedule, {}, 'RegularSchedule'
 
 
+  ## Plots
+
+  json_field :plot_data, {}, {
+    plots: 'DivePlot[]'
+  }
+
+
   ## Run
 
   def run!(params={}, change_user='DdDive#run')

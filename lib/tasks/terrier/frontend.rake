@@ -20,7 +20,8 @@ namespace :frontend do
         '../dd-user' => ['DdUser'],
         '../queries/filters' => ['FilterInput'],
         '../../terrier/attachments' => ['Attachment'],
-        '../../terrier/schedules' => ['RegularSchedule']
+        '../../terrier/schedules' => ['RegularSchedule'],
+        '../dives/dive-plots' => ['DivePlot']
       },
       prefix: 'Dd',
       type_map: {'User' => 'DdUser'}
