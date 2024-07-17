@@ -29,6 +29,8 @@ class DdDivePlot < ApplicationRecord
 
   belongs_to :dd_dive
 
+  validates :title, presence: true
+
   json_field :layout, {}, 'DivePlotLayout'
 
   json_field :traces, [], 'DivePlotTrace[]'

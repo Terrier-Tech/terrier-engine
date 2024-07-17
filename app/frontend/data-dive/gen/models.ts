@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-07-17 11:41:27 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-07-17 13:26:00 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -10,7 +10,7 @@ import { Attachment } from "../../terrier/attachments"
 
 import { RegularSchedule } from "../../terrier/schedules"
 
-import { DivePlotTrace, DivePlotLayout } from "../dives/dive-plots"
+import { DivePlotTrace, DivePlotLayout } from "../plots/dive-plots"
 
 import { OptionalProps } from "tuff-core/types"
 

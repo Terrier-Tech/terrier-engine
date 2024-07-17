@@ -1,5 +1,5 @@
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
-import {DiveEditorState} from "./dive-editor"
+import {DiveEditorState} from "../dives/dive-editor"
 import {PartTag} from "tuff-core/parts"
 import {MarkerStyle, TraceStyle, TraceType, YAxisName} from "tuff-plot/trace"
 import {PlotLayout} from "tuff-plot/layout"

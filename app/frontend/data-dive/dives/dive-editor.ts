@@ -20,7 +20,7 @@ import Arrays from "tuff-core/arrays"
 import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
 import {DiveDeliveryForm} from "./dive-delivery"
-import {DivePlotsForm} from "./dive-plots"
+import {DivePlotsForm} from "../plots/dive-plots"
 
 const log = new Logger("DiveEditor")
 

@@ -4,7 +4,7 @@ import Db from "../dd-db"
 import DdSession from "../dd-session"
 import {FilterInput} from "../queries/filters"
 import Tables from "../queries/tables"
-import {SchemaDef} from "../../terrier/schema";
+import {SchemaDef} from "../../terrier/schema"
 
 
 ////////////////////////////////////////////////////////////////////////////////
