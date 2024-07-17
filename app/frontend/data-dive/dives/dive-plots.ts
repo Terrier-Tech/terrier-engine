@@ -5,7 +5,7 @@ import {MarkerStyle, TraceStyle, TraceType, YAxisName} from "tuff-plot/trace"
 import {PlotLayout} from "tuff-plot/layout"
 
 
-export type DiveTrace = {
+export type DivePlotTrace = {
     id: string
     type: TraceType
     title: string
@@ -17,13 +17,8 @@ export type DiveTrace = {
     marker?: MarkerStyle
 }
 
-
-export type DivePlot = {
-    id: string
-    title: string
-    traces: DiveTrace[]
-    layout: PlotLayout
-}
+// maybe we'll add more in the future
+export type DivePlotLayout = PlotLayout
 
 
 export class DivePlotsForm extends TerrierFormPart<DiveEditorState> {

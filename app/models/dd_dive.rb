@@ -4,6 +4,7 @@
 # | created_by_id       | uuid         | indexed               |
 # | created_by_name     | text         | required              |
 # | dd_dive_group_id    | uuid         | indexed               |
+# | delivery_mode       | text         |                       |
 # | delivery_recipients | text[]       |                       |
 # | delivery_schedule   | jsonb        |                       |
 # | description_html    | text         |                       |
@@ -63,10 +64,6 @@ class DdDive < ApplicationRecord
 
 
   ## Plots
-
-  json_field :plot_data, {}, {
-    plots: 'DivePlot[]'
-  }
 
 
   ## Run

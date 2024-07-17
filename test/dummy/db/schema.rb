@@ -56,6 +56,26 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
     t.index ["updated_by_id"], name: "index_dd_dive_groups_on_updated_by_id"
   end
 
+  create_table "dd_dive_plots", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.text "title", null: false
+    t.jsonb "traces", default: [], null: false
+    t.jsonb "layout", default: {}, null: false
+    t.uuid "dd_dive_id", null: false
+    t.index ["_state"], name: "index_dd_dive_plots_on__state"
+    t.index ["created_by_id"], name: "index_dd_dive_plots_on_created_by_id"
+    t.index ["dd_dive_id"], name: "index_dd_dive_plots_on_dd_dive_id"
+    t.index ["extern_id"], name: "index_dd_dive_plots_on_extern_id"
+    t.index ["updated_by_id"], name: "index_dd_dive_plots_on_updated_by_id"
+  end
+
   create_table "dd_dive_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -101,7 +121,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
     t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
-    t.jsonb "plot_data"
     t.index ["_state"], name: "index_dd_dives_on__state"
     t.index ["created_by_id"], name: "index_dd_dives_on_created_by_id"
     t.index ["dd_dive_group_id"], name: "index_dd_dives_on_dd_dive_group_id"
@@ -304,6 +323,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
   add_foreign_key "contacts", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "created_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "updated_by_id"
+  add_foreign_key "dd_dive_plots", "dd_dives"
+  add_foreign_key "dd_dive_plots", "users", column: "created_by_id"
+  add_foreign_key "dd_dive_plots", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_runs", "dd_dives"
   add_foreign_key "dd_dive_runs", "users", column: "created_by_id"
   add_foreign_key "dd_dive_runs", "users", column: "updated_by_id"
