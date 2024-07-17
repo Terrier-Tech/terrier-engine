@@ -68,7 +68,7 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 
 			# sort the rows
 			t = performance.now()
-			rows = table.find('tbody tr')
+			rows = table.find('tbody tr').not('.always-top')
 			rows.sort (a, b) ->
 				aCol = $(a).find(".col-#{col}, .column-#{col}")
 				aVal = _computeCellValue aCol
@@ -84,6 +84,9 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 			puts "Sorted rows in #{(performance.now() - t).toFixed(2)} ms"
 
 			t = performance.now()
+			alwaysTopRow = table.find('tr.always-top')
+			if alwaysTopRow.length > 0
+				table.find('tbody').prepend(alwaysTopRow)
 			rows.detach().appendTo table.find('tbody')
 			table.find('tbody tr.total').detach().appendTo table.find('tbody')
 			puts "Re-attached rows in #{(performance.now() - t).toFixed(2)} ms"
