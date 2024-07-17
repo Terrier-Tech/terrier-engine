@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bookmark</title>
+    <g id="bookmark" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M23,2 L9,2 C8.44771525,2 8,2.44771525 8,3 L8,29 L8.00557168,29.1091549 C8.08647256,29.8925099 9.03032124,30.2910881 9.65079137,29.7592566 L15.999,24.317 L22.3492086,29.7592566 C22.9978819,30.3152623 24,29.8543532 24,29 L24,3 C24,2.44771525 23.5522847,2 23,2 Z M22,4 L22,26.826 L16.6507914,22.2407434 L16.5536644,22.1671829 C16.185438,21.9219813 15.6924909,21.9465015 15.3492086,22.2407434 L10,26.825 L10,4 L22,4 Z" id="Path-97" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

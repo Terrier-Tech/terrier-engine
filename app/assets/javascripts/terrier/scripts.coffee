@@ -182,7 +182,7 @@ _reportExecModalTemplate = window.tinyTemplate (script, fieldValues, fieldOption
 				div '.script-messages'
 
 
-# @options can contain field_options and field_values, which will override 
+# @options can contain field_options and field_values, which will override
 # whatever is returned from compute_field_values
 # pass [] for a select field options to hide it (but still have a hidden field)
 class ReportExecModal

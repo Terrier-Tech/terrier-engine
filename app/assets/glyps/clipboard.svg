@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>clipboard</title>
+    <g id="clipboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M25.9,4 C26.5075132,4 27,4.44771525 27,5 L27,5 L27,29 C27,29.5522847 26.5075132,30 25.9,30 L25.9,30 L6.1,30 C5.49248678,30 5,29.5522847 5,29 L5,29 L5,5 C5,4.44771525 5.49248678,4 6.1,4 L6.1,4 L10.5983851,3.99889691 C10.3280659,4.57424329 10.1410658,5.23827889 10.0545563,5.99958939 L7,6 L7,28 L25,28 L25,6 L21.9454437,5.99958939 C21.8589342,5.23827889 21.6719341,4.57424329 21.4016149,3.99889691 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M16,2 C12.7810486,2 11,3.78104858 11,7 C11,7.55228475 11.4477153,8 12,8 L20,8 C20.5522847,8 21,7.55228475 21,7 C21,3.78104858 19.2189514,2 16,2 Z M16.207355,4.00296477 C17.76587,4.048522 18.608868,4.62134898 18.8909807,5.87607734 L18.915,6 L13.084,6 L13.1090193,5.87607734 C13.4033978,4.56679557 14.3084945,4 16,4 L16.207355,4.00296477 Z" id="Path" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="9" y="10" width="14" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="9" y="14" width="14" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="9" y="18" width="14" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="9" y="22" width="10" height="2" rx="1"></rect>
+    </g>
+</svg>
