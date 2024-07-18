@@ -1,4 +1,4 @@
-// This file was automatically generated, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-07-17 08:41:32 -0500, DO NOT EDIT IT MANUALLY!
 
 import * as inflection from "inflection"
 

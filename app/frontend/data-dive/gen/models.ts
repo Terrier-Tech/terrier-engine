@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-05-16 13:17:01 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-07-17 13:26:00 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -9,6 +9,8 @@ import { FilterInput } from "../queries/filters"
 import { Attachment } from "../../terrier/attachments"
 
 import { RegularSchedule } from "../../terrier/schedules"
+
+import { DivePlotTrace, DivePlotLayout } from "../plots/dive-plots"
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -31,6 +33,7 @@ export type DdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -59,6 +62,7 @@ export type UnpersistedDdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -112,6 +116,44 @@ export type UnpersistedDdDiveGroup = {
     created_by?: DdUser
     updated_by?: DdUser
     dd_dives?: OptionalProps<UnpersistedDdDive, "dd_dive_group_id">[]
+}
+
+export type DdDivePlot = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    title: string
+    traces: DivePlotTrace[]
+    layout: DivePlotLayout
+    dd_dive_id: string
+    created_by?: DdUser
+    updated_by?: DdUser
+    dd_dive?: DdDive
+}
+
+export type UnpersistedDdDivePlot = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    title: string
+    traces: DivePlotTrace[]
+    layout: DivePlotLayout
+    dd_dive_id: string
+    created_by?: DdUser
+    updated_by?: DdUser
+    dd_dive?: DdDive
 }
 
 export type DdDiveRun = {
@@ -170,6 +212,7 @@ export const DdDiveRunEnumFields = {
 export type PersistedModelTypeMap = {
     dd_dive: DdDive
     dd_dive_group: DdDiveGroup
+    dd_dive_plot: DdDivePlot
     dd_dive_run: DdDiveRun
 }
 
@@ -179,6 +222,7 @@ export type PersistedModelTypeMap = {
 export type UnpersistedModelTypeMap = {
     dd_dive: UnpersistedDdDive
     dd_dive_group: UnpersistedDdDiveGroup
+    dd_dive_plot: UnpersistedDdDivePlot
     dd_dive_run: UnpersistedDdDiveRun
 }
 
@@ -188,6 +232,7 @@ export type UnpersistedModelTypeMap = {
 export type ModelIncludesMap = {
     dd_dive: "created_by" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
     dd_dive_group: "created_by" | "dd_dives" | "updated_by"
+    dd_dive_plot: "created_by" | "dd_dive" | "updated_by"
     dd_dive_run: "created_by" | "dd_dive" | "updated_by"
 }
 
