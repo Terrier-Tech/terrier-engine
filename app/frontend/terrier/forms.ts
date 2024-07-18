@@ -1,7 +1,7 @@
 import {Field, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
-import {InputTag, InputTagAttrs, SelectTag, SelectTagAttrs, TextAreaTag, TextAreaTagAttrs} from "tuff-core/html"
+import {DivTag, InputTag, InputTagAttrs, SelectTag, SelectTagAttrs, TextAreaTag, TextAreaTagAttrs} from "tuff-core/html"
 import TerrierPart from "./parts/terrier-part"
 import GlypPicker from "./parts/glyp-picker"
 import Glyps from "./glyps"
@@ -55,7 +55,7 @@ function titleizeOptions(opts: readonly string[], blank?: string): SelectOptions
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Override regular `FormFields` methods to include validation errors.
+ * Override regular `FormFields` methods to include validation errors and optional compound fields.
  */
 export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
 
@@ -141,6 +141,20 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
             }
         }).emitClick(this.pickGlypKey, {key})
     }
+
+
+    /**
+     * Creates a .tt-compound-field tag and passes the field to the nested function.
+     * I suppose it's just a slight convenience over having `parent.div(".tt-compound-field"...` everywhere.
+     * @param parent
+     * @param fun a function that accepts the field as an argument, to actually populate the field
+     */
+    compoundField(parent: PartTag, fun: (field: DivTag) => any) {
+        parent.div(".tt-compound-field", field => {
+            fun(field)
+        })
+    }
+
 }
 
 

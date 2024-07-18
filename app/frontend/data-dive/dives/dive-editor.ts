@@ -20,7 +20,7 @@ import Arrays from "tuff-core/arrays"
 import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
 import {DiveDeliveryForm} from "./dive-delivery"
-import {DivePlotsForm} from "../plots/dive-plots"
+import DivePlotList from "../plots/dive-plot-list"
 
 const log = new Logger("DiveEditor")
 
@@ -42,7 +42,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     deliveryForm!: DiveDeliveryForm
 
-    plotsForm!: DivePlotsForm
+    plotList!: DivePlotList
 
     newQueryKey = Messages.untypedKey()
     duplicateQueryKey = Messages.untypedKey()
@@ -121,7 +121,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         this.deliveryForm = this.settingsTabs.upsertTab({key: 'delivery', title: "Delivery", icon: "glyp-email"}, DiveDeliveryForm, this.state)
 
-        this.plotsForm = this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotsForm, this.state)
+        this.plotList = this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotList, this.state)
     }
 
     /**
