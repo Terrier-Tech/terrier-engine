@@ -1,0 +1,15 @@
+@import "../terrier/tt-mixins";
+
+// the part that actualy renders a dive plot
+.dd-dive-plot-render {
+	// placeholder
+	padding: 4em;
+	border: 2px solid var(--tt-secondary-color);
+	background: var(--tt-inset-background);
+	text-align: center;
+}
+
+// shown in the right Plots panel in the dive editor
+.dd-dive-plot-preview {
+	margin-bottom: var(--tt-gap);
+}

@@ -28,7 +28,7 @@ export type DivePlotLayout = PlotLayout
  */
 async function get(dive: DdDive): Promise<DdDivePlot[]> {
     return await Db().query('dd_dive_plot')
-        .where({dd_dive_id: dive.id})
+        .where({dd_dive_id: dive.id, _state: 0})
         .orderBy("title ASC")
         .exec()
 }
