@@ -14,6 +14,7 @@ const log = new Logger('List Viewer')
 export type ListItem = {
     listId: string
     listClickable?: boolean
+    listClear?: boolean
     listStyle?: 'none' | 'panel' | 'header'
 }
 
@@ -34,6 +35,9 @@ class ListItemPart<T extends ListItem> extends Part<T> {
             if (this.state.listClickable) {
                 itemView.class('clickable')
                 itemView.emitClick(this.viewer.itemClickedKey, {listId: this.state.listId})
+            }
+            else if (this.state.listClear) {
+                itemView.emitClick(this.viewer.clearCurrentKey)
             }
             if (isCurrent) {
                 itemView.class('current')
@@ -128,6 +132,7 @@ class SideContainerPart extends Part<{viewer: ListViewerPart<any>}> {
         }
         else {
             log.debug(`[SideContainerPart] No details part to render`)
+            this.viewer.renderEmptyDetails(parent)
         }
     }
 
@@ -156,7 +161,24 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     items: T[] = []
     itemPartMap: Record<string, ListItemPart<T>> = {}
 
+    /**
+     * Emit this key when a specific item is clicked.
+     */
     itemClickedKey = Messages.typedKey<ListItem>()
+
+    /**
+     * Emit this key to clear the current selection.
+     */
+    clearCurrentKey = Messages.untypedKey()
+
+    /**
+     * Clears the currently selected item.
+     */
+    clearCurrent() {
+        this.detailsContext?.clear()
+        this.detailsContext = undefined
+        this.dirty()
+    }
 
     /**
      * A message with this key gets emitted whenever the details are shown.
@@ -175,6 +197,11 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
             log.debug(`Clicked on list item ${m.data.listId}`, m)
             this.showDetails(m.data.listId)
         })
+
+        this.onClick(this.clearCurrentKey, m => {
+            log.debug(`Clicked clear key`, m)
+            this.clearCurrent()
+        })
     }
 
 
@@ -184,6 +211,13 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
      * Subclasses must implement this to provide a list of items to render.
      */
     abstract fetchItems(): Promise<T[]>
+
+    /**
+     * Subclasses can override this to automatically load the first item in the list.
+     */
+    get shouldLoadFirstItem(): boolean {
+        return false
+    }
 
     /**
      * Fetches the items with `fetchItems()` and re-renders the list.
@@ -215,7 +249,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
             log.info(`Showing item specified in params: ${id}`)
             this.showDetails(id)
         }
-        else {
+        else if (this.shouldLoadFirstItem) {
             const firstClickable = this.items.filter(item => item.listClickable)[0]
             if (firstClickable) {
                 log.info(`Showing first clickable item`)
@@ -256,6 +290,14 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
      * @param context
      */
     abstract renderDetails(context: ListViewerDetailsContext<T>): any
+
+    /**
+     * Subclasses should override this to render custom content when there's no item selected (and layout=side).
+     * @param parent
+     */
+    renderEmptyDetails(parent: PartTag) {
+        parent.div(".text-center").text("Nothing to see here")
+    }
 
 
     // Details

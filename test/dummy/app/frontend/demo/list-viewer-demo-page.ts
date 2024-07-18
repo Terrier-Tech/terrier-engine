@@ -26,7 +26,8 @@ const demoItems: DemoItem[] = Arrays.range(0, 50).map((i) => {
         return {
             listId: `demo-${i}`,
             listStyle: 'header',
-            title: `Header ${i/10 + 1}`
+            title: `Header ${i/10 + 1}`,
+            listClear: true
         }
     }
     return {
@@ -84,7 +85,17 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
     }
 
     renderDetails(context: ListViewerDetailsContext<DemoItem>) {
-        context.makePart(DemoDetailPart, context.item as DemoPanelItem)
+        if ('details' in context.item) {
+            context.makePart(DemoDetailPart, context.item)
+        }
+        else {
+            alert("Clicked on a header")
+        }
+    }
+
+
+    renderEmptyDetails(parent: PartTag) {
+        parent.div().text("Demo Empty Item")
     }
 
 }
