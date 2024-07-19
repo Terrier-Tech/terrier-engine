@@ -38,6 +38,9 @@
 		&.large-top-padding {
 			padding-top: 2em;
 		}
+		.stretch {
+			flex: 1 1 auto;
+		}
 	}
 	h1 {
 		font-size: 26px;

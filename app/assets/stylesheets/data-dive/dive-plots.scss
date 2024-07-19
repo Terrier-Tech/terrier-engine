@@ -9,6 +9,17 @@
 	text-align: center;
 }
 
+
+.dd-dive-plot-list {
+	.plot-title {
+		a {
+			font-size: calc(var(--tt-body-font-size) * 1.25);
+			@include tt-scale-push;
+		}
+	}
+}
+
+
 // shown in the right Plots panel in the dive editor
 .dd-dive-plot-preview {
 	margin-bottom: var(--tt-gap);

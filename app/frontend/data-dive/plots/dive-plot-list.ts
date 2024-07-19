@@ -7,10 +7,11 @@ import Fragments from "../../terrier/fragments"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import DivePlotEditor from "./dive-plot-editor"
-import * as inflection from "inflection"
 import DivePlotRenderPart, {DivePlotRenderState} from "./dive-plot-render-part"
 
 const log = new Logger("DivePlotList")
+
+const editKey = Messages.typedKey<{ id: string }>()
 
 class DivePlotPreview extends TerrierPart<DivePlotRenderState> {
 
@@ -25,7 +26,13 @@ class DivePlotPreview extends TerrierPart<DivePlotRenderState> {
     }
 
     render(parent: PartTag) {
-        parent.div(".title").text(this.state.plot.title)
+        parent.h3(".plot-title", title => {
+            title.i('.shrink.icon-only.glyp-differential')
+            title.div('.text-center.stretch').text(this.state.plot.title)
+            title.a('.glyp-settings.icon-only')
+                .data({tooltip: "Edit this plot"})
+                .emitClick(editKey, {id: this.state.plot.id})
+        })
         parent.part(this.renderPart)
     }
 }
@@ -41,7 +48,7 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
     plots!: DdDivePlot[]
 
     get parentClasses(): Array<string> {
-        return ['tt-flex', 'column', 'gap', 'dd-dive-tool', 'tt-typography']
+        return ['dd-dive-plot-list', 'tt-flex', 'column', 'gap', 'dd-dive-tool', 'tt-typography']
     }
 
     async init() {
@@ -56,6 +63,18 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
                 traces: []
             }
             this.app.showModal(DivePlotEditor, {...this.state, plot})
+        })
+
+        this.onClick(editKey, m => {
+            const id = m.data.id
+            log.info(`Editing plot ${id}`)
+            const plot: UnpersistedDdDivePlot | undefined = this.plots.filter(p => p.id === id)[0]
+            if (plot) {
+                this.app.showModal(DivePlotEditor, {...this.state, plot})
+            }
+            else {
+                log.warn(`Couldn't find a plot with id=${id}`)
+            }
         })
 
         this.listenMessage(DivePlotList.reloadKey, _ => {
@@ -79,8 +98,6 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
     }
 
     render(parent: PartTag): any {
-        parent.h3().text(`${this.plots.length} ${inflection.inflect('Plot', this.plots.length)}`)
-
         this.renderCollection(parent, "plots")
 
         Fragments.button(parent, this.theme, "New Plot", "hub-plus", "secondary")
