@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>scoreboard</title>
+    <g id="scoreboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M29,2 C29.5522847,2 30,2.44771525 30,3 L30,19 C30,19.5522847 29.5522847,20 29,20 L25,20 L25,20 L25,29 C25,29.5522847 24.5522847,30 24,30 C23.4477153,30 23,29.5522847 23,29 L23,20 L9,20 L9,20 L9,29 C9,29.5522847 8.55228475,30 8,30 C7.44771525,30 7,29.5522847 7,29 L7,20 L3,20 C2.44771525,20 2,19.5522847 2,19 L2,3 C2,2.44771525 2.44771525,2 3,2 L29,2 Z M28,4 L4,4 L4,18 L28,18 L28,4 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M10,8 C10.5522847,8 11,8.44771525 11,9 L11,16 C11,16.5522847 10.5522847,17 10,17 L6,17 C5.44771525,17 5,16.5522847 5,16 L5,9 C5,8.44771525 5.44771525,8 6,8 L10,8 Z M9,10 L7,10 L7,15 L9,15 L9,10 Z" id="Rectangle" fill="#000000" fill-rule="nonzero"></path>
+        <path d="M18,6 C18.5522847,6 19,6.44771525 19,7 L19,11 C19,11.5522847 18.5522847,12 18,12 L14,12 C13.4477153,12 13,11.5522847 13,11 L13,7 C13,6.44771525 13.4477153,6 14,6 L18,6 Z M17,8 L15,8 L15,10 L17,10 L17,8 Z" id="Rectangle-Copy-3" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="5" y="5" width="6" height="2" rx="1"></rect>
+        <rect id="Rectangle-Copy-4" fill="#000000" x="21" y="5" width="6" height="2" rx="1"></rect>
+        <path d="M26,8 C26.5522847,8 27,8.44771525 27,9 L27,16 C27,16.5522847 26.5522847,17 26,17 L22,17 C21.4477153,17 21,16.5522847 21,16 L21,9 C21,8.44771525 21.4477153,8 22,8 L26,8 Z M25,10 L23,10 L23,15 L25,15 L25,10 Z" id="Rectangle-Copy-2" fill="#000000" fill-rule="nonzero"></path>
+    </g>
+</svg>

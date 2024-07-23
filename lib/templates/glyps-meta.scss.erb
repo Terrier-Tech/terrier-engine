@@ -14,6 +14,6 @@
   font-family: "glyp";
 }
 
-% config['glyphs'].each do |row|
+<% config['glyphs'].each do |row| %>
 $glyp-<%= row['name'] %>: "\<%= row['code'].to_s(16) %>";
-% end
+<% end %>

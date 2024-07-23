@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>image</title>
+    <g id="image" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M29,4 C29.5522847,4 30,4.44771525 30,5 L30,5 L30,27 C30,27.5522847 29.5522847,28 29,28 L29,28 L3,28 C2.44771525,28 2,27.5522847 2,27 L2,27 L2,5 C2,4.44771525 2.44771525,4 3,4 L3,4 Z M19,13.415 L11,21.4142136 L8,18.415 L4,22.414 L4,26 L28,26 L28,22.415 L19,13.415 Z M28,6 L4,6 L4,19.584 L8,15.5857864 L11,18.585 L19,10.5857864 L28,19.585 L28,6 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"></path>
+        <circle id="Oval" fill="#000000" cx="8" cy="10" r="2"></circle>
+    </g>
+</svg>

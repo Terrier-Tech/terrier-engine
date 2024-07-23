@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>list</title>
+    <g id="list" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(4.000000, 3.000000)" fill="#000000">
+            <rect id="Rectangle" x="4" y="0" width="20" height="2" rx="1"></rect>
+            <circle id="Oval" cx="1" cy="1" r="1"></circle>
+        </g>
+        <g id="Group-3" transform="translate(4.000000, 11.000000)" fill="#000000">
+            <rect id="Rectangle-Copy-2" x="4" y="0" width="20" height="2" rx="1"></rect>
+            <circle id="Oval-Copy-2" cx="1" cy="1" r="1"></circle>
+        </g>
+        <g id="Group-4" transform="translate(4.000000, 19.000000)" fill="#000000">
+            <rect id="Rectangle-Copy-4" x="4" y="0" width="20" height="2" rx="1"></rect>
+            <circle id="Oval-Copy-4" cx="1" cy="1" r="1"></circle>
+        </g>
+        <g id="Group-5" transform="translate(4.000000, 27.000000)" fill="#000000">
+            <circle id="Oval-Copy-3" cx="1" cy="1" r="1"></circle>
+            <rect id="Rectangle-Copy-3" x="4" y="0" width="20" height="2" rx="1"></rect>
+        </g>
+    </g>
+</svg>
