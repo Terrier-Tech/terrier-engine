@@ -1,27 +1,19 @@
-
-import {MarkerStyle, TraceStyle, TraceType, YAxisName} from "tuff-plot/trace"
-import {PlotLayout} from "tuff-plot/layout"
 import {DdDive, DdDivePlot} from "../gen/models"
 import Db from "../dd-db"
+import {DivePlotAxis} from "./dive-plot-axes"
 
-/**
- * Similar to the tuff-plot Trace but not strongly typed to the data type since it's dynamically assigned to a query.
- */
-export type DivePlotTrace = {
-    id: string
-    type: TraceType
-    title: string
-    query_id: string
-    x: string
-    y: string
-    y_axis: YAxisName
-    style?: TraceStyle
-    marker?: MarkerStyle
+
+// mimic PlotLayout but with our own types
+export type DivePlotLayout = {
+    pad?: number
+    axes?: {
+        left?: DivePlotAxis
+        top?: DivePlotAxis
+        right?: DivePlotAxis
+        bottom?: DivePlotAxis
+    }
+
 }
-
-// maybe we'll add more in the future
-export type DivePlotLayout = PlotLayout
-
 /**
  * Get all plots for the given dive.
  * @param dive

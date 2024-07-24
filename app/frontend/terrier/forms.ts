@@ -150,7 +150,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
      * @param fun a function that accepts the field as an argument, to actually populate the field
      */
     compoundField(parent: PartTag, fun: (field: DivTag) => any) {
-        parent.div(".tt-compound-field", field => {
+        return parent.div(".tt-compound-field", field => {
             fun(field)
         })
     }

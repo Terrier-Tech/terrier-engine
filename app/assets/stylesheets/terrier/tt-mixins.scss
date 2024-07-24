@@ -134,6 +134,10 @@ $color-names: ['link', 'primary', 'secondary', 'active', 'pending', 'success', '
 		justify-content: flex-end;
 	}
 
+	&.justify-stretch {
+		justify-content: stretch;
+	}
+
 	&.justify-space-evenly {
 		justify-content: space-evenly;
 	}

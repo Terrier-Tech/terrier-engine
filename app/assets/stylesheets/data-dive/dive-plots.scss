@@ -24,3 +24,30 @@
 .dd-dive-plot-preview {
 	margin-bottom: var(--tt-gap);
 }
+
+.dd-plot-axes-and-preview {
+	.plot-title-field {
+		width: initial;
+		margin: 0 auto;
+		input[type=text] {
+			width: 240px;
+		}
+	}
+}
+
+
+// fields for an individual axis
+.dd-dive-plot-axis-fields {
+	display: flex;
+	gap: var(--tt-gap);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	&.bottom {
+		flex-direction: row;
+	}
+	input[type=text] {
+		flex: 0 0 auto;
+		width: 140px;
+	}
+}
