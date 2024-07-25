@@ -4,18 +4,18 @@ require 'terrier/frontend/base_generator'
 class ModelGenerator < BaseGenerator
 
   # @param options [Hash] a hash of options for generating the model
-  # @option options [Hash<String,Array<String>>] :imports a hash of import paths to a list of symbols
-  # @option options [Hash<String,String>] :type_map a hash of type names to map to other names
-  # @option options [String] :prefix a model name prefix used to select the included models
-  # @option options [String] :exclude_prefix a model name prefix used to reject out the excluded models
+  # @option options [Hash{String => Array<String>}] :imports a hash of import paths to a list of symbols
+  # @option options [Hash{String => String}] :type_map a hash of type names to map to other names
+  # @option options [String, Array<String>] :prefix model name prefix(s) used to select the included models
+  # @option options [String, Array<String>] :exclude_prefix model name prefix(s) used to reject out the excluded models
   def initialize(options={})
     super
     @has_shrine = defined?(Shrine)
 
     @imports = options[:imports] || {}
-    @exclude_prefix = options[:exclude_prefix].presence
-    @prefix = options[:prefix].presence
     @type_map = options[:type_map] || {}
+    @prefix = Array.wrap(options[:prefix])
+    @exclude_prefix = Array.wrap(options[:exclude_prefix])
 
     # add the default imports
     @imports['tuff-core/types'] ||= []
@@ -25,8 +25,8 @@ class ModelGenerator < BaseGenerator
   def each_model
     ApplicationRecord.descendants.each do |model|
       next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
-      next if @prefix && !model.name.start_with?(@prefix) # filter by prefix
-      next if @exclude_prefix && model.name.start_with?(@exclude_prefix) # filter by exclude prefix
+      next if @prefix.present? && !@prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by prefix
+      next if @exclude_prefix.present? && @exclude_prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by exclude prefix
       yield model
     end
   end
