@@ -36,21 +36,32 @@ class ModelGenerator < BaseGenerator
     Rails.application.eager_load!
     models = {}
     each_model do |model|
-      enum_fields = {}
-      model.validators.each do |v|
-        if v.options[:in].present? && v.attributes.length == 1
-          enum_fields[v.attributes.first] = v.options[:in]
+      reflections = model.reflections
+      if (reflections_to_exclude = model.try(:exclude_reflections_from_frontend).presence)
+        reflections = reflections.except *reflections_to_exclude
+      end
+
+      columns = model.columns
+      if (columns_to_exclude = model.try(:exclude_columns_from_frontend).presence)
+        columns = columns.reject { _1.name.in? columns_to_exclude }
+      end
+
+      column_names = Set.new columns.map(&:name)
+      enum_fields = model.validators.each_with_object({}) do |validator, enum_fields|
+        column, *other_columns = validator.attributes
+        values = validator.options[:in]
+        if !other_columns.present? && column.to_s.in?(column_names) && values.present?
+          enum_fields[column] = values
         end
       end
-      attachments = @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : []
-      columns_to_exclude = model.try(:exclude_columns_from_frontend) || Set.new
+
       models[model.name] = {
-        columns: model.columns.reject { |c| c.name.in?(columns_to_exclude) },
-        reflections: model.reflections,
-        belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
-        has_manies: model.reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
-        enum_fields: enum_fields,
-        attachments: attachments,
+        columns:,
+        reflections:,
+        belongs_tos: reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
+        has_manies: reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
+        enum_fields:,
+        attachments: @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : [],
         model_class: model,
         table_name: model.table_name
       }
