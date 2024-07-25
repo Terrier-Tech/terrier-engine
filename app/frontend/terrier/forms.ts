@@ -155,6 +155,21 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         })
     }
 
+    /**
+     * Makes a label with a radio and title span inside of it.
+     * @param parent
+     * @param name
+     * @param value
+     * @param title the title to put in the label span
+     * @param attrs attributes for the radio input
+     */
+    radioLabel<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, value: string, title?: string, attrs: InputTagAttrs = {}) {
+        return parent.label('.body-size', label => {
+            this.radio(label, name, value, attrs)
+            label.span().text(title || value)
+        })
+    }
+
 }
 
 

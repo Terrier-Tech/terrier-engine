@@ -9,7 +9,12 @@ import DivePlotList from "./dive-plot-list"
 import Db from "../dd-db"
 import DivePlotRenderPart from "./dive-plot-render-part"
 import {DivePlotAxis, DivePlotAxisFields} from "./dive-plot-axes"
-import {DivePlotTrace} from "./dive-plot-trace"
+import DivePlotTraces, {
+    DivePlotTrace,
+    DivePlotTraceEditor,
+    DivePlotTraceRow,
+} from "./dive-plot-traces"
+import Fragments from "../../terrier/fragments"
 
 const log = new Logger("DivePlotList")
 
@@ -21,10 +26,14 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
 
     plot!: UnpersistedDdDivePlot
     fields!: TerrierFormFields<UnpersistedDdDivePlot>
+
     leftAxisFields!: DivePlotAxisFields
     rightAxisFields!: DivePlotAxisFields
     bottomAxisFields!: DivePlotAxisFields
+
+    newTraceKey = Messages.untypedKey()
     traces: DivePlotTrace[] = []
+
     renderPart!: DivePlotRenderPart
     saveKey = Messages.untypedKey()
 
@@ -37,7 +46,7 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
         else {
             this.setTitle("New Dive Plot")
         }
-        this.setIcon("hub-plot")
+        this.setIcon("glyp-differential")
 
         this.fields = new TerrierFormFields<UnpersistedDdDivePlot>(this, this.plot)
 
@@ -50,7 +59,19 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
         const bottomAxis: DivePlotAxis = axes['bottom'] || {type: 'number', title: ''}
         this.bottomAxisFields = new DivePlotAxisFields(this, bottomAxis, 'bottom')
 
+        // trace editors
         this.traces = this.plot.traces || []
+        this.updateTraces()
+
+        this.onClick(this.newTraceKey, _ => {
+            log.info("Showing new trace form")
+            const state = {
+                ...this.state,
+                trace: DivePlotTraces.blankTrace(),
+                onSave: (newTrace: DivePlotTrace) => this.addTrace(newTrace)
+            }
+            this.app.showModal(DivePlotTraceEditor, state)
+        })
 
         this.renderPart = this.makePart(DivePlotRenderPart, this.state)
 
@@ -64,6 +85,22 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             log.debug("Saving plot", this.plot)
             this.save()
         })
+    }
+
+    addTrace(trace: DivePlotTrace) {
+        this.traces.push(trace)
+        this.updateTraces()
+    }
+
+    replaceTrace(trace: DivePlotTrace) {
+        // TODO: implement this in tuff-core
+        this.traces = this.traces.map(t => t.id === trace.id ? trace : t)
+        this.updateTraces()
+    }
+
+    updateTraces() {
+        this.assignCollection('traces', DivePlotTraceRow, this.plot.traces || [])
+        this.dirty()
     }
 
     renderContent(parent: PartTag): void {
@@ -85,12 +122,17 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
 
             mainColumn.h3(".glyp-items").text("Traces")
 
+            this.renderCollection(mainColumn, 'traces')
+
+            mainColumn.div('.tt-flex.justify-center', row => {
+                Fragments.button(row, this.theme, "New Trace", 'glyp-plus')
+            }).emitClick(this.newTraceKey)
         })
     }
 
     async save() {
         const plotData = await this.fields.serialize()
-        const plot = {...this.plot, title: plotData.title}
+        const plot = {...this.plot, title: plotData.title, traces: this.traces}
 
         plot.layout.axes = {
             left: await this.leftAxisFields.serialize(),
