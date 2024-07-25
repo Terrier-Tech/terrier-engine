@@ -4,18 +4,18 @@ require 'terrier/frontend/base_generator'
 class ModelGenerator < BaseGenerator
 
   # @param options [Hash] a hash of options for generating the model
-  # @option options [Hash<String,Array<String>>] :imports a hash of import paths to a list of symbols
-  # @option options [Hash<String,String>] :type_map a hash of type names to map to other names
-  # @option options [String] :prefix a model name prefix used to select the included models
-  # @option options [String] :exclude_prefix a model name prefix used to reject out the excluded models
+  # @option options [Hash{String => Array<String>}] :imports a hash of import paths to a list of symbols
+  # @option options [Hash{String => String}] :type_map a hash of type names to map to other names
+  # @option options [String, Array<String>] :prefix model name prefix(s) used to select the included models
+  # @option options [String, Array<String>] :exclude_prefix model name prefix(s) used to reject out the excluded models
   def initialize(options={})
     super
     @has_shrine = defined?(Shrine)
 
     @imports = options[:imports] || {}
-    @exclude_prefix = options[:exclude_prefix].presence
-    @prefix = options[:prefix].presence
     @type_map = options[:type_map] || {}
+    @prefix = Array.wrap(options[:prefix])
+    @exclude_prefix = Array.wrap(options[:exclude_prefix])
 
     # add the default imports
     @imports['tuff-core/types'] ||= []
@@ -25,8 +25,8 @@ class ModelGenerator < BaseGenerator
   def each_model
     ApplicationRecord.descendants.each do |model|
       next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
-      next if @prefix && !model.name.start_with?(@prefix) # filter by prefix
-      next if @exclude_prefix && model.name.start_with?(@exclude_prefix) # filter by exclude prefix
+      next if @prefix.present? && !@prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by prefix
+      next if @exclude_prefix.present? && @exclude_prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by exclude prefix
       yield model
     end
   end
@@ -36,21 +36,32 @@ class ModelGenerator < BaseGenerator
     Rails.application.eager_load!
     models = {}
     each_model do |model|
-      enum_fields = {}
-      model.validators.each do |v|
-        if v.options[:in].present? && v.attributes.length == 1
-          enum_fields[v.attributes.first] = v.options[:in]
+      reflections = model.reflections
+      if (reflections_to_exclude = model.try(:exclude_reflections_from_frontend).presence)
+        reflections = reflections.except *reflections_to_exclude
+      end
+
+      columns = model.columns
+      if (columns_to_exclude = model.try(:exclude_columns_from_frontend).presence)
+        columns = columns.reject { _1.name.in? columns_to_exclude }
+      end
+
+      column_names = Set.new columns.map(&:name)
+      enum_fields = model.validators.each_with_object({}) do |validator, enum_fields|
+        column, *other_columns = validator.attributes
+        values = validator.options[:in]
+        if !other_columns.present? && column.to_s.in?(column_names) && values.present?
+          enum_fields[column] = values
         end
       end
-      attachments = @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : []
-      columns_to_exclude = model.try(:exclude_columns_from_frontend) || Set.new
+
       models[model.name] = {
-        columns: model.columns.reject { |c| c.name.in?(columns_to_exclude) },
-        reflections: model.reflections,
-        belongs_tos: model.reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
-        has_manies: model.reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
-        enum_fields: enum_fields,
-        attachments: attachments,
+        columns:,
+        reflections:,
+        belongs_tos: reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
+        has_manies: reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
+        enum_fields:,
+        attachments: @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : [],
         model_class: model,
         table_name: model.table_name
       }

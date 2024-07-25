@@ -318,6 +318,15 @@ module Terrier::Model
       @_exclude_columns_from_frontend
     end
 
+    def exclude_reflections_from_frontend!(*args)
+      @_exclude_reflections_from_frontend ||= Set.new
+      @_exclude_reflections_from_frontend.merge(args.map(&:to_s))
+    end
+
+    def exclude_reflections_from_frontend
+      @_exclude_reflections_from_frontend
+    end
+
 
     ## Upserting (Class Methods)
 

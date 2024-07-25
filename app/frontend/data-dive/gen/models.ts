@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-07-17 13:26:00 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-07-25 17:02:53 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -171,6 +171,7 @@ export type DdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
     created_by?: DdUser
@@ -194,6 +195,7 @@ export type UnpersistedDdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
     created_by?: DdUser
