@@ -150,8 +150,6 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
         if (!this._breadcrumbs.length && !this._title?.length) return
 
         parent.h1('.breadcrumbs', h1 => {
-            const crumbs = Array.from(this._breadcrumbs)
-
             // add a breadcrumb for the page title
             if (this._title?.length) {
                 const titleCrumb: Action = {
@@ -164,10 +162,10 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                 if (this._titleClasses?.length) {
                     titleCrumb.classes = this._titleClasses
                 }
-                crumbs.push(titleCrumb)
+                this.addBreadcrumb(titleCrumb)
             }
 
-            this.app.theme.renderActions(h1, crumbs)
+            this.app.theme.renderActions(h1, Array.from(this._breadcrumbs))
         })
     }
 
