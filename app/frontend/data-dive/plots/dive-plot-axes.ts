@@ -18,12 +18,16 @@ export type DivePlotAxis = {
 }
 
 const axisTypeOptions = [
-    {value: 'none', title: 'None'},
     {value: 'number', title: 'Number'},
     {value: 'time', title: 'Date/Time'},
     {value: 'group', title: 'Grouped Bars'},
     {value: 'stack', title: 'Stacked Bars'},
 ]
+
+// the right axis isn't required
+const rightAxisTypeOptions = axisTypeOptions.concat([
+    {value: 'none', title: 'None'}
+])
 
 export class DivePlotAxisFields extends TerrierFormFields<DivePlotAxis> {
 
@@ -39,18 +43,8 @@ export class DivePlotAxisFields extends TerrierFormFields<DivePlotAxis> {
             this.textInput(container, "title", {placeholder: "Title"})
 
             // type
-            const typeDir = this.side == 'bottom' ? 'row' : 'column'
-            container.div(`.tt-flex.wrapped.small-gap.${typeDir}`, flex => {
-                axisTypeOptions.forEach(option => {
-                    if ((this.side == 'bottom' || this.side == 'left') && option.value == 'none') {
-                        return // don't let them not have a bottom or left axis
-                    }
-                    flex.label(".caption-size", label => {
-                        this.radio(label, 'type', option.value)
-                        label.span().text(option.title)
-                    })
-                })
-            })
+            const typeOptions = this.side == 'right' ? rightAxisTypeOptions : axisTypeOptions
+            this.select(container, 'type', typeOptions)
         })
     }
 }

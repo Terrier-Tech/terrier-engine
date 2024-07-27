@@ -15,6 +15,7 @@ import DivePlotTraces, {
     DivePlotTraceRow,
 } from "./dive-plot-traces"
 import Fragments from "../../terrier/fragments"
+import Arrays from "tuff-core/arrays"
 
 const log = new Logger("DivePlotList")
 
@@ -68,9 +69,25 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             const state = {
                 ...this.state,
                 trace: DivePlotTraces.blankTrace(),
-                onSave: (newTrace: DivePlotTrace) => this.addTrace(newTrace)
+                onSave: (newTrace: DivePlotTrace) => this.addTrace(newTrace),
+                onDelete: (_: DivePlotTrace) => {}
             }
             this.app.showModal(DivePlotTraceEditor, state)
+        })
+
+        this.onClick(DivePlotTraces.editKey, m => {
+            const id = m.data.id
+            log.info(`Editing plot trace ${id}`)
+            const trace = this.traces.find(t => t.id==id)
+            if (trace) {
+                const state = {
+                    ...this.state,
+                    trace,
+                    onSave: (newTrace: DivePlotTrace) => this.replaceTrace(newTrace),
+                    onDelete: (trace: DivePlotTrace) => this.removeTrace(trace),
+                }
+                this.app.showModal(DivePlotTraceEditor, state)
+            }
         })
 
         this.renderPart = this.makePart(DivePlotRenderPart, this.state)
@@ -94,17 +111,24 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
 
     replaceTrace(trace: DivePlotTrace) {
         // TODO: implement this in tuff-core
+        log.info(`Replacing trace ${trace.id}`, trace)
         this.traces = this.traces.map(t => t.id === trace.id ? trace : t)
         this.updateTraces()
     }
 
+    removeTrace(trace: DivePlotTrace) {
+        log.info(`Removing trace ${trace.id}`, trace)
+        this.traces = Arrays.compact(this.traces.map(t => t.id === trace.id ? null : t))
+        this.updateTraces()
+    }
+
     updateTraces() {
-        this.assignCollection('traces', DivePlotTraceRow, this.plot.traces || [])
+        this.assignCollection('traces', DivePlotTraceRow, this.traces || [])
         this.dirty()
     }
 
     renderContent(parent: PartTag): void {
-        parent.div(".tt-flex.column.padded.gap", mainColumn => {
+        parent.div(".tt-flex.column.padded.large-gap", mainColumn => {
 
             mainColumn.div(".dd-plot-axes-and-preview.tt-flex.column.gap", axesAndPreview => {
                 this.fields.compoundField(axesAndPreview, field => {

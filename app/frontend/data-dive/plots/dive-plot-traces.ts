@@ -45,7 +45,10 @@ function blankTrace(): DivePlotTrace {
 export type DivePlotTraceState = DivePlotEditorState & {
     trace: DivePlotTrace
     onSave: (trace: DivePlotTrace) => any
+    onDelete: (trace: DivePlotTrace) => any
 }
+
+const editKey = Messages.typedKey<{ id: string }>()
 
 export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
@@ -58,7 +61,8 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
     axisOptions: string[] = []
 
     saveKey = Messages.untypedKey()
-    
+    deleteKey = Messages.untypedKey()
+
     async init() {
         this.setTitle("Plot Trace Editor")
         this.setIcon("glyp-items")
@@ -78,12 +82,24 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
         this.addAction({
             title: "Save",
-            icon: "hub-checkmark",
+            icon: "glyp-checkmark",
             click: {key: this.saveKey}
         })
 
+        this.addAction({
+            title: "Delete",
+            icon: "glyp-delete",
+            click: {key: this.deleteKey},
+            classes: ['alert']
+        }, 'secondary')
+
         this.onClick(this.saveKey, _ => {
             this.save()
+        })
+
+        this.onClick(this.deleteKey, _ => {
+            this.state.onDelete(this.trace)
+            this.pop()
         })
     }
 
@@ -132,8 +148,9 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
     }
 
     async save() {
-        this.trace = await this.fields.serialize()
-        log.debug("Saving plot trace", this.trace)
+        const data = await this.fields.serialize()
+        this.trace = {...this.trace, ...data}
+        log.info("Saving plot trace", this.trace)
         this.state.onSave(this.trace)
         this.pop()
     }
@@ -144,13 +161,18 @@ export class DivePlotTraceRow extends TerrierFormPart<DivePlotTrace> {
 
     render(parent: PartTag) {
         const trace = this.state
-        parent.div().text(`Plot Trace Row: ${trace.x} -> ${trace.y}`)
+        parent.a('.dd-dive-plot-trace-row.tt-panel.padded', panel => {
+            panel.div('.panel-content.tt-flex.row.gap', content => {
+                content.div('.axes').text(`${trace.x} -> ${trace.y}`)
+            })
+        }).emitClick(editKey, {id: trace.id})
     }
 
 }
 
 
 const DivePlotTraces = {
-    blankTrace
+    blankTrace,
+    editKey
 }
 export default DivePlotTraces

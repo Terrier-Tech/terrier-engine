@@ -50,4 +50,13 @@
 		flex: 0 0 auto;
 		width: 140px;
 	}
+	select {
+		width: initial;
+	}
+}
+
+.dd-dive-plot-trace-row {
+	display: flex;
+	--tt-scale-push-factor: 0.01;
+	@include tt-scale-push;
 }
