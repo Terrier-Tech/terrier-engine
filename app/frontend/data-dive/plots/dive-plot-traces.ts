@@ -29,6 +29,9 @@ export type DivePlotTrace = {
     marker?: MarkerStyle
 }
 
+/**
+ * Create a new blank trace.
+ */
 function blankTrace(): DivePlotTrace {
     return {
         id: Ids.makeUuid(),
@@ -42,6 +45,37 @@ function blankTrace(): DivePlotTrace {
     }
 }
 
+
+/// Trace Style Fields
+
+/**
+ * Form fields for editing trace style.
+ */
+class TraceStyleFields extends TerrierFormFields<TraceStyle> {
+
+        render(parent: PartTag) {
+            parent.div('.tt-form.tt-flex.gap.wrap', container => {
+                this.compoundField(container, field => {
+                    field.label().text("Color")
+                    this.textInput(field, 'stroke', {placeholder: 'Color'})
+                })
+                this.compoundField(container, field => {
+                    field.label().text("Width")
+                    this.numberInput(field, 'strokeWidth', {placeholder: 'Width'})
+                })
+                this.compoundField(container, field => {
+                    field.label().text("Dashes")
+                    this.textInput(field, 'strokeDasharray', {placeholder: 'Dashes'})
+                })
+            })
+        }
+
+
+}
+
+
+/// Editor
+
 export type DivePlotTraceState = DivePlotEditorState & {
     trace: DivePlotTrace
     onSave: (trace: DivePlotTrace) => any
@@ -50,6 +84,9 @@ export type DivePlotTraceState = DivePlotEditorState & {
 
 const editKey = Messages.typedKey<{ id: string }>()
 
+/**
+ * Editor for a single plot trace.
+ */
 export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
     fields!: TerrierFormFields<DivePlotTrace>
@@ -59,6 +96,8 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
     queryOptions!: SelectOptions
     axisOptions: string[] = []
+
+    styleFields!: TraceStyleFields
 
     saveKey = Messages.untypedKey()
     deleteKey = Messages.untypedKey()
@@ -79,6 +118,8 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
         this.updateAxisOptions(this.trace.query_id)
 
         this.fields = new TerrierFormFields<DivePlotTrace>(this, this.state.trace)
+
+        this.styleFields = new TraceStyleFields(this, this.trace.style || {})
 
         this.addAction({
             title: "Save",
@@ -122,7 +163,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
     }
 
     renderContent(parent: PartTag): void {
-        parent.div(".tt-form.tt-flex.gap.column.padded", mainColumn => {
+        parent.div(".tt-form.tt-flex.large-gap.column.padded", mainColumn => {
             // query
             this.fields.compoundField(mainColumn, field => {
                 field.label().text("Query")
@@ -132,17 +173,23 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
             // axes
             mainColumn.div('.tt-flex.gap', row => {
                 row.div('.tt-flex.column.gap', col => {
-                    col.h4().text("X Column")
+                    col.h3().text("X Column")
                     for (const c of this.axisOptions) {
                         this.fields.radioLabel(col, 'x', c, c)
                     }
                 })
                 row.div('.tt-flex.column.gap', col => {
-                    col.h4().text("Y Column")
+                    col.h3().text("Y Column")
                     for (const c of this.axisOptions) {
                         this.fields.radioLabel(col, 'y', c, c)
                     }
                 })
+            })
+
+            // style
+            mainColumn.div('.tt-flex.gap.column', styleRow => {
+                styleRow.h3().text("Style")
+                this.styleFields.render(styleRow)
             })
         })
     }
@@ -157,6 +204,12 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
 }
 
+
+/// Row
+
+/**
+ * Row for displaying a single plot trace.
+ */
 export class DivePlotTraceRow extends TerrierFormPart<DivePlotTrace> {
 
     render(parent: PartTag) {
@@ -170,6 +223,8 @@ export class DivePlotTraceRow extends TerrierFormPart<DivePlotTrace> {
 
 }
 
+
+/// Export
 
 const DivePlotTraces = {
     blankTrace,
