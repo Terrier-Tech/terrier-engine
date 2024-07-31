@@ -35,6 +35,7 @@ export type Action = {
     subtitle?: string
     tooltip?: string
     icon?: IconName
+    img?: string
     href?: string
     classes?: string[]
     click?: Packet
@@ -100,6 +101,9 @@ export default class Theme {
                 }
                 if (action.icon?.length) {
                     this.renderIcon(a, action.icon, iconColor)
+                }
+                if (action.img?.length) {
+                    a.img('.image', {src:  action.img})
                 }
                 if (action.title?.length) {
                     a.div('.title', {text: action.title})
