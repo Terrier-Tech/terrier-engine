@@ -1,6 +1,6 @@
 @import "../terrier/tt-mixins";
 
-// the part that actualy renders a dive plot
+// the part that actually renders a dive plot
 .dd-dive-plot-render {
 	// placeholder
 	padding: 4em;
@@ -59,4 +59,20 @@
 	display: flex;
 	--tt-scale-push-factor: 0.01;
 	@include tt-scale-push;
+}
+
+// TraceStyle fields
+.dd-trace-style-fields {
+	--preview-size: 64px;
+	svg {
+		width: var(--preview-size);
+		height: var(--preview-size);
+	}
+	.stroke-width-preview line {
+		stroke: var(--tt-secondary-color);
+	}
+	.dash-preview line {
+		stroke: var(--tt-secondary-color);
+		stroke-width: 2px;
+	}
 }

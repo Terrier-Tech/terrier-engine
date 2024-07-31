@@ -9,10 +9,16 @@ import {UnpersistedDdDivePlot} from "../gen/models"
 import {SelectOptions} from "tuff-core/forms"
 import Queries, {Query} from "../queries/queries"
 import {Logger} from "tuff-core/logging"
-import Columns from "../queries/columns";
-import Messages from "tuff-core/messages";
+import Columns from "../queries/columns"
+import Messages from "tuff-core/messages"
+import {ColorName, TraceStyleFields} from "./dive-plot-styles"
 
 const log = new Logger("DivePlotTraces")
+
+
+export type DivePlotTraceStyle = TraceStyle & {
+    colorName: ColorName | "default"
+}
 
 /**
  * Similar to the tuff-plot Trace but not strongly typed to the data type since it's dynamically assigned to a query.
@@ -24,7 +30,7 @@ export type DivePlotTrace = {
     query_id: string
     x: string
     y: string
-    y_axis: YAxisName
+    yAxis: YAxisName
     style?: TraceStyle
     marker?: MarkerStyle
 }
@@ -40,38 +46,11 @@ function blankTrace(): DivePlotTrace {
         query_id: '',
         x: '',
         y: '',
-        y_axis: 'left',
+        yAxis: 'left',
         style: {}
     }
 }
 
-
-/// Trace Style Fields
-
-/**
- * Form fields for editing trace style.
- */
-class TraceStyleFields extends TerrierFormFields<TraceStyle> {
-
-        render(parent: PartTag) {
-            parent.div('.tt-form.tt-flex.gap.wrap', container => {
-                this.compoundField(container, field => {
-                    field.label().text("Color")
-                    this.textInput(field, 'stroke', {placeholder: 'Color'})
-                })
-                this.compoundField(container, field => {
-                    field.label().text("Width")
-                    this.numberInput(field, 'strokeWidth', {placeholder: 'Width'})
-                })
-                this.compoundField(container, field => {
-                    field.label().text("Dashes")
-                    this.textInput(field, 'strokeDasharray', {placeholder: 'Dashes'})
-                })
-            })
-        }
-
-
-}
 
 
 /// Editor
