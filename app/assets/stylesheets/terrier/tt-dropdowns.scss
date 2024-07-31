@@ -76,6 +76,10 @@
 			font-size: var(--tt-label-font-size);
 		}
 
+		.image {
+			max-width: 32px;
+		}
+
 		.icon.white svg {
 			@include tt-icon-size(0.75);
 			* {

@@ -103,7 +103,7 @@ export default class Theme {
                     this.renderIcon(a, action.icon, iconColor)
                 }
                 if (action.img?.length) {
-                    a.img('.image-thumb', {src:  action.img})
+                    a.img('.image', {src:  action.img})
                 }
                 if (action.title?.length) {
                     a.div('.title', {text: action.title})
