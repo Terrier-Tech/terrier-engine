@@ -27,31 +27,57 @@ const colorNames = Object.keys(namedColors)
 // the type of colorOptions
 export type ColorName = keyof typeof colorNames
 
-const colorOptions = []
+/**
+ * Use named stroke widths so that we can style them how we want.
+ */
+const strokeWidths = {
+    light: 1,
+    medium: 2,
+    heavy: 4
+} as const
 
-const strokeWidthOptions = [
-    1, 2, 4, 6
-]
+const strokeWidthOptions = Object.entries(strokeWidths).map(([value, title]) => {
+    return {value, title}
+})
 
-const dashArrayOptions = [
-    {
-        value: "",
-        label: 'Solid'
-    },
-    {
-        value: "8 8",
-        title: "Dashed"
-    },
-    {
-        value: "2 2",
-        title: "Dotted"
-    }
-]
+export type StrokeWidthName = keyof typeof strokeWidths
+
+/**
+ * Use named dash arrays so that we can style them how we want.
+ */
+const namedDashArrays = {
+    solid: '',
+    dashed: '8 8',
+    dotted: '2 2'
+} as const
+
+const dashArrayOptions = Object.entries(namedDashArrays).map(([value, title]) => {
+    return {value, title}
+})
+
+export type DashArrayName = keyof typeof namedDashArrays
+
+/**
+ * Create a blank style.
+ */
+function blankStyle(): DivePlotTraceStyle {
+    return {colorName: 'default', strokeWidthName: 'medium', strokeDasharrayName: 'solid'}
+}
+
+
+/**
+ * Use named values for trace color, stroke width, and dash array.
+ */
+export type DivePlotTraceStyle = TraceStyle & {
+    colorName: ColorName | "default"
+    strokeWidthName: StrokeWidthName
+    strokeDasharrayName: DashArrayName
+}
 
 /**
  * Form fields for editing trace style.
  */
-export class TraceStyleFields extends TerrierFormFields<TraceStyle> {
+export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
 
     render(parent: PartTag) {
         parent.div('.dd-trace-style-fields.tt-form.tt-flex.gap.wrap', container => {
@@ -63,16 +89,16 @@ export class TraceStyleFields extends TerrierFormFields<TraceStyle> {
             // stroke width
             container.div(".shrink", col => {
                 col.h3().text("Stroke Width")
-                for (const width of strokeWidthOptions) {
+                for (const option of strokeWidthOptions) {
                     col.label('.body-size', label => {
-                        this.radio(label, 'strokeWidth', width)
+                        this.radio(label, 'strokeWidthName', option.value)
                         label.svg('.stroke-width-preview', svg => {
                             svg.line({
                                 x1: 0,
                                 x2: previewSize,
                                 y1: previewSize / 2,
                                 y2: previewSize / 2,
-                                strokeWidth: width
+                                strokeWidth: option.title
                             })
                         })
                     })
@@ -84,14 +110,14 @@ export class TraceStyleFields extends TerrierFormFields<TraceStyle> {
                 col.h3().text("Dashes")
                 for (const option of dashArrayOptions) {
                     col.label('.body-size', label => {
-                        this.radio(label, 'strokeDasharray', option.value)
+                        this.radio(label, 'strokeDasharrayName', option.value)
                         label.svg('.dash-preview', svg => {
                             svg.line({
                                 x1: 0,
                                 x2: previewSize,
                                 y1: previewSize / 2,
                                 y2: previewSize / 2,
-                                strokeDasharray: option.value
+                                strokeDasharray: option.title
                             })
                         })
                     })
@@ -102,3 +128,11 @@ export class TraceStyleFields extends TerrierFormFields<TraceStyle> {
 
 
 }
+
+
+const DivePlotStyles = {
+    namedColors,
+    colorNames,
+    blankStyle
+}
+export default DivePlotStyles

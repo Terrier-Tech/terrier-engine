@@ -1,4 +1,4 @@
-import {MarkerStyle, TraceStyle, TraceType, YAxisName} from "tuff-plot/trace"
+import {MarkerStyle, TraceType, YAxisName} from "tuff-plot/trace"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import { PartTag } from "tuff-core/parts"
 import {ModalPart} from "../../terrier/modals"
@@ -11,14 +11,9 @@ import Queries, {Query} from "../queries/queries"
 import {Logger} from "tuff-core/logging"
 import Columns from "../queries/columns"
 import Messages from "tuff-core/messages"
-import {ColorName, TraceStyleFields} from "./dive-plot-styles"
+import DivePlotStyles, {DivePlotTraceStyle, TraceStyleFields} from "./dive-plot-styles"
 
 const log = new Logger("DivePlotTraces")
-
-
-export type DivePlotTraceStyle = TraceStyle & {
-    colorName: ColorName | "default"
-}
 
 /**
  * Similar to the tuff-plot Trace but not strongly typed to the data type since it's dynamically assigned to a query.
@@ -31,7 +26,7 @@ export type DivePlotTrace = {
     x: string
     y: string
     yAxis: YAxisName
-    style?: TraceStyle
+    style?: DivePlotTraceStyle
     marker?: MarkerStyle
 }
 
@@ -47,7 +42,7 @@ function blankTrace(): DivePlotTrace {
         x: '',
         y: '',
         yAxis: 'left',
-        style: {}
+        style: DivePlotStyles.blankStyle(),
     }
 }
 
@@ -98,7 +93,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
         this.fields = new TerrierFormFields<DivePlotTrace>(this, this.state.trace)
 
-        this.styleFields = new TraceStyleFields(this, this.trace.style || {})
+        this.styleFields = new TraceStyleFields(this, this.trace.style || DivePlotStyles.blankStyle())
 
         this.addAction({
             title: "Save",

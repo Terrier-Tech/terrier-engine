@@ -12,10 +12,10 @@
 
 .dd-dive-plot-list {
 	.plot-title {
-		a {
-			font-size: calc(var(--tt-body-font-size) * 1.25);
-			@include tt-scale-push;
-		}
+		padding: 0.5em 0;
+		font-size: calc(var(--tt-body-font-size) * 1.25);
+		--tt-scale-push-factor: 0.01;
+		@include tt-scale-push;
 	}
 }
 

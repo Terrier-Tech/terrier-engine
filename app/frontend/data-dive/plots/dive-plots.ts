@@ -25,8 +25,18 @@ async function get(dive: DdDive): Promise<DdDivePlot[]> {
         .exec()
 }
 
+/**
+ * Soft delete a plot.
+ * @param plot
+ */
+async function softDelete(plot: DdDivePlot) {
+    plot._state = 2
+    return await Db().update('dd_dive_plot', plot)
+}
+
 
 const DivePlots = {
-    get
+    get,
+    softDelete
 }
 export default DivePlots

@@ -1,7 +1,7 @@
 import { PartTag } from "tuff-core/parts"
 import {ModalPart} from "../../terrier/modals"
 import {DiveEditorState} from "../dives/dive-editor"
-import {UnpersistedDdDivePlot} from "../gen/models"
+import {DdDivePlot, UnpersistedDdDivePlot} from "../gen/models"
 import {TerrierFormFields} from "../../terrier/forms"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
@@ -16,6 +16,7 @@ import DivePlotTraces, {
 } from "./dive-plot-traces"
 import Fragments from "../../terrier/fragments"
 import Arrays from "tuff-core/arrays"
+import DivePlots from "./dive-plots";
 
 const log = new Logger("DivePlotList")
 
@@ -36,6 +37,7 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
     traces: DivePlotTrace[] = []
 
     renderPart!: DivePlotRenderPart
+    deleteKey = Messages.untypedKey()
     saveKey = Messages.untypedKey()
 
     async init() {
@@ -90,13 +92,32 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             }
         })
 
+        this.onClick(this.deleteKey, async _ => {
+            if (confirm("Are you sure you want to delete this plot?")) {
+                log.info("Deleting plot", this.plot)
+                await DivePlots.softDelete(this.plot as DdDivePlot)
+                this.emitMessage(DivePlotList.reloadKey, {})
+                this.successToast("Successfully Deleted Plot")
+                this.pop()
+            }
+        })
+
         this.renderPart = this.makePart(DivePlotRenderPart, this.state)
 
         this.addAction({
             title: "Save",
-            icon: "hub-checkmark",
+            icon: "glyp-checkmark",
             click: {key: this.saveKey}
         })
+
+        if (this.plot.id?.length) {
+            this.addAction({
+                title: "Delete",
+                icon: "glyp-delete",
+                classes: ['alert'],
+                click: {key: this.deleteKey}
+            }, 'secondary')
+        }
 
         this.onClick(this.saveKey, _ => {
             log.debug("Saving plot", this.plot)

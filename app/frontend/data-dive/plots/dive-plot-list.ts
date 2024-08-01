@@ -26,13 +26,12 @@ class DivePlotPreview extends TerrierPart<DivePlotRenderState> {
     }
 
     render(parent: PartTag) {
-        parent.h3(".plot-title", title => {
+        parent.a(".plot-title.tt-flex.gap", title => {
             title.i('.shrink.icon-only.glyp-differential')
             title.div('.text-center.stretch').text(this.state.plot.title)
-            title.a('.glyp-settings.icon-only')
-                .data({tooltip: "Edit this plot"})
-                .emitClick(editKey, {id: this.state.plot.id})
-        })
+            title.i('.glyp-settings.shrink.icon-only')
+        }).data({tooltip: "Edit this plot"})
+            .emitClick(editKey, {id: this.state.plot.id})
         parent.part(this.renderPart)
     }
 }
