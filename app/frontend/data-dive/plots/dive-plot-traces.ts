@@ -1,5 +1,4 @@
 import {MarkerStyle, TraceType, YAxisName} from "tuff-plot/trace"
-import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import { PartTag } from "tuff-core/parts"
 import {ModalPart} from "../../terrier/modals"
 import Ids from "../../terrier/ids"
@@ -12,6 +11,7 @@ import {Logger} from "tuff-core/logging"
 import Columns from "../queries/columns"
 import Messages from "tuff-core/messages"
 import DivePlotStyles, {DivePlotTraceStyle, TraceStyleFields} from "./dive-plot-styles"
+import TerrierPart from "../../terrier/parts/terrier-part";
 
 const log = new Logger("DivePlotTraces")
 
@@ -50,7 +50,7 @@ function blankTrace(): DivePlotTrace {
 
 /// Editor
 
-export type DivePlotTraceState = DivePlotEditorState & {
+export type DivePlotTraceEditorState = DivePlotEditorState & {
     trace: DivePlotTrace
     onSave: (trace: DivePlotTrace) => any
     onDelete: (trace: DivePlotTrace) => any
@@ -61,7 +61,7 @@ const editKey = Messages.typedKey<{ id: string }>()
 /**
  * Editor for a single plot trace.
  */
-export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
+export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
     fields!: TerrierFormFields<DivePlotTrace>
     queries: Query[] = []
@@ -180,16 +180,38 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
 /// Row
 
+
+export type DivePlotTraceRowState = DivePlotEditorState & {
+    trace: DivePlotTrace
+    index: number // keep track of which row is being rendered so we can choose the default color
+}
+
 /**
  * Row for displaying a single plot trace.
  */
-export class DivePlotTraceRow extends TerrierFormPart<DivePlotTrace> {
+export class DivePlotTraceRow extends TerrierPart<DivePlotTraceRowState> {
 
     render(parent: PartTag) {
-        const trace = this.state
+        const trace = this.state.trace
+        const style = trace.style || DivePlotStyles.blankStyle()
+        const query = this.state.dive.query_data?.queries.find(q => q.id == trace.query_id)
         parent.a('.dd-dive-plot-trace-row.tt-panel.padded', panel => {
-            panel.div('.panel-content.tt-flex.row.gap', content => {
+            panel.div('.tt-flex.row.gap.align-center', content => {
+                // query
+                if (query) {
+                    content.div('.glyp-query.with-icon').text(query.name)
+                }
+                else {
+                    content.div('.glyp-query.alert.with-icon').text("Unknown Query")
+                }
+
+                // axes
                 content.div('.axes').text(`${trace.x} -> ${trace.y}`)
+
+                // style
+                content.div('.style', stylePreview => {
+                    DivePlotStyles.renderPreview(stylePreview, style, this.state.index)
+                }).data({tooltip: `${style.colorName} ${style.strokeWidthName} ${style.strokeDasharrayName}`})
             })
         }).emitClick(editKey, {id: trace.id})
     }

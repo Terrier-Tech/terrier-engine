@@ -59,6 +59,12 @@
 	display: flex;
 	--tt-scale-push-factor: 0.01;
 	@include tt-scale-push;
+
+	--preview-size: 64px;
+	svg.trace-style-preview {
+		width: var(--preview-size);
+		height: calc(var(--preview-size) / 2);
+	}
 }
 
 // TraceStyle fields

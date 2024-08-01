@@ -144,7 +144,12 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
     }
 
     updateTraces() {
-        this.assignCollection('traces', DivePlotTraceRow, this.traces || [])
+        let index = -1
+        const rowStates = (this.traces || []).map(trace => {
+            index += 1
+            return {...this.state, trace, index}
+        })
+        this.assignCollection('traces', DivePlotTraceRow, rowStates)
         this.dirty()
     }
 

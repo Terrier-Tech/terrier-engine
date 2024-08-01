@@ -1,5 +1,5 @@
 import {TerrierFormFields} from "../../terrier/forms"
-import {TraceStyle} from "tuff-plot/trace"
+import {defaultColorPalette, TraceStyle} from "tuff-plot/trace"
 import {PartTag} from "tuff-core/parts"
 import {titleize} from "inflection"
 
@@ -145,9 +145,26 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
 }
 
 
+function renderPreview(parent: PartTag, style: DivePlotTraceStyle, index: number) {
+    const color = style.colorName === 'default' ? defaultColorPalette[index % defaultColorPalette.length] : namedColors[style.colorName]
+    parent.svg('.trace-style-preview', svg => {
+        svg.line({
+            x1: 0,
+            x2: previewSize,
+            y1: previewSize / 4,
+            y2: previewSize / 4,
+            stroke: color,
+            strokeWidth: strokeWidths[style.strokeWidthName],
+            strokeDasharray: namedDashArrays[style.strokeDasharrayName]
+        })
+    })
+}
+
+
 const DivePlotStyles = {
     namedColors,
     colorNames,
-    blankStyle
+    blankStyle,
+    renderPreview
 }
 export default DivePlotStyles
