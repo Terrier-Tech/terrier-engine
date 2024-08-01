@@ -36,11 +36,14 @@
 		gap: 0.8em;
 		line-height: 1.3;
 		align-items: center;
-		&.caption-size {
+		&.caption-size, .caption-size {
 			font-size: var(--tt-caption-font-size);
 		}
-		&.body-size {
+		&.body-size, .body-size {
 			font-size: var(--tt-body-font-size);
+		}
+		&.label-size, .label-size {
+			font-size: var(--tt-label-font-size);
 		}
 	}
 }

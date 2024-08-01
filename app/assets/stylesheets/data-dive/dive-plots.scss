@@ -64,6 +64,20 @@
 // TraceStyle fields
 .dd-trace-style-fields {
 	--preview-size: 64px;
+	.color-options {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--tt-gap);
+	}
+	.default-color {
+		.color-preview {
+			@include tt-diagonal-stripe-background(#eee, #ccc, 0.5em);
+		}
+	}
+	.color-preview {
+		width: var(--preview-size);
+		height: var(--preview-size);
+	}
 	svg {
 		width: var(--preview-size);
 		height: var(--preview-size);

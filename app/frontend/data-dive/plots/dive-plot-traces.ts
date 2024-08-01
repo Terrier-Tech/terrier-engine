@@ -93,7 +93,8 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
 
         this.fields = new TerrierFormFields<DivePlotTrace>(this, this.state.trace)
 
-        this.styleFields = new TraceStyleFields(this, this.trace.style || DivePlotStyles.blankStyle())
+        this.trace.style ||= DivePlotStyles.blankStyle()
+        this.styleFields = new TraceStyleFields(this, this.trace.style)
 
         this.addAction({
             title: "Save",
@@ -161,16 +162,14 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
             })
 
             // style
-            mainColumn.div('.tt-flex.gap.column', styleRow => {
-                styleRow.h3().text("Style")
-                this.styleFields.render(styleRow)
-            })
+            this.styleFields.render(mainColumn)
         })
     }
 
     async save() {
         const data = await this.fields.serialize()
         this.trace = {...this.trace, ...data}
+        this.trace.style = await this.styleFields.serialize()
         log.info("Saving plot trace", this.trace)
         this.state.onSave(this.trace)
         this.pop()

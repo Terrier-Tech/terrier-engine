@@ -258,6 +258,17 @@ $color-diff: 0.08;
 	}
 }
 
+@mixin tt-diagonal-stripe-background($color1, $color2, $width) {
+	background: repeating-linear-gradient(
+					45deg,
+					$color1,
+					$color1 $width,
+					$color2 $width,
+					$color2 2*$width
+	)
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Rounded Corners
 ////////////////////////////////////////////////////////////////////////////////

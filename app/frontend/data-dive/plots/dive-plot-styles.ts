@@ -1,6 +1,7 @@
 import {TerrierFormFields} from "../../terrier/forms"
 import {TraceStyle} from "tuff-plot/trace"
 import {PartTag} from "tuff-core/parts"
+import {titleize} from "inflection"
 
 const previewSize = 64
 
@@ -10,9 +11,7 @@ const namedColors = {
     success: '#58AC5C',
     alert: '#D01819',
     gray: '#aaaaaa',
-    sense: '#8e44ad',
     billing: '#9b59b6',
-    warn: '#e67e22',
     pending: '#f1c40f',
     docs: '#0abde3',
     magenta: '#db19ce',
@@ -25,7 +24,7 @@ const namedColors = {
 const colorNames = Object.keys(namedColors)
 
 // the type of colorOptions
-export type ColorName = keyof typeof colorNames
+export type ColorName = keyof typeof namedColors
 
 /**
  * Use named stroke widths so that we can style them how we want.
@@ -80,10 +79,26 @@ export type DivePlotTraceStyle = TraceStyle & {
 export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
 
     render(parent: PartTag) {
-        parent.div('.dd-trace-style-fields.tt-form.tt-flex.gap.wrap', container => {
-            this.compoundField(container, field => {
-                field.label().text("Color")
-                this.colorInput(field, 'stroke', {placeholder: 'Color'})
+        parent.div('.dd-trace-style-fields.tt-form.tt-flex.gap.mobile-collapsible', container => {
+            // color
+            container.div(".stretch.tt-flex.column.gap", col => {
+                col.h3().text("Color")
+                col.label(".default-color.body-size", defaultLabel => {
+                    this.radio(defaultLabel, 'colorName', 'default')
+                    defaultLabel.div('.color-preview')
+                    defaultLabel.div(labels => {
+                        labels.div().text("Default (Chosen By Plot Order)")
+                        labels.div('.label-size').text("Trace colors use a varying color palette by default, but you can select a specific color for this trace below.")
+                    })
+                })
+                col.div(".color-options", optionsContainer => {
+                    for (const [name, color] of Object.entries(namedColors)) {
+                        optionsContainer.label('.color-option', label => {
+                            this.radio(label, 'colorName', name)
+                            label.div('.color-preview').css({background: color})
+                        }).data({tooltip: titleize(name)})
+                    }
+                })
             })
 
             // stroke width
@@ -100,7 +115,7 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
                                 y2: previewSize / 2,
                                 strokeWidth: option.title
                             })
-                        })
+                        }).data({tooltip: titleize(option.value)})
                     })
                 }
             })
@@ -120,7 +135,7 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
                                 strokeDasharray: option.title
                             })
                         })
-                    })
+                    }).data({tooltip: titleize(option.value)})
                 }
             })
         })
