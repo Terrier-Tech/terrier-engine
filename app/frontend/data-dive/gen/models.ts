@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-07-25 17:02:53 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-08-02 09:35:27 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -10,7 +10,9 @@ import { Attachment } from "../../terrier/attachments"
 
 import { RegularSchedule } from "../../terrier/schedules"
 
-import { DivePlotTrace, DivePlotLayout } from "../plots/dive-plots"
+import { DivePlotLayout } from "../plots/dive-plot-layouts"
+
+import { DivePlotTrace } from "../plots/dive-plot-traces"
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -171,7 +173,6 @@ export type DdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
-    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
     created_by?: DdUser
@@ -195,7 +196,6 @@ export type UnpersistedDdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
-    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
     created_by?: DdUser

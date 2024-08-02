@@ -1,4 +1,4 @@
-import {AxisType} from "tuff-plot/axis"
+import {AxisType, PlotAxis} from "tuff-plot/axis"
 import {TerrierFormFields} from "../../terrier/forms"
 import {PartTag} from "tuff-core/parts"
 import TerrierPart from "../../terrier/parts/terrier-part"
@@ -49,8 +49,25 @@ export class DivePlotAxisFields extends TerrierFormFields<DivePlotAxis> {
     }
 }
 
+/**
+ * Convert a DivePlotAxis to a tuff-plot PlotAxis.
+ * @param diveAxis
+ * @return undefined if the axis type is 'none'
+ */
+function toPlotAxis(diveAxis: DivePlotAxis): PlotAxis | undefined {
+    if (diveAxis.type == 'none') {
+        return undefined
+    }
+    return {
+        type: diveAxis.type,
+        title: diveAxis.title,
+        range: "auto"
+    }
+}
+
 
 const DivePlotAxes = {
-    axisSides
+    axisSides,
+    toPlotAxis
 }
 export default DivePlotAxes

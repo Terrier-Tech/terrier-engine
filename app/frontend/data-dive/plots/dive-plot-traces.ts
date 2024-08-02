@@ -1,4 +1,4 @@
-import {MarkerStyle, TraceType, YAxisName} from "tuff-plot/trace"
+import {MarkerStyle, PlotTrace, TraceType, YAxisName} from "tuff-plot/trace"
 import { PartTag } from "tuff-core/parts"
 import {ModalPart} from "../../terrier/modals"
 import Ids from "../../terrier/ids"
@@ -6,7 +6,7 @@ import {DivePlotEditorState} from "./dive-plot-editor"
 import {TerrierFormFields} from "../../terrier/forms"
 import {UnpersistedDdDivePlot} from "../gen/models"
 import {SelectOptions} from "tuff-core/forms"
-import Queries, {Query} from "../queries/queries"
+import Queries, {Query, QueryResult} from "../queries/queries"
 import {Logger} from "tuff-core/logging"
 import Columns from "../queries/columns"
 import Messages from "tuff-core/messages"
@@ -139,10 +139,15 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
     renderContent(parent: PartTag): void {
         parent.div(".tt-form.tt-flex.large-gap.column.padded", mainColumn => {
-            // query
-            this.fields.compoundField(mainColumn, field => {
-                field.label().text("Query")
-                this.fields.select(field, 'query_id', this.queryOptions)
+            mainColumn.div('.tt-flex.gap', row => {
+                // query
+                this.fields.compoundField(row, field => {
+                    field.label().text("Query")
+                    this.fields.select(field, 'query_id', this.queryOptions)
+                })
+
+                // plot axis
+
             })
 
             // axes
@@ -219,10 +224,27 @@ export class DivePlotTraceRow extends TerrierPart<DivePlotTraceRowState> {
 }
 
 
+/// Conversion
+
+function toPlotTrace(diveTrace: DivePlotTrace, queryResult: QueryResult): PlotTrace<any> {
+    return {
+        type: diveTrace.type,
+        title: diveTrace.title,
+        data: queryResult.rows || [],
+        x: diveTrace.x,
+        y: diveTrace.y,
+        yAxis: diveTrace.yAxis || 'left',
+        style: DivePlotStyles.toTraceStyle(diveTrace.style || DivePlotStyles.blankStyle()),
+        marker: diveTrace.marker
+    }
+}
+
+
 /// Export
 
 const DivePlotTraces = {
     blankTrace,
-    editKey
+    editKey,
+    toPlotTrace
 }
 export default DivePlotTraces

@@ -3,10 +3,12 @@
 // the part that actually renders a dive plot
 .dd-dive-plot-render {
 	// placeholder
-	padding: 4em;
 	border: 2px solid var(--tt-secondary-color);
 	background: var(--tt-inset-background);
 	text-align: center;
+	min-width: $max-fixed-width;
+	min-height: 240px;
+	position: relative;
 }
 
 

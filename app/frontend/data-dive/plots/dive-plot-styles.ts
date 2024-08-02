@@ -73,6 +73,9 @@ export type DivePlotTraceStyle = TraceStyle & {
     strokeDasharrayName: DashArrayName
 }
 
+
+/// Fields
+
 /**
  * Form fields for editing trace style.
  */
@@ -145,6 +148,14 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
 }
 
 
+/// Preview
+
+/**
+ * Render a preview of the trace style.
+ * @param parent
+ * @param style
+ * @param index
+ */
 function renderPreview(parent: PartTag, style: DivePlotTraceStyle, index: number) {
     const color = style.colorName === 'default' ? defaultColorPalette[index % defaultColorPalette.length] : namedColors[style.colorName]
     parent.svg('.trace-style-preview', svg => {
@@ -161,10 +172,29 @@ function renderPreview(parent: PartTag, style: DivePlotTraceStyle, index: number
 }
 
 
+/// Conversion
+
+/**
+ * Convert a DivePlotTraceStyle to a tuff-plot TraceStyle.
+ * @param diveStyle
+ */
+function toTraceStyle(diveStyle: DivePlotTraceStyle): TraceStyle {
+    const tuffStyle: TraceStyle = {
+        strokeWidth: strokeWidths[diveStyle.strokeWidthName],
+        strokeDasharray: namedDashArrays[diveStyle.strokeDasharrayName]
+    }
+    if (diveStyle.colorName !== 'default') {
+        tuffStyle.stroke = namedColors[diveStyle.colorName]
+    }
+    return tuffStyle
+}
+
+
 const DivePlotStyles = {
     namedColors,
     colorNames,
     blankStyle,
-    renderPreview
+    renderPreview,
+    toTraceStyle
 }
 export default DivePlotStyles

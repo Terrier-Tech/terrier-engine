@@ -21,7 +21,8 @@ namespace :frontend do
         '../queries/filters' => ['FilterInput'],
         '../../terrier/attachments' => ['Attachment'],
         '../../terrier/schedules' => ['RegularSchedule'],
-        '../plots/dive-plots' => %w[DivePlotTrace DivePlotLayout]
+        '../plots/dive-plot-layouts' => %w[DivePlotLayout],
+        '../plots/dive-plot-traces' => %w[DivePlotTrace]
       },
       prefix: 'Dd',
       type_map: {'User' => 'DdUser'}

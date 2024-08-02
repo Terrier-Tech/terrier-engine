@@ -119,9 +119,17 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             })
         })
 
-        this.deliveryForm = this.settingsTabs.upsertTab({key: 'delivery', title: "Delivery", icon: "glyp-email"}, DiveDeliveryForm, this.state)
+        this.plotList = this.settingsTabs.upsertTab({
+            key: 'plots',
+            title: "Plots",
+            icon: "glyp-differential"
+        }, DivePlotList, this.state)
 
-        this.plotList = this.settingsTabs.upsertTab({key: 'plots', title: "Plots", icon: "glyp-differential"}, DivePlotList, this.state)
+        this.deliveryForm = this.settingsTabs.upsertTab({
+            key: 'delivery',
+            title: "Delivery",
+            icon: "glyp-email"
+        }, DiveDeliveryForm, this.state)
     }
 
     /**

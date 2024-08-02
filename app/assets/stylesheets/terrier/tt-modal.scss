@@ -60,6 +60,7 @@
 	}
 
 	.modal-header {
+		border-bottom: 1px solid var(--tt-border-color);
 		h2, i {
 			font-size: var(--tt-modal-header-font-size);
 		}
