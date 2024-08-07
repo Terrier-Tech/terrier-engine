@@ -61,7 +61,8 @@ function toPlotAxis(diveAxis: DivePlotAxis): PlotAxis | undefined {
     return {
         type: diveAxis.type,
         title: diveAxis.title,
-        range: "auto"
+        range: "auto",
+        tickLength: 6
     }
 }
 

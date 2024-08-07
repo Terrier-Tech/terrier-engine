@@ -1,13 +1,30 @@
 @import "../terrier/tt-mixins";
 
+// TODO: it would be nice if we didn't have to do this for each implementation
+.tuff-part-PlotPart {
+	min-height: 320px;
+	max-width: 100%;
+	position: relative;
+	.tuff-plot-container {
+		--tuff-plot-axis-stroke: var(--tt-body-color);
+		--tuff-plot-viewport-fill: var(--tt-panel-background);
+		--tuff-plot-label-color: var(--tt-body-color);
+		--tuff-plot-grid-stroke: #{rgba(#888, 0.1)};
+		--tuff-plot-tool-background: var(--tt-panel-background);
+		--tuff-plot-axis-font-weight: normal;
+	}
+
+	g.hover {
+		background-color: var(--tt-inset-background);
+	}
+}
+
 // the part that actually renders a dive plot
 .dd-dive-plot-render {
-	// placeholder
-	border: 2px solid var(--tt-secondary-color);
-	background: var(--tt-inset-background);
+	@include tt-inset-box;
+	@include tt-inset-box-shadow;
 	text-align: center;
-	min-width: $max-fixed-width;
-	min-height: 240px;
+	min-width: $phone-breakpoint;
 	position: relative;
 }
 
