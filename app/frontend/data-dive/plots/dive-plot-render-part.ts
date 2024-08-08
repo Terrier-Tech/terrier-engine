@@ -9,7 +9,7 @@ import {PlotPart} from "tuff-plot/part"
 import DivePlotLayouts from "./dive-plot-layouts"
 import DivePlotTraces from "./dive-plot-traces"
 
-const log = new Logger("DivePlotTraceRenderPart")
+const log = new Logger("DivePlotRenderPart")
 
 export type DivePlotRenderState = DivePlotEditorState & {
     plot: UnpersistedDdDivePlot
@@ -31,6 +31,18 @@ export default class DivePlotRenderPart extends TerrierPart<DivePlotRenderState>
         await this.reload()
     }
 
+    relayout() {
+        if (this.plotPart) {
+            log.info(`Relayouting plot`, this)
+            // convert the layout to its tuff-plot equivalents
+            this.plotPart.state.layout = DivePlotLayouts.toPlotLayout(this.state.plot.layout)
+
+            // force the plot to update its layout
+            this.plotPart.relayout()
+            this.plotPart.dirty()
+        }
+    }
+
     async reload() {
         // determine which queries are needed
         const queryIds = Arrays.unique(this.state.plot.traces.map(t => t.query_id))
@@ -46,17 +58,15 @@ export default class DivePlotRenderPart extends TerrierPart<DivePlotRenderState>
             this.previewData[query.id] = await Queries.preview(query)
         }
 
-        // convert the layout and traces to their tuff-plot equivalents
-        this.plotPart.state.layout = DivePlotLayouts.toPlotLayout(this.state.plot.layout)
+        // convert the traces to tuff-plot traces
         this.plotPart.state.traces = this.state.plot.traces.map(t => {
             const queryResult = this.previewData[t.query_id]
             return DivePlotTraces.toPlotTrace(t, queryResult)
         })
         log.info(`Generated ${this.plotPart.state.traces.length} traces`, this.plotPart.state.traces)
-        this.plotPart.dirty()
 
         this.stopLoading()
-        this.dirty()
+        this.relayout()
     }
 
     get parentClasses(): Array<string> {

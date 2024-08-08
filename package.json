@@ -19,7 +19,7 @@
     "dayjs": "^1.11.7",
     "inflection": "^2.0.1",
     "tuff-core": "latest",
-    "tuff-plot": "^0.2.0",
+    "tuff-plot": "^0.3.0",
     "tuff-sortable": "latest",
     "turbolinks": "^5.2.0"
   },

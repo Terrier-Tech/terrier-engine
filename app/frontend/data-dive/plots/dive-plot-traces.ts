@@ -11,7 +11,7 @@ import {Logger} from "tuff-core/logging"
 import Columns from "../queries/columns"
 import Messages from "tuff-core/messages"
 import DivePlotStyles, {DivePlotTraceStyle, TraceStyleFields} from "./dive-plot-styles"
-import TerrierPart from "../../terrier/parts/terrier-part";
+import TerrierPart from "../../terrier/parts/terrier-part"
 
 const log = new Logger("DivePlotTraces")
 

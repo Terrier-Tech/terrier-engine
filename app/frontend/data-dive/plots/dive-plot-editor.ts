@@ -25,6 +25,7 @@ export type DivePlotEditorState = DiveEditorState & {
 }
 
 export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
+    static relayoutKey = Messages.untypedKey()
 
     plot!: UnpersistedDdDivePlot
     fields!: TerrierFormFields<UnpersistedDdDivePlot>
@@ -123,6 +124,11 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             log.debug("Saving plot", this.plot)
             this.save()
         })
+
+        this.onChange(DivePlotEditor.relayoutKey, m => {
+            log.info("Relayouting plot editor", m)
+            this.serialize().then(() => this.renderPart.relayout())
+        })
     }
 
     addTrace(trace: DivePlotTrace) {
@@ -150,7 +156,9 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             return {...this.state, trace, index}
         })
         this.assignCollection('traces', DivePlotTraceRow, rowStates)
-        this.dirty()
+        if (this.renderPart) {
+            this.renderPart.relayout()
+        }
     }
 
     renderContent(parent: PartTag): void {
@@ -180,15 +188,23 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
         })
     }
 
-    async save() {
+    async serialize() {
         const plotData = await this.fields.serialize()
-        const plot = {...this.plot, title: plotData.title, traces: this.traces}
+        const plot = this.plot
+        plot.title = plotData.title
+        plot.traces = this.traces
 
         plot.layout.axes = {
             left: await this.leftAxisFields.serialize(),
             bottom: await this.bottomAxisFields.serialize(),
             right: await this.rightAxisFields.serialize()
         }
+
+        return plot
+    }
+
+    async save() {
+        const plot = await this.serialize()
 
         log.info("Saving plot", plot)
 
@@ -206,5 +222,3 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
 
     }
 }
-
-

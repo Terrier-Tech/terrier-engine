@@ -4,13 +4,14 @@ import {PartTag} from "tuff-core/parts"
 import TerrierPart from "../../terrier/parts/terrier-part"
 import {DbErrors} from "../../terrier/db-client"
 import * as inflection from "inflection"
+import DivePlotEditor from "./dive-plot-editor";
 
 
 // let's not worry about a top axis for now
 const axisSides = ['left', 'bottom', 'right'] as const
 export type AxisSide = typeof axisSides[number]
 
-export type DivePlotAxisType = AxisType | 'none'
+export type DivePlotAxisType = AxisType | 'dollars' | 'days' | 'months' | 'none'
 
 export type DivePlotAxis = {
     type: DivePlotAxisType
@@ -19,7 +20,9 @@ export type DivePlotAxis = {
 
 const axisTypeOptions = [
     {value: 'number', title: 'Number'},
-    {value: 'time', title: 'Date/Time'},
+    {value: 'dollars', title: 'Dollars'},
+    {value: 'days', title: 'Dates'},
+    {value: 'months', title: 'Months'},
     {value: 'group', title: 'Grouped Bars'},
     {value: 'stack', title: 'Stacked Bars'},
 ]
@@ -41,10 +44,12 @@ export class DivePlotAxisFields extends TerrierFormFields<DivePlotAxis> {
 
             // title
             this.textInput(container, "title", {placeholder: "Title"})
+                .emitChange(DivePlotEditor.relayoutKey)
 
             // type
             const typeOptions = this.side == 'right' ? rightAxisTypeOptions : axisTypeOptions
             this.select(container, 'type', typeOptions)
+                .emitChange(DivePlotEditor.relayoutKey)
         })
     }
 }
@@ -58,8 +63,30 @@ function toPlotAxis(diveAxis: DivePlotAxis): PlotAxis | undefined {
     if (diveAxis.type == 'none') {
         return undefined
     }
+    let tickMode: PlotAxis['tickMode'] = 'auto'
+    let type: AxisType = 'number'
+    let tickFormat: PlotAxis['tickFormat'] = '0.[0]a'
+    switch (diveAxis.type) {
+        case 'dollars':
+            type = 'number'
+            tickFormat = '($0.[0]a)'
+            break
+        case 'days':
+            type = 'time'
+            tickFormat = 'MM/DD'
+            break
+        case 'months':
+            type = 'time'
+            tickFormat = 'MMM'
+            tickMode = 'months'
+            break
+        default:
+            type = diveAxis.type
+    }
     return {
-        type: diveAxis.type,
+        type,
+        tickMode,
+        tickFormat,
         title: diveAxis.title,
         range: "auto",
         tickLength: 6

@@ -25,6 +25,12 @@ class DivePlotPreview extends TerrierPart<DivePlotRenderState> {
         return ['dd-dive-plot-preview']
     }
 
+    relayout() {
+        if (this.renderPart) {
+            this.renderPart.relayout()
+        }
+    }
+
     render(parent: PartTag) {
         parent.a(".plot-title.tt-flex.gap", title => {
             title.i('.shrink.icon-only.glyp-differential')
@@ -92,6 +98,9 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
 
         const plotStates = this.plots.map((plot) => {return {...this.state, plot}})
         this.assignCollection("plots", DivePlotPreview, plotStates)
+        this.getCollectionParts("plots").forEach(part => {
+            (part as DivePlotPreview).relayout()
+        })
 
         this.dirty()
     }
