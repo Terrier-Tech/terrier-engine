@@ -65,6 +65,13 @@ export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
      * Serializes just the fields needed for the delivery settings.
      */
     async serialize(): Promise<DiveDeliverySettings> {
+        if (!this.isAttached) {
+            // it was never actually rendered
+            log.info("Skipping delivery setting serialization since it was never rendered", this)
+            const delivery_schedule = this.state.dive.delivery_schedule || {schedule_type: 'none'}
+            const delivery_recipients = this.state.dive.delivery_recipients || []
+            return {delivery_schedule, delivery_recipients}
+        }
         const delivery_schedule = await this.scheduleForm.serializeConcrete()
         log.info(`Serialized ${delivery_schedule.schedule_type} delivery schedule`, delivery_schedule)
         const delivery_recipients = this.recipientsForm.state.emails
