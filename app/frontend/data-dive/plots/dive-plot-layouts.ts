@@ -1,4 +1,3 @@
-// mimic PlotLayout but with our own types
 import DivePlotAxes, {DivePlotAxis} from "./dive-plot-axes"
 import {PlotLayout} from "tuff-plot/layout"
 

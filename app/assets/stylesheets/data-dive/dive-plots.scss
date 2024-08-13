@@ -7,7 +7,7 @@
 	position: relative;
 	.tuff-plot-container {
 		--tuff-plot-axis-stroke: var(--tt-body-color);
-		--tuff-plot-viewport-fill: var(--tt-plot-background);
+		--tuff-plot-viewport-fill: var(--tt-inset-background);
 		--tuff-plot-label-color: var(--tt-body-color);
 		--tuff-plot-grid-stroke: #{rgba(#888, 0.1)};
 		--tuff-plot-tool-background: var(--tt-panel-background);
@@ -15,7 +15,7 @@
 	}
 
 	g.hover {
-		background-color: var(--tt-inset-background);
+		background-color: rgba(0, 0, 0, 0.04);
 	}
 }
 
@@ -38,7 +38,7 @@
 
 .dd-dive-plot-list {
 	.plot-title {
-		padding: 0.5em 0;
+		padding: 0 0.5em;
 		font-size: calc(var(--tt-body-font-size) * 1.25);
 		--tt-scale-push-factor: 0.04;
 		@include tt-scale-push-children;
