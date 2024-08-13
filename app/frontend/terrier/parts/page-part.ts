@@ -63,8 +63,11 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
     protected _breadcrumbs = Array<Action>()
 
     addBreadcrumb(crumb: Action) {
+        this.beforeAddBreadcrumb(crumb)
         this._breadcrumbs.push(crumb)
     }
+
+    protected beforeAddBreadcrumb(_crumb: Action) {}
 
     protected _titleHref?: string
 
@@ -150,6 +153,8 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
         if (!this._breadcrumbs.length && !this._title?.length) return
 
         parent.h1('.breadcrumbs', h1 => {
+            const crumbs = Array.from(this._breadcrumbs)
+
             // add a breadcrumb for the page title
             if (this._title?.length) {
                 const titleCrumb: Action = {
@@ -162,10 +167,11 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                 if (this._titleClasses?.length) {
                     titleCrumb.classes = this._titleClasses
                 }
-                this.addBreadcrumb(titleCrumb)
+                this.beforeAddBreadcrumb(titleCrumb)
+                crumbs.push(titleCrumb)
             }
 
-            this.app.theme.renderActions(h1, Array.from(this._breadcrumbs))
+            this.app.theme.renderActions(h1, crumbs)
         })
     }
 
