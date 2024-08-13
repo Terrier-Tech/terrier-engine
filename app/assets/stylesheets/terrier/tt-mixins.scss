@@ -341,12 +341,24 @@ $color-diff: 0.08;
 	box-shadow: calc(var(--tt-shadow-spread) / 2) calc(var(--tt-shadow-spread) / 2) var(--tt-shadow-spread) var(--tt-shadow-color);
 }
 
+// scales this element when hovering and clicking
 @mixin tt-scale-push {
 	@include tt-no-select;
 	&:hover {
 		transform: scale(calc(1 + var(--tt-scale-push-factor)));
 	}
 	&:active {
+		transform: scale(calc(1 - var(--tt-scale-push-factor)));
+	}
+}
+
+// scales all immediate children when hovering and clicking
+@mixin tt-scale-push-children {
+	@include tt-no-select;
+	&:hover > * {
+		transform: scale(calc(1 + var(--tt-scale-push-factor)));
+	}
+	&:active> * {
 		transform: scale(calc(1 - var(--tt-scale-push-factor)));
 	}
 }

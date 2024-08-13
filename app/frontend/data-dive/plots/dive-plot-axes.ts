@@ -66,19 +66,23 @@ function toPlotAxis(diveAxis: DivePlotAxis): PlotAxis | undefined {
     let tickMode: PlotAxis['tickMode'] = 'auto'
     let type: AxisType = 'number'
     let tickFormat: PlotAxis['tickFormat'] = '0.[0]a'
+    let hoverFormat = '0.[0]a'
     switch (diveAxis.type) {
         case 'dollars':
             type = 'number'
             tickFormat = '($0.[0]a)'
+            hoverFormat = tickFormat
             break
         case 'days':
             type = 'time'
             tickFormat = 'MM/DD'
+            hoverFormat = tickFormat
             break
         case 'months':
             type = 'time'
             tickFormat = 'MMM'
             tickMode = 'months'
+            hoverFormat = 'MM/DD' // we probably still want to see days on hover
             break
         default:
             type = diveAxis.type
@@ -87,6 +91,7 @@ function toPlotAxis(diveAxis: DivePlotAxis): PlotAxis | undefined {
         type,
         tickMode,
         tickFormat,
+        hoverFormat,
         title: diveAxis.title,
         range: "auto",
         tickLength: 6

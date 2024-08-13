@@ -67,6 +67,7 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
         this.traces = this.plot.traces || []
         this.updateTraces()
 
+        // new trace
         this.onClick(this.newTraceKey, _ => {
             log.info("Showing new trace form")
             const state = {
@@ -78,6 +79,7 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             this.app.showModal(DivePlotTraceEditor, state)
         })
 
+        // edit a trace
         this.onClick(DivePlotTraces.editKey, m => {
             const id = m.data.id
             log.info(`Editing plot trace ${id}`)
@@ -93,6 +95,7 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
             }
         })
 
+        // delete a trace
         this.onClick(this.deleteKey, async _ => {
             if (confirm("Are you sure you want to delete this plot?")) {
                 log.info("Deleting plot", this.plot)
