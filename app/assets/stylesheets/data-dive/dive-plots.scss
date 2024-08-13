@@ -7,7 +7,7 @@
 	position: relative;
 	.tuff-plot-container {
 		--tuff-plot-axis-stroke: var(--tt-body-color);
-		--tuff-plot-viewport-fill: var(--tt-panel-background);
+		--tuff-plot-viewport-fill: var(--tt-plot-background);
 		--tuff-plot-label-color: var(--tt-body-color);
 		--tuff-plot-grid-stroke: #{rgba(#888, 0.1)};
 		--tuff-plot-tool-background: var(--tt-panel-background);
@@ -21,8 +21,6 @@
 
 // the part that actually renders a dive plot
 .dd-dive-plot-render {
-	@include tt-inset-box;
-	@include tt-inset-box-shadow;
 	text-align: center;
 	min-width: $phone-breakpoint;
 	position: relative;
