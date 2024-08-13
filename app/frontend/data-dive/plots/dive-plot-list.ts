@@ -25,6 +25,12 @@ class DivePlotPreview extends TerrierPart<DivePlotRenderState> {
         return ['dd-dive-plot-preview']
     }
 
+    reload() {
+        if (this.renderPart) {
+            this.renderPart.reload().then()
+        }
+    }
+
     relayout() {
         if (this.renderPart) {
             this.renderPart.relayout()
@@ -99,7 +105,7 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
         const plotStates = this.plots.map((plot) => {return {...this.state, plot}})
         this.assignCollection("plots", DivePlotPreview, plotStates)
         this.getCollectionParts("plots").forEach(part => {
-            (part as DivePlotPreview).relayout()
+            (part as DivePlotPreview).reload()
         })
 
         this.dirty()

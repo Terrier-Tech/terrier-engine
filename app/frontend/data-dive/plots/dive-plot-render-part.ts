@@ -37,9 +37,20 @@ export default class DivePlotRenderPart extends TerrierPart<DivePlotRenderState>
             // convert the layout to its tuff-plot equivalents
             this.plotPart.state.layout = DivePlotLayouts.toPlotLayout(this.state.plot.layout)
 
+            // convert the traces to tuff-plot traces
+            if (this.previewData) {
+                this.plotPart.state.traces = Arrays.compact(this.state.plot.traces.map(t => {
+                    const queryResult = this.previewData[t.query_id]
+                    if (queryResult == null) {
+                        return null
+                    }
+                    return DivePlotTraces.toPlotTrace(t, queryResult)
+                }))
+                log.info(`Generated ${this.plotPart.state.traces.length} traces`, this.plotPart.state.traces)
+            }
+
             // force the plot to update its layout
             this.plotPart.relayout()
-            this.plotPart.dirty()
         }
     }
 
@@ -57,13 +68,6 @@ export default class DivePlotRenderPart extends TerrierPart<DivePlotRenderState>
         for (const query of queries) {
             this.previewData[query.id] = await Queries.preview(query)
         }
-
-        // convert the traces to tuff-plot traces
-        this.plotPart.state.traces = this.state.plot.traces.map(t => {
-            const queryResult = this.previewData[t.query_id]
-            return DivePlotTraces.toPlotTrace(t, queryResult)
-        })
-        log.info(`Generated ${this.plotPart.state.traces.length} traces`, this.plotPart.state.traces)
 
         this.stopLoading()
         this.relayout()

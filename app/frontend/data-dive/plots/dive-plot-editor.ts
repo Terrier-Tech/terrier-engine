@@ -135,20 +135,20 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
     }
 
     addTrace(trace: DivePlotTrace) {
+        log.info(`Adding trace ${trace.id}`, trace)
         this.traces.push(trace)
         this.updateTraces()
     }
 
     replaceTrace(trace: DivePlotTrace) {
-        // TODO: implement this in tuff-core
         log.info(`Replacing trace ${trace.id}`, trace)
-        this.traces = this.traces.map(t => t.id === trace.id ? trace : t)
+        Arrays.replaceBy(this.traces, trace, 'id')
         this.updateTraces()
     }
 
     removeTrace(trace: DivePlotTrace) {
         log.info(`Removing trace ${trace.id}`, trace)
-        this.traces = Arrays.compact(this.traces.map(t => t.id === trace.id ? null : t))
+        this.traces = Arrays.without(this.traces, trace)
         this.updateTraces()
     }
 
