@@ -82,6 +82,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
         this.plot = this.state.plot
         this.trace = this.state.trace
+        this.trace.yAxis ||= 'left'
 
         this.queries = this.state.dive.query_data?.queries || []
         this.queryOptions = this.queries.map(query => {
@@ -145,9 +146,6 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
                     field.label().text("Query")
                     this.fields.select(field, 'query_id', this.queryOptions)
                 })
-
-                // plot axis
-
             })
 
             // axes
@@ -163,6 +161,11 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
                     for (const c of this.axisOptions) {
                         this.fields.radioLabel(col, 'y', c, c)
                     }
+                })
+                row.div('.tt-flex.column.gap', col => {
+                    col.h3().text("Y Axis")
+                    this.fields.radioLabel(col, 'yAxis', 'left', 'Left')
+                    this.fields.radioLabel(col, 'yAxis', 'right', 'Right')
                 })
             })
 
@@ -190,6 +193,7 @@ export type DivePlotTraceRowState = DivePlotEditorState & {
     trace: DivePlotTrace
     index: number // keep track of which row is being rendered so we can choose the default color
 }
+
 
 /**
  * Row for displaying a single plot trace.
