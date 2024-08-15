@@ -131,10 +131,9 @@ export default class DivePlotEditor extends ModalPart<DivePlotEditorState> {
         parent.div(".tt-flex.column.padded.large-gap", mainColumn => {
 
             mainColumn.div(".dd-plot-axes-and-preview.tt-flex.column.gap", axesAndPreview => {
-                this.fields.compoundField(axesAndPreview, field => {
-                    field.label(".required").text("Title")
-                    this.fields.textInput(field, 'title', {class: 'shrink plot-title'})
-                }).class('plot-title-field')
+                this.fields.compoundField(axesAndPreview, 'title', 'plot-title-field')
+                    .label("Title", '.required')
+                    .textInput({class: 'shrink plot-title'})
                 axesAndPreview.div('.tt-flex.gap', row => {
                     this.leftAxisFields.render(row)
                     row.part(this.renderPart)

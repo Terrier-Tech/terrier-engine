@@ -55,18 +55,17 @@ class TraceStyleFields extends TerrierFormFields<TraceStyle> {
 
         render(parent: PartTag) {
             parent.div('.tt-form.tt-flex.gap.wrap', container => {
-                this.compoundField(container, field => {
-                    field.label().text("Color")
-                    this.textInput(field, 'stroke', {placeholder: 'Color'})
-                })
-                this.compoundField(container, field => {
-                    field.label().text("Width")
-                    this.numberInput(field, 'strokeWidth', {placeholder: 'Width'})
-                })
-                this.compoundField(container, field => {
-                    field.label().text("Dashes")
-                    this.textInput(field, 'strokeDasharray', {placeholder: 'Dashes'})
-                })
+                this.compoundField(container, 'stroke')
+                    .label("Color")
+                    .textInput({placeholder: 'Color'})
+
+                this.numericCompoundField(container, 'strokeWidth')
+                    .label("Width")
+                    .numberInput({placeholder: 'Width'})
+
+                this.compoundField(container, 'strokeDasharray')
+                    .label("Dashes")
+                    .textInput({placeholder: 'Dashes'})
             })
         }
 
@@ -165,10 +164,10 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceState> {
     renderContent(parent: PartTag): void {
         parent.div(".tt-form.tt-flex.large-gap.column.padded", mainColumn => {
             // query
-            this.fields.compoundField(mainColumn, field => {
-                field.label().text("Query")
-                this.fields.select(field, 'query_id', this.queryOptions)
-            })
+            this.fields
+                .compoundField(mainColumn, 'query_id')
+                .label("Query")
+                .select(this.queryOptions)
 
             // axes
             mainColumn.div('.tt-flex.gap', row => {
