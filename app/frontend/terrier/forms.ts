@@ -8,6 +8,10 @@ import Glyps from "./glyps"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import Strings from "tuff-core/strings"
+import Theme, {Action, ColorName, IconName} from "./theme"
+import Objects from "tuff-core/objects"
+import {InlineStyle} from "tuff-core/tags"
+import Hints, {Hint, HintRenderOptions} from "./hints"
 
 const log = new Logger("TerrierForms")
 
@@ -142,17 +146,20 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         }).emitClick(this.pickGlypKey, {key})
     }
 
+    compoundField<Key extends KeyOfType<T, string> & string>(parent: PartTag, key: Key, ...classes: string[]): StringCompoundFieldBuilder<T, Key> {
+        return new StringCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
+    }
 
-    /**
-     * Creates a .tt-compound-field tag and passes the field to the nested function.
-     * I suppose it's just a slight convenience over having `parent.div(".tt-compound-field"...` everywhere.
-     * @param parent
-     * @param fun a function that accepts the field as an argument, to actually populate the field
-     */
-    compoundField(parent: PartTag, fun: (field: DivTag) => any) {
-        return parent.div(".tt-compound-field", field => {
-            fun(field)
-        })
+    numericCompoundField<Key extends KeyOfType<T, number> & string>(parent: PartTag, key: Key, ...classes: string[]): NumericCompoundFieldBuilder<T, Key> {
+        return new NumericCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
+    }
+
+    fileCompoundField<Key extends KeyOfType<T, File> & string>(parent: PartTag, key: Key, ...classes: string[]): FileCompoundFieldBuilder<T, Key> {
+        return new FileCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
+    }
+
+    booleanCompoundField<Key extends KeyOfType<T, boolean> & string>(parent: PartTag, key: Key, ...classes: string[]): BooleanCompoundFieldBuilder<T, Key> {
+        return new BooleanCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
     }
 
     /**
@@ -170,6 +177,153 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         })
     }
 
+}
+
+abstract class CompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, unknown> & string> {
+
+    field!: DivTag
+
+    constructor(readonly formFields: TerrierFormFields<T>, readonly parent: PartTag, readonly key: K, readonly theme: Theme, ...classes: string[]) {
+        this.field = parent.div('.tt-compound-field')
+        // add the error class if this key (or key_id) is in the errors object
+        if (formFields.errors && (formFields.errors[key] || formFields.errors[`${key}_id`] || formFields.errors[key.replace(/_id$/,'')])) {
+            this.field.class('error')
+        }
+        if (classes.length) {
+            this.field.class(...classes)
+        }
+    }
+
+    readonly(text?: string): this {
+        this.field.div('.readonly', {text: text ?? Objects.safeToString(this.formFields.data[this.key]) })
+        return this
+    }
+
+    label(text: string, ...classes: string[]): this {
+        this.field.label({ text, htmlFor: `${this.formFields.part.id}-${this.key}`, classes })
+        return this
+    }
+
+    tooltip(text: string): this {
+        this.field.dataAttr('tooltip', text)
+        return this
+    }
+
+    hint(hint: Hint, options?: HintRenderOptions): this {
+        Hints.renderHint(this.theme, this.field, hint, options)
+        return this
+    }
+
+    icon(icon: IconName, color: ColorName = 'secondary'): this {
+        this.theme.renderIcon(this.field, icon, color)
+        return this
+    }
+
+    css(styles: InlineStyle): this {
+        this.field.css(styles)
+        return this
+    }
+
+    action(action: Action, color: ColorName = 'link'): this {
+        action.classes ||= []
+        action.classes.push(color)
+        this.theme.renderActions(this.field, action, {iconColor: color})
+        return this
+    }
+
+    class(...s: string[]): this {
+        this.field.class(...s)
+        return this
+    }
+}
+
+class StringCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, string> & string> extends CompoundFieldBuilder<T, K> {
+    hiddenInput(attrs?: InputTagAttrs): this {
+        this.formFields.hiddenInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    textInput(attrs?: InputTagAttrs): this {
+        this.formFields.textInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    emailInput(attrs?: InputTagAttrs): this {
+        this.formFields.emailInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    phoneInput(attrs?: InputTagAttrs): this {
+        this.formFields.phoneInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    passwordInput(attrs?: InputTagAttrs): this {
+        this.formFields.passwordInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    searchInput(attrs?: InputTagAttrs): this {
+        this.formFields.searchInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    urlInput(attrs?: InputTagAttrs): this {
+        this.formFields.urlInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    textArea(attrs?: TextAreaTagAttrs): this {
+        this.formFields.textArea(this.field, this.key, attrs ?? {})
+        return this
+    }
+    dateInput(attrs?: InputTagAttrs): this {
+        this.formFields.dateInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    timeInput(attrs?: InputTagAttrs): this {
+        this.formFields.timeInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    dateTimeInput(attrs?: InputTagAttrs): this {
+        this.formFields.dateTimeInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    monthInput(attrs?: InputTagAttrs): this {
+        this.formFields.monthInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    weekInput(attrs?: InputTagAttrs): this {
+        this.formFields.weekInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+    radio(value: string, attrs?: InputTagAttrs): this {
+        this.formFields.radio(this.field, this.key, value, attrs ?? {})
+        return this
+    }
+    select(selectOptions?: SelectOptions, attrs?: InputTagAttrs): this {
+        this.formFields.select(this.field, this.key, selectOptions, attrs ?? {})
+        return this
+    }
+    colorInput(attrs?: InputTagAttrs): this {
+        this.formFields.colorInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+}
+
+class NumericCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, number> & string> extends CompoundFieldBuilder<T, K> {
+    numberInput(attrs?: InputTagAttrs): this {
+        this.formFields.numberInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+}
+
+class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, File> & string> extends CompoundFieldBuilder<T, K> {
+    fileInput(attrs?: InputTagAttrs): this {
+        this.formFields.fileInput(this.field, this.key, attrs ?? {})
+        return this
+    }
+}
+
+class BooleanCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, boolean> & string> extends CompoundFieldBuilder<T, K> {
+
+    checkbox(attrs?: InputTagAttrs): this {
+        this.formFields.checkbox(this.field, this.key, attrs ?? {})
+        return this
+    }
 }
 
 
