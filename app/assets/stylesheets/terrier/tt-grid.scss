@@ -13,6 +13,30 @@
 		grid-gap: calc(var(--tt-gap) / 2);
 	}
 
+	&.row-gap {
+		grid-row-gap: var(--tt-gap);
+	}
+
+	&.large-row-gap {
+		grid-row-gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-row-gap {
+		grid-row-gap: calc(var(--tt-gap) / 2);
+	}
+
+	&.col-gap {
+		grid-column-gap: var(--tt-gap);
+	}
+
+	&.large-col-gap {
+		grid-column-gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-col-gap {
+		grid-column-gap: calc(var(--tt-gap) / 2);
+	}
+
 	grid-template-columns: repeat(auto-fill, minmax(var(--tt-grid-column-width, 350px), 1fr));
 
 	&.fit-width {
