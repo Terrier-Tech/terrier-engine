@@ -1,7 +1,16 @@
-import {Field, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
+import {FieldConstructor, FormFields, FormPartData, InputType, KeyOfType, SelectOptions} from "tuff-core/forms"
 import {DbErrors} from "./db-client"
 import {PartTag} from "tuff-core/parts"
-import {DivTag, InputTag, InputTagAttrs, SelectTag, SelectTagAttrs, TextAreaTag, TextAreaTagAttrs} from "tuff-core/html"
+import {
+    DefaultTagAttrs,
+    DivTag,
+    InputTag,
+    InputTagAttrs,
+    SelectTag,
+    SelectTagAttrs,
+    TextAreaTag,
+    TextAreaTagAttrs
+} from "tuff-core/html"
 import TerrierPart from "./parts/terrier-part"
 import GlypPicker from "./parts/glyp-picker"
 import Glyps from "./glyps"
@@ -90,33 +99,27 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         })
     }
 
-    protected input<Key extends KeyOfType<T, any> & string>(parent: PartTag, type: InputType, name: Key, serializerType: {
-        new(name: string): Field<any, Element>
-    }, attrs?: InputTagAttrs): InputTag {
+    protected addErrorClass(name: string, attrs: DefaultTagAttrs) {
         if (this.errors && this.errors[name]) {
             attrs ||= {}
             attrs.classes ||= []
             attrs.classes.push('error')
         }
+    }
+
+    input<Key extends KeyOfType<T,any> & string>(parent: PartTag, type: InputType, name: Key, serializerType: FieldConstructor<any, Element>, attrs: InputTagAttrs={}): InputTag {
+        this.addErrorClass(name, attrs)
         return super.input(parent, type, name, serializerType, attrs);
     }
 
-    select<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, options?: SelectOptions, attrs: SelectTagAttrs = {}): SelectTag {
-        if (this.errors && this.errors[name]) {
-            attrs ||= {}
-            attrs.classes ||= []
-            attrs.classes.push('error')
-        }
-        return super.select(parent, name, options, attrs);
+    select<Key extends keyof T & string, TSerializer extends FieldConstructor<T[Key], HTMLSelectElement>>(parent: PartTag, name: Key, options?: SelectOptions, attrs: SelectTagAttrs = {}, serializerType?: TSerializer): SelectTag {
+        this.addErrorClass(name, attrs)
+        return super.select(parent, name, options, attrs, serializerType);
     }
 
-    textArea<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, attrs: TextAreaTagAttrs={}): TextAreaTag {
-        if (this.errors && this.errors[name]) {
-            attrs ||= {}
-            attrs.classes ||= []
-            attrs.classes.push('error')
-        }
-        return super.textArea(parent, name, attrs);
+    textArea<Key extends keyof T & string, TSerializer extends FieldConstructor<T[Key], HTMLTextAreaElement>>(parent: PartTag, name: Key, attrs: SelectTagAttrs = {}, serializerType?: TSerializer): TextAreaTag {
+        this.addErrorClass(name, attrs)
+        return super.textArea(parent, name, attrs, serializerType);
     }
 
     /**
@@ -146,20 +149,12 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         }).emitClick(this.pickGlypKey, {key})
     }
 
-    compoundField<Key extends KeyOfType<T, string> & string>(parent: PartTag, key: Key, ...classes: string[]): StringCompoundFieldBuilder<T, Key> {
-        return new StringCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
-    }
-
-    numericCompoundField<Key extends KeyOfType<T, number> & string>(parent: PartTag, key: Key, ...classes: string[]): NumericCompoundFieldBuilder<T, Key> {
-        return new NumericCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
+    compoundField<Key extends keyof T & string>(parent: PartTag, key: Key, ...classes: string[]): CompoundFieldBuilder<T, Key> {
+        return new CompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
     }
 
     fileCompoundField<Key extends KeyOfType<T, File> & string>(parent: PartTag, key: Key, ...classes: string[]): FileCompoundFieldBuilder<T, Key> {
         return new FileCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
-    }
-
-    booleanCompoundField<Key extends KeyOfType<T, boolean> & string>(parent: PartTag, key: Key, ...classes: string[]): BooleanCompoundFieldBuilder<T, Key> {
-        return new BooleanCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
     }
 
     /**
@@ -170,7 +165,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
      * @param title the title to put in the label span
      * @param attrs attributes for the radio input
      */
-    radioLabel<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, value: string, title?: string, attrs: InputTagAttrs = {}) {
+    radioLabel<Key extends KeyOfType<T, string> & string>(parent: PartTag, name: Key, value: T[Key], title?: string, attrs: InputTagAttrs = {}) {
         return parent.label('.body-size', label => {
             this.radio(label, name, value, attrs)
             label.span().text(title || value)
@@ -179,7 +174,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
 
 }
 
-abstract class CompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, unknown> & string> {
+class CompoundFieldBuilder<T extends Record<string, unknown>, K extends keyof T & string> {
 
     field!: DivTag
 
@@ -194,8 +189,81 @@ abstract class CompoundFieldBuilder<T extends Record<string, unknown>, K extends
         }
     }
 
+    hiddenInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.hiddenInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    textInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.textInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    numberInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.numberInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    emailInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.emailInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    phoneInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.phoneInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    passwordInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.passwordInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    searchInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.searchInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    urlInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.urlInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    textArea(attrs?: TextAreaTagAttrs, serializerType?: FieldConstructor<T[K], HTMLTextAreaElement>): this {
+        this.formFields.textArea(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    dateInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.dateInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    timeInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.timeInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    dateTimeInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.dateTimeInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    monthInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.monthInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    weekInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.weekInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    radio(value: T[K], attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.radio(this.field, this.key, value, attrs ?? {}, serializerType)
+        return this
+    }
+    checkbox(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.checkbox(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+    select(selectOptions?: SelectOptions, attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLSelectElement>): this {
+        this.formFields.select(this.field, this.key, selectOptions, attrs ?? {}, serializerType)
+        return this
+    }
+    colorInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.colorInput(this.field, this.key, attrs ?? {}, serializerType)
+        return this
+    }
+
     readonly(text?: string): this {
-        this.field.div('.readonly', {text: text ?? Objects.safeToString(this.formFields.data[this.key]) })
+        this.field.div('.readonly-field', {text: text ?? Objects.safeToString(this.formFields.data[this.key]) })
         return this
     }
 
@@ -214,8 +282,10 @@ abstract class CompoundFieldBuilder<T extends Record<string, unknown>, K extends
         return this
     }
 
-    icon(icon: IconName, color: ColorName = 'secondary'): this {
-        this.theme.renderIcon(this.field, icon, color)
+    icon(icon: IconName, color: ColorName | null = 'secondary'): this {
+        this.field.label('.icon-only', label => {
+            this.theme.renderIcon(label, icon, color)
+        })
         return this
     }
 
@@ -237,80 +307,6 @@ abstract class CompoundFieldBuilder<T extends Record<string, unknown>, K extends
     }
 }
 
-class StringCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, string> & string> extends CompoundFieldBuilder<T, K> {
-    hiddenInput(attrs?: InputTagAttrs): this {
-        this.formFields.hiddenInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    textInput(attrs?: InputTagAttrs): this {
-        this.formFields.textInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    emailInput(attrs?: InputTagAttrs): this {
-        this.formFields.emailInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    phoneInput(attrs?: InputTagAttrs): this {
-        this.formFields.phoneInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    passwordInput(attrs?: InputTagAttrs): this {
-        this.formFields.passwordInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    searchInput(attrs?: InputTagAttrs): this {
-        this.formFields.searchInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    urlInput(attrs?: InputTagAttrs): this {
-        this.formFields.urlInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    textArea(attrs?: TextAreaTagAttrs): this {
-        this.formFields.textArea(this.field, this.key, attrs ?? {})
-        return this
-    }
-    dateInput(attrs?: InputTagAttrs): this {
-        this.formFields.dateInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    timeInput(attrs?: InputTagAttrs): this {
-        this.formFields.timeInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    dateTimeInput(attrs?: InputTagAttrs): this {
-        this.formFields.dateTimeInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    monthInput(attrs?: InputTagAttrs): this {
-        this.formFields.monthInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    weekInput(attrs?: InputTagAttrs): this {
-        this.formFields.weekInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-    radio(value: string, attrs?: InputTagAttrs): this {
-        this.formFields.radio(this.field, this.key, value, attrs ?? {})
-        return this
-    }
-    select(selectOptions?: SelectOptions, attrs?: InputTagAttrs): this {
-        this.formFields.select(this.field, this.key, selectOptions, attrs ?? {})
-        return this
-    }
-    colorInput(attrs?: InputTagAttrs): this {
-        this.formFields.colorInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-}
-
-class NumericCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, number> & string> extends CompoundFieldBuilder<T, K> {
-    numberInput(attrs?: InputTagAttrs): this {
-        this.formFields.numberInput(this.field, this.key, attrs ?? {})
-        return this
-    }
-}
-
 class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, File> & string> extends CompoundFieldBuilder<T, K> {
     fileInput(attrs?: InputTagAttrs): this {
         this.formFields.fileInput(this.field, this.key, attrs ?? {})
@@ -318,13 +314,6 @@ class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyO
     }
 }
 
-class BooleanCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, boolean> & string> extends CompoundFieldBuilder<T, K> {
-
-    checkbox(attrs?: InputTagAttrs): this {
-        this.formFields.checkbox(this.field, this.key, attrs ?? {})
-        return this
-    }
-}
 
 
 

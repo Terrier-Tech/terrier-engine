@@ -59,7 +59,7 @@ class TraceStyleFields extends TerrierFormFields<TraceStyle> {
                     .label("Color")
                     .textInput({placeholder: 'Color'})
 
-                this.numericCompoundField(container, 'strokeWidth')
+                this.compoundField(container, 'strokeWidth')
                     .label("Width")
                     .numberInput({placeholder: 'Width'})
 
