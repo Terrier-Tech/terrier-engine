@@ -16,7 +16,6 @@ import GlypPicker from "./parts/glyp-picker"
 import Glyps from "./glyps"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
-import Strings from "tuff-core/strings"
 import Theme, {Action, ColorName, IconName} from "./theme"
 import Objects from "tuff-core/objects"
 import {InlineStyle} from "tuff-core/tags"
@@ -41,25 +40,6 @@ function getRadioValue(container: HTMLElement, selector: string): string | undef
         }
     })
     return value
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Options
-////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Computes a `SelectOptions` array by titleizing the values in a plain string array.
- * @param opts
- */
-function titleizeOptions(opts: readonly string[], blank?: string): SelectOptions {
-    const out = opts.map(c => {
-        return {value: c, title: Strings.titleize(c)}
-    })
-    if (blank != undefined) { // don't test length, allow it to be a blank string
-        out.unshift({title: blank, value: ''})
-    }
-    return out
 }
 
 
@@ -322,7 +302,6 @@ class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyO
 ////////////////////////////////////////////////////////////////////////////////
 
 const Forms = {
-    titleizeOptions,
     getRadioValue
 }
 
