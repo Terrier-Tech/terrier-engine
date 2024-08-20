@@ -117,7 +117,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         return super.select(parent, name, options, attrs, serializerType);
     }
 
-    textArea<Key extends keyof T & string, TSerializer extends FieldConstructor<T[Key], HTMLTextAreaElement>>(parent: PartTag, name: Key, attrs: SelectTagAttrs = {}, serializerType?: TSerializer): TextAreaTag {
+    textArea<Key extends keyof T & string, TSerializer extends FieldConstructor<T[Key], HTMLTextAreaElement>>(parent: PartTag, name: Key, attrs: TextAreaTagAttrs = {}, serializerType?: TSerializer): TextAreaTag {
         this.addErrorClass(name, attrs)
         return super.textArea(parent, name, attrs, serializerType);
     }
