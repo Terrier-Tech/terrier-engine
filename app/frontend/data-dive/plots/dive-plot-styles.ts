@@ -35,11 +35,8 @@ const strokeWidths = {
     heavy: 4
 } as const
 
-const strokeWidthOptions = Object.entries(strokeWidths).map(([value, title]) => {
-    return {value, title}
-})
-
 export type StrokeWidthName = keyof typeof strokeWidths
+
 
 /**
  * Use named dash arrays so that we can style them how we want.
@@ -50,11 +47,8 @@ const namedDashArrays = {
     dotted: '2 2'
 } as const
 
-const dashArrayOptions = Object.entries(namedDashArrays).map(([value, title]) => {
-    return {value, title}
-})
-
 export type DashArrayName = keyof typeof namedDashArrays
+
 
 /**
  * Create a blank style.
@@ -97,7 +91,7 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
                 col.div(".color-options", optionsContainer => {
                     for (const [name, color] of Object.entries(namedColors)) {
                         optionsContainer.label('.color-option', label => {
-                            this.radio(label, 'colorName', name)
+                            this.radio(label, 'colorName', name as ColorName)
                             label.div('.color-preview').css({background: color})
                         }).data({tooltip: titleize(name)})
                     }
@@ -107,18 +101,18 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
             // stroke width
             container.div(".shrink", col => {
                 col.h3().text("Stroke Width")
-                for (const option of strokeWidthOptions) {
+                for (const [name, width] of Object.entries(strokeWidths)) {
                     col.label('.body-size', label => {
-                        this.radio(label, 'strokeWidthName', option.value)
+                        this.radio(label, 'strokeWidthName', name as StrokeWidthName)
                         label.svg('.stroke-width-preview', svg => {
                             svg.line({
                                 x1: 0,
                                 x2: previewSize,
                                 y1: previewSize / 2,
                                 y2: previewSize / 2,
-                                strokeWidth: option.title
+                                strokeWidth: width
                             })
-                        }).data({tooltip: titleize(option.value)})
+                        }).data({tooltip: titleize(name)})
                     })
                 }
             })
@@ -126,19 +120,19 @@ export class TraceStyleFields extends TerrierFormFields<DivePlotTraceStyle> {
             // dash array
             container.div(".shrink", col => {
                 col.h3().text("Dashes")
-                for (const option of dashArrayOptions) {
+                for (const [name, value] of Object.entries(namedDashArrays)) {
                     col.label('.body-size', label => {
-                        this.radio(label, 'strokeDasharrayName', option.value)
+                        this.radio(label, 'strokeDasharrayName', name as DashArrayName)
                         label.svg('.dash-preview', svg => {
                             svg.line({
                                 x1: 0,
                                 x2: previewSize,
                                 y1: previewSize / 2,
                                 y2: previewSize / 2,
-                                strokeDasharray: option.title
+                                strokeDasharray: value
                             })
                         })
-                    }).data({tooltip: titleize(option.value)})
+                    }).data({tooltip: titleize(name)})
                 }
             })
         })

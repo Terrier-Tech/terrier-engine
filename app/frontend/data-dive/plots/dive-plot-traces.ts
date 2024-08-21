@@ -47,7 +47,6 @@ function blankTrace(): DivePlotTrace {
 }
 
 
-
 /// Editor
 
 export type DivePlotTraceEditorState = DivePlotEditorState & {
@@ -140,13 +139,11 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
     renderContent(parent: PartTag): void {
         parent.div(".tt-form.tt-flex.large-gap.column.padded", mainColumn => {
-            mainColumn.div('.tt-flex.gap', row => {
-                // query
-                this.fields.compoundField(row, field => {
-                    field.label().text("Query")
-                    this.fields.select(field, 'query_id', this.queryOptions)
-                })
-            })
+            // query
+            this.fields
+                .compoundField(mainColumn, 'query_id')
+                .label("Query")
+                .select(this.queryOptions)
 
             // axes
             mainColumn.div('.tt-flex.gap', row => {

@@ -16,13 +16,13 @@ namespace :frontend do
     ModelGenerator.new(
       typescript_dir: typescript_dir,
       imports: {
-        '../queries/queries' => ['Query'],
-        '../dd-user' => ['DdUser'],
-        '../queries/filters' => ['FilterInput'],
-        '../../terrier/attachments' => ['Attachment'],
-        '../../terrier/schedules' => ['RegularSchedule'],
+        '../queries/queries' => %w[Query],
+        '../dd-user' => %w[DdUser],
+        '../queries/filters' => %w[FilterInput],
+        '../../terrier/attachments' => %w[Attachment],
+        '../../terrier/schedules' => %w[RegularSchedule],
         '../plots/dive-plot-layouts' => %w[DivePlotLayout],
-        '../plots/dive-plot-traces' => %w[DivePlotTrace]
+        '../plots/dive-plot-traces' => %w[DivePlotTrace],
       },
       prefix: 'Dd',
       type_map: {'User' => 'DdUser'}

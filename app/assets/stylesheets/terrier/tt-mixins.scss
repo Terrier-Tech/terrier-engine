@@ -90,6 +90,30 @@ $color-names: ['link', 'primary', 'secondary', 'active', 'pending', 'success', '
 		gap: 0;
 	}
 
+	&.row-gap {
+		row-gap: var(--tt-gap);
+	}
+
+	&.large-row-gap {
+		row-gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-row-gap {
+		row-gap: calc(var(--tt-gap) / 2);
+	}
+
+	&.col-gap {
+		column-gap: var(--tt-gap);
+	}
+
+	&.large-col-gap {
+		column-gap: calc(var(--tt-gap) * 2);
+	}
+
+	&.small-col-gap {
+		column-gap: calc(var(--tt-gap) / 2);
+	}
+
 	&.padded {
 		padding: var(--tt-pad);
 	}
