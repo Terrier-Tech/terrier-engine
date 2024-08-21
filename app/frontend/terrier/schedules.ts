@@ -1,9 +1,9 @@
-import TerrierFormPart from "./parts/terrier-form-part"
 import {PartTag} from "tuff-core/parts"
 import * as inflection from "inflection"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import dayjs from "dayjs"
+import {TerrierFormFields} from "./forms"
 
 const log = new Logger("Schedules")
 
@@ -81,65 +81,59 @@ export type CombinedRegularSchedule = {
 // Form
 ////////////////////////////////////////////////////////////////////////////////
 
-export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule> {
+export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSchedule> {
 
     scheduleTypeChangeKey = Messages.typedKey<{schedule_type: ScheduleType}>()
-
-    async init() {
-        this.onChange(this.scheduleTypeChangeKey, m => {
-            log.info(`Schedule type changed to ${m.data.schedule_type}`)
-            this.dirty()
-        })
-    }
 
     get parentClasses(): Array<string> {
         return ['tt-flex', 'column', 'gap', 'regular-schedule-form', 'tt-form']
     }
 
-
     render(parent: PartTag): any {
-        parent.label('.caption-size', label => {
-            this.radio(label, 'schedule_type', 'none')
-                .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'none'})
-            label.span().text("Do Not Deliver")
-        })
-
-        parent.label('.caption-size', label => {
-            this.radio(label, 'schedule_type', 'daily')
-                .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'daily'})
-            label.span().text("Deliver Daily")
-        })
-        if (this.state.schedule_type == 'daily') {
-            parent.div('.schedule-type-fields.daily.tt-flex.gap', row => {
-                this.select(row, 'hour_of_day', HourOfDayOptions)
+        parent.div('.tt-flex.column.gap.regular-schedule-form.tt-form', col => {
+            col.label('.caption-size', label => {
+                this.radio(label, 'schedule_type', 'none')
+                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'none'})
+                label.span().text("Do Not Deliver")
             })
-        }
 
-        parent.label('.caption-size', label => {
-            this.radio(label, 'schedule_type', 'weekly')
-                .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'weekly'})
-            label.span().text("Deliver Weekly")
-        })
-        if (this.state.schedule_type == 'weekly') {
-            parent.div('.schedule-type-fields.weekly.tt-flex.gap', row => {
-                this.select(row, 'day_of_week', DayOfWeekOptions)
-                    .data({tooltip: "Day of the week"})
-                this.select(row, 'hour_of_day', HourOfDayOptions)
+            col.label('.caption-size', label => {
+                this.radio(label, 'schedule_type', 'daily')
+                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'daily'})
+                label.span().text("Deliver Daily")
             })
-        }
+            if (this.data.schedule_type == 'daily') {
+                col.div('.schedule-type-fields.daily.tt-flex.gap', row => {
+                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                })
+            }
 
-        parent.label('.caption-size', label => {
-            this.radio(label, 'schedule_type', 'monthly')
-                .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'monthly'})
-            label.span().text("Deliver Monthly")
-        })
-        if (this.state.schedule_type == 'monthly') {
-            parent.div('.schedule-type-fields.monthly.tt-flex.gap', row => {
-                this.select(row, 'day_of_month', DayOfMonthOptions)
-                    .data({tooltip: "Day of the month"})
-                this.select(row, 'hour_of_day', HourOfDayOptions)
+            col.label('.caption-size', label => {
+                this.radio(label, 'schedule_type', 'weekly')
+                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'weekly'})
+                label.span().text("Deliver Weekly")
             })
-        }
+            if (this.data.schedule_type == 'weekly') {
+                col.div('.schedule-type-fields.weekly.tt-flex.gap', row => {
+                    this.select(row, 'day_of_week', DayOfWeekOptions)
+                        .data({tooltip: "Day of the week"})
+                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                })
+            }
+
+            col.label('.caption-size', label => {
+                this.radio(label, 'schedule_type', 'monthly')
+                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'monthly'})
+                label.span().text("Deliver Monthly")
+            })
+            if (this.data.schedule_type == 'monthly') {
+                col.div('.schedule-type-fields.monthly.tt-flex.gap', row => {
+                    this.select(row, 'day_of_month', DayOfMonthOptions)
+                        .data({tooltip: "Day of the month"})
+                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                })
+            }
+        })
     }
 
 
@@ -150,6 +144,7 @@ export class RegularScheduleForm extends TerrierFormPart<CombinedRegularSchedule
         const raw = await this.serialize()
         const schedule_type = raw.schedule_type
         const hour_of_day = raw.hour_of_day || '0'
+        log.info(`Serializing schedule type ${schedule_type}`, raw)
         switch (schedule_type) {
             case 'none':
                 return {schedule_type}

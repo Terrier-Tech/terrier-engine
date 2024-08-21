@@ -1,7 +1,7 @@
 import {PartTag} from "tuff-core/parts"
 import DiveEditor, {DiveEditorState} from "./dive-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
-import {RegularSchedule, RegularScheduleForm} from "../../terrier/schedules"
+import {RegularSchedule, RegularScheduleFields} from "../../terrier/schedules"
 import {Logger} from "tuff-core/logging"
 import {EmailListForm} from "../../terrier/emails"
 import {DdDiveRun} from "../gen/models"
@@ -24,17 +24,17 @@ export type DiveDeliverySettings = {
 
 export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
 
-    scheduleForm!: RegularScheduleForm
+    scheduleFields!: RegularScheduleFields
     recipientsForm!: EmailListForm
     deliveryList!: DiveDeliveryList
 
     async init() {
         const schedule = this.state.dive.delivery_schedule || {schedule_type: 'none'}
-        this.scheduleForm = this.makePart(RegularScheduleForm, schedule)
+        this.scheduleFields = new RegularScheduleFields(this, schedule)
         this.recipientsForm = this.makePart(EmailListForm, {emails: this.state.dive.delivery_recipients || []})
         this.deliveryList = this.makePart(DiveDeliveryList, this.state)
 
-        this.listen('datachanged', this.scheduleForm.dataChangedKey, m => {
+        this.listen('datachanged', this.scheduleFields.dataChangedKey, m => {
             log.info(`Schedule form data changed`, m.data)
             this.emitMessage(DiveEditor.diveChangedKey, {})
         })
@@ -51,7 +51,7 @@ export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
 
     render(parent: PartTag): any {
         parent.h3(".glyp-setup").text("Schedule")
-        parent.part(this.scheduleForm)
+        this.scheduleFields.render(parent)
         parent.h3(".glyp-users").text("Recipients")
         parent.part(this.recipientsForm)
         parent.div('.deliveries', deliveriesContainer => {
@@ -72,7 +72,7 @@ export class DiveDeliveryForm extends TerrierPart<DiveEditorState> {
             const delivery_recipients = this.state.dive.delivery_recipients || []
             return {delivery_schedule, delivery_recipients}
         }
-        const delivery_schedule = await this.scheduleForm.serializeConcrete()
+        const delivery_schedule = await this.scheduleFields.serializeConcrete()
         log.info(`Serialized ${delivery_schedule.schedule_type} delivery schedule`, delivery_schedule)
         const delivery_recipients = this.recipientsForm.state.emails
         return {delivery_schedule, delivery_recipients}
