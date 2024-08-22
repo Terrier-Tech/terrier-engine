@@ -72,6 +72,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
     styleFields!: TraceStyleFields
 
+    queryChangedKey = Messages.untypedKey()
     saveKey = Messages.untypedKey()
     deleteKey = Messages.untypedKey()
 
@@ -117,6 +118,11 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
             this.state.onDelete(this.trace)
             this.pop()
         })
+
+        this.onChange(this.queryChangedKey, m => {
+            log.info(`Query changed`, m)
+            this.updateAxisOptions(m.value)
+        })
     }
 
     /**
@@ -140,10 +146,11 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
     renderContent(parent: PartTag): void {
         parent.div(".tt-form.tt-flex.large-gap.column.padded", mainColumn => {
             // query
-            this.fields
-                .compoundField(mainColumn, 'query_id')
-                .label("Query")
-                .select(this.queryOptions)
+            mainColumn.div(".tt-compound-field", field => {
+                field.label().text("Query")
+                this.fields.select(field, 'query_id', this.queryOptions)
+                    .emitChange(this.queryChangedKey)
+            })
 
             // axes
             mainColumn.div('.tt-flex.gap', row => {

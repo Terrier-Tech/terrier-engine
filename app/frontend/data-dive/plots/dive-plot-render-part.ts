@@ -8,6 +8,7 @@ import Arrays from "tuff-core/arrays"
 import {PlotPart} from "tuff-plot/part"
 import DivePlotLayouts from "./dive-plot-layouts"
 import DivePlotTraces from "./dive-plot-traces"
+import DiveEditor from "../dives/dive-editor";
 
 const log = new Logger("DivePlotRenderPart")
 
@@ -27,6 +28,12 @@ export default class DivePlotRenderPart extends TerrierPart<DivePlotRenderState>
     async init() {
 
         this.plotPart = this.makePart(PlotPart, {layout: {}, traces: []})
+
+
+        this.listenMessage(DiveEditor.diveChangedKey, _ => {
+            log.info("Dive changed, reloading plot")
+            this.reload().then()
+        }, {attach: 'passive'})
 
         await this.reload()
     }
