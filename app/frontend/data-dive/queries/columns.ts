@@ -5,7 +5,6 @@ import {Logger} from "tuff-core/logging"
 import Forms, {FormFields, SelectOptions} from "tuff-core/forms"
 import Objects from "tuff-core/objects"
 import {ModalPart} from "../../terrier/modals"
-import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
@@ -13,6 +12,8 @@ import Arrays from "tuff-core/arrays"
 import Dom from "tuff-core/dom"
 import Validation, {ColumnValidationError} from "./validation"
 import Queries, {Query} from "./queries"
+import {TerrierFormFields} from "../../terrier/forms"
+import TerrierPart from "../../terrier/parts/terrier-part"
 
 const log = new Logger("Columns")
 
@@ -134,7 +135,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     addState(col: ColumnRef) {
         this.columnCount += 1
-        this.columnStates.push({schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, ...col})
+        this.columnStates.push({schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col})
     }
 
 
@@ -201,7 +202,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     }
 
     get currentColumnNames(): Set<string> {
-        return new Set(this.columnStates.map(s => s.name))
+        return new Set(this.columnStates.map(s => s.column.name))
     }
 
     renderContent(parent: PartTag): void {
@@ -265,10 +266,11 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         }
     }
 
-    serialize(): ColumnRef[] {
-        return this.columnStates.map(state => {
-            return Objects.omit(state, 'schema', 'columnsEditor', 'id') as ColumnRef
-        })
+    async serialize(): Promise<ColumnRef[]> {
+        const parts = this.getCollectionParts("columns")
+        return await Promise.all(parts.map(async part => {
+            return await (part as ColumnEditor).serialize()
+        }))
     }
 
     /**
@@ -276,7 +278,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
      */
     async validate() {
         // serialize the columns and table settings
-        const columns = this.serialize()
+        const columns = await this.serialize()
         const tableData = await this.tableFields.serialize()
 
         // make a deep copy of the query and update this table's columns and settings
@@ -295,14 +297,14 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
         // copy the column errors over
         for (let i = 0; i < columns.length; i++) {
-            this.columnStates[i].errors = columns[i].errors
+            this.columnStates[i].column.errors = columns[i].errors
         }
 
         this.dirty()
     }
 
     async save() {
-        const columns = this.serialize()
+        const columns = await this.serialize()
         const tableData = await this.tableFields.serialize()
         this.state.tableView.updateColumns(columns, tableData.prefix)
         this.emitMessage(DiveEditor.diveChangedKey, {})
@@ -311,28 +313,32 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
 }
 
-type ColumnState = ColumnRef & {
+type ColumnState = {
     schema: SchemaDef
     columnsEditor: ColumnsEditorModal
     id: string
+    column: ColumnRef
 }
 
 /**
  * An editor row for an individual column.
  */
-class ColumnEditor extends TerrierFormPart<ColumnState> {
+class ColumnEditor extends TerrierPart<ColumnState> {
 
     schema!: SchemaDef
     modelDef!: ModelDef
+    columnRef!: ColumnRef
     columnDef!: ColumnDef
+    fields!: TerrierFormFields<ColumnRef>
 
     functionOptions!: SelectOptions
 
     async init() {
         this.schema = this.state.schema
         this.modelDef = this.state.columnsEditor.modelDef
-        this.columnDef = this.modelDef.columns[this.state.name]
-        log.info(`Column ${this.state.name} definition:`, this.columnDef)
+        this.columnRef = this.state.column
+        this.columnDef = this.modelDef.columns[this.columnRef.name]
+        this.fields = new TerrierFormFields(this, this.columnRef)
 
         let funcs = Array.from<string>(AggFunctions)
         if (this.columnDef.type == 'date' || this.columnDef.type.includes('time')) {
@@ -342,23 +348,23 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
     }
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-editor-row'])
+        return super.parentClasses.concat(['dd-editor-row', 'tt-form'])
     }
 
     render(parent: PartTag) {
         parent.div('.name', col => {
-            col.div('.tt-readonly-field', {text: this.state.name})
+            col.div('.tt-readonly-field', {text: this.columnRef.name})
         })
         parent.div('.alias', col => {
-            this.textInput(col, "alias", {placeholder: "Alias"})
+            this.fields.textInput(col, "alias", {placeholder: "Alias"})
                 .emitChange(valueChangedKey)
         })
         parent.div('.function', col => {
-            this.select(col, "function", this.functionOptions)
+            this.fields.select(col, "function", this.functionOptions)
                 .emitChange(valueChangedKey)
         })
         parent.div('.group-by', col => {
-            this.checkbox(col, "grouped")
+            this.fields.checkbox(col, "grouped")
                 .emitChange(valueChangedKey)
         })
         parent.div('.actions', actions => {
@@ -366,11 +372,15 @@ class ColumnEditor extends TerrierFormPart<ColumnState> {
                 a.i('.glyp-close')
             }).emitClick(removeKey, {id: this.state.id})
         })
-        if (this.state.errors?.length) {
-            for (const error of this.state.errors) {
+        if (this.columnRef.errors?.length) {
+            for (const error of this.columnRef.errors) {
                 parent.div('.error.tt-bubble.alert').text(error.message)
             }
         }
+    }
+
+    async serialize() {
+        return await this.fields.serialize()
     }
     
 }
