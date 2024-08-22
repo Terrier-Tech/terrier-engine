@@ -230,7 +230,7 @@ class ColumnRef < QueryModel
 end
 
 class Filter < QueryModel
-  attr_accessor :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
+  attr_accessor :id, :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
 
   # computed
   attr_reader :input_key, :input_value

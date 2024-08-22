@@ -1,12 +1,10 @@
-import {Part, PartTag} from "tuff-core/parts"
+import {PartTag} from "tuff-core/parts"
 import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import {TableRef, TableView} from "./tables"
 import {Logger} from "tuff-core/logging"
-import Objects from "tuff-core/objects"
 import * as inflection from "inflection"
 import {ModalPart} from "../../terrier/modals"
-import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import {Dropdown} from "../../terrier/dropdowns"
 import dayjs from "dayjs"
 import Format from "../../terrier/format"
@@ -14,6 +12,9 @@ import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import {SelectOptions} from "tuff-core/forms"
+import {TerrierFormFields} from "../../terrier/forms"
+import TerrierPart from "../../terrier/parts/terrier-part"
+import Ids from "../../terrier/ids"
 
 const log = new Logger("Filters")
 
@@ -22,6 +23,7 @@ const log = new Logger("Filters")
 ////////////////////////////////////////////////////////////////////////////////
 
 type BaseFilter = {
+    id: string
     filter_type: string
     column: string
     editable?: 'optional' | 'required'
@@ -77,7 +79,7 @@ export type InclusionFilter = BaseFilter & {
 }
 
 // currently not implemented, but it would be neat
-export type OrFilter = {
+export type OrFilter = BaseFilter & {
     column: 'or'
     filter_type: 'or'
     where: Filter[]
@@ -85,7 +87,7 @@ export type OrFilter = {
 
 export type Filter = DirectFilter | DateRangeFilter | InclusionFilter | OrFilter
 
-type FilterType = Filter['filter_type']
+// export type FilterType = Filter['filter_type']
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -160,19 +162,19 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 
     modelDef!: ModelDef
     table!: TableRef
-    filterStates: FilterState[] = []
+    editorStates: EditorState[] = []
     filterCount = 0
 
     updateFilterEditors() {
-        this.assignCollection('filters', FilterEditorContainer, this.filterStates)
+        this.assignCollection('filters', FilterEditorContainer, this.editorStates)
     }
 
     addState(filter: Filter) {
         this.filterCount += 1
-        this.filterStates.push({
+        this.editorStates.push({
             schema: this.state.schema,
-            filtersEditor: this,
-            id: `filter-${this.filterCount}`, ...filter
+            modelDef: this.modelDef,
+            filter: filter
         })
     }
 
@@ -229,10 +231,10 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
     }
 
     removeFilter(id: string) {
-        const filter = Arrays.find(this.filterStates, f => f.id == id)
+        const filter = Arrays.find(this.editorStates, f => f.filter.id == id)
         if (filter) {
             log.info(`Removing filter ${id}`, filter)
-            this.filterStates = Arrays.without(this.filterStates, filter)
+            this.editorStates = Arrays.without(this.editorStates, filter)
             this.updateFilterEditors()
         }
     }
@@ -250,15 +252,16 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
         super.update(elem)
 
         // if there are no filters, show the dropdown right away
-        if (this.filterStates.length == 0) {
+        if (this.editorStates.length == 0) {
             this.showAddFilterDropdown(null)
         }
     }
 
-    save() {
-        const filters = this.filterStates.map(state => {
-            return Objects.omit(state, 'schema', 'filtersEditor', 'id') as Filter
-        })
+    async save() {
+        const editors = this.getCollectionParts('filters') as FilterEditorContainer[]
+        const filters = await Promise.all(editors.map(async editor => {
+            return await editor.serialize()
+        }))
         this.state.tableView.updateFilters(filters)
         this.emitMessage(DiveEditor.diveChangedKey, {})
         this.pop()
@@ -271,64 +274,33 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 // Base Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-type BaseFilterState<T extends BaseFilter> = T & {
+type EditorState = {
     schema: SchemaDef
-    filtersEditor: FiltersEditorModal
-    id: string
-}
-
-type FilterState = BaseFilterState<Filter>
-
-/**
- * Base class for editors for specific filter types.
- */
-abstract class FilterEditor<T extends BaseFilter> extends TerrierFormPart<BaseFilterState<T>> {
-
-    modelDef!: ModelDef
-    columnDef?: ColumnDef
-
-    async init() {
-        this.modelDef = this.state.filtersEditor.modelDef
-        this.columnDef = this.modelDef.columns[this.state.column]
-    }
-
-    get parentClasses(): Array<string> {
-        return super.parentClasses.concat(['dd-editor-row'])
-    }
-
-    renderActions(row: PartTag) {
-        row.div('.actions', actions => {
-            actions.a(a => {
-                a.i('.glyp-close')
-            }).emitClick(removeKey, {id: this.state.id})
-        })
-    }
+    modelDef: ModelDef
+    filter: Filter
 }
 
 /**
- * Contains a concrete instance of FilterEditor for the specific type of filter.
+ * Contains a concrete instance of FilterFields for the specific type of filter.
  */
-class FilterEditorContainer extends Part<FilterState> {
+class FilterEditorContainer extends TerrierPart<EditorState> {
 
-    editor?: FilterEditor<any>
+    fields?: FilterFields<any>
 
     async init() {
-        this.makeEditor(this.state.filter_type)
+        this.makeFields(this.state.filter)
     }
 
-    makeEditor(filterType: FilterType) {
-        if (this.editor) {
-            this.removeChild(this.editor)
-        }
-        switch (filterType) {
+    makeFields(filter: Filter) {
+        switch (filter.filter_type) {
             case 'direct':
-                this.editor = this.makePart(DirectFilterEditor, this.state as BaseFilterState<DirectFilter>)
+                this.fields = new DirectFilterEditor(this, filter as DirectFilter)
                 break
             case 'inclusion':
-                this.editor = this.makePart(InclusionFilterEditor, this.state as BaseFilterState<InclusionFilter>)
+                this.fields = new InclusionFilterEditor(this, filter as InclusionFilter)
                 break
             case 'date_range':
-                this.editor = this.makePart(DateRangeFilterEditor, this.state as BaseFilterState<DateRangeFilter>)
+                this.fields = new DateRangeFilterEditor(this, filter as DateRangeFilter)
                 break
         }
     }
@@ -338,68 +310,103 @@ class FilterEditorContainer extends Part<FilterState> {
      * in which case we need a new editor since it's dependent on the filter type.
      * @param state
      */
-    assignState(state: FilterState): boolean {
+    assignState(state: EditorState): boolean {
         const changed = super.assignState(state)
         if (changed) {
-            this.makeEditor(this.state.filter_type)
+            this.makeFields(this.state.filter)
         }
         return changed
     }
 
+    get parentClasses(): Array<string> {
+        return super.parentClasses.concat(['dd-editor-row', 'tt-form'])
+    }
+
     render(parent: PartTag) {
-        if (this.editor) {
-            parent.part(this.editor)
+        if (this.fields) {
+            this.fields.render(parent)
         }
         else {
-            parent.div('.tt-bubble.alert', {text: `Unknown filter type '${this.state.filter_type}'`})
+            parent.div('.tt-bubble.alert', {text: `Unknown filter type '${this.state.filter.filter_type}'`})
         }
     }
 
+    async serialize(): Promise<Filter> {
+        return await this.fields!.serialize()
+    }
+
 }
+
+/**
+ * Base class for fields for specific filter types.
+ */
+abstract class FilterFields<F extends BaseFilter> extends TerrierFormFields<F> {
+
+    modelDef!: ModelDef
+    columnDef?: ColumnDef
+
+    protected constructor(readonly container: FilterEditorContainer, filter: F) {
+        super(container, filter)
+        this.modelDef = container.state.modelDef
+        this.columnDef = this.modelDef.columns[this.data.column]
+    }
+
+    abstract render(parent: PartTag): void
+
+    renderActions(row: PartTag) {
+        row.div('.actions', actions => {
+            actions.a(a => {
+                a.i('.glyp-close')
+            }).emitClick(removeKey, {id: this.data.id})
+        })
+    }
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Direct Editor
 ////////////////////////////////////////////////////////////////////////////////
 
-class DirectFilterEditor extends FilterEditor<DirectFilter> {
+class DirectFilterEditor extends FilterFields<DirectFilter> {
 
     numericChangeKey = Messages.untypedKey()
 
-    async init() {
-        await super.init()
+    constructor(container: FilterEditorContainer, filter: DirectFilter) {
+        super(container, filter)
 
         if (this.columnDef?.type == 'cents') {
-            this.state.column_type = 'cents'
-            this.state.numeric_value = parseInt(this.state.value) / 100
+            this.data.column_type = 'cents'
+            this.data.numeric_value = parseInt(this.data.value) / 100
         }
         else if (this.columnDef?.type == 'number') {
-            this.state.column_type = 'number'
-            this.state.numeric_value = parseFloat(this.state.value)
+            this.data.column_type = 'number'
+            this.data.numeric_value = parseFloat(this.data.value)
         }
+        log.info(`Direct filter for ${this.columnDef?.name} initialized`, this.data)
 
         // for numeric types, we use a number input and translate the
         // value back to the string value field whenever it changes
-        this.onChange(this.numericChangeKey, m => {
-            log.info(`Direct filter for ${this.columnDef?.name} numeric value changed to ${m.value}`)
-            if (this.state.column_type == 'cents') {
-                this.state.value = Math.round(parseFloat(m.value)*100).toString()
+        this.part.onChange(this.numericChangeKey, m => {
+            if (this.data.column_type == 'cents') {
+                this.data.value = Math.round(parseFloat(m.value)*100).toString()
             }
             else {
-                this.state.value = m.value
+                this.data.value = m.value
             }
+            log.info(`Direct filter for ${this.columnDef?.name} numeric value changed to ${m.value}`, this.data)
         })
     }
 
     render(parent: PartTag) {
         parent.div('.column', col => {
-            col.div('.tt-readonly-field', {text: this.state.column})
+            col.div('.tt-readonly-field', {text: this.data.column})
         })
         parent.div('.operator', col => {
             const opts = operatorOptions(this.columnDef?.type || 'text')
             this.select(col, 'operator', opts)
         })
         parent.div('.filter', col => {
-            switch (this.state.column_type) {
+            switch (this.data.column_type) {
                 case 'cents':
                     col.div('.tt-compound-field', field => {
                         field.label().text('$')
@@ -418,6 +425,19 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
         this.renderActions(parent)
     }
 
+    async serialize() {
+        const data = await super.serialize()
+        if (data.numeric_value != null) {
+            if (this.data.column_type == 'cents') {
+                data.value = Math.round(data.numeric_value * 100).toString()
+            } else {
+                data.value = data.numeric_value.toString()
+            }
+        }
+        log.info(`Direct filter for ${this.columnDef?.name} serialized`, data)
+        return data
+    }
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -426,15 +446,15 @@ class DirectFilterEditor extends FilterEditor<DirectFilter> {
 
 const inclusionChangedKey = Messages.typedKey<{value: string}>()
 
-class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
+class InclusionFilterEditor extends FilterFields<InclusionFilter> {
 
     values!: Set<string>
 
-    async init() {
-        await super.init()
+    constructor(container: FilterEditorContainer, filter: InclusionFilter) {
+        super(container, filter)
 
-        this.values = new Set(this.state.in || [])
-        this.onChange(inclusionChangedKey, m => {
+        this.values = new Set(this.data.in || [])
+        this.part.onChange(inclusionChangedKey, m => {
             const val = m.data.value
             const checked = (m.event.target as HTMLInputElement).checked
             log.info(`${val} checkbox changed to ${checked}`)
@@ -444,13 +464,13 @@ class InclusionFilterEditor extends FilterEditor<InclusionFilter> {
             else {
                 this.values.delete(val)
             }
-            this.state.in = Array.from(this.values)
+            this.data.in = Array.from(this.values)
         })
     }
 
     render(parent: PartTag) {
         parent.div('.column', col => {
-            col.div('.tt-readonly-field', {text: this.state.column})
+            col.div('.tt-readonly-field', {text: this.data.column})
         })
         parent.div('.operator', col => {
             col.span().text("In")
@@ -485,42 +505,44 @@ const dateRangeRelativeChangedKey = Messages.untypedKey()
 const dateRangePeriodChangedKey = Messages.typedKey<{period: string}>()
 const dateRangePreselectKey = Messages.typedKey<VirtualDateRange>()
 
-class DateRangeFilterEditor extends FilterEditor<DateRangeFilter> {
+class DateRangeFilterEditor extends FilterFields<DateRangeFilter> {
 
     range!: VirtualDateRange
 
-    async init() {
+    constructor(container: FilterEditorContainer, filter: DateRangeFilter) {
+        super(container, filter)
+
         // assume it's a virtual range for the sake of editing it
-        if ('period' in this.state.range) {
-            this.range = this.state.range
+        if ('period' in this.data.range) {
+            this.range = this.data.range
         }
         else {
             // make up a new range
             this.range = {period: 'day', relative: -1}
-            this.state.range = this.range
+            this.data.range = this.range
         }
 
-        this.onChange(dateRangeRelativeChangedKey, m => {
+        this.part.onChange(dateRangeRelativeChangedKey, m => {
             this.range.relative = parseFloat(m.value)
-            this.dirty()
+            this.part.dirty()
         })
 
-        this.onChange(dateRangePeriodChangedKey, m => {
+        this.part.onChange(dateRangePeriodChangedKey, m => {
             log.info(`Date range period ${m.data.period} changed to ${m.value}`)
             this.range.period = m.data.period as VirtualDatePeriod
-            this.dirty()
+            this.part.dirty()
         })
 
-        this.onClick(dateRangePreselectKey, m => {
+        this.part.onClick(dateRangePreselectKey, m => {
             this.range = m.data
-            this.state.range = this.range
-            this.dirty()
+            this.data.range = this.range
+            this.part.dirty()
         })
     }
 
     render(parent: PartTag) {
         parent.div('.column', col => {
-            col.div('.tt-readonly-field', {text: this.state.column})
+            col.div('.tt-readonly-field', {text: this.data.column})
         })
         parent.div('.operator', col => {
             col.span().text("Range")
@@ -598,16 +620,17 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
             const colDef = this.state.modelDef.columns[column]
             if (colDef) {
                 this.clear()
+                const id = Ids.makeUuid()
                 switch (colDef.type) {
                     case 'enum':
                         const vals = colDef.possible_values || []
-                        return this.state.callback({filter_type: 'inclusion', column, in: vals})
+                        return this.state.callback({id, filter_type: 'inclusion', column, in: vals})
                     case 'date':
                     case 'datetime':
-                        return this.state.callback({filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
+                        return this.state.callback({id, filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
                     default: // direct
                         const colType = colDef.type == 'number' || colDef.type == 'cents' ? colDef.type : 'text'
-                        return this.state.callback({filter_type: 'direct', column, column_type: colType, operator: 'eq', value: ''})
+                        return this.state.callback({id, filter_type: 'direct', column, column_type: colType, operator: 'eq', value: '0'})
                 }
             }
             else {
