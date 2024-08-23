@@ -37,12 +37,12 @@ class QueryEngineTest < ActiveSupport::TestCase
     engine = DataDive::QueryEngine.new(query)
 
     # show that we can override filter values explicitly through the params
-    builder = engine.to_sql_builder({'WorkOrder.time#range' => '2022'})
+    builder = engine.to_sql_builder({'date_range_1' => '2022'})
     assert_includes builder.clauses, "work_order.time >= '2022-01-01'"
     assert_includes builder.clauses, "work_order.time < '2023-01-01'"
 
     # explicit date ranges have an explicit max, so this is equivalent to a '2022-04-01'
-    builder = engine.to_sql_builder({ 'WorkOrder.time#range' => '2022-04-01:2022-04-02' })
+    builder = engine.to_sql_builder({ 'date_range_1' => '2022-04-01:2022-04-02' })
     assert_includes builder.clauses, "work_order.time >= '2022-04-01'"
     assert_includes builder.clauses, "work_order.time < '2022-04-02'"
   end

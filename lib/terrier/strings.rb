@@ -122,7 +122,12 @@ class String
     "data:#{mime_type};base64,#{base64_data}"
   end
 
+
+  def self.random_string(len)
+    rand(36 ** len).to_s(36)
+  end
 end
+
 
 class Integer
 

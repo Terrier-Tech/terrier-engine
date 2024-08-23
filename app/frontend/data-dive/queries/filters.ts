@@ -688,6 +688,9 @@ export type FilterInput = Filter & {
  * @param filter
  */
 function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
+    if (!filter.id?.length) {
+        filter.id = Ids.makeRandom(8)
+    }
     const key = `${table.model}.${filter.column}`
     const filterInput: FilterInput = {input_key: key,...filter, input_value: ''}
     switch (filter.filter_type) {

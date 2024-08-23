@@ -160,6 +160,7 @@ module TestDive
         ],
         filters: [
           {
+            id: 'date_range_1',
             filter_type: "date_range",
             column: 'time',
             range: {

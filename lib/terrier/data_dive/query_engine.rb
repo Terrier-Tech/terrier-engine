@@ -274,23 +274,24 @@ class Filter < QueryModel
   def build(builder, table, params={})
     # possibly override the value from the params
     @input_key = compute_input_key table
-    @input_value = params[input_key]
+    @id ||= String.random_string 8
+    @input_value = params[@id]
 
     case @filter_type
     when 'direct'
       op = sql_operator
       val = @input_value.presence || @value
-      params[@input_key] = val
+      params[@id] = val
       builder.where "#{table.alias}.#{@column} #{op} ?", val
     when 'date_range'
       period = DatePeriod.parse(@input_value.presence || @range)
-      params[@input_key] = period.to_s
+      params[@id] = period.to_s
       builder.where "#{table.alias}.#{@column} >= ?", period.start_date
       builder.where "#{table.alias}.#{@column} < ?", period.end_date
     when 'inclusion'
       val = @input_value.presence || @in
       val = val.split(',').map(&:strip) if val.is_a?(String)
-      params[@input_key] = val.join(', ')
+      params[@id] = val.join(', ')
       builder.where "#{table.alias}.#{@column} in ?", val
     else
       raise "Unknown filter type '#{@filter_type}'"
