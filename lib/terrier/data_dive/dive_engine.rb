@@ -53,7 +53,10 @@ class DataDive::DiveEngine
         info "Executed '#{query['name']}' in #{dt_exec.to_ms}ms"
 
         # collect the filters for output
-        actual_filters += qe.filters
+        actual_filters += qe.filters.map do |filter|
+          filter.query = qe.query
+          filter
+        end
 
         # format the output using the column metadata
         t = Time.now
@@ -98,7 +101,7 @@ class DataDive::DiveEngine
       col_type = filter.column_type
       val = format_value val, col_type
       info "Computed #{filter.input_name} value: #{val} (#{col_type})"
-      computed_inputs << { name: filter.input_name, value: val }
+      computed_inputs << {query: filter.query&.name, name: filter.input_name, value: val }
     end
     data['Inputs'] = computed_inputs
 

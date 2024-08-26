@@ -22,6 +22,7 @@ class TableRef < QueryModel
   # used by the runner
   attr_accessor :table_name, :alias, :model_class
 
+  # @param engine [QueryEngine]
   # @param attrs [Hash]
   def initialize(engine, attrs)
     super
@@ -230,7 +231,7 @@ class ColumnRef < QueryModel
 end
 
 class Filter < QueryModel
-  attr_accessor :id, :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
+  attr_accessor :id, :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label, :query
 
   # computed
   attr_reader :input_name, :input_value

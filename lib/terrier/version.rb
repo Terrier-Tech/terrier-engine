@@ -1,3 +1,3 @@
 module Terrier
-  VERSION = '4.34.1'
+  VERSION = '4.35.0'
 end
