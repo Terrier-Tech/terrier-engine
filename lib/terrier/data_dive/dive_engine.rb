@@ -30,8 +30,8 @@ class DataDive::DiveEngine
     # copy the filter input values into the params
     filters = input_data['filters'] || []
     filters.each do |filter|
-      info "Using filter input #{filter['input_key']} = #{filter['input_value']}"
-      params[filter['input_key']] = filter['input_value']
+      info "Using filter input #{filter['id']} = #{filter['input_value']}"
+      params[filter['id']] = filter['input_value']
     end
     actual_filters = []
 
@@ -94,11 +94,11 @@ class DataDive::DiveEngine
     # get the computed filter inputs back from the params
     computed_inputs = []
     actual_filters.each do |filter|
-      val = params[filter.input_key]
+      val = params[filter.id]
       col_type = filter.column_type
       val = format_value val, col_type
-      info "Computed #{filter.input_key} value: #{val} (#{col_type})"
-      computed_inputs << { key: filter.input_key, value: val }
+      info "Computed #{filter.input_name} value: #{val} (#{col_type})"
+      computed_inputs << { name: filter.input_name, value: val }
     end
     data['Inputs'] = computed_inputs
 

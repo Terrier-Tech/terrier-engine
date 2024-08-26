@@ -233,21 +233,22 @@ class Filter < QueryModel
   attr_accessor :id, :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable, :edit_label
 
   # computed
-  attr_reader :input_key, :input_value
+  attr_reader :input_name, :input_value
 
   # this should match the implementation of `Filters.toInput` on the frontend
-  def compute_input_key(table)
+  def compute_input_name(table)
     key = "#{table.model}.#{@column}"
-    case @filter_type
-    when 'inclusion'
-      "#{key}#in"
-    when 'date_range'
-      "#{key}#range"
-    when 'direct'
-      "#{key}##{@operator}"
-    else
-      raise "Don't know how to compute an input_key for a #{@filter_type} filter"
-    end
+    key = case @filter_type
+          when 'inclusion'
+            "#{key} in"
+          when 'date_range'
+            "#{key} range"
+          when 'direct'
+            "#{key} #{@operator}"
+          else
+            raise "Don't know how to compute an input_name for a #{@filter_type} filter"
+          end
+    "#{key}"
   end
 
   def sql_operator
@@ -273,7 +274,7 @@ class Filter < QueryModel
 
   def build(builder, table, params={})
     # possibly override the value from the params
-    @input_key = compute_input_key table
+    @input_name = compute_input_name table
     @id ||= String.random_string 8
     @input_value = params[@id]
 

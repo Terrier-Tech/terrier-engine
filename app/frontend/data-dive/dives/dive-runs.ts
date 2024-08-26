@@ -63,7 +63,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     logList!: LogListPart
 
     startKey = Messages.untypedKey()
-    pickDateKey = Messages.typedKey<{ input_key: string }>()
+    pickDateKey = Messages.typedKey<{ id: string }>()
 
     async init() {
         this.setTitle("Run Dive")
@@ -97,15 +97,15 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
         this.onClick(this.pickDateKey, m => {
             const initialRange = {
-                min: this.inputFields.data[`${m.data.input_key}-min`] as DateLiteral,
-                max: dayjs(this.inputFields.data[`${m.data.input_key}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
+                min: this.inputFields.data[`${m.data.id}-min`] as DateLiteral,
+                max: dayjs(this.inputFields.data[`${m.data.id}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
             } as LiteralDateRange
             this.toggleDropdown(DatePeriodPickerPart, {
                 initial: initialRange,
                 callback: (newRange: LiteralDateRange) => {
-                    log.info(`Picked date range for ${m.data.input_key}`, newRange)
-                    this.inputFields.data[`${m.data.input_key}-min`] = newRange.min
-                    this.inputFields.data[`${m.data.input_key}-max`] = dayjs(newRange.max).subtract(1, 'day').format(Dates.literalFormat)
+                    log.info(`Picked date range for ${m.data.id}`, newRange)
+                    this.inputFields.data[`${m.data.id}-min`] = newRange.min
+                    this.inputFields.data[`${m.data.id}-max`] = dayjs(newRange.max).subtract(1, 'day').format(Dates.literalFormat)
                     this.dirty()
                 }} as DatePeriodPickerState,
                 m.event.target
@@ -258,8 +258,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
 
     renderInput(parent: HtmlParentTag, filter: FilterInput) {
         parent.div('.dd-dive-run-input', col => {
-            // don't show anything after the # and replace periods with spaces
-            const title = inflection.titleize(filter.input_key.split('#')[0].split('.').join(' '))
+            const title = filter.input_name.split(' ')[0].replaceAll('.', ' ') // we don't need the operator
             col.label('.caption-size').text(title)
             switch (filter.filter_type) {
                 case 'direct':
@@ -280,26 +279,26 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             switch (filter.column_type) {
                 case 'cents':
                     field.label().text('$')
-                    this.inputFields.numberInput(field, filter.input_key)
+                    this.inputFields.numberInput(field, filter.id)
                     break
                 case 'number':
-                    this.inputFields.numberInput(field, filter.input_key)
+                    this.inputFields.numberInput(field, filter.id)
                     break
                 default:
-                    this.inputFields.textInput(field, filter.input_key)
+                    this.inputFields.textInput(field, filter.id)
             }
         })
     }
 
     renderDateRangeInput(parent: HtmlParentTag, filter: DateRangeFilter & FilterInput) {
         parent.div('.tt-compound-field', field => {
-            this.inputFields.dateInput(field, `${filter.input_key}-min`)
+            this.inputFields.dateInput(field, `${filter.id}-min`)
             field.label().text('→')
-            this.inputFields.dateInput(field, `${filter.input_key}-max`)
+            this.inputFields.dateInput(field, `${filter.id}-max`)
             field.a('.icon-only', {title: "Pick a common date range"}, a => {
                 a.i('.glyp-pick_date')
             })
-            .emitClick(this.pickDateKey, {input_key: filter.input_key})
+            .emitClick(this.pickDateKey, {id: filter.id})
 
         })
     }
@@ -308,7 +307,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
         parent.div('.inclusion-radios', container => {
             for (const possible of filter.possible_values || []) {
                 container.label('.body-size', label => {
-                    this.inputFields.checkbox(label, `${filter.input_key}-${possible}`)
+                    this.inputFields.checkbox(label, `${filter.id}-${possible}`)
                     label.span().text(inflection.titleize(possible))
                 })
             }

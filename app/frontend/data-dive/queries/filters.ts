@@ -676,7 +676,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 ////////////////////////////////////////////////////////////////////////////////
 
 export type FilterInput = Filter & {
-    input_key: string
+    input_name: string
     input_value: string
     possible_values?: string[]
 }
@@ -691,20 +691,20 @@ function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInpu
     if (!filter.id?.length) {
         filter.id = Ids.makeRandom(8)
     }
-    const key = `${table.model}.${filter.column}`
-    const filterInput: FilterInput = {input_key: key,...filter, input_value: ''}
+    const name = `${table.model}.${filter.column}`
+    const filterInput: FilterInput = {...filter, input_name: name, input_value: ''}
     switch (filter.filter_type) {
         case 'inclusion':
             const modelDef = schema.models[table.model]
             const columnDef = modelDef.columns[filter.column]
             filterInput.possible_values = columnDef.possible_values
-            filterInput.input_key = `${filterInput.input_key}#in`
+            filterInput.input_name = `${filterInput.input_name} in`
             break
         case 'date_range':
-            filterInput.input_key = `${filterInput.input_key}#range`
+            filterInput.input_name = `${filterInput.input_name} range`
             break
         case 'direct':
-            filterInput.input_key = `${filterInput.input_key}#${filter.operator}`
+            filterInput.input_name = `${filterInput.input_name} ${filter.operator}`
             break
     }
     return filterInput
@@ -721,21 +721,21 @@ function populateRawInputData(filters: FilterInput[]): Record<string,string> {
         switch (filter.filter_type) {
             case 'date_range':
                 const range = Dates.materializeVirtualRange(filter.range)
-                data[`${filter.input_key}-min`] = range.min
-                data[`${filter.input_key}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
+                data[`${filter.id}-min`] = range.min
+                data[`${filter.id}-max`] = dayjs(range.max).subtract(1, 'day').format(Dates.literalFormat)
                 break
             case 'direct':
                 switch (filter.column_type) {
                     case 'cents':
-                        data[filter.input_key] = (parseInt(filter.value)/100).toString()
+                        data[filter.id] = (parseInt(filter.value)/100).toString()
                         break
                     default:
-                        data[filter.input_key] = filter.value
+                        data[filter.id] = filter.value
                 }
                 break
             case 'inclusion':
                 for (const value of filter.in) {
-                    data[`${filter.input_key}-${value}`] = 'true'
+                    data[`${filter.id}-${value}`] = 'true'
                 }
                 break
             default:
@@ -756,8 +756,8 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
         switch (filter.filter_type) {
             case 'date_range':
                 const range = {
-                    min: data[`${filter.input_key}-min`] as DateLiteral,
-                    max: dayjs(data[`${filter.input_key}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
+                    min: data[`${filter.id}-min`] as DateLiteral,
+                    max: dayjs(data[`${filter.id}-max`]).add(1, 'day').format(Dates.literalFormat) as DateLiteral
                 }
                 const period = Dates.serializePeriod(range)
                 filter.input_value = period
@@ -765,17 +765,17 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
             case 'direct':
                 switch (filter.column_type) {
                     case 'cents':
-                        const dollars = data[filter.input_key]
+                        const dollars = data[filter.id]
                         filter.input_value = Math.round(parseFloat(dollars)*100).toString()
                         break
                     default:
-                        filter.input_value = data[filter.input_key]
+                        filter.input_value = data[filter.id]
                 }
                 break
             case 'inclusion':
                 const values: string[] = []
                 for (const value of filter.possible_values || []) {
-                    if (data[`${filter.input_key}-${value}`]) {
+                    if (data[`${filter.id}-${value}`]) {
                         values.push(value)
                     }
                 }
