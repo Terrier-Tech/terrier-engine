@@ -462,6 +462,7 @@ table.dd-query-result {
 .dive-column-sort-zone {
 	display: flex;
 	flex: 1 1 auto;
+	flex-wrap: wrap;
 	gap: 1em;
 	padding: 1em;
 	@include tt-inset-box;
