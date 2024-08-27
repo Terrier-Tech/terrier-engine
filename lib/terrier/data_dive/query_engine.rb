@@ -268,6 +268,10 @@ class Filter < QueryModel
       '<='
     when 'ilike'
       'ilike'
+    when 'contains'
+      '@>'
+    when 'excludes'
+      '@>'
     else
       raise "Unknown operator '#{@operator}'"
     end
@@ -284,7 +288,16 @@ class Filter < QueryModel
       op = sql_operator
       val = @input_value.presence || @value
       params[@id] = val
-      builder.where "#{table.alias}.#{@column} #{op} ?", val
+      if op == '@>' # an array filter
+        val ||= ''
+        val = val.split(',').map(&:strip) if val.is_a?(String)
+        val = val.to_postgres_array_literal
+      end
+      clause = "#{table.alias}.#{@column} #{op} ?"
+      if @operator == 'excludes'
+        clause = "not (#{clause})"
+      end
+      builder.where clause, val
     when 'date_range'
       period = DatePeriod.parse(@input_value.presence || @range)
       params[@id] = period.to_s

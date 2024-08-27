@@ -30,19 +30,25 @@ type BaseFilter = {
     edit_label?: string
 }
 
-const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte'] as const
+const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'contains', 'excludes'] as const
 export type DirectOperator = typeof directOperators[number]
 
 /**
  * Computes the operator options for the given column type.
  * @param type
  */
-function operatorOptions(type: string): SelectOptions {
+function operatorOptions(colDef?: ColumnDef): SelectOptions {
+    const type = colDef?.type || 'text'
     let operators: DirectOperator[] = ['eq', 'ne'] // equality is the only thing we can assume for any type
     switch (type) {
         case 'text':
         case 'string':
-            operators = ['eq', 'ne', 'ilike']
+            if (colDef?.array) {
+                operators = ['contains', 'excludes']
+            }
+            else {
+                operators = ['eq', 'ne', 'ilike']
+            }
             break
         case 'float':
         case 'integer':
@@ -111,7 +117,7 @@ function operatorDisplay(op: DirectOperator): string {
         case 'gte':
             return '≥'
         default:
-            return '?'
+            return op
     }
 }
 
@@ -402,7 +408,7 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
             col.div('.tt-readonly-field', {text: this.data.column})
         })
         parent.div('.operator', col => {
-            const opts = operatorOptions(this.columnDef?.type || 'text')
+            const opts = operatorOptions(this.columnDef)
             this.select(col, 'operator', opts)
         })
         parent.div('.filter', col => {
@@ -630,7 +636,8 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
                         return this.state.callback({id, filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
                     default: // direct
                         const colType = colDef.type == 'number' || colDef.type == 'cents' ? colDef.type : 'text'
-                        return this.state.callback({id, filter_type: 'direct', column, column_type: colType, operator: 'eq', value: '0'})
+                        const defaultValue = colType == 'text' ? '' : '0'
+                        return this.state.callback({id, filter_type: 'direct', column, column_type: colType, operator: 'eq', value: defaultValue})
                 }
             }
             else {

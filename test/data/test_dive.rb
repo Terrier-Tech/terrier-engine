@@ -49,7 +49,7 @@ module TestDive
           {
             filter_type: 'inclusion',
             column: 'status',
-            in: ['active', 'complete']
+            in: %w[active complete]
           }
         ],
         joins: {
@@ -138,7 +138,7 @@ module TestDive
     {
       id: 'order_summary',
       name: 'Order Summary',
-      columns: ["location_number", "status", "month", "count", "user_name"],
+      columns: %w[location_number status month count user_name],
       from: {
         model: 'WorkOrder',
         columns: [
@@ -201,6 +201,38 @@ module TestDive
             ]
           }
         }
+      }
+    }
+  end
+
+  def self.employees
+    {
+      id: 'employees',
+      name: 'Employees',
+      from: {
+        model: 'User',
+        columns: [
+          {
+            name: 'id'
+          },
+          {
+            name: 'email'
+          },
+          {
+            name: 'role'
+          },
+          {
+            name: 'tags'
+          }
+        ],
+        filters: [
+          {
+            id: 'tags_1',
+            filter_type: 'direct',
+            column: 'tags',
+            operator: 'contains'
+          }
+        ]
       }
     }
   end

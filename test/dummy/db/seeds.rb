@@ -52,8 +52,8 @@ user_map = User.all.to_a.index_by &:extern_id
   user.email ||= Faker::Internet.email(name: user.full_name)
   fake_address user
   user.role ||= User.possible_role_values.sample
-  unless user.role == 'customer'
-    user.tags ||= [Faker::Job.position, Faker::Job.seniority]
+  unless user.role == 'customer' or user.tags.present?
+    user.tags = [Faker::Job.position, Faker::Job.seniority]
   end
   ap user
   user.save_if_needed! change_user

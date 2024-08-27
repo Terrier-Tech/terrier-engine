@@ -60,12 +60,26 @@ class QueryEngineTest < ActiveSupport::TestCase
 
   test 'column types' do
     query = TestDive.order_details
-    engine = DataDive::QueryEngine.new(query)
+    engine = DataDive::QueryEngine.new query
 
     columns = engine.compute_column_metadata
     assert_equal 12, columns.size
 
     assert_equal 'cents', columns['Order Price'].type
+  end
+
+
+  test 'array filters' do
+    query = TestDive.employees
+    engine = DataDive::QueryEngine.new query
+    res = engine.validate
+    assert_nil res[:error]
+
+    # contains filters treat comma-separated strings as arrays and test their inclusion in the given column
+    builder = engine.to_sql_builder({'tags_1' => 'Dynamic'})
+    assert_includes builder.clauses, "u.tags @> '{\"Dynamic\"}'"
+    builder = engine.to_sql_builder({'tags_1' => 'Dynamic, Engineer'})
+    assert_includes builder.clauses, "u.tags @> '{\"Dynamic\", \"Engineer\"}'"
   end
 
 
