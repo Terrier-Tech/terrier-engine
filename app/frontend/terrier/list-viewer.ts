@@ -87,12 +87,11 @@ export class ListViewerDetailsContext<T extends ListItem> {
      * @param state
      */
     makePart<PartType extends Part<StateType>, StateType>(partType: PartConstructor<PartType, StateType>, state: StateType) {
-        if (this.viewer.layout == 'side') {
-            this.part = this.viewer.sideContainerPart.makePart(partType, state)
-        }
-        else {
-            this.part = this.viewer.currentItemPart?.makePart(partType, state)
-        }
+        const parentPart = (this.viewer.layout == 'side')
+            ? this.viewer.sideContainerPart
+            : this.viewer.currentItemPart
+        if (this.part) parentPart?.removeChild(this.part)
+        this.part = parentPart?.makePart(partType, state)
     }
 
     /**
