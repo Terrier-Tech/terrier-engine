@@ -6,7 +6,6 @@ import QueryEditor from "../queries/query-editor"
 import {Logger} from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
 import {TabContainerPart} from "../../terrier/tabs"
-import PagePart from "../../terrier/parts/page-part"
 import ContentPart from "../../terrier/parts/content-part"
 import {ModalPart} from "../../terrier/modals"
 import {DdDive} from "../gen/models"
@@ -21,6 +20,7 @@ import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
 import {DiveDeliveryForm} from "./dive-delivery"
 import DivePlotList from "../plots/dive-plot-list"
+import {DivePage} from "./dive-page"
 
 const log = new Logger("DiveEditor")
 
@@ -193,7 +193,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 // Editor Page
 ////////////////////////////////////////////////////////////////////////////////
 
-export class DiveEditorPage extends PagePart<{id: string}> {
+export class DiveEditorPage extends DivePage<{id: string}> {
 
     editor!: DiveEditor
     session!: DdSession
@@ -222,6 +222,8 @@ export class DiveEditorPage extends PagePart<{id: string}> {
             title: dive.name,
             icon: 'glyp-data_dive'
         })
+
+        this.addDocsAction()
 
         this.addToolbarInput('show-hints', 'checkbox', {
             title: "Hints",
@@ -424,3 +426,4 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         })
     }
 }
+

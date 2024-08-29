@@ -1,5 +1,4 @@
 import {Logger} from "tuff-core/logging"
-import PagePart from "../../terrier/parts/page-part"
 import {PartTag} from "tuff-core/parts"
 import Schema, {SchemaDef} from "../../terrier/schema"
 import {DdDive, DdDiveGroup, UnpersistedDdDive, UnpersistedDdDiveGroup} from "../gen/models"
@@ -16,6 +15,7 @@ import TerrierPart from "../../terrier/parts/terrier-part"
 import {DiveRunModal} from "./dive-runs"
 import * as inflection from "inflection"
 import Schedules from "../../terrier/schedules"
+import {DivePage} from "./dive-page"
 
 const log = new Logger("DiveList")
 
@@ -204,7 +204,7 @@ export class DiveListPart extends TerrierPart<DiveListState> {
 // Page
 ////////////////////////////////////////////////////////////////////////////////
 
-export class DiveListPage extends PagePart<{}> {
+export class DiveListPage extends DivePage<{}> {
 
     listPart!: DiveListPart
     newGroupKey = Messages.untypedKey()
@@ -215,6 +215,8 @@ export class DiveListPage extends PagePart<{}> {
         this.mainContentWidth = 'wide'
 
         this.listPart = this.makePart(DiveListPart, {mode: 'editor'})
+
+        this.addDocsAction()
 
         this.addAction({
             title: "New Group",
