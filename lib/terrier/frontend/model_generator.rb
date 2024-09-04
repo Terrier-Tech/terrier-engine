@@ -179,21 +179,21 @@ class ModelGenerator < BaseGenerator
 
   # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
+    schema_method = "#{col.name}_schema"
+    if model_class.respond_to?(schema_method)
+      schema = model_class.send(schema_method)
+      if schema.present?
+        return typescript_schema_type(schema)
+      end
+    end
+
     case col.type
     when :boolean, :bool
       'boolean'
     when :integer, :float
       'number'
     when :json, :jsonb
-      schema_method = "#{col.name}_schema"
-      if model_class.respond_to?(schema_method)
-        schema = model_class.send(schema_method)
-        if schema.present?
-          typescript_schema_type(schema)
-        else
-          'object'
-        end
-      elsif @has_shrine && model_class && model_class.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
+      if @has_shrine && model_class && model_class.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
         'Attachment | { path: string }'
       else
         'object'
