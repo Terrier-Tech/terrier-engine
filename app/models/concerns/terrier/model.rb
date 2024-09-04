@@ -238,6 +238,11 @@ module Terrier::Model
       self.define_singleton_method "#{name}_options" do
         select_options
       end
+      if options[:schema]
+        self.define_singleton_method "#{name}_schema" do
+          options[:schema].dup
+        end
+      end
     end
 
     # creates accessors name_s, name_s=, and safe_name
