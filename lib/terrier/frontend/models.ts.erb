@@ -80,6 +80,16 @@ export type ModelIncludesMap = {
 }
 
 /**
+ * Map model names to an array of association names.
+ */
+export const ModelIncludesArrayMap = {
+  <% models.keys.sort.each do |model_name| -%>
+    <% refs = models[model_name][:reflections] -%>
+    <%= model_name.tableize.singularize %>: [<%= refs.keys.sort.map{|r| "'#{r}'"}.join(', ') %>] as const,
+  <% end -%>
+}
+
+/**
  * Map "sluggable" model names to their types
  */
 export type SluggableModelTypeMap = {

@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-08-21 07:43:58 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-09-06 11:24:15 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -35,7 +35,6 @@ export type DdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
-    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -64,7 +63,6 @@ export type UnpersistedDdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
-    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -236,6 +234,16 @@ export type ModelIncludesMap = {
     dd_dive_group: "created_by" | "dd_dives" | "updated_by"
     dd_dive_plot: "created_by" | "dd_dive" | "updated_by"
     dd_dive_run: "created_by" | "dd_dive" | "updated_by"
+}
+
+/**
+ * Map model names to an array of association names.
+ */
+export const ModelIncludesArrayMap = {
+    dd_dive: ["created_by", "dd_dive_group", "dd_dive_runs", "owner", "updated_by"] as const,
+    dd_dive_group: ["created_by", "dd_dives", "updated_by"] as const,
+    dd_dive_plot: ["created_by", "dd_dive", "updated_by"] as const,
+    dd_dive_run: ["created_by", "dd_dive", "updated_by"] as const,
 }
 
 /**

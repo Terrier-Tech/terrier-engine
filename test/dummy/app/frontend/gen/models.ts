@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-07-17 08:40:18 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2024-09-06 11:12:20 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -473,6 +473,20 @@ export type ModelIncludesMap = {
     target: "created_by" | "updated_by" | "work_orders"
     user: "contacts" | "created_by" | "updated_by" | "work_orders"
     work_order: "created_by" | "invoice" | "location" | "target" | "updated_by" | "user"
+}
+
+/**
+ * Map model names to an array of association names.
+ */
+export const ModelIncludesArrayMap = {
+    contact: ["created_by", "location", "updated_by", "user"] as const,
+    invoice: ["created_by", "location", "updated_by", "work_orders"] as const,
+    location: ["contacts", "created_by", "invoices", "updated_by", "work_orders"] as const,
+    script: ["created_by", "script_runs", "updated_by"] as const,
+    script_run: ["created_by", "script", "updated_by"] as const,
+    target: ["created_by", "updated_by", "work_orders"] as const,
+    user: ["contacts", "created_by", "updated_by", "work_orders"] as const,
+    work_order: ["created_by", "invoice", "location", "target", "updated_by", "user"] as const,
 }
 
 /**
