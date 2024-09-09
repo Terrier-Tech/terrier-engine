@@ -114,6 +114,16 @@ a .tt-hint {
 			rotate: 270deg;
 		}
 	}
+
+	@each $name in $color-names {
+		&[data-tt-hint-color=#{$name}] {
+			--tt-hint-color: var(--tt-#{$name}-color);
+		}
+	}
+
+	&[data-tt-hint-color=white] {
+		color: var(--tt-body-color);
+	}
 }
 
 .tt-button .tt-hint {

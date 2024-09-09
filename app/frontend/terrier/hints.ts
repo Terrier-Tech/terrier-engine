@@ -1,7 +1,7 @@
 import Html, {DivTag, HtmlParentTag} from "tuff-core/html"
 import Messages from "tuff-core/messages"
 import {PartPlugin} from "tuff-core/plugins"
-import Theme, {IconName} from "./theme"
+import Theme, {ColorName, IconName} from "./theme"
 import PagePart from "./parts/page-part"
 import TerrierPart from "./parts/terrier-part"
 
@@ -15,6 +15,7 @@ export type HintRenderOptions = {
     classes?: string[]
     side?: 'inline' | 'top' | 'right' | 'bottom' | 'left' | 'inline-top' | 'inline-right' | 'inline-bottom' | 'inline-left'
     hideIcon?: boolean
+    color?: ColorName
 }
 
 /**
@@ -30,6 +31,7 @@ function renderHint(theme: Theme, parent: HtmlParentTag, hint: Hint, options?: H
     if (hint.tooltip) hintTag.dataAttr('tooltip', hint.tooltip)
     if (options?.classes) hintTag.class(...options.classes)
     if (options?.side && options.side != 'inline') hintTag.dataAttr('tt-hint-side', options.side)
+    if (options?.color) hintTag.dataAttr('tt-hint-color', options.color)
 
     const hideIcon = options?.hideIcon ?? false
     if (!hideIcon) {
