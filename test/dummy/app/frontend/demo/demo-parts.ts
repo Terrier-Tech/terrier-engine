@@ -47,11 +47,12 @@ class Panel extends PanelPart<NoState> {
             hint: {
                 hint: {
                     title: "Action Hint",
+                    icon: 'glyp-alert',
                     tooltip: "This hint belongs on a panel action. " +
                         "Action hints can go on any kind of action that gets rendered with <code>Theme#renderActions</code>, " +
                         "Including panels, pages, and modals."
                 },
-                options: { side: 'bottom' }
+                options: { side: 'bottom', color: 'alert' }
             }
         })
 
