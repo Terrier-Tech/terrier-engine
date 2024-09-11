@@ -37,7 +37,7 @@
 		grid-column-gap: calc(var(--tt-gap) / 2);
 	}
 
-	grid-template-columns: repeat(var(--tt-grid-fill-mode, auto-fill), minmax(min(var(--tt-grid-column-width, 350px), 100%), 1fr));
+	grid-template-columns: repeat(var(--tt-grid-fill-mode, auto-fill), minmax(var(--tt-grid-column-width, 350px), 1fr));
 
 	&.fit-width {
 		--tt-grid-fill-mode: auto-fit;
