@@ -21,6 +21,7 @@ export default class PlatformDemoPage extends DemoPage {
         this.makePart(DemoParts.Panel, {}, 'panel')
         this.makePart(DemoParts.DemoTabs, {side: 'top'}, 'tabs')
         this.makePart(DemoParts.CircleProgressPanel, {}, 'circle-progress')
+        this.makePart(DemoParts.CollapsibleDemoPanel, {}, 'collapsible')
 
         this.addAction({
             title: "Primary",
@@ -52,6 +53,7 @@ export default class PlatformDemoPage extends DemoPage {
             col.part(this.namedChild('panel')!)
             col.part(this.namedChild('tabs')!)
             col.part(this.namedChild('circle-progress')!)
+            col.part(this.namedChild('collapsible')!)
         })
     }
 
