@@ -1,7 +1,9 @@
-import ContentPart from "./content-part"
-import {PartTag} from "tuff-core/parts"
+import { DivTag, DivTagAttrs } from "tuff-core/html"
+import { PartTag } from "tuff-core/parts"
+import { TagArgs } from "tuff-core/tags"
 import Fragments from "../fragments"
-import Messages from "tuff-core/messages"
+import CollapsiblePlugin, { CollapsibleOptions, CollapsibleState } from "../plugins/collapsible-plugin"
+import ContentPart from "./content-part"
 
 export type CollapsibleConfig = {
     collapsed?: boolean
@@ -10,31 +12,35 @@ export type CollapsibleConfig = {
 /**
  * A part that renders content inside a panel.
  */
-export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig}> {
-    protected static readonly DEFAULT_CHEVRON_SIDE: 'left' | 'right' = 'left'
-
-    private _toggleCollapseKey = Messages.untypedKey()
-    private _transitionEndKey = Messages.untypedKey()
-
-    private _prevCollapsedState?: boolean
+export default abstract class PanelPart<TState> extends ContentPart<TState & { collapsible?: CollapsibleConfig | CollapsibleOptions}> {
+    collapsiblePlugin?: CollapsiblePlugin
 
     async init() {
-        if (this.state.collapsible) {
-            this._prevCollapsedState = this.state.collapsible.collapsed
-            this.state.collapsible.chevronSide ??= PanelPart.DEFAULT_CHEVRON_SIDE
-            this.onClick(this._toggleCollapseKey, _ => {
-                this.toggleCollapse()
-            })
-            this.onTransitionEnd(this._transitionEndKey, m => {
-                if (m.event.propertyName != 'flex-basis') return
-                if (!(m.event.currentTarget instanceof HTMLElement)) return
-                m.event.currentTarget.querySelector('.tt-panel')?.classList.remove('collapsing')
-            })
+        const collapsibleConfig = this.state.collapsible
+        if (collapsibleConfig) {
+            this.collapsiblePlugin = this.makePlugin(CollapsiblePlugin, { collapsibleState: this.getCollapsibleState(collapsibleConfig) })
         }
     }
 
-    assignState(state: TState & { collapsible?: CollapsibleConfig }): boolean {
-        this._prevCollapsedState = state.collapsible?.collapsed
+    getCollapsibleState(collapsibleConfig: CollapsibleConfig | CollapsibleOptions): CollapsibleState {
+        if ('collapsibleState' in collapsibleConfig && collapsibleConfig.collapsibleState) {
+            return collapsibleConfig.collapsibleState
+        } else if ('collapsed' in collapsibleConfig) {
+            return collapsibleConfig.collapsed ? 'collapsed' : 'expanded'
+        } else {
+            return 'expanded'
+        }
+    }
+
+    assignState(state: TState & { collapsible?: CollapsibleConfig | CollapsibleOptions }): boolean {
+        if (state.collapsible) {
+            const collapsibleState = this.getCollapsibleState(state.collapsible)
+            if (this.collapsiblePlugin) {
+                this.collapsiblePlugin.assignState({...this.collapsiblePlugin.state, collapsibleState})
+            } else {
+                this.collapsiblePlugin = this.makePlugin(CollapsiblePlugin, {collapsibleState})
+            }
+        }
         return super.assignState(state);
     }
 
@@ -54,13 +60,14 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         const collapsibleConfig = this.state.collapsible
         parent.div('.tt-panel', panel => {
             panel.class(...this.panelClasses)
-            if (collapsibleConfig?.collapsed) panel.class('collapsed')
-            panel.emitTransitionEnd(this._transitionEndKey)
             if (this._title?.length || this.hasActions('tertiary')) {
                 panel.div('.panel-header', header => {
-                    if (collapsibleConfig?.chevronSide == 'left') {
-                        this.renderChevron(header)
+                    if (collapsibleConfig && (!('chevronSide' in collapsibleConfig) || collapsibleConfig?.chevronSide == 'left')) {
+                        this.collapsiblePlugin!.renderCollapser(header, collapser => {
+                            this.renderChevronIcon(collapser, this.collapsiblePlugin!.state.collapsibleState!)
+                        })
                     }
+
                     header.h2(h2 => {
                         if (this._icon) {
                             this.app.theme.renderIcon(h2, this._icon, 'link')
@@ -70,13 +77,18 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
                     header.div('.tertiary-actions', actions => {
                         this.theme.renderActions(actions, this.getActions('tertiary'))
                     })
-                    if (collapsibleConfig?.chevronSide == 'right') {
-                        this.renderChevron(header)
+
+                    if (collapsibleConfig && ('chevronSide' in collapsibleConfig) && collapsibleConfig?.chevronSide == 'right') {
+                        this.collapsiblePlugin!.renderCollapser(header, collapser => {
+                            this.renderChevronIcon(collapser, this.collapsiblePlugin!.state.collapsibleState!)
+                        })
                     }
                 })
             }
-            panel.div('.panel-content', ...this.contentClasses, content => {
-                content.div('.content-container', container => {
+
+            this.renderPanelContent(panel, wrapper => {
+                wrapper.class('panel-content', ...this.contentClasses)
+                wrapper.div('.content-container', container => {
                     this.renderContent(container)
                 })
             })
@@ -85,56 +97,17 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         })
     }
 
-    update(elem: HTMLElement) {
-        const panel = elem.querySelector('.tt-panel')
-        if (!(panel instanceof HTMLElement)) return
-        this.transitionCollapsed(panel)
-    }
-
-    private transitionCollapsed(panelElem: HTMLElement) {
-        const collapsibleConfig = this.state.collapsible
-        if (!collapsibleConfig) return
-
-        if (collapsibleConfig.collapsed == this._prevCollapsedState) return
-
-        const content = panelElem.querySelector('.panel-content') as HTMLElement
-        const contentContainer = content.querySelector('.content-container') as HTMLElement
-
-        const height = `${contentContainer.clientHeight}px`
-        if (collapsibleConfig.collapsed) {
-            // we can't transition between 'auto' and a set pixel value,
-            // so we need to first set to the initial pixel value (gotten from the content container,
-            // whose height is not limited), then set to 0
-            content.style.flexBasis = height
-            requestAnimationFrame(() => {
-                // ensure initial height has been set before continuing
-                content.style.flexBasis = '0'
+    renderPanelContent(parent: PartTag, ...args: TagArgs<DivTag,DivTagAttrs>[]): DivTag {
+        if (this.collapsiblePlugin) {
+            return this.collapsiblePlugin.renderContainer(parent, collapsibleWrapper => {
+                collapsibleWrapper.div(...args)
             })
         } else {
-            content.style.flexBasis = height
-        }
-
-        panelElem.classList.add('collapsing') // 'collapsing' is applied for the duration of the open and close animation
-        panelElem.classList.toggle('collapsed', collapsibleConfig.collapsed)
-    }
-
-    toggleCollapse() {
-        if (this.state.collapsible) {
-            this._prevCollapsedState = this.state.collapsible.collapsed
-            this.state.collapsible.collapsed = !this.state.collapsible.collapsed
-            this.stale()
+            return parent.div(...args)
         }
     }
 
-    renderChevron(parent: PartTag) {
-        if (this.state.collapsible) {
-            parent.a('.collapsible-chevron', chev => {
-                this.renderChevronIcon(chev, this.state.collapsible?.collapsed!)
-            }).emitClick(this._toggleCollapseKey)
-        }
-    }
-
-    renderChevronIcon(parent: PartTag, _isCollapsed: Boolean) {
+    renderChevronIcon(parent: PartTag, _collapsibleState: CollapsibleState) {
         this.app.theme.renderIcon(parent, 'glyp-chevron_down', 'white')
     }
 }
