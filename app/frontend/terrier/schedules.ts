@@ -4,6 +4,7 @@ import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import dayjs from "dayjs"
 import {TerrierFormFields} from "./forms"
+import TerrierPart from "./parts/terrier-part"
 
 const log = new Logger("Schedules")
 
@@ -84,6 +85,16 @@ export type CombinedRegularSchedule = {
 export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSchedule> {
 
     scheduleTypeChangeKey = Messages.typedKey<{schedule_type: ScheduleType}>()
+
+    constructor(part: TerrierPart<any>, data: CombinedRegularSchedule) {
+        super(part, data)
+
+        this.part.onChange(this.scheduleTypeChangeKey, m => {
+            log.info(`Schedule type changed to ${m.data.schedule_type}`)
+            this.data = m.data
+            this.part.dirty()
+        })
+    }
 
     get parentClasses(): Array<string> {
         return ['tt-flex', 'column', 'gap', 'regular-schedule-form', 'tt-form']
