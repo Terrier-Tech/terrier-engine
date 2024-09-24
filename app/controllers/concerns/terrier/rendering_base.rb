@@ -84,8 +84,13 @@ module Terrier::RenderingBase
         format.json {render json: {status: 'error', message: @message, backtrace: ex.backtrace}}
         format.csv {render plain: "error\n#{@message}"}
         format.html do
-          options[:template] = 'application/error'
-          render options
+          if Rails.configuration.try(:consider_all_requests_local)
+            # if Rails' full error page is enabled, re-raise the exception to get the full error page
+            raise ex
+          else
+            options[:template] = 'application/error'
+            render options
+          end
         end
         format.svg do
           render plain: "<svg width='640px' height='640px' viewBox='0 0 640 640' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>" +
