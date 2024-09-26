@@ -135,6 +135,7 @@
 					justify-content: center;
 					flex: 1 1 auto;
 					opacity: var(--label-opacity);
+					@include tt-bottom-rounded-corners;
 				}
 				&.error {
 					max-width: var(--table-editor-width);
