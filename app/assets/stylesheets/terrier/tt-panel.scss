@@ -76,26 +76,6 @@
 		&.gap .content-container {
 			gap: var(--tt-gap);
 		}
-
-		transition: flex-basis var(--tt-animation-duration) ease-in-out;
-	}
-	.collapsible-chevron {
-		transition: rotate var(--tt-animation-duration) ease-in;
-	}
-	&.collapsed {
-		.panel-content {
-			flex-basis: 0;
-			pointer-events: none;
-		}
-
-		.collapsible-chevron {
-			rotate: -90deg;
-		}
-	}
-	&.collapsed, &.collapsing {
-		.panel-content {
-			overflow-y: hidden;
-		}
 	}
 
 	.panel-actions {

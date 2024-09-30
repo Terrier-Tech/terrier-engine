@@ -1,0 +1,21 @@
+.tt-collapsible-container {
+	transition-duration: var(--tt-animation-duration);
+
+	min-height: 0;
+	display: grid;
+	grid-template-rows: 1fr;
+
+	overflow: hidden;
+	.tt-collapsible-content {
+		overflow: hidden;
+	}
+	&[data-collapsible-state=collapsed] {
+		grid-template-rows: 0fr;
+		pointer-events: none;
+	}
+}
+
+.tt-collapser {
+	display: inline-block;
+	transition-duration: var(--tt-animation-duration);
+}

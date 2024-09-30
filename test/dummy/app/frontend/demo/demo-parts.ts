@@ -1,21 +1,22 @@
-import {NoState, PartTag} from "tuff-core/parts"
-import {ModalPart, modalPopKey} from "@terrier/modals"
-import Toasts from "@terrier/toasts"
-import {ActionsDropdown} from "@terrier/dropdowns"
-import {Action, ColorName} from "@terrier/theme"
-import PanelPart from "@terrier/parts/panel-part"
-import Tabs, {TabContainerPart} from "@terrier/tabs"
-import {Logger} from "tuff-core/logging"
 import Api from "@terrier/api"
-import {ApiSubscriber, PollingSubscriber, StreamingSubscriber} from "@terrier/api-subscriber"
-import Messages from "tuff-core/messages"
-import Strings from "tuff-core/strings"
-import {LogEntry} from "@terrier/logging"
-import MultiCircularProgressBarPart, {MultiCircularProgressState} from "@terrier/multi-circular-progress";
-import Time from "tuff-core/time"
+import { ApiSubscriber, PollingSubscriber, StreamingSubscriber } from "@terrier/api-subscriber"
+import { ActionsDropdown } from "@terrier/dropdowns"
 import Hints from "@terrier/hints"
+import { LogEntry } from "@terrier/logging"
+import { ModalPart, modalPopKey } from "@terrier/modals"
+import MultiCircularProgressBarPart, { MultiCircularProgressState } from "@terrier/multi-circular-progress"
+import PanelPart from "@terrier/parts/panel-part"
 import TerrierPart from "@terrier/parts/terrier-part"
-import LoadOnScrollPlugin, {LoadOnScrollOptions} from "@terrier/plugins/load-on-scroll-plugin";
+import CollapsiblePlugin, { CollapsibleState } from "@terrier/plugins/collapsible-plugin"
+import LoadOnScrollPlugin, { LoadOnScrollOptions } from "@terrier/plugins/load-on-scroll-plugin"
+import Tabs, { TabContainerPart } from "@terrier/tabs"
+import { Action, ColorName } from "@terrier/theme"
+import Toasts from "@terrier/toasts"
+import { Logger } from "tuff-core/logging"
+import Messages from "tuff-core/messages"
+import { NoState, PartTag } from "tuff-core/parts"
+import Strings from "tuff-core/strings"
+import Time from "tuff-core/time"
 
 const log = new Logger("Demo Parts")
 
@@ -464,12 +465,100 @@ class CircleProgressPanel extends PanelPart<NoState> {
 
 }
 
+class CollapsibleDemoPanel extends PanelPart<NoState> {
+    collapseAllKey = Messages.untypedKey()
+
+    collapsibles!: CollapsiblePlugin[]
+
+    async init() {
+        this.setTitle("Collapsible Demo")
+
+        this.addAction({
+            icon: 'glyp-open',
+            title: "Toggle All",
+            click: { key: this.collapseAllKey },
+        }, 'tertiary')
+
+        this.collapsibles = [
+            this.makePlugin(CollapsiblePlugin, {}),
+            this.makePlugin(CollapsiblePlugin, {
+                collapsibleState: 'collapsed',
+                collapserTransitionOptions: {
+                    css: { rotate: '0.5turn x' },
+                    durationMs: 750,
+                },
+                containerTransitionOptions: {
+                    css: { opacity: '0%' },
+                    durationMs: 750,
+                },
+            }),
+           this.makePlugin(CollapsiblePlugin, {}),
+        ]
+
+        this.onClick(this.collapseAllKey, _ => {
+            const state: CollapsibleState = this.collapsibles.some(p => p.state.collapsibleState == 'expanded')
+                ? 'collapsed'
+                : 'expanded'
+
+            this.collapsibles.forEach(p => p.toggleState(state))
+        })
+    }
+
+    protected get contentClasses(): string[] {
+        return [...super.contentClasses, 'padded']
+    }
+
+    renderContent(parent: PartTag) {
+        parent.div('tt-grid.gap', row => {
+            row.div(cell => {
+                cell.h3(heading => {
+                    this.collapsibles[0].renderCollapser(heading, collapser => {
+                        this.theme.renderIcon(collapser, 'glyp-chevron_down')
+                    })
+                    heading.span().text("Collapsible Header")
+                })
+
+                this.collapsibles[0].renderContainer(cell, content => {
+                    content.div('.tt-flex.column.small-gap.tt-padded', paras => {
+                        paras.p().text("This is the content of collapsibles[0]. Pellentesque sagittis ipsum a eros convallis condimentum. Ut interdum ac magna et posuere. Vivamus at velit turpis.")
+                        paras.p().text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sagittis ipsum a eros convallis condimentum. Ut interdum ac magna et posuere. Vivamus at velit turpis. Nunc condimentum sodales tortor at.")
+                    })
+                })
+            })
+
+            row.div(cell => {
+                this.collapsibles[1].renderContainer(cell, content => {
+                    content.div('.tt-flex.column.small-gap.tt-padded', paras => {
+                        paras.p().text("This is the content of collapsibles[1]. Pellentesque sagittis ipsum a eros convallis condimentum. Ut interdum ac magna et posuere. Vivamus at velit turpis.")
+                        paras.p().text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sagittis ipsum a eros convallis condimentum. Ut interdum ac magna et posuere. Vivamus at velit turpis. Nunc condimentum sodales tortor at.")
+                    })
+                })
+                cell.div({ css: { textAlign: 'center' } }, div => {
+                    this.collapsibles[1].renderCollapser(div, '.tt-h-padded', collapser => {
+                        this.theme.renderIcon(collapser, 'glyp-chevron_up')
+                    })
+                })
+            })
+
+            row.div(cell => {
+                this.collapsibles[2].renderContainer(cell, content => {
+                    content.div('.tt-flex.column.small-gap.tt-padded', paras => {
+                        paras.p().text("This is the content of collapsibles[2]. It doesn't have a dedicated collapser button, so it is only toggled by the global Toggle All button.")
+                        paras.p().text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque sagittis ipsum a eros convallis condimentum. Ut interdum ac magna et posuere. Vivamus at velit turpis. Nunc condimentum sodales tortor at.")
+                    })
+                })
+            })
+        })
+    }
+}
+
 
 const DemoParts = {
     Panel,
     Modal,
     DemoTabs,
     CircleProgressPanel,
+    CollapsibleDemoPanel,
     openModalKey,
 }
 
