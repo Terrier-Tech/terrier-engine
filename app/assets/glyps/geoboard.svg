@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>geoboard</title>
+    <g id="geoboard" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M18.9995347,16 L18.9995347,20 L18.975,20 L9.375,52 L54.624,52 L45.024,20 L40.9995347,20 L40.9995347,16 L46.5119387,16 C47.3951551,16 48.1738009,16.5793363 48.4275913,17.4253042 L59.2275913,53.4253042 C59.2835233,53.6117443 59.3119387,53.8053509 59.3119387,54 C59.3119387,55.1045695 58.4165082,56 57.3119387,56 L6.6880613,56 C6.49341217,56 6.29980558,55.9715846 6.11336553,55.9156526 C5.05537983,55.5982569 4.45501302,54.4832899 4.77240873,53.4253042 L15.5724087,17.4253042 C15.8261991,16.5793363 16.6048449,16 17.4880613,16 L18.9995347,16 Z M34.9995347,20 L24.9995347,20 L24.9995347,16 L34.9995347,16 L34.9995347,20 Z" id="Path-298" fill="#000000" fill-rule="nonzero"></path>
+        <rect id="Rectangle" fill="#000000" x="20" y="12" width="4" height="36" rx="2"></rect>
+        <rect id="Rectangle-Copy" fill="#000000" x="28" y="22" width="4" height="14" rx="2"></rect>
+        <rect id="Rectangle-Copy-3" fill="#000000" x="44" y="36" width="4" height="14" rx="2"></rect>
+        <rect id="Rectangle-Copy-2" fill="#000000" x="36" y="4" width="4" height="40" rx="2"></rect>
+    </g>
+</svg>
