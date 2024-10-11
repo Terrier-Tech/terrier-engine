@@ -1105,7 +1105,7 @@ class Workspace
 
 	saveState: ->
 		config = @layout.toConfig()
-		puts "Saving script worksapce state: ", config
+		puts "Saving script workspace state: ", config
 		localStorage.setItem _workspaceStateKey, JSON.stringify(config)
 
 	getSavedStated: ->
@@ -1265,8 +1265,8 @@ _runsTemplate = tinyTemplate (runs) ->
 							div '.created-by', run.created_by_name
 							div '.duration', "#{(run.duration || 0).toFixed(1)}s"
 						td '', ->
-							if run.fields
-								_fieldValuesPartial(run.fields)
+							if run.filtered_fields
+								_fieldValuesPartial(run.filtered_fields)
 						td ".status.#{run.status}", run.status.titleize()
 						td '.exception', run.exception || ''
 						td '.inline-actions', ->
