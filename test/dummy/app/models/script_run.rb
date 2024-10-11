@@ -57,6 +57,12 @@ class ScriptRun < ApplicationRecord
   end
 
   def filtered_fields
-    self.fields&.map { |k, value| [k, value.is_a?(Array) ? 'File' : value] }^.to_h
+    SqlBuilder.new
+              .with("jsonb_data as (select fields from script_runs where id = '#{self.id}')")
+              .select('jsonb_object_agg(key, value) as fields')
+              .from('jsonb_data, jsonb_each(jsonb_data.fields::jsonb)')
+              .where("jsonb_typeof(value) != 'array'")
+              .as_objects
+              .exec.to_a.first.fields
   end
 end
