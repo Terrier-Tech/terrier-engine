@@ -55,4 +55,8 @@ class ScriptRun < ApplicationRecord
   def log_url
     self.log.url
   end
+
+  def filtered_fields
+    self.fields&.map { |k, value| [k, value.is_a?(Array) ? 'File' : value] }^.to_h
+  end
 end

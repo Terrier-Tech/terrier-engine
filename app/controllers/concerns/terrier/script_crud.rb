@@ -65,7 +65,7 @@ module Terrier::ScriptCrud
       begin
         script = Script.find params[:script_id]
         runs = script.script_runs.where(_state: 0).order(created_at: :desc)
-        render_success "Got #{runs.count} runs", {runs: runs.as_json(methods: %i(log_url))}
+        render_success "Got #{runs.count} runs", {runs: runs.as_json(methods: %i(log_url filtered_fields), except: %i(fields))}
       rescue => ex
         render_exception ex
       end
