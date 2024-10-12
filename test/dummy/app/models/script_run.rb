@@ -55,4 +55,14 @@ class ScriptRun < ApplicationRecord
   def log_url
     self.log.url
   end
+
+  def filtered_fields
+    SqlBuilder.new
+              .with("jsonb_data as (select fields from script_runs where id = '#{self.id}')")
+              .select('jsonb_object_agg(key, value) as fields')
+              .from('jsonb_data, jsonb_each(jsonb_data.fields::jsonb)')
+              .where("jsonb_typeof(value) != 'array'")
+              .as_objects
+              .exec.to_a.first.fields
+  end
 end
