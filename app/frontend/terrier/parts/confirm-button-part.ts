@@ -1,5 +1,4 @@
 import {PartTag} from "tuff-core/parts"
-import Icons from '../gen/hub-icons'
 import Messages, {TypedKey} from "tuff-core/messages"
 import { ColorName, IconName } from "../theme"
 import TerrierPart from "./terrier-part"
