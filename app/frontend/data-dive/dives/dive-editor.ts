@@ -380,7 +380,6 @@ class NewQueryModal extends ModalPart<NewQueryState> {
 // Duplicate Query Modal
 ////////////////////////////////////////////////////////////////////////////////
 
-
 type DuplicateQueryState = {
     editor: DiveEditor
     schema: SchemaDef
