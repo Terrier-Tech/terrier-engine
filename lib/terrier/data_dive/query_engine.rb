@@ -353,7 +353,7 @@ class DataDive::QueryEngine
     if @query.columns.present?
       col_orders = {}
       @query.columns.each_with_index { |c, i| col_orders[c] = i }
-      columns = columns.sort_by{|c| col_orders[c.select_name]}
+      columns = columns.sort_by{|c| col_orders[c.select_name] || 9999}
     end
 
     {
