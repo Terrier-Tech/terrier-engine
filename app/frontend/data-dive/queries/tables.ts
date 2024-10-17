@@ -82,6 +82,8 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
     modelDef!: ModelDef
     parentView?: TableView<any>
 
+    joinParts: Record<string, TableView<JoinedTableRef>> = {}
+
     editTableKey = Messages.untypedKey()
     editColumnsKey = Messages.untypedKey()
     editFiltersKey = Messages.untypedKey()
@@ -95,7 +97,11 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         this.modelDef = this.schema.models[this.table.model]
         this.tableName = inflection.titleize(inflection.tableize(this.table.model))
         this.displayName = this.tableName
-        this.updateJoinedViews()
+
+        // create parts for the existing joins
+        Object.values(this.table.joins || {}).map(table => {
+            this.addJoinedPart(table)
+        })
 
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.displayName} Columns`)
@@ -163,7 +169,8 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                         log.info(`Creating joined table`, newTable)
                         this.table.joins ||= {}
                         this.table.joins[newTable.belongs_to] = newTable
-                        this.updateJoinedViews()
+                        this.addJoinedPart(newTable)
+                        this.dirty()
                     }
                 }
                 this.app.showModal(JoinedTableEditorModal, {table, belongsTo, callback, parentTable: this.state.table as TableRef})
@@ -171,23 +178,19 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         })
     }
 
-    /**
-     * Re-generates all views for the joined tables.
-     */
-    updateJoinedViews() {
-        const states = Object.values(this.table.joins || {}).map(table => {
-            return {schema: this.schema, queryEditor: this.state.queryEditor, table}
-        })
-        this.assignCollection('joined', JoinedTableView, states)
-        for (const part of this.getCollectionParts('joined')) {
-            (part as JoinedTableView).parentView = this
-        }
+    addJoinedPart(joinedTable: JoinedTableRef) {
+        const state = {schema: this.schema, queryEditor: this.state.queryEditor, table: joinedTable}
+        const part = this.makePart(JoinedTableView, state)
+        part.parentView = this
+        this.joinParts[joinedTable.belongs_to] = part
     }
 
-    removeJoinedTable(joinedTable: JoinedTableRef) {
+
+    removeJoinedPart(joinedTable: JoinedTableRef) {
         if (this.table?.joins) {
             delete this.table.joins[joinedTable.belongs_to]
-            this.updateJoinedViews()
+            delete this.joinParts[joinedTable.belongs_to]
+            this.dirty()
         }
     }
 
@@ -208,8 +211,11 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             parent.div('.chicken-foot')
         }
 
-        this.renderCollection(parent, 'joined')
-            .class('joins-column')
+        parent.div('.joins-column', col => {
+            for (const name of Object.keys(this.joinParts).sort()) {
+                col.part(this.joinParts[name])
+            }
+        })
 
         parent.div(".tt-panel.table-panel", panel => {
             panel.div('.title', title => {
@@ -350,7 +356,7 @@ export class JoinedTableView extends TableView<JoinedTableRef> {
                     }
                     else {
                         log.info(`Deleted joined table ${this.displayName}`)
-                        this.parentView!.removeJoinedTable(this.table)
+                        this.parentView!.removeJoinedPart(this.table)
                     }
                 }
                 this.app.showModal(JoinedTableEditorModal, {
