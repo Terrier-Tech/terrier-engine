@@ -47,7 +47,7 @@ const updatedKey = Messages.typedKey<TableRef>()
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Recursively collects all of the filters for this and all joined tables.
+ * Recursively collect  s all of the filters for this and all joined tables.
  * Only keep one (the last one traversed) per table/column combination.
  * This means that some filters may clobber others, but I think it will yield
  * the desired result most of the time.
