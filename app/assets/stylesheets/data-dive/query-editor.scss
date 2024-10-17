@@ -433,6 +433,8 @@ table.dd-query-result {
 	@include tt-inset-box;
 	@include tt-inset-box-shadow;
 	padding: 1em;
+	max-height: 15em;
+	overflow-y: scroll;
 }
 
 .dive-query-order-bys {
