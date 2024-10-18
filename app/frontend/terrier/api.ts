@@ -117,7 +117,7 @@ async function get<ResponseType>(url: string, params: QueryParams | Record<strin
  */
 async function safePost<ResponseType>(url: string, body: Record<string, unknown> | FormData): Promise<ResponseType> {
     log.debug(`Safe posting to ${url} with body`, body)
-    const config = { method: 'POST' } as RequestInit
+    const config: RequestInit = { method: 'POST' }
     if (body instanceof FormData) {
         config.body = body
     } else {
@@ -140,7 +140,7 @@ async function safePost<ResponseType>(url: string, body: Record<string, unknown>
  */
 async function post<ResponseType>(url: string, body: Record<string, unknown> | FormData): Promise<ResponseType & ApiResponse> {
     log.debug(`Posting to ${url} with body`, body)
-    const config = { method: 'POST' } as RequestInit
+    const config: RequestInit = { method: 'POST' }
     if (body instanceof FormData) {
         config.body = body
     } else {
