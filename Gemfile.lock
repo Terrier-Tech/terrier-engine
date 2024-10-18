@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.36.9)
+    terrier-engine (4.37.0)
       amazing_print
       coderay
       colorize
@@ -139,7 +139,7 @@ GEM
     down (5.4.2)
       addressable (~> 2.8)
     drb (2.2.1)
-    dry-cli (1.1.0)
+    dry-cli (1.2.0)
     erubi (1.13.0)
     execjs (2.9.1)
     faker (3.2.3)
@@ -178,6 +178,7 @@ GEM
       rake (~> 13.0)
     lodash-rails (4.17.21)
       railties (>= 3.1)
+    logger (1.6.1)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -197,7 +198,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.25.1)
     mutex_m (0.2.0)
-    net-imap (0.4.16)
+    net-imap (0.5.0)
       date
       net-protocol
     net-pop (0.1.2)
@@ -328,8 +329,9 @@ GEM
     vite_rails (3.0.17)
       railties (>= 5.1, < 8)
       vite_ruby (~> 3.0, >= 3.2.2)
-    vite_ruby (3.8.2)
+    vite_ruby (3.9.0)
       dry-cli (>= 0.7, < 2)
+      logger (~> 1.6)
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
     webrick (1.8.2)
