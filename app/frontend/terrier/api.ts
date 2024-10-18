@@ -115,15 +115,16 @@ async function get<ResponseType>(url: string, params: QueryParams | Record<strin
  * @param url the URL of the API endpoint
  * @param body the body of the request (will be transmitted as JSON)
  */
-async function safePost<ResponseType>(url: string, body: Record<string, unknown>): Promise<ResponseType> {
+async function safePost<ResponseType>(url: string, body: Record<string, unknown> | FormData): Promise<ResponseType> {
     log.debug(`Safe posting to ${url} with body`, body)
-    const response = await apiRequest<ResponseType>(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-    })
+    const config: RequestInit = { method: 'POST' }
+    if (body instanceof FormData) {
+        config.body = body
+    } else {
+        config.body = JSON.stringify(body)
+        config.headers = { 'Content-Type': 'application/json' }
+    }
+    const response = await apiRequest<ResponseType>(url, config)
     if (response.status == 'error') {
         throw new ApiException(response.message)
     }
@@ -139,7 +140,7 @@ async function safePost<ResponseType>(url: string, body: Record<string, unknown>
  */
 async function post<ResponseType>(url: string, body: Record<string, unknown> | FormData): Promise<ResponseType & ApiResponse> {
     log.debug(`Posting to ${url} with body`, body)
-    const config = { method: 'POST' } as RequestInit
+    const config: RequestInit = { method: 'POST' }
     if (body instanceof FormData) {
         config.body = body
     } else {
