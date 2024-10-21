@@ -124,18 +124,15 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     modelDef!: ModelDef
     table!: TableRef
-    columnStates: ColumnState[] = []
+    columnEditors: Record<string, ColumnEditor> = {}
     columnCount = 0
 
     tableFields!: FormFields<TableRef>
 
-    updateColumnEditors() {
-        this.assignCollection('columns', ColumnEditor, this.columnStates)
-    }
-
-    addState(col: ColumnRef) {
+    addEditor(col: ColumnRef) {
         this.columnCount += 1
-        this.columnStates.push({schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col})
+        const state = {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col}
+        this.columnEditors[state.id] = this.makePart(ColumnEditor, state)
     }
 
 
@@ -148,9 +145,8 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         // initialize the columns states
         const columns: ColumnRef[] = this.table.columns || []
         for (const col of columns) {
-            this.addState(col)
+            this.addEditor(col)
         }
-        this.updateColumnEditors()
 
         this.setTitle(`Columns for ${this.state.tableView.displayName}`)
         this.setIcon('glyp-columns')
@@ -172,7 +168,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         this.onClick(removeKey, m => {
-            this.removeColumn(m.data.id)
+            this.removeEditor(m.data.id)
         })
 
         this.onClick(addSingleKey, m => {
@@ -193,16 +189,20 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         const colDef = this.modelDef.columns[col]
         log.info(`Add column ${col}`, colDef)
         if (colDef) {
-            this.addState({name: colDef.name})
-            this.updateColumnEditors()
+            this.addEditor({name: colDef.name})
             this.dirty()
         } else {
             alert(`Unknown column name '${col}'`)
         }
     }
 
+    get currentEditorStates(): ColumnState[] {
+        return Object.values(this.columnEditors).map(e => e.state)
+    }
+
     get currentColumnNames(): Set<string> {
-        return new Set(this.columnStates.map(s => s.column.name))
+        const states = this.currentEditorStates
+        return new Set(states.map(s => s.column.name))
     }
 
     renderContent(parent: PartTag): void {
@@ -223,8 +223,11 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
                 header.div('.function').label({text: "Function"})
                 header.div('.group-by').label({text: "Group By?"})
             })
-            this.renderCollection(table, 'columns')
-                .class('dd-editor-row-container')
+            table.div('dd-editor-row-container', container => {
+                for (const id of Object.keys(this.columnEditors)) {
+                    container.part(this.columnEditors[id])
+                }
+            })
         })
 
         // common column quick links
@@ -258,17 +261,21 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     }
 
-    removeColumn(id: string) {
-        const col = Arrays.find(this.columnStates, c => c.id == id)
-        if (col) {
-            this.columnStates = Arrays.without(this.columnStates, col)
-            this.updateColumnEditors()
+    removeEditor(id: string) {
+        const editor = this.columnEditors[id]
+        if (editor) {
+            log.info(`Removing column ${id}`)
+            this.removeChild(editor)
+            delete this.columnEditors[id]
+        }
+        else {
+            log.warn(`No editor for column ${id}`)
         }
     }
 
     async serialize(): Promise<ColumnRef[]> {
-        const parts = this.getCollectionParts("columns")
-        return await Promise.all(parts.map(async part => {
+        const editors = Object.values(this.columnEditors)
+        return await Promise.all(editors.map(async part => {
             return await (part as ColumnEditor).serialize()
         }))
     }
@@ -296,8 +303,9 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         Validation.validateQuery(query)
 
         // copy the column errors over
+        const editors = Object.values(this.columnEditors)
         for (let i = 0; i < columns.length; i++) {
-            this.columnStates[i].column.errors = columns[i].errors
+            editors[i].state.column.errors = columns[i].errors
         }
 
         this.dirty()
