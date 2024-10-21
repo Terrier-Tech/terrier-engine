@@ -288,10 +288,21 @@ class Filter < QueryModel
       op = sql_operator
       val = @input_value.presence || @value
       params[@id] = val
-      if op == '@>' # an array filter
+
+      # an array filter
+      if op == '@>'
         val ||= ''
         val = val.split(',').map(&:strip) if val.is_a?(String)
         val = val.to_postgres_array_literal
+      end
+
+      # comma-separated values
+      if op == '=' && val&.include?(',')
+        op = 'IN'
+        val = val.split(',').map(&:strip)
+      elsif op == '<>' && val&.include?(',')
+        op = 'NOT IN'
+        val = val.split(',').map(&:strip)
       end
       clause = "#{table.alias}.#{@column} #{op} ?"
       if @operator == 'excludes'

@@ -231,6 +231,12 @@ module TestDive
             filter_type: 'direct',
             column: 'tags',
             operator: 'contains'
+          },
+          {
+            id: 'role_1',
+            filter_type: 'direct',
+            column: 'role',
+            operator: 'eq'
           }
         ]
       }

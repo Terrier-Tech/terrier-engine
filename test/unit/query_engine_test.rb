@@ -82,5 +82,16 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_includes builder.clauses, "u.tags @> '{\"Dynamic\", \"Engineer\"}'"
   end
 
+  test 'comma-separated filters' do
+    query = TestDive.employees
+    engine = DataDive::QueryEngine.new query
+    res = engine.validate
+    assert_nil res[:error]
+
+    builder = engine.to_sql_builder({ 'role_1' => "foo, bar" })
+    assert_includes builder.clauses, "u.role IN ('foo','bar')"
+
+  end
+
 
 end
