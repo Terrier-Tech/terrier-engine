@@ -7,7 +7,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.38.0)
+    terrier-engine (4.38.1)
       amazing_print
       coderay
       colorize
@@ -230,7 +230,7 @@ GEM
     puma (6.4.3)
       nio4r (~> 2.0)
     racc (1.8.1)
-    rack (3.1.7)
+    rack (3.1.8)
     rack-proxy (0.7.7)
       rack
     rack-session (2.0.0)

@@ -193,7 +193,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                     continue;
                 }
 
-                fields.label(label => {
+                fields.label(`label-${def.name}`, label => {
                     if (def.icon?.length) {
                         label.i('.icon').class(def.icon)
                     }
