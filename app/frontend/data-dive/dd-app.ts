@@ -1,4 +1,4 @@
-import {NoState, PartTag} from "tuff-core/parts"
+import {PartTag} from "tuff-core/parts"
 import {TerrierApp} from "../terrier/app"
 import {RouterPart} from "tuff-core/routing"
 import { Action } from "../terrier/theme"
@@ -18,7 +18,7 @@ class ContentRouterPart extends RouterPart {
 
 }
 
-export default class DdApp extends TerrierApp<NoState> {
+export default class DdApp extends TerrierApp<{}> {
 
     contentPart!: ContentRouterPart
     session!: DdSession
