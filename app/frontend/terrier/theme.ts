@@ -35,6 +35,7 @@ export type Action = {
     subtitle?: string
     tooltip?: string
     icon?: IconName
+    color?: ColorName
     img?: string
     href?: string
     classes?: string[]
@@ -90,7 +91,7 @@ export default class Theme {
             actions = [actions]
         }
         for (const action of actions) {
-            let iconColor = options?.iconColor
+            let iconColor = action.color || options?.iconColor
             const attrs = action.tooltip?.length ? {data: {tooltip: action.tooltip}} : {}
             parent.a(attrs, a => {
                 const classes = action.classes || []
@@ -110,6 +111,9 @@ export default class Theme {
                 }
                 if (action.subtitle?.length) {
                     a.div('.subtitle', {text: action.subtitle})
+                }
+                if (iconColor?.length) {
+                    a.class(iconColor)
                 }
                 if (!(action.title?.length || action.subtitle?.length)) {
                     a.class('icon-only')

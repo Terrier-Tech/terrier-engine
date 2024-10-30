@@ -44,11 +44,15 @@
 			@include tt-scale-push;
 			--color: var(--tt-secondary-color);
 			@include tt-theme-colored;
-			color: var(--color);
+			.icon {
+				@include tt-theme-colored;
+				color: var(--color);
+			}
 
 			// actions with text have a small label with larger icon
 			.title {
 				font-size: var(--tt-label-font-size);
+				color: var(--color);
 			}
 			i {
 				font-size: 150%;

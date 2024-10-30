@@ -71,26 +71,26 @@ class Panel extends PanelPart<NoState> {
 
         this.addAction({
             title: "Toast",
-            classes: ['secondary'],
             icon: 'glyp-announcement',
             click: {key: toastKey, data: {color: 'secondary'}}
         }, "secondary")
 
         this.addAction({
             icon: 'glyp-camera',
+            color: 'billing',
             tooltip: "Icon-Only"
         }, "tertiary")
 
         this.addAction({
             icon: 'hub-admin',
-            classes: ['primary'],
+            color: 'primary',
             tooltip: "Primary Color"
         }, "tertiary")
 
         this.addAction({
             title: "Confirm Sheet",
             icon: 'glyp-help',
-            classes: ['success'],
+            color: 'success',
             click: {key: sheetKey, data: {type: 'confirm'}}
         }, "tertiary")
 
