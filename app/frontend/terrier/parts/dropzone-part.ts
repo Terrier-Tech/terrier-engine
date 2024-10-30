@@ -1,5 +1,5 @@
-import {PartTag} from "tuff-core/parts"
 import Messages from "tuff-core/messages"
+import { PartTag } from "tuff-core/parts"
 import TerrierPart from "./terrier-part"
 import mime from "mime-types"
 
@@ -10,7 +10,7 @@ type DropzonePartState = {
     text?: string
 }
 
-export const FileUploadedKey = Messages.typedKey<{ file: File, file_content: string }>()
+export const FileUploadedKey = Messages.typedKey<{ file: File, type: string }>()
 
 export default class DropzonePart extends TerrierPart<DropzonePartState> {
     _dragOverKey = Messages.untypedKey()
@@ -39,7 +39,7 @@ export default class DropzonePart extends TerrierPart<DropzonePartState> {
             this.stale()
 
             if (m.event.dataTransfer) {
-                if (m.event.dataTransfer.files.length > 1) {
+                if (m.event.dataTransfer.files.length != 1) {
                     this.alertToast("Please choose only one file to upload.")
                     return
                 }
@@ -61,28 +61,12 @@ export default class DropzonePart extends TerrierPart<DropzonePartState> {
             this.alertToast('Error uploading file: File must be one of the following types: ' + this.state.accept_file_types.map(type => `.${type}`).join('; '))
             return
         }
-        const reader = new FileReader();
 
-        reader.onload = (event) => {
-            if (event.target?.result) {
-                this.state.file_content = event.target.result
-                this.emitMessage(FileUploadedKey, { file: file, file_content: this.state.file_content })
-            }
-        };
-
-        reader.onerror = () => {
-            this.alertToast('Error reading file')
-        };
-
-        if (type == 'xlsx') {
-            reader.readAsArrayBuffer(file)
-        } else {
-            reader.readAsText(file);
-        }
+        this.emitMessage(FileUploadedKey, { file: file, type: type })
     };
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat('tt-dropzone')
+        return super.parentClasses.concat('dropzone')
     }
 
     render(parent: PartTag) {
