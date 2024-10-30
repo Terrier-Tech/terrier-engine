@@ -123,7 +123,7 @@ function panelActions(panel: PartTag, actions: PanelActions, theme: Theme) {
                 const levelActions = actions[level]
                 if (!levelActions?.length) continue;
                 actionsContainer.div(`.${level}-actions`, container => {
-                    theme.renderActions(container, levelActions, { iconColor: 'white', defaultClass: level })
+                    theme.renderActions(container, levelActions, { defaultClass: level })
                 })
             }
         })
