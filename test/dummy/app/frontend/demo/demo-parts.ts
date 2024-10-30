@@ -78,14 +78,19 @@ class Panel extends PanelPart<NoState> {
 
         this.addAction({
             icon: 'glyp-camera',
-            classes: ['active'],
             tooltip: "Icon-Only"
+        }, "tertiary")
+
+        this.addAction({
+            icon: 'hub-admin',
+            classes: ['primary'],
+            tooltip: "Primary Color"
         }, "tertiary")
 
         this.addAction({
             title: "Confirm Sheet",
             icon: 'glyp-help',
-            classes: ['active'],
+            classes: ['success'],
             click: {key: sheetKey, data: {type: 'confirm'}}
         }, "tertiary")
 

@@ -42,6 +42,10 @@
 			display: block;
 			text-align: center;
 			@include tt-scale-push;
+			--color: var(--tt-secondary-color);
+			@include tt-theme-colored;
+			color: var(--color);
+
 			// actions with text have a small label with larger icon
 			.title {
 				font-size: var(--tt-label-font-size);
@@ -102,18 +106,7 @@
 				i {
 					transform: scale(1.2);
 				}
-				&.primary {
-					color: var(--tt-primary-color);
-				}
-				&.secondary {
-					color: var(--tt-secondary-color);
-				}
-				&.alert {
-					color: var(--tt-alert-color);
-				}
-				&.pending {
-					color: var(--tt-pending-color);
-				}
+				@include tt-theme-colored;
 				&:hover {
 					filter: brightness(1.1);
 				}
