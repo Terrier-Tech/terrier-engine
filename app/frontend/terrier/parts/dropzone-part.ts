@@ -66,7 +66,7 @@ export default class DropzonePart extends TerrierPart<DropzonePartState> {
     };
 
     get parentClasses(): Array<string> {
-        return super.parentClasses.concat('dropzone')
+        return super.parentClasses.concat('tt-dropzone')
     }
 
     render(parent: PartTag) {
