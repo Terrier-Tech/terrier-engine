@@ -1,0 +1,17 @@
+.tt-dropzone {
+	border: 2px dashed var(--tt-secondary-border-color);
+	border-radius: 6px;
+	width: 100%;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	label.file-input-button {
+		font-size: 16px;
+		gap: 2px;
+	}
+	&.dragging-over {
+		background-color: var(--tt-secondary-hover-color);
+	}
+}
