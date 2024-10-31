@@ -108,6 +108,6 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
     }
 
     renderChevronIcon(parent: PartTag, _collapsibleState: CollapsibleState) {
-        this.app.theme.renderIcon(parent, 'glyp-chevron_down', 'white')
+        this.app.theme.renderIcon(parent, 'glyp-chevron_down', null)
     }
 }
