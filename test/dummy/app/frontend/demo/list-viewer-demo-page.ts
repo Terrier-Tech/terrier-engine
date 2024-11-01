@@ -61,15 +61,28 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
 }
 
 
+class DemoListHeader extends TerrierPart<{ time: string }> {
+
+        render(parent: PartTag) {
+            parent.div(".list-view-demo-header").text(`Demo Header ${this.state.time}`)
+        }
+}
+
 class DemoListViewer extends ListViewerPart<DemoItem> {
 
     async init() {
         await super.init()
 
+        const time = dayjs().format('h:mm:ss A')
+        const headerState = {time}
+        this.listHeaderPart = this.makePart(DemoListHeader, headerState)
+
         // make the list reload periodically
         setInterval(
             () => {
-                log.info(`Reloading at ${dayjs().format('h:mm:ss A')}`)
+                headerState.time = dayjs().format('h:mm:ss A')
+                this.listHeaderPart?.dirty()
+                log.info(`Reloading at ${headerState.time}`)
                 this.reload()
             },
             10000
@@ -91,10 +104,6 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
         else {
             alert("Clicked on a header")
         }
-    }
-
-    renderListHeader(parent: PartTag) {
-        parent.div(".list-view-demo-header").text("Demo Header")
     }
 
     renderEmptyDetails(parent: PartTag) {

@@ -1,5 +1,5 @@
 import TerrierPart from "./parts/terrier-part"
-import {Part, PartConstructor, PartTag, StatelessPart} from "tuff-core/parts"
+import { Part, PartConstructor, PartTag, StatelessPart } from "tuff-core/parts"
 import Messages from "tuff-core/messages"
 import {Logger} from "tuff-core/logging"
 import {PageBreakpoints} from "./parts/page-part"
@@ -269,9 +269,11 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     render(parent: PartTag): any {
         log.debug(`Rendering the viewer`)
         parent.div('.tt-list-viewer-list', list => {
-            list.div('.tt-list-viewer-header', header => {
-                this.renderListHeader(header)
-            })
+            if (this.listHeaderPart) {
+                list.div('.tt-list-viewer-header', header => {
+                    header.part(this.listHeaderPart!)
+                })
+            }
             this.renderCollection(list, 'items')
         })
         if (this.layout == 'side') {
@@ -294,20 +296,20 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     abstract renderDetails(context: ListViewerDetailsContext<T>): any
 
     /**
-     * Subclasses can override this to render something at the top of the list.
-     * @param parent
-     */
-    renderListHeader(_parent: PartTag) {
-
-    }
-
-    /**
      * Subclasses should override this to render custom content when there's no item selected (and layout=side).
      * @param parent
      */
     renderEmptyDetails(parent: PartTag) {
         parent.div(".text-center").text("Nothing to see here")
     }
+
+
+    // Header
+
+    /**
+     * Subclasses can provide a part to render at the top of the list.
+     */
+    listHeaderPart?: Part<any>
 
 
     // Details
