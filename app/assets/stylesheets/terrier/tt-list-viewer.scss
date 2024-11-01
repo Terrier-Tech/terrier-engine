@@ -27,6 +27,12 @@ $arrow-size: 16px;
 				gap: var(--tt-gap);
 			}
 		}
+		.tt-list-viewer-header {
+			padding: 0;
+			position: sticky;
+			top: 0;
+			z-index: 2; // above the items, even the current one
+		}
 		.tt-list-viewer-item {
 			display: flex;
 			position: relative;

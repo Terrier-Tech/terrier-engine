@@ -93,6 +93,9 @@ class DemoListViewer extends ListViewerPart<DemoItem> {
         }
     }
 
+    renderListHeader(parent: PartTag) {
+        parent.div(".list-view-demo-header").text("Demo Header")
+    }
 
     renderEmptyDetails(parent: PartTag) {
         parent.div().text("Demo Empty Item")

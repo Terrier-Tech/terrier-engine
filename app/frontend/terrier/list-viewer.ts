@@ -269,6 +269,9 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
     render(parent: PartTag): any {
         log.debug(`Rendering the viewer`)
         parent.div('.tt-list-viewer-list', list => {
+            list.div('.tt-list-viewer-header', header => {
+                this.renderListHeader(header)
+            })
             this.renderCollection(list, 'items')
         })
         if (this.layout == 'side') {
@@ -289,6 +292,14 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
      * @param context
      */
     abstract renderDetails(context: ListViewerDetailsContext<T>): any
+
+    /**
+     * Subclasses can override this to render something at the top of the list.
+     * @param parent
+     */
+    renderListHeader(_parent: PartTag) {
+
+    }
 
     /**
      * Subclasses should override this to render custom content when there's no item selected (and layout=side).
