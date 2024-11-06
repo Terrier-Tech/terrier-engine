@@ -7,9 +7,6 @@ namespace :frontend do
   task gen_models: :environment do
     ModelGenerator.new(
       exclude_prefix: 'Dd',
-      imports: {
-        '../../terrier/attachments' => %w[Attachment],
-      }
     ).run
   end
 
