@@ -50,10 +50,10 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
             }
             parent.div(...actionsClasses, actions => {
                 actions.div('.secondary-actions', container => {
-                    this.theme.renderActions(container, secondaryActions, {iconColor: 'white', defaultClass: 'secondary'})
+                    this.theme.renderActions(container, secondaryActions, { defaultClass: 'secondary' })
                 })
                 actions.div('.primary-actions', container => {
-                    this.theme.renderActions(container, primaryActions, {iconColor: 'white', defaultClass: 'primary'})
+                    this.theme.renderActions(container, primaryActions, { defaultClass: 'primary' })
                 })
             })
         }

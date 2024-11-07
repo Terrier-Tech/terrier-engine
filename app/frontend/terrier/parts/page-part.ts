@@ -135,8 +135,8 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
                 conatiner.div('.page-content', main => {
                     this.renderContent(main)
                     main.div('.page-actions', actions => {
-                        this.renderActions(actions, 'secondary', {iconColor: null, defaultClass: 'secondary'})
-                        this.renderActions(actions, 'primary', {iconColor: null, defaultClass: 'primary'})
+                        this.renderActions(actions, 'secondary', { defaultClass: 'secondary' })
+                        this.renderActions(actions, 'primary', { defaultClass: 'primary' })
                     })
                 })
             })
