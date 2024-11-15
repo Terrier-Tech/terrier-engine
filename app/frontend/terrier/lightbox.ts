@@ -70,14 +70,14 @@ class LightboxPart extends Part<LightboxState> {
     }
 
     update(_elem: HTMLElement) {
-        setTimeout(_ => {
+        setTimeout(() => {
             _elem.classList.add('active') // start css fade in
         }, 10)
     }
 
     close() {
         this.element?.classList.remove('active')
-        setTimeout(_ => {
+        setTimeout(() => {
             this.state.app.removeOverlay(this.state)
         }, 500)
     }
