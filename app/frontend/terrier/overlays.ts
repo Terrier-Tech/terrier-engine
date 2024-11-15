@@ -33,7 +33,7 @@ export class OverlayPart extends Part<NoState> {
      */
     pushLayer<PartType extends Part<StateType>, StateType extends {}>(
         constructor: PartConstructor<PartType, StateType>,
-        state: StateType,
+        state: NoInfer<StateType>,
         type: OverlayLayerType
     ): PartType {
         this.layerStates.push({partClass: constructor, partState: state, type})
@@ -50,7 +50,7 @@ export class OverlayPart extends Part<NoState> {
      */
     getOrCreateLayer<PartType extends Part<StateType>, StateType extends {}>(
         constructor: PartConstructor<PartType, StateType>,
-        state: StateType,
+        state: NoInfer<StateType>,
         type: OverlayLayerType
     ): PartType {
         const layers = this.getCollectionParts('layers')

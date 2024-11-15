@@ -1,5 +1,5 @@
 import {Logger} from "tuff-core/logging"
-import {Part, PartConstructor, PartParent} from "tuff-core/parts"
+import {Part, PartConstructor} from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
 import Tooltips from "./tooltips"
 import Lightbox from "./lightbox"
@@ -48,8 +48,8 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
     /// Overlays
 
     addOverlay<OverlayType extends Part<StateType>, StateType extends {}>(
-        constructor: { new(p: PartParent, id: string, state: StateType): OverlayType; },
-        state: StateType,
+        constructor: PartConstructor<OverlayType, StateType>,
+        state: NoInfer<StateType>,
         type: OverlayLayerType
     ) {
         return this.overlayPart.pushLayer(constructor, state, type)
@@ -85,7 +85,7 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
 
     showModal<ModalType extends ModalPart<StateType>, StateType>(
         constructor: PartConstructor<ModalType, StateType>,
-        state: StateType
+        state: NoInfer<StateType>
     ): ModalType {
         const modalStack = this.overlayPart.getOrCreateLayer(ModalStackPart, {}, 'modal')
         const modal = modalStack.pushModal(constructor, state)

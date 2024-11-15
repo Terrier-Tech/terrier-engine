@@ -147,7 +147,10 @@ export class ModalStackPart extends TerrierPart<{}> {
      * @param constructor the modal class
      * @param state the modal's state
      */
-    pushModal<StateType>(constructor: PartConstructor<ModalPart<StateType>, StateType>, state: StateType): ModalPart<StateType> {
+    pushModal<ModalType extends ModalPart<StateType>, StateType>(
+        constructor: PartConstructor<ModalType, StateType>,
+        state: NoInfer<StateType>
+    ): ModalPart<StateType> {
         log.info(`Making modal`, constructor.name)
         const modal = this.makePart(constructor, state)
         this.modals.push(modal)

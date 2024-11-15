@@ -1,4 +1,4 @@
-import {Part, PartParent, PartTag} from "tuff-core/parts"
+import { Part, PartConstructor, PartTag } from "tuff-core/parts"
 import {TerrierApp} from "../app"
 import Loading from "../loading"
 import Theme, {IconName} from "../theme"
@@ -171,8 +171,8 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
      * @param target the target element around which to show the dropdown
      */
     makeDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
-        constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
-        state: DropdownStateType,
+        constructor: PartConstructor<DropdownType, DropdownStateType>,
+        state: NoInfer<DropdownStateType>,
         target: EventTarget | null) {
         const dropdown = this.app.addOverlay(constructor, state, 'dropdown')
         dropdown.parentPart = this
@@ -193,8 +193,8 @@ export default abstract class TerrierPart<TState> extends Part<TState> {
      * @param target the target element around which to show the dropdown
      */
     toggleDropdown<DropdownType extends Dropdown<DropdownStateType>, DropdownStateType extends {}>(
-        constructor: { new(p: PartParent, id: string, state: DropdownStateType): DropdownType; },
-        state: DropdownStateType,
+        constructor: PartConstructor<DropdownType, DropdownStateType>,
+        state: NoInfer<DropdownStateType>,
         target: EventTarget | null) {
         if (target && target instanceof HTMLElement && target == this.app.lastDropdownTarget) {
             this.clearDropdowns()
