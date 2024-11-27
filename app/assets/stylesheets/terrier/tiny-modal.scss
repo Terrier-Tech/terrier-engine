@@ -90,10 +90,10 @@ body.with-modal {
 	display: flex;
 	flex-direction: column;
 	width: 100%;
+	--tiny-modal-header-height: 32px;
 	.modal-header {
 		flex: 0 0 auto;
 		display: flex;
-		padding-right: 50px;
 		h2 {
 			flex: 1 0 auto;
 			margin: 0;
@@ -101,19 +101,18 @@ body.with-modal {
 			line-height: 1;
 		}
 		a.close-modal {
-			position: absolute;
-			right: 0;
-			top: 0;
-			font-size: 32px;
+			font-size: var(--tiny-modal-header-height);
 			display: block;
-			width: 32px;
-			height: 32px;
+			flex: 0 0 auto;
+			width: var(--tiny-modal-header-height);
+			height: var(--tiny-modal-header-height);
 			text-align: center;
+			line-height: 1;
 			&:hover {
-				transform: scale(1.08);
+				transform: scale(1.05);
 			}
 			&:active {
-				transform: scale(0.92);
+				transform: scale(0.95);
 			}
 		}
 	}
