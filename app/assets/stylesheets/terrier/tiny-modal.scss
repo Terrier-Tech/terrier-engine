@@ -116,6 +116,16 @@ body.with-modal {
 			}
 		}
 	}
+	.modal-breadcrumbs {
+		display: flex;
+		align-items: stretch;
+		flex: 0 0 auto;
+		height: var(--tiny-modal-header-height);
+		a {
+			display: flex;
+			align-items: center;
+		}
+	}
 	.modal-content {
 		min-height: 400px;
 		flex: 1 1 auto;

@@ -1,4 +1,5 @@
-tinyModal.closeIconClass = '.close-x'
+tinyModal.closeIconClass = '.glyp-close'
+tinyModal.enableBreadcrumbs = true
 
 ## Loader
 

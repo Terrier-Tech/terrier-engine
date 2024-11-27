@@ -206,6 +206,44 @@ window.tinyModal.reload = (url=null, callback=null) ->
 	container.showLoadingOverlay()
 	container.load url, callback
 
+# set this to true to have breadcrumbs automatically inserted into the header
+window.tinyModal.enableBreadcrumbs ||= false
+
+_breadcrumbsTemplate = tinyTemplate (breadcrumbs) ->
+	div '.modal-breadcrumbs', ->
+		for crumb in breadcrumbs
+			a '.modal-crumb', ->
+				div '.title', crumb.title
+
+# generate breadcrumbs for the previous columns in the stack and prepend it to the given column's header
+# returns an array of the breadcrumbs that were added
+window.tinyModal.updateBreadcrumbs = (column) ->
+	# remove any previously added breadcrumbs
+	column.find('.modal-header .modal-breadcrumbs').remove()
+
+	# find the columns earlier in the stack
+	previousColumns = column.prevAll('.modal-column')
+	unless previousColumns.length
+		return []
+
+	# compute the breadcrumb values
+	breadcrumbs = previousColumns.map((index, col) ->
+		header = $(col).find('.modal-header h2')
+		puts "col and header", col, header
+		{
+			title: header.text()
+		}
+	).get()
+	puts "Generating breadcrumbs for previous columns", previousColumns, breadcrumbs
+
+	# render the breadcrumbs in the header
+	column.find('.modal-header').prepend _breadcrumbsTemplate(breadcrumbs)
+	breadcrumbs
+
+window.tinyModal.updateBreadcrumbsIfEnabled = (column) ->
+	if tinyModal.enableBreadcrumbs
+		tinyModal.updateBreadcrumbs column
+
 
 # removes the actions from the last column
 window.tinyModal.removeActions = ->
@@ -245,6 +283,7 @@ window.tinyModal.showDirect = (content, options={}) ->
 	if options.columnClasses?.length
 		column.addClass tinyTemplate.parseClasses(options.columnClasses).join(' ')
 	addCallbacks options, column
+	tinyModal.updateBreadcrumbsIfEnabled column
 
 	_layoutRow row
 
@@ -311,6 +350,7 @@ window.tinyModal.show = (url, options={}) ->
 					options.callback column
 				if options.onShow?
 					options.onShow column
+			tinyModal.updateBreadcrumbsIfEnabled column
 	)
 
 	# show the window in another frame to allow the animation to happen
