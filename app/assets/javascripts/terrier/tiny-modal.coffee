@@ -184,12 +184,15 @@ window.tinyModal.ensureModalUrl = (url) ->
 			url += '?modal=true'
 	url
 
-# loads a URL into the top modal stack
-window.tinyModal.replaceColumn = (url) ->
-	url = tinyModal.ensureModalUrl url
+# loads a URL or ray HTML into the top modal stack
+window.tinyModal.replaceColumn = (urlOrHtml) ->
 	container = _topColumn()
-	container.showLoadingOverlay()
-	container.load url
+	if urlOrHtml.startsWith '<'
+		container.html urlOrHtml
+	else
+		url = tinyModal.ensureModalUrl urlOrHtml
+		container.showLoadingOverlay()
+		container.load url
 
 # reloads the top modal using the modal-src input or the provided url
 window.tinyModal.reload = (url=null, callback=null) ->
