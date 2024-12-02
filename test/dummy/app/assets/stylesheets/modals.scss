@@ -3,18 +3,9 @@
 #modal-window {
 	background-color: #fff;
 
-	// keep in #modal-window to not interfere with tt-modal
-	.modal-header a.close-modal {
-		line-height: 1;
-		// we don't have icons, so just use a multiplication symbol
-		i.close-x {
-			font-style: normal;
-			font-weight: bold;
-
-			&::after {
-				content: '×';
-			}
-		}
+	.modal-header .modal-breadcrumbs {
+		gap: 1em;
+		padding: 0 1em;
 	}
 
 	// keep in #modal-window to not interfere with tt-modal

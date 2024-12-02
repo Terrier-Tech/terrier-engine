@@ -190,20 +190,20 @@ $(document).on 'click', 'a.stacked-modal', ->
 	depth = parseInt ($(this).data('depth') || '1')
 	tinyModal.showDirect(
 		_stackTemplate(depth)
-		title: 'Stacked Modal'
-		title_icon: 'navicon-round'
+		title: "Stack #{depth}"
+		title_icon: 'glyp-' + _.sample(glyps.names)
 		expanded: true
 		contentClass: 'stacked-content'
 		actions: [
 			{
 				title: 'Push Stack'
-				icon: 'chevron-right'
+				icon: 'glyp-chevron_right'
 				class: 'stacked-modal'
 				attrs: {data: {depth: depth+1}}
 			}
 			{
 				title: 'Pop Stack'
-				icon: 'chevron-left'
+				icon: 'glyp-chevron_left'
 				class: 'close-modal'
 				end: true
 			}

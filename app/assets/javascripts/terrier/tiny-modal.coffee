@@ -1,7 +1,7 @@
 window.tinyModal = {}
 
 # this can be overridden to customize the class of the close button icon
-window.tinyModal.closeIconClass = '.la.la-close.glyp-close.lyph-close'
+window.tinyModal.closeIconClass = '.glyp-close'
 
 # this can be overridden to customize the class of the icon used on error pages
 window.tinyModal.alertIcon = 'alert'
@@ -94,6 +94,12 @@ window.tinyModal.pop = ->
 window.tinyModal.getStackSize = ->
 	$('#modal-row .modal-column').length
 
+# Pops the tinyModal stack until the specified level is reached.
+# This calls tinyModal.pop(), so the pop callbacks will be called for each layer being removed.
+window.tinyModal.popTo = (level) ->
+	while tinyModal.getStackSize() > level
+		tinyModal.pop()
+
 
 window.tinyModal.removeLoadingOverlay = ->
 	$('#modal-window').find('.loading-overlay').remove()
@@ -124,7 +130,7 @@ _actionPartial = (action) ->
 		sel += ".action-#{action._index}"
 	a "#{sel}#{tinyTemplate.classesToSelector(action.class)}", action.attrs||{}, ->
 		if action.icon?.length
-			icon ".ion-#{action.icon}.la.la-#{action.icon}.#{action.icon}"
+			icon ".la.la-#{action.icon}.#{action.icon}"
 		span '.title', action.title
 
 _template = tinyTemplate (options, content) ->
@@ -135,7 +141,7 @@ _template = tinyTemplate (options, content) ->
 		h2 '.with-icon', ->
 			i = options.title_icon || options.icon
 			if i?.length
-				icon ".la.la-#{i}.ion-#{i}.#{i}"
+				icon ".la.la-#{i}.#{i}"
 			span '', options.title
 		a '.close-modal', ->
 			icon tinyModal.closeIconClass
@@ -211,8 +217,10 @@ window.tinyModal.enableBreadcrumbs ||= false
 
 _breadcrumbsTemplate = tinyTemplate (breadcrumbs) ->
 	div '.modal-breadcrumbs', ->
-		for crumb in breadcrumbs
-			a '.modal-crumb', ->
+		for crumb, i in breadcrumbs
+			a '.modal-crumb', data: {level: i+1}, ->
+				if crumb.icon?.length
+					icon [crumb.icon]
 				div '.title', crumb.title
 
 # generate breadcrumbs for the previous columns in the stack and prepend it to the given column's header
@@ -229,17 +237,27 @@ window.tinyModal.updateBreadcrumbs = (column) ->
 	# compute the breadcrumb values
 	breadcrumbs = previousColumns.map((index, col) ->
 		header = $(col).find('.modal-header h2')
-		puts "col and header", col, header
 		{
+			icon: header.find('i')[0]?.className
 			title: header.text()
 		}
-	).get()
+	).get().reverse()
 	puts "Generating breadcrumbs for previous columns", previousColumns, breadcrumbs
 
 	# render the breadcrumbs in the header
 	column.find('.modal-header').prepend _breadcrumbsTemplate(breadcrumbs)
 	breadcrumbs
 
+# pop the stack back to the given level when a breadcrumb is clicked
+$(document).on 'click', '#modal-window a.modal-crumb', (evt) ->
+	level = evt.currentTarget.dataset.level
+	unless level
+		console.warn "No data-level specified for .modal-breadcrumb"
+		return
+	tinyModal.popTo level
+	false
+
+# checks tinyModal.enableBreadcrumbs before updating the breadcrumbs
 window.tinyModal.updateBreadcrumbsIfEnabled = (column) ->
 	if tinyModal.enableBreadcrumbs
 		tinyModal.updateBreadcrumbs column

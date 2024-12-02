@@ -15,6 +15,7 @@
 #= require turbolinks
 #= require lodash
 #= require morphdom
+#= require terrier/_glyps
 #= require terrier/forms
 #= require terrier/strings
 #= require terrier/polyfills
