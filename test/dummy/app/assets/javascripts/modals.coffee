@@ -190,7 +190,7 @@ $(document).on 'click', 'a.stacked-modal', ->
 	depth = parseInt ($(this).data('depth') || '1')
 	tinyModal.showDirect(
 		_stackTemplate(depth)
-		title: "Stack #{depth}"
+		title: "Stack Title #{depth}"
 		title_icon: 'glyp-' + _.sample(glyps.names)
 		expanded: true
 		contentClass: 'stacked-content'

@@ -3,6 +3,10 @@
 #modal-window {
 	background-color: #fff;
 
+	.modal-header {
+		background-color: rgba(#666, 0.1);
+	}
+
 	.modal-header .modal-breadcrumbs {
 		gap: 1em;
 		padding: 0 1em;

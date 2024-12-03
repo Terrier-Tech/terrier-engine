@@ -94,6 +94,7 @@ body.with-modal {
 	.modal-header {
 		flex: 0 0 auto;
 		display: flex;
+		justify-content: right; // so that the close button is always visible
 		h2 {
 			flex: 1 0 auto;
 			margin: 0;
@@ -107,7 +108,6 @@ body.with-modal {
 			justify-content: center;
 			flex: 0 0 auto;
 			width: var(--tiny-modal-header-height);
-			//height: var(--tiny-modal-header-height);
 			text-align: center;
 			line-height: 1;
 			&:hover {
