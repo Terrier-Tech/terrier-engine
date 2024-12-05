@@ -1,4 +1,5 @@
 import {ModalPart} from "../../terrier/modals"
+import Columns from "./columns"
 import Queries, {OrderBy, Query} from "./queries"
 import Messages from "tuff-core/messages"
 import {PartTag} from "tuff-core/parts"
@@ -54,15 +55,19 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
 
         // collect the column options
         const query = this.state.query
-        Queries.eachColumn(query, (_, col) => {
-            this.columnOptions.push({title: col.name, value: col.name})
+        const existingColumns = new Set<string>()
+        Queries.eachColumn(query, (table, col) => {
+            const name = Columns.computeSelectName(table, col)
+            existingColumns.add(name)
+            this.columnOptions.push({title: name, value: name})
         })
 
-        // initialize the order=bys from the query, if present
+        // initialize the order-bys from the query, if present
         if (query.order_by?.length) {
-            this.orderBys = query.order_by
+            // filter out columns that are no longer present in the query
+            this.orderBys = query.order_by.filter(ob => existingColumns.has(ob.column))
         }
-        else {
+        if (!query.order_by?.length) { // this isn't an else because the previous clause might've resulted in no columns
             // start with something by default
             this.addClause()
         }

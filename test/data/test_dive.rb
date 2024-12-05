@@ -14,7 +14,7 @@ module TestDive
       name: 'Order Details',
       order_by: [
         {column: "location_id", dir: "asc"},
-        {column: "time", dir: "desc"}
+        {column: "Order Time", dir: "desc"}
       ],
       from: {
         model: 'WorkOrder',
@@ -23,7 +23,8 @@ module TestDive
             name: 'id'
           },
           {
-            name: 'time'
+            name: 'time',
+            alias: "Order Time"
           },
           {
             name: 'notes',
@@ -239,6 +240,28 @@ module TestDive
             operator: 'eq'
           }
         ]
+      }
+    }
+  end
+
+  def self.sorting
+    {
+      id: 'sorting',
+      name: "Sorting",
+      from: {
+        model: 'User',
+        columns: [
+          {
+            name: 'id'
+          },
+          {
+            name: 'email',
+            alias: 'E-Mail'
+          },
+          {
+            name: 'role'
+          }
+        ],
       }
     }
   end

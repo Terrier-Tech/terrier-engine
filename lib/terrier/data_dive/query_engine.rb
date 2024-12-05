@@ -393,7 +393,7 @@ class DataDive::QueryEngine
     order_bys.each do |ob|
       col = ob['column'] || ob[:column] || raise("No column specified for order_by statement #{ob.inspect}")
       dir = ob['dir'].presence || ob[:dir].presence || 'asc'
-      builder.order_by "#{col} #{dir}"
+      builder.order_by "\"#{col}\" #{dir}"
     end.join(", ")
   end
 
