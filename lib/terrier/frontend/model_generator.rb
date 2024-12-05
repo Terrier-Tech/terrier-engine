@@ -51,7 +51,7 @@ class ModelGenerator < BaseGenerator
         column, *other_columns = validator.attributes
         values = validator.options[:in]
         if !other_columns.present? && column.to_s.in?(column_names) && values.present?
-          enum_fields[column] = values
+          enum_fields[column] = values.is_a?(Proc) ? values.call : values
         end
       end
 
