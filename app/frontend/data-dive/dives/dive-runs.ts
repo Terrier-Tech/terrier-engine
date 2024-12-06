@@ -1,3 +1,4 @@
+import Arrays from "tuff-core/arrays"
 import {ModalPart} from "../../terrier/modals"
 import {PartTag} from "tuff-core/parts"
 import {DdDive, DdDiveRun, UnpersistedDdDiveRun} from "../gen/models"
@@ -191,8 +192,12 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             col.div('.tt-flex.collapsible.gap.tt-form', row => {
                 // inputs
                 row.div('.tt-flex.column.dd-dive-run-inputs', col => {
-                    for (const filter of this.filters) {
-                        this.renderInput(col, filter)
+                    const filtersByQuery = Arrays.groupBy(this.filters, 'query_name')
+                    for (const queryName of Object.keys(filtersByQuery).sort()) {
+                        col.h3(".glyp-data_dive_query").text(queryName)
+                        for (const filter of filtersByQuery[queryName]) {
+                            this.renderInput(col, filter)
+                        }
                     }
                 })
 

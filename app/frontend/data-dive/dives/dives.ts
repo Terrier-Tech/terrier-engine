@@ -61,7 +61,7 @@ async function list(): Promise<DiveListResult> {
 function computeFilterInputs(schema: SchemaDef, dive: DdDive): FilterInput[] {
     const filters: Record<string, FilterInput> = {}
     for (const query of dive.query_data?.queries || []) {
-        Tables.computeFilterInputs(schema, query.from, filters)
+        Tables.computeFilterInputs(schema, query, query.from, filters)
     }
     return Object.values(filters)
 }

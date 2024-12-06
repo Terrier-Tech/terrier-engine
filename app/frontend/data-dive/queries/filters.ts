@@ -1,6 +1,7 @@
 import {PartTag} from "tuff-core/parts"
 import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
+import { Query } from "./queries"
 import {TableRef, TableView} from "./tables"
 import {Logger} from "tuff-core/logging"
 import * as inflection from "inflection"
@@ -683,6 +684,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
 ////////////////////////////////////////////////////////////////////////////////
 
 export type FilterInput = Filter & {
+    query_name: string
     input_name: string
     input_value: string
     possible_values?: string[]
@@ -694,12 +696,12 @@ export type FilterInput = Filter & {
  * @param table
  * @param filter
  */
-function toInput(schema: SchemaDef, table: TableRef, filter: Filter): FilterInput {
+function toInput(schema: SchemaDef, query: Query, table: TableRef, filter: Filter): FilterInput {
     if (!filter.id?.length) {
         filter.id = Ids.makeRandom(8)
     }
     const name = `${table.model}.${filter.column}`
-    const filterInput: FilterInput = {...filter, input_name: name, input_value: ''}
+    const filterInput: FilterInput = {...filter, query_name: query.name, input_name: name, input_value: ''}
     switch (filter.filter_type) {
         case 'inclusion':
             const modelDef = schema.models[table.model]

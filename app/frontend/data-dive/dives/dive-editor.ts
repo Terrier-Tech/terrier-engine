@@ -416,6 +416,7 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         this.state.editor.queryTabs.showTab(query.id)
         this.pop()
         this.app.successToast("Duplicated Query", 'glyp-copy')
+        this.emitMessage(DiveEditor.diveChangedKey, {})
     }
 
     renderContent(parent: PartTag): void {

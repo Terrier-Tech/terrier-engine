@@ -47,22 +47,19 @@ const updatedKey = Messages.typedKey<TableRef>()
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Recursively collect  s all of the filters for this and all joined tables.
- * Only keep one (the last one traversed) per table/column combination.
- * This means that some filters may clobber others, but I think it will yield
- * the desired result most of the time.
+ * Recursively collects all the filters for this and all joined tables.
  * @param schema
  * @param table
  * @param filters
  */
-function computeFilterInputs(schema: SchemaDef, table: TableRef, filters: Record<string, FilterInput>) {
+function computeFilterInputs(schema: SchemaDef, query: Query, table: TableRef, filters: Record<string, FilterInput>) {
     for (const f of table.filters || []) {
-        const fi = Filters.toInput(schema, table, f)
+        const fi = Filters.toInput(schema, query, table, f)
         filters[fi.id] = fi
     }
     if (table.joins) {
         for (const j of Object.values(table.joins)) {
-            computeFilterInputs(schema, j, filters)
+            computeFilterInputs(schema, query, j, filters)
         }
     }
 }

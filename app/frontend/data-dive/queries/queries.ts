@@ -1,3 +1,4 @@
+import { Filter } from "./filters"
 import {TableRef} from "./tables"
 import api, {ApiResponse} from "../../terrier/api"
 import {PartTag} from "tuff-core/parts"
@@ -63,7 +64,7 @@ function eachTable(query: Query, fn: TableFunction) {
     eachChildTable(query.from, fn)
 }
 
-type ColumnFunction = (table: TableRef, col: ColumnRef) => any
+export type ColumnFunction = (table: TableRef, col: ColumnRef) => any
 
 function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
     if (table.columns) {
@@ -87,14 +88,44 @@ function eachColumn(query: Query, fn: ColumnFunction) {
     eachColumnForTable(query.from, fn)
 }
 
+export type FilterFunction = (table: TableRef, filter: Filter) => any
+
+function eachFilterForTable(table: TableRef, fn: FilterFunction) {
+    if (table.filters) {
+        for (const filter of table.filters) {
+            fn(table, filter)
+        }
+    }
+    if (table.joins) {
+        for (const joinedTable of Object.values(table.joins)) {
+            eachFilterForTable(joinedTable, fn)
+        }
+    }
+}
+
 /**
- * Duplicates a query, including all of the nested data structures.
+ * Recursively iterates over all filters in the query and executes the given function for each.
+ * @param query
+ * @param fn a function to evaluate on each filter
+ */
+function eachFilter(query: Query, fn: FilterFunction) {
+    eachFilterForTable(query.from, fn)
+}
+
+/**
+ * Duplicates a query, including all the nested data structures.
  * @param query the query to duplicate
  * @return a completely new query
  */
 function duplicate(query: Query): Query {
     const newQuery = Objects.deepCopy(query)
     newQuery.id = Ids.makeUuid()
+
+    // filters need new IDs, otherwise they won't be able to be set differently than the original query's filters
+    eachFilter(newQuery, (_, filter) => {
+        filter.id = Ids.makeUuid()
+    })
+
     return newQuery
 }
 
@@ -332,6 +363,7 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 const Queries = {
     eachColumn,
     eachTable,
+    eachFilter,
     duplicate,
     validate,
     preview,
