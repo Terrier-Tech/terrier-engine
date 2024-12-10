@@ -32,30 +32,30 @@ window.leftPad = (s, width) ->
 _upcaseValues = ['cod', 'csr', 'html', 'pdf', 'ach', 'eft', 'wdi', 'wdo']
 _upcaseBlacklist = ['at', 'by', 'to', 'is', 'or', 'of']
 
-# only capitalizes the first character
-window.capitalize = (s) ->
+# capitalizes the first character or the first 2 if conditions allow
+window.capitalize = (s, upcase=true) ->
 	unless s?
 		return ''
-	if (s.length < 3 and _upcaseBlacklist.indexOf(s) < 0) or _upcaseValues.indexOf(s)>-1
+	if upcase and ((s.length < 3 and _upcaseBlacklist.indexOf(s) < 0) or _upcaseValues.indexOf(s)>-1)
 		return s.toUpperCase()
 	s && s[0].toUpperCase() + s.slice(1)
 
-String::capitalize = ->
-	window.capitalize this
+String::capitalize = (upcase) ->
+	window.capitalize this, upcase
 
 # capitalizes every word
-window.titleize = (s) ->
+window.titleize = (s, upcase) ->
 	unless s?
 		return ''
 	s = s.toString()
 	if s == '_state'
 		return s
 	comps = s.split(/[\s_-]/g)
-	capitalized = _.map comps, (c) -> window.capitalize(c)
+	capitalized = _.map comps, (c) -> window.capitalize(c, upcase)
 	capitalized.join ' '
 
-String::titleize = ->
-	window.titleize this
+String::titleize = (upcase) ->
+	window.titleize this, upcase
 
 # converts the string to camel-case
 window.camelize = (s) ->
