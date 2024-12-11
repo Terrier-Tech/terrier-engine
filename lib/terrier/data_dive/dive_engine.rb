@@ -73,7 +73,9 @@ class DataDive::DiveEngine
         qd['exec_time'] = dt_format + dt_exec
         qd['count'] = rows.count
 
-        data[qe.query.name] = rows
+        # remove invalid sheet name characters and limit to 31 chars
+        sheet_name = qe.query.name.gsub(/[\\\/\?\*\[\]]/, "_").slice(0, 31)
+        data[sheet_name] = rows
         dt = dt_exec + dt_format
         @stream&.write 'query_result', {
           id: qe.query.id,
