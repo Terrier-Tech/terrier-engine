@@ -255,7 +255,7 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
     }
 
     renderFileOutput(parent: DivTag, fileOutput: RunFileOutput) {
-        parent.a('.file-output', {href: fileOutput.url}, row => {
+        parent.a('.file-output', { href: fileOutput.url, download: fileOutput.name }, row => {
             row.div('.name.glyp-file_spreadsheet.with-icon').text(fileOutput.name)
             row.div('.details.glyp-download.with-icon').text("Click to download")
         })
