@@ -264,7 +264,8 @@ module Terrier::Model
       self.define_method "safe_#{name}" do
         val = self[name]
         if val.blank?
-          default.dup
+          default_val = default.dup
+          default_val.is_a?(Proc) ? default_val.call : default_val
         elsif val.is_a? String
           JSON.parse val
         else
