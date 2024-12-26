@@ -234,6 +234,13 @@ export class DiveEditorPage extends DivePage<{id: string}> {
         })
 
         this.addAction({
+            title: 'Sync',
+            icon: 'glyp-terrier',
+            classes: ['terrier-record-sync'],
+            data: { id: this.state.id, table: 'dd_dive', title: dive.name }
+        }, 'tertiary')
+
+        this.addAction({
             title: 'Discard',
             icon: 'glyp-cancelled',
             classes: ['discard-dive-action'],
