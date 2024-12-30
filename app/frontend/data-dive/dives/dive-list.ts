@@ -219,6 +219,13 @@ export class DiveListPage extends DivePage<{}> {
         this.addDocsAction()
 
         this.addAction({
+            title: 'Sync from Terrier',
+            icon: 'glyp-terrier',
+            classes: ['terrier-record-sync down'],
+            data: { table: 'dd_dive' }
+        }, 'tertiary')
+
+        this.addAction({
             title: "New Group",
             icon: 'glyp-plus_outline',
             click: {key: this.newGroupKey}
