@@ -1,5 +1,6 @@
 require 'http'
 require 'ssh_data'
+require 'ed25519'
 
 # manages SSH public keys distributed by terrier.tech
 class SshKeyManager
@@ -131,7 +132,7 @@ class SshKeyManager
   #   - :ssh_signature [String] the challenge string encrypted
   #   - :ssh_public_key [String] the public key used for encryption
   def generate_challenge
-    get_logger.level = 'debug'
+    # get_logger.level = 'debug'
 
     # load the keys
     ssh_private_key = load_private_key
@@ -149,6 +150,8 @@ class SshKeyManager
     }
   end
 
+  # the amount of time that a challenge is valid
+  CHALLENGE_DURATION = 5.seconds
 
   # Validates that a signed challenge string is valid,
   # that the challenge timestamp is recent enough,
@@ -158,9 +161,27 @@ class SshKeyManager
     raw_key = data[:ssh_public_key].presence || raise("Must pass a ssh_public_key")
     challenge = data[:ssh_challenge].presence || raise("Must pass a ssh_challenge")
     raw_signature = data[:ssh_signature].presence || raise("Must pass a ssh_signature")
+
+    # ensure that the challenge is recent enough
+    timestamp = Time.at(challenge.to_i)
+    if timestamp < CHALLENGE_DURATION.ago
+      raise "Challenge #{challenge} is #{timestamp}, which is too old!"
+    end
+
+    # verify that the signature matches the challenge
     binary_signature = Base64.decode64 raw_signature
     public_key = SSHData::PublicKey.parse_openssh raw_key
-    public_key.verify challenge, binary_signature
+    unless public_key.verify challenge, binary_signature
+      raise "Challenge does not match signature"
+    end
+
+    # verify that the public key is on this machine
+    public_keys = load_all_public_keys
+    unless public_keys.include? raw_key
+      raise "Public key #{raw_key} is not on this machine!"
+    end
+
+    true
   end
 
 end

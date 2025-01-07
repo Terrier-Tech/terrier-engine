@@ -13,11 +13,8 @@ namespace :ssh do
     manager = SshKeyManager.new
     data = manager.generate_challenge
     ap data
-    if manager.validate_challenge! data
-      puts "Challenge successfully validated!".green
-    else
-      puts "Challenge failed to validate!".red
-    end
+    manager.validate_challenge! data
+    puts "Challenge successfully validated!".green
   end
 
 end
