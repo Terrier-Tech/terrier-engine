@@ -7,14 +7,4 @@ namespace :ssh do
     SshKeyManager.new.update_public_keys
   end
 
-
-  desc "Generates a challenge and signature pair for this client"
-  task generate_challenge: :environment do
-    manager = SshKeyManager.new
-    data = manager.generate_challenge
-    ap data
-    manager.validate_challenge! data
-    puts "Challenge successfully validated!".green
-  end
-
 end

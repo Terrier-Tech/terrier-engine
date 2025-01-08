@@ -40,7 +40,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'coderay'
   s.add_dependency 'net-ssh'
   s.add_dependency 'ed25519'
-  s.add_dependency 'ssh_data'
 
   s.add_development_dependency 'pg'
   s.add_development_dependency 'sassc', '>= 2.4.0'
