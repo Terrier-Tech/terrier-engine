@@ -6,10 +6,10 @@ GIT
 
 GIT
   remote: https://github.com/Terrier-Tech/terrier_auth.git
-  revision: 116a414207a2f02cb4fc8d63b1da86b1e6b7eb56
+  revision: 4b39f24d1b4813950a8165bd3fa6c77226d663b4
   branch: main
   specs:
-    terrier_auth (0.1.5)
+    terrier_auth (0.1.6)
       amazing_print
       colorize
       ed25519
@@ -20,7 +20,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.45.1)
+    terrier-engine (4.45.2)
       amazing_print
       coderay
       colorize
@@ -161,7 +161,8 @@ GEM
     execjs (2.9.1)
     faker (3.2.3)
       i18n (>= 1.8.11, < 2)
-    ffi (1.16.3)
+    ffi (1.17.1)
+    ffi (1.17.1-x86_64-darwin)
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
