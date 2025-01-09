@@ -12,6 +12,7 @@ gemspec
 # your gem to rubygems.org.
 
 gem 'sql_builder', git: 'git@github.com:Terrier-Tech/sql_builder.git'
+gem 'terrier_auth', github: 'Terrier-Tech/terrier_auth', branch: 'main'
 
 group :development do
   gem 'pry'
