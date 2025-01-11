@@ -40,6 +40,7 @@ export type Action = {
     href?: string
     classes?: string[]
     click?: Packet
+    data?: Record<string, unknown> | undefined
     badge?: string
     hint?: {
         hint: Hint
@@ -92,7 +93,8 @@ export default class Theme {
         }
         for (const action of actions) {
             let iconColor = action.color || options?.iconColor
-            const attrs = action.tooltip?.length ? {data: {tooltip: action.tooltip}} : {}
+            let attrs = action.tooltip?.length ? {data: {tooltip: action.tooltip}} : {}
+            if (action.data) attrs = Object.assign({}, attrs, {data: action.data})
             parent.a(attrs, a => {
                 const classes = action.classes || []
                 if (classes?.length) {
