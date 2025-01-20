@@ -15,7 +15,10 @@ class StringTest < ActiveSupport::TestCase
   end
 
   test 'without_parens' do
-    assert_equal 'hello world', "hello world (foo bar1)".without_parens
+    assert_equal 'hello world', "hello world (remove)".without_parens
+    assert_equal 'hello world', "hello world ((foo bar1))".without_parens
+    assert_equal 'hello world', "hello world ((foo, bar1 & *%@ 123 123#&%)".without_parens
+    assert_equal 'Fumigation', "Fumigation (2+ rail car/trailer/unit))".without_parens
   end
 
   test 'postgres_array_literal' do
