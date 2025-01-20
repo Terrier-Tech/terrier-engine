@@ -103,7 +103,7 @@ class String
 
   # returns the string with anything between parentheses
   def without_parens
-    self.gsub(/\([\w\s]+\)/, '').strip
+    self.gsub(/\(.+\)/, '').strip
   end
 
   # converts a string containing terminal colors codes to an HTML string with .code-* spans

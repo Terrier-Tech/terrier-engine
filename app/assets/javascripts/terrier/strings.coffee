@@ -83,7 +83,7 @@ String::underscore = ->
 window.withoutParens = (s) ->
 	unless s?
 		return ''
-	s.replace(/\([\w\s]+\)/g, '').trim()
+	s.replace(/\(.+\)/g, '').trim()
 
 String::withoutParams = ->
 	window.withoutParens this
