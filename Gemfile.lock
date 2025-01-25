@@ -20,7 +20,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.45.6)
+    terrier-engine (4.45.7)
       amazing_print
       coderay
       colorize
@@ -168,8 +168,8 @@ GEM
       rake
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hiredis-client (0.23.0)
-      redis-client (= 0.23.0)
+    hiredis-client (0.23.2)
+      redis-client (= 0.23.2)
     http (5.2.0)
       addressable (~> 2.8)
       base64 (~> 0.1)
@@ -196,7 +196,7 @@ GEM
       rake (~> 13.0)
     lodash-rails (4.17.21)
       railties (>= 3.1)
-    logger (1.6.4)
+    logger (1.6.5)
     loofah (2.22.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -240,7 +240,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
-    parser (3.3.6.0)
+    parser (3.3.7.0)
       ast (~> 2.4.1)
       racc
     pg (1.5.6)
@@ -297,7 +297,7 @@ GEM
       psych (>= 4.0.0)
     redis (5.3.0)
       redis-client (>= 0.22.0)
-    redis-client (0.23.0)
+    redis-client (0.23.2)
       connection_pool
     reline (0.5.10)
       io-console (~> 0.5)

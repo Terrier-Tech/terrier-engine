@@ -7,6 +7,7 @@ const log = new Logger('Toasts')
 export type ToastOptions = {
     color: ColorName
     icon?: IconName
+    duration?: 'long' | 'default' | number
 }
 
 /**
@@ -17,6 +18,13 @@ export type ToastOptions = {
  */
 function show(message: string, options: ToastOptions, theme: Theme) {
     log.info(`Show ${options.color  }: ${message}`)
+
+    const duration =
+        options.duration == 'long'
+            ? 4000
+            : typeof options.duration == 'number'
+            ? options.duration
+            : 2000
 
     // ensure the container exists
     let container = document.getElementById('tt-toasts')
@@ -68,7 +76,7 @@ function show(message: string, options: ToastOptions, theme: Theme) {
     // remove the toast after a couple seconds
     setTimeout(
         () => remove(),
-        2000
+        duration
     )
 }
 
