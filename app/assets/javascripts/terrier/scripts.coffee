@@ -709,7 +709,7 @@ class FieldsControls
 
 _editorTemplate = tinyTemplate (script, constants) ->
 	form '.script-editor.show-settings', ->
-		input '#id', type: 'hidden', value: script.id
+		input '#script-id', type: 'hidden', value: script.id
 		div '.toolbar', ->
 			a '.toggle-settings', ->
 				icon '.glyp-chevron_left.lyph-arrow-left'
