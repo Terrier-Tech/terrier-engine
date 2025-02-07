@@ -50,8 +50,9 @@ class ModelGenerator < BaseGenerator
       enum_fields = model.validators.each_with_object({}) do |validator, enum_fields|
         column, *other_columns = validator.attributes
         values = validator.options[:in]
-        if !other_columns.present? && column.to_s.in?(column_names) && values.present?
-          enum_fields[column] = values.is_a?(Proc) ? values.call : values
+        if !other_columns.present? && column.to_s.in?(column_names) && values.present? && !values.is_a?(Proc)
+          # if values is a proc, the values aren't known at compile time and shouldn't be included in the typescript type
+          enum_fields[column] = values
         end
       end
 

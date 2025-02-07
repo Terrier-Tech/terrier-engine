@@ -44,6 +44,7 @@
   <% if model[:enum_fields].present? -%>
     export const <%= model_name %>EnumFields = {
     <% model[:enum_fields].each do |col, values| -%>
+      <% next if model[:enum_fields].blank? -%>
       <%= col %>: [<%= values.select(&:present?).map{|f| "'#{f}'"}.join(',') %>] as const,
     <% end -%>
     }

@@ -209,39 +209,57 @@ module Terrier::Model
     # defines a string field that only accepts a fixed set of possible values
     # pass optional: true for the value to be optional
     def enum_field(name, values, options={})
-      inclusion_options = {
+      unless options[:optional]
+        validates name, presence: true
+      end
+
+      if options[:default]
+        @default_values ||= {}
+        @default_values[name] = { value: options[:default], required: !options[:optional] }
+      end
+
+      if options[:has_custom_validation].nil?
+        inclusion_options = {
           in: values,
-          message: "'%{value}' is not a valid #{name} value"
-      }
-      if options[:optional]
-        inclusion_options[:allow_blank] = true
-        inclusion_options[:allow_nil] = true
-      end
-      validates name, inclusion: inclusion_options
-
-      # create helper methods for name_value? and name_value!
-      values.each do |value|
-        define_method("#{name}_#{value}?") { self.send(name) == value }
-        define_method("#{name}_#{value}!") { self.send("#{name}=", value) }
+          message: "'%{value}' is not a valid #{name.to_s.titleize}"
+        }
+        if options[:optional]
+          inclusion_options[:allow_blank] = true
+          inclusion_options[:allow_nil] = true
+        end
+        validates name, inclusion: inclusion_options
       end
 
-      self.define_singleton_method "possible_#{name}_values" do
-        values
-      end
-
-      select_options = values.map do |v|
-        [v.smart_title, v]
-      end
-      if options[:optional]
-        select_options = [['', nil]] + select_options
-      end
-      self.define_singleton_method "#{name}_options" do
-        select_options
-      end
       if options[:schema]
         self.define_singleton_method "#{name}_schema" do
           options[:schema].dup
         end
+      end
+
+      unless values.is_a?(Proc)
+        # create helper methods for name_value? and name_value!
+        values.each do |value|
+          define_method("#{name}_#{value}?") { self.send(name) == value }
+          define_method("#{name}_#{value}!") { self.send("#{name}=", value) }
+        end
+      end
+
+      self.define_singleton_method "possible_#{name}_values" do
+        values.is_a?(Proc) ? values.call : values
+      end
+
+      self.define_singleton_method "#{name}_options" do |blank=nil|
+        select_options = self.send("possible_#{name}_values").map do |v|
+          if v.is_a?(Array) and v.count >= 2
+            [v[0].smart_title, v[1]]
+          else
+            [v.smart_title, v]
+          end
+        end
+        if blank.present? || (options[:optional] && !options[:exclude_blank_option])
+          select_options.unshift([(blank || ''), nil])
+        end
+        select_options
       end
     end
 
