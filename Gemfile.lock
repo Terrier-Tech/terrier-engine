@@ -6,10 +6,10 @@ GIT
 
 GIT
   remote: https://github.com/Terrier-Tech/terrier_auth.git
-  revision: 4b39f24d1b4813950a8165bd3fa6c77226d663b4
+  revision: 712ed45fdd983e75c4b65dfa4055c826f6220c6f
   branch: main
   specs:
-    terrier_auth (0.1.6)
+    terrier_auth (0.1.8)
       amazing_print
       colorize
       ed25519
