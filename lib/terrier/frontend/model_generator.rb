@@ -132,7 +132,7 @@ class ModelGenerator < BaseGenerator
 
       # is it an enum?
       if enum_field
-        raw_col[:possible_values] = enum_field
+        raw_col[:possible_values] = enum_field.is_a?(Proc) ? enum_field.call : enum_field
       end
       raw_cols[col.name] = raw_col
     end
