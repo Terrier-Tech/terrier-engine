@@ -379,12 +379,20 @@ class DataDive::QueryEngine
     return false unless @query.columns.present?
     col_orders = {}
     @query.columns.each_with_index{|c, i| col_orders[c] = i}
+    original_selects = builder.selects
     builder.selects = builder.selects.map do |s|
       name = s.gsub(/"$/, '').split('"').last
       index = col_orders[name]
       next unless index
       {select: s, name: name, index: index}
     end.compact.sort_by_key(:index).map_key :select
+    if builder.selects.present?
+      true
+    else
+      # if the filtered selects is empty - meaning none of the chosen columns exist in the query - just use the original selects
+      builder.selects = original_selects
+      false
+    end
   end
 
   # Generates the order_by clauses for the given query builder
