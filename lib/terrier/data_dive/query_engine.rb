@@ -377,22 +377,26 @@ class DataDive::QueryEngine
   # @param builder [SqlBuilder]
   def apply_column_sort(builder)
     return false unless @query.columns.present?
+
+    # the order of the columns as defined by the query
     col_orders = {}
     @query.columns.each_with_index{|c, i| col_orders[c] = i}
-    original_selects = builder.selects
+
+    # the order of the selects as defined by the query
+    select_order = {}
+    builder.selects.each_with_index{|c, i| select_order[c] = i}
+
+    # sort the select by the order of the columns if present, otherwise by the original select order
     builder.selects = builder.selects.map do |s|
-      name = s.gsub(/"$/, '').split('"').last
+      name = s.gsub(/"$/, '').split('"').last # only take the last thing in quotes
       index = col_orders[name]
-      next unless index
+      unless index
+        # fall back to the original select order
+        index = select_order[s] + 9999
+      end
       {select: s, name: name, index: index}
     end.compact.sort_by_key(:index).map_key :select
-    if builder.selects.present?
-      true
-    else
-      # if the filtered selects is empty - meaning none of the chosen columns exist in the query - just use the original selects
-      builder.selects = original_selects
-      false
-    end
+    true
   end
 
   # Generates the order_by clauses for the given query builder
