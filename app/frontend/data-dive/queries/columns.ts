@@ -70,13 +70,14 @@ export type ColumnRef = {
  * @param col
  */
 function computeSelectName(table: TableRef, col: ColumnRef): string {
+    let name = col.name
     if (col.alias?.length) {
-        return col.alias
-    } else if (table.prefix?.length) {
-        return `${table.prefix}${col.name}`
-    } else {
-        return col.name
+        name = col.alias
     }
+    if (table.prefix?.length) {
+        name = `${table.prefix}${name}`
+    }
+    return name
 }
 
 
