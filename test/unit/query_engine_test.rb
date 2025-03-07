@@ -28,7 +28,11 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_equal %w[date_trunc('month',work_order.time) work_order.status location.id u.id], builder.group_bys
 
     # ensure the select statements are in the correct order
-    selects = ["location.number as \"location_number\"", "work_order.status as \"status\"", "to_char(date_trunc('month',work_order.time),'YYYY-MM') as \"month\"", "count(work_order.id) as \"count\"", "u.first_name as \"user_name\""]
+    # which is the query's "columns" order followed by the natural order of the rest of the columns in the selects
+    selects = [
+      'location.number as "location_number"', 'work_order.status as "status"', 'to_char(date_trunc(\'month\',work_order.time),\'YYYY-MM\') as "month"', 'count(work_order.id) as "count"', 'u.first_name as "user_name"', # these are in "columns"
+      'location.id as "id"', 'u.id as "id"' # these two aren't in "columns"
+    ]
     assert_equal selects, builder.selects
   end
 

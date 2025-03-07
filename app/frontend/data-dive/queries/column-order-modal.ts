@@ -1,5 +1,7 @@
+import Arrays from "tuff-core/arrays"
 import { PartTag } from "tuff-core/parts"
 import {ModalPart} from "../../terrier/modals"
+import Columns from "./columns"
 import Queries, {Query} from "./queries"
 import Messages from "tuff-core/messages"
 import SortablePlugin from "tuff-sortable/sortable-plugin"
@@ -34,17 +36,25 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
 
         // initialize the columns from the query, if present
         const query = this.state.query
+        const initialColumns = new Set<string>() // keep track of the initial columns
         if (query.columns?.length) {
             this.columns = query.columns
+            this.columns.forEach(c => {
+                initialColumns.add(c)
+            })
         }
 
         // ensure that all columns in the query are represented, regardless of whether they're stored
-        Queries.eachColumn(query, (_, col) => {
-            const name = col.alias || col.name
+        Queries.eachColumn(query, (table, col) => {
+            const name = Columns.computeSelectName(table, col)
             if (!this.columns.includes(name)) {
                 this.columns.push(name)
+                initialColumns.delete(name)
             }
         })
+
+        // remove any of the initial columns that aren't in the query anymore
+        Arrays.deleteIf(this.columns, (c) => initialColumns.has(c))
 
         // make the list sortable
         this.makePlugin(SortablePlugin, {
