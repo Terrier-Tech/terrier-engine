@@ -28,7 +28,11 @@ module Top
       if line.ends_with?('/') # this is the root partition
         data[:disk] = Top.parse_disk_line line
       elsif line.index(/\s\/mnt\//) || line.index(/\/System\/Volumes\/Data$/) # /System/Volumes/Data for development
-        data[:volume] = Top.parse_disk_line line
+        if defined?(CLYP) && line.index(CLYP) # prefer vols with clyp name
+          data[:volume] = Top.parse_disk_line line
+        else
+          data[:volume] ||= Top.parse_disk_line line
+        end
       end
     end
 
