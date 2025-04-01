@@ -933,6 +933,7 @@ class Editor
 		if @hasChanges
 			title += '*'
 		@tabContainer.setTitle title
+		@ui.find('#script-id').val @script.id
 
 
 	serialize: ->
