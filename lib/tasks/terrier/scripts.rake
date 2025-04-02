@@ -15,6 +15,7 @@ namespace :scripts do
         executor.set_field_values({})
         executor.me = "#{time.titleize} Runner"
         run = executor.init_run
+        run.script_body = script.body&.strip&.force_encoding(Encoding::UTF_8)
         executor.run run, nil
         puts "Completed with status '#{run.status}' in #{run.duration} seconds"
         if run.errors && run.errors.full_messages.length > 0
