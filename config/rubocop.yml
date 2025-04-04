@@ -1,0 +1,3 @@
+# terrier-engine/config/rubocop.yml
+AllCops:
+  NewCops: enable

@@ -16,4 +16,5 @@ gem 'terrier_auth', github: 'Terrier-Tech/terrier_auth', branch: 'main'
 
 group :development do
   gem 'pry'
+  gem 'rubocop', require: false
 end
