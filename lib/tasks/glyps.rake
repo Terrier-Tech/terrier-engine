@@ -36,7 +36,7 @@ namespace :glyps do
     if File.exist? tmp_dir
       FileUtils.rm_r Dir.glob("#{abs_tmp_dir}/*")
     else
-      FileUtils.mkdir abs_tmp_dir
+      FileUtils.mkdir_p abs_tmp_dir
     end
     logged_exec "Optimizing SVGs", "npx svgo --config app/assets/glyps/glyp-svgo-config.cjs -f #{glyp_dir} -o #{abs_tmp_dir}"
 
