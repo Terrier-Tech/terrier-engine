@@ -1,3 +1,11 @@
+#
+class Pet
+  include Terrier::Embedded
+
+  field :name, type: String
+  field :species, type: String, required: false
+end
+
 # Columns
 # +---------------------------------+-----------+--------------------------------+
 # | address1                        | text      |                                |
@@ -34,6 +42,7 @@
 # | Has Many   | work_orders | WorkOrder |
 # +------------+-------------+-----------+
 class User < ApplicationRecord
+  include Terrier::Embedder
   include ActiveModel::SecurePassword
   has_secure_password
 
@@ -53,4 +62,6 @@ class User < ApplicationRecord
     self.password_confirmation = self.password
   end
 
+  embeds_many :pets, class: Pet
 end
+

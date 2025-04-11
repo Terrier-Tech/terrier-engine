@@ -11,10 +11,7 @@ module Terrier::Embedder
   module ClassMethods
 
     def embedded_fields
-      unless @_embedded_fields
-        @_embedded_fields = {}
-      end
-      @_embedded_fields
+      @_embedded_fields ||= HashWithIndifferentAccess.new
     end
 
     def embeds_one(model_name, options={})
@@ -24,7 +21,8 @@ module Terrier::Embedder
 
       embedded_fields[model_name] = {
         name: model_name,
-        type: model
+        kind: :one,
+        type: model,
       }
 
       define_method field_name do
@@ -62,7 +60,8 @@ module Terrier::Embedder
 
       embedded_fields[model_name] = {
         name: model_name,
-        type: model
+        kind: :many,
+        type: model,
       }
 
       define_method field_name do
