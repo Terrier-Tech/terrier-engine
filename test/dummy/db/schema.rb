@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -90,6 +90,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
     t.jsonb "output_data"
     t.jsonb "output_file_data"
     t.text "status", null: false
+    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_data"
     t.index ["_state"], name: "index_dd_dive_runs_on__state"
@@ -118,6 +119,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
     t.integer "sort_order"
     t.jsonb "query_data"
     t.text "dive_types", default: [], null: false, array: true
+    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
     t.index ["_state"], name: "index_dd_dives_on__state"
@@ -280,6 +282,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_17_132834) do
     t.text "state"
     t.text "tags", default: [], null: false, array: true
     t.text "zip"
+    t.json "pets"
     t.index ["_state"], name: "index_users_on__state"
     t.index ["created_by_id"], name: "index_users_on_created_by_id"
     t.index ["email"], name: "index_users_on_email", unique: true
