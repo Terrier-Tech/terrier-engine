@@ -1,3 +1,41 @@
 # terrier-engine/config/rubocop.yml
 AllCops:
   NewCops: enable
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/RedundantSelf:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: diff_comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: diff_comma
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+Layout/EndAlignment:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 30
+  CountRepeatedAttributes: false
+Metrics/BlockLength:
+  Max: 50
+  AllowedMethods: ['included']
+Metrics/ClassLength:
+  Max: 200
+  CountAsOne: ['array', 'hash']
+Metrics/CyclomaticComplexity:
+  Enabled: false
+Metrics/MethodLength:
+  Max: 40
+  CountAsOne: ['array', 'hash']
+Metrics/ModuleLength:
+  Max: 200
+  CountAsOne: ['array', 'hash']
+Metrics/PerceivedComplexity:
+  Max: 16
