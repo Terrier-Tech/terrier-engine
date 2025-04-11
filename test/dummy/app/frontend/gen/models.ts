@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-09-06 11:12:20 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-04-11 15:53:00 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -164,9 +164,9 @@ export type Script = {
     title: string
     description?: string
     email_recipients?: string[]
-    script_fields?: object
+    script_fields?: { name: string; default_value: string; values: string; required: string; field_type: string }[]
     report_category?: "admin" | "locations" | "miscellaneous" | "none"
-    schedule_rules?: object
+    schedule_rules?: { days: string[]; weeks: string[]; months: string[] }[]
     schedule_rule_summaries?: string[]
     schedule_time: "none" | "evening" | "morning" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18"
     num_per_year: number
@@ -193,9 +193,9 @@ export type UnpersistedScript = {
     title: string
     description?: string
     email_recipients?: string[]
-    script_fields?: object
+    script_fields?: { name: string; default_value: string; values: string; required: string; field_type: string }[]
     report_category?: "admin" | "locations" | "miscellaneous" | "none"
-    schedule_rules?: object
+    schedule_rules?: { days: string[]; weeks: string[]; months: string[] }[]
     schedule_rule_summaries?: string[]
     schedule_time: "none" | "evening" | "morning" | "7" | "8" | "9" | "10" | "11" | "12" | "13" | "14" | "15" | "16" | "17" | "18"
     num_per_year: number
@@ -334,6 +334,7 @@ export type User = {
     state?: string
     tags: string[]
     zip?: string
+    pets?: { name: string; species: string }[]
     created_by?: User
     updated_by?: User
     work_orders?: WorkOrder[]
@@ -367,6 +368,7 @@ export type UnpersistedUser = {
     state?: string
     tags: string[]
     zip?: string
+    pets?: { name: string; species: string }[]
     created_by?: User
     updated_by?: User
     work_orders?: OptionalProps<UnpersistedWorkOrder, "user_id">[]
