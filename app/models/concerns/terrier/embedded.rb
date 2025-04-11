@@ -1,9 +1,10 @@
 class EmbeddedFieldDef
 
-  attr_accessor :type, :null, :default
+  attr_accessor :type, :element_type, :null, :default
 
   def initialize(args)
     @type = args[:type]
+    @element_type = args[:element_type] # used when @type is Array
     @null = args[:required] ? false : true
     @default = args[:default]
   end
@@ -58,6 +59,7 @@ module Terrier::Embedded
         options.delete :downcase
       end
       options[:type] = Array
+      options[:element_type] = String
       field name, options
       define_method "#{name}_s" do
         s = self.send(name)
@@ -114,6 +116,7 @@ module Terrier::Embedded
     # creates an int array field and the associated string getter and setter
     def self.int_array_field(name, options = {})
       options[:type] = Array
+      options[:element_type] = Integer
       field name, options
       define_method "#{name}_s" do
         s = self.send(name)

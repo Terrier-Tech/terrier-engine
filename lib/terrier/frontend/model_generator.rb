@@ -180,6 +180,18 @@ class ModelGenerator < BaseGenerator
 
   # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
+    if model_class.respond_to?(:embedded_fields)
+      embedded = model_class.embedded_fields[col.name.to_sym]
+      if embedded.present?
+        embedded_type = embedded_schema_type(embedded[:type])
+        return case embedded[:kind].to_sym
+          when nil, :one then embedded_type
+          when :many then "#{embedded_type}[]"
+          else raise "Unknown embedded kind: #{embedded[:kind].inspect}"
+          end
+      end
+    end
+
     schema_method = "#{col.name}_schema"
     if model_class.respond_to?(schema_method)
       schema = model_class.send(schema_method)
@@ -216,22 +228,56 @@ class ModelGenerator < BaseGenerator
     case type
     when Hash
       type_str = StringIO.new
-      type_str << "{ "
+      type_str << '{ '
       last_key = type.keys.count - 1
       type.keys.each_with_index do |key, i|
         type_str << key
-        type_str << ": "
+        type_str << ': '
         type_str << typescript_schema_type(type[key])
         if i < last_key
-          type_str << ", "
+          type_str << ', '
         end
       end
-      type_str << " }"
+      type_str << ' }'
       type_str.string
     when :integer, :float
       'number'
     when :json, :jsonb
       'object'
+    else
+      type
+    end
+  end
+
+  # returns a schema string for the embedded model type
+  # @param embedded_type [Terrier::Embedded]
+  # @return [String]
+  def embedded_schema_type(embedded_type)
+    type_hash = {}
+    embedded_type.field_defs.each do |name, opts|
+      next if opts.type.nil?
+
+      type_hash[name] = ruby_type_to_typescript(opts.type, opts)
+    end
+
+    typescript_schema_type(type_hash)
+  end
+
+  def ruby_type_to_typescript(type, opts = nil)
+    if type < Terrier::Embedded
+      embedded_schema_type(type)
+    elsif type < Numeric
+      'number'
+    elsif type < Hash
+      'Record<unknown, unknown>'
+    elsif [String, Time].include?(type)
+      'string'
+    elsif type == Array
+      if opts.nil? || opts.element_type.nil?
+        'unknown[]'
+      else
+        "#{ruby_type_to_typescript(opts.element_type)}[]"
+      end
     else
       type
     end
