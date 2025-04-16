@@ -220,7 +220,7 @@ export class DiveListPage extends DivePage<{}> {
 
         this.addAction({
             title: 'Sync from Terrier',
-            icon: 'glyp-terrier',
+            icon: 'glyp-terrier_sync',
             classes: ['terrier-record-sync'],
             data: { table: 'dd_dive', direction: 'down' }
         }, 'tertiary')
