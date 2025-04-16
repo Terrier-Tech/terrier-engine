@@ -272,6 +272,8 @@ class Filter < QueryModel
       '@>'
     when 'excludes'
       '@>'
+    when 'any'
+      '&&'
     else
       raise "Unknown operator '#{@operator}'"
     end
@@ -290,7 +292,7 @@ class Filter < QueryModel
       params[@id] = val
 
       # an array filter
-      if op == '@>'
+      if %w[@> &&].include?(op)
         val ||= ''
         val = val.split(',').map(&:strip) if val.is_a?(String)
         val = val.to_postgres_array_literal
@@ -453,7 +455,6 @@ class DataDive::QueryEngine
       sql.gsub!(word, "\n   #{word}")
     end
 
-    info "Generated SQL:\n#{sql}"
     res = {
       sql: sql,
       sql_html: CodeRay.scan(sql, :sql).html

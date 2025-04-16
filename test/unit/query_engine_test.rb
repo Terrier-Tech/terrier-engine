@@ -84,6 +84,12 @@ class QueryEngineTest < ActiveSupport::TestCase
     assert_includes builder.clauses, "u.tags @> '{\"Dynamic\"}'"
     builder = engine.to_sql_builder({'tags_1' => 'Dynamic, Engineer'})
     assert_includes builder.clauses, "u.tags @> '{\"Dynamic\", \"Engineer\"}'"
+
+    # any filters should match on any value shared between the two arrays
+    query = TestDive.any_array_filter
+    engine = DataDive::QueryEngine.new query
+    builder = engine.to_sql_builder({ 'tags_1' => 'Dynamic, Engineer' })
+    assert_includes builder.clauses, "u.tags && '{\"Dynamic\", \"Engineer\"}'"
   end
 
   test 'comma-separated filters' do

@@ -31,7 +31,7 @@ type BaseFilter = {
     edit_label?: string
 }
 
-const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'contains', 'excludes'] as const
+const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'contains', 'excludes', 'any'] as const
 export type DirectOperator = typeof directOperators[number]
 
 /**
@@ -45,7 +45,7 @@ function operatorOptions(colDef?: ColumnDef): SelectOptions {
         case 'text':
         case 'string':
             if (colDef?.array) {
-                operators = ['contains', 'excludes']
+                operators = ['contains', 'excludes', 'any']
             }
             else {
                 operators = ['eq', 'ne', 'ilike']
@@ -117,6 +117,12 @@ function operatorDisplay(op: DirectOperator): string {
             return '>'
         case 'gte':
             return '≥'
+        case 'contains':
+            return "Contains ALL of:"
+        case 'excludes':
+            return "Contains NONE of:"
+        case 'any':
+            return "Contains ANY of:"
         default:
             return op
     }

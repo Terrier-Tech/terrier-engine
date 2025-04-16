@@ -266,4 +266,27 @@ module TestDive
     }
   end
 
+  def self.any_array_filter
+    {
+      id: 'any',
+      name: "Any",
+      from: {
+        model: 'User',
+        columns: [
+          {
+            name: 'id'
+          },
+        ],
+        filters: [
+          {
+            id: 'tags_1',
+            filter_type: 'direct',
+            column: 'tags',
+            operator: 'any'
+          },
+        ]
+      }
+    }
+  end
+
 end
