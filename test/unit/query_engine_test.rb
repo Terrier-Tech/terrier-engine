@@ -49,6 +49,13 @@ class QueryEngineTest < ActiveSupport::TestCase
     builder = engine.to_sql_builder({ 'date_range_1' => '2022-04-01:2022-04-02' })
     assert_includes builder.clauses, "work_order.time >= '2022-04-01'"
     assert_includes builder.clauses, "work_order.time < '2022-04-02'"
+
+    # present operator
+    query = TestDive.employees
+    engine = DataDive::QueryEngine.new(query)
+    builder = engine.to_sql_builder
+    assert_includes builder.clauses, "u.address2 IS NOT NULL"
+    assert_includes builder.clauses, "length(u.address2) > 0"
   end
 
   test 'validate' do

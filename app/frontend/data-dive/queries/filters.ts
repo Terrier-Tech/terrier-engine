@@ -31,7 +31,7 @@ type BaseFilter = {
     edit_label?: string
 }
 
-const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'contains', 'excludes', 'any'] as const
+const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'present', 'contains', 'excludes', 'any'] as const
 export type DirectOperator = typeof directOperators[number]
 
 /**
@@ -48,13 +48,13 @@ function operatorOptions(colDef?: ColumnDef): SelectOptions {
                 operators = ['contains', 'excludes', 'any']
             }
             else {
-                operators = ['eq', 'ne', 'ilike']
+                operators = ['eq', 'ne', 'ilike', 'present']
             }
             break
         case 'float':
         case 'integer':
         case 'cents':
-            operators = ['eq', 'ne', 'lt', 'gt', 'lte', 'gte']
+            operators = ['eq', 'ne', 'lt', 'gt', 'lte', 'gte', 'present']
             break
     }
     return operators.map(op => {
@@ -117,6 +117,8 @@ function operatorDisplay(op: DirectOperator): string {
             return '>'
         case 'gte':
             return '≥'
+        case 'present':
+            return "Is Present?"
         case 'contains':
             return "Contains ALL of:"
         case 'excludes':
@@ -128,19 +130,29 @@ function operatorDisplay(op: DirectOperator): string {
     }
 }
 
+/**
+ * Determine whether the given operator needs an argument.
+ * @param op
+ */
+function operatorNeedsArgument(op: DirectOperator): boolean {
+    return op != 'present';
+}
+
 
 function renderStatic(parent: PartTag, filter: Filter) {
     switch (filter.filter_type) {
         case 'direct':
             parent.div('.column').text(filter.column)
             parent.div('.operator').text(operatorDisplay(filter.operator))
-            switch (filter.column_type) {
-                case 'cents':
-                    parent.div('.value').text(Format.cents(filter.value))
-                    break
-                default:
-                    parent.div('.value').text(filter.value)
-                    break
+            if (operatorNeedsArgument(filter.operator)) {
+                switch (filter.column_type) {
+                    case 'cents':
+                        parent.div('.value').text(Format.cents(filter.value))
+                        break
+                    default:
+                        parent.div('.value').text(filter.value)
+                        break
+                }
             }
             break
         case 'date_range':
@@ -383,6 +395,7 @@ abstract class FilterFields<F extends BaseFilter> extends TerrierFormFields<F> {
 class DirectFilterEditor extends FilterFields<DirectFilter> {
 
     numericChangeKey = Messages.untypedKey()
+    operatorChangeKey = Messages.untypedKey()
 
     constructor(container: FilterEditorContainer, filter: DirectFilter) {
         super(container, filter)
@@ -396,6 +409,11 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
             this.data.numeric_value = parseFloat(this.data.value)
         }
         log.info(`Direct filter for ${this.columnDef?.name} initialized`, this.data)
+
+        this.part.onChange(this.operatorChangeKey, m => {
+            log.info(`Operator changed`, m)
+            this.part.dirty()
+        })
 
         // for numeric types, we use a number input and translate the
         // value back to the string value field whenever it changes
@@ -417,22 +435,25 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
         parent.div('.operator', col => {
             const opts = operatorOptions(this.columnDef)
             this.select(col, 'operator', opts)
+                .emitChange(this.operatorChangeKey)
         })
         parent.div('.filter', col => {
-            switch (this.data.column_type) {
-                case 'cents':
-                    col.div('.tt-compound-field', field => {
-                        field.label().text('$')
-                        this.numberInput(field, 'numeric_value', {placeholder: "Value"})
+            if (operatorNeedsArgument(this.data.operator)) {
+                switch (this.data.column_type) {
+                    case 'cents':
+                        col.div('.tt-compound-field', field => {
+                            field.label().text('$')
+                            this.numberInput(field, 'numeric_value', { placeholder: "Value" })
+                                .emitChange(this.numericChangeKey)
+                        })
+                        break
+                    case 'number':
+                        this.numberInput(col, 'numeric_value', { placeholder: "Value" })
                             .emitChange(this.numericChangeKey)
-                    })
-                    break
-                case 'number':
-                    this.numberInput(col, 'numeric_value', {placeholder: "Value"})
-                        .emitChange(this.numericChangeKey)
-                    break
-                default:
-                    this.textInput(col, 'value', {placeholder: "Value"})
+                        break
+                    default:
+                        this.textInput(col, 'value', { placeholder: "Value" })
+                }
             }
         })
         this.renderActions(parent)

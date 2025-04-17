@@ -20,7 +20,7 @@ class TableRef < QueryModel
   attr_accessor :model, :prefix, :columns, :joins, :filters, :_id
 
   # used by the runner
-  attr_accessor :table_name, :alias, :model_class
+  attr_accessor :table_name, :alias, :model_class, :column_map
 
   # @param engine [QueryEngine]
   # @param attrs [Hash]
@@ -33,6 +33,7 @@ class TableRef < QueryModel
     else
       @columns = []
     end
+    @column_map = @columns.index_by{|col| col.name}
     if @filters.present?
       @filters = @filters.map{|filter| Filter.new(@engine, filter)}
     else
@@ -252,6 +253,22 @@ class Filter < QueryModel
     "#{key}"
   end
 
+  def compute_column_metadata(table)
+    metadata = ColumnMetadata.new @engine, { column_name: @column }
+
+    # the type
+    model = table.model_class
+    ar_column = model.columns_hash[@column]
+    unless ar_column
+      warn "Unknown column '#{@column}' for #{model.name}"
+      return nil
+    end
+    sql_type_metadata = ar_column.sql_type_metadata
+    metadata.null = ar_column.null
+    metadata.type = model.custom_type(@column).presence || sql_type_metadata.type.to_s
+    metadata
+  end
+
   def sql_operator
     case @operator
     when 'eq'
@@ -266,6 +283,8 @@ class Filter < QueryModel
       '>='
     when 'lte'
       '<='
+    when 'present'
+      'is not null'
     when 'ilike'
       'ilike'
     when 'contains'
@@ -279,11 +298,20 @@ class Filter < QueryModel
     end
   end
 
+  # @return [Boolean] true if the operator needs an argument passed
+  def operator_needs_argument?
+    @operator != 'present'
+  end
+
   def build(builder, table, params={})
     # possibly override the value from the params
     @input_name = compute_input_name table
     @id ||= String.random_string 8
     @input_value = params[@id]
+
+    # compute the metadata and assign type
+    metadata = compute_column_metadata table
+    @column_type = metadata.type
 
     case @filter_type
     when 'direct'
@@ -306,11 +334,28 @@ class Filter < QueryModel
         op = 'NOT IN'
         val = val.split(',').map(&:strip)
       end
-      clause = "#{table.alias}.#{@column} #{op} ?"
-      if @operator == 'excludes'
-        clause = "not (#{clause})"
+
+      # compose the clause
+      if operator_needs_argument?
+        clause = "#{table.alias}.#{@column} #{op} ?"
+        if @operator == 'excludes'
+          clause = "not (#{clause})"
+        end
+        builder.where clause, val
+      else # no arguments
+        if @operator == 'present'
+          builder.where "#{table.alias}.#{@column} IS NOT NULL"
+          if @column_type == 'text'
+            # this is treated like rails presence
+            builder.where "length(#{table.alias}.#{@column}) > 0"
+          else
+            builder.where "#{table.alias}.#{@column} <> 0"
+          end
+        else
+          clause = "#{table.alias}.#{@column} #{op}"
+          builder.where clause
+        end
       end
-      builder.where clause, val
     when 'date_range'
       period = DatePeriod.parse(@input_value.presence || @range)
       params[@id] = period.to_s

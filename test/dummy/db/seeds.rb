@@ -27,7 +27,11 @@ totals = {
 
 def fake_address(record)
   record.address1 ||= Faker::Address.street_address
-  record.address1 ||= Faker::Address.secondary_address
+  if rand > 0.5
+    record.address2 = Faker::Address.secondary_address
+  else
+    record.address2 = nil
+  end
   record.city ||= Faker::Address.city
   record.state ||= Faker::Address.state
   record.zip ||= Faker::Address.zip_code

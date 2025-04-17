@@ -90,7 +90,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
     t.jsonb "output_data"
     t.jsonb "output_file_data"
     t.text "status", null: false
-    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_data"
     t.index ["_state"], name: "index_dd_dive_runs_on__state"
@@ -119,7 +118,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
     t.integer "sort_order"
     t.jsonb "query_data"
     t.text "dive_types", default: [], null: false, array: true
-    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
     t.index ["_state"], name: "index_dd_dives_on__state"

@@ -238,6 +238,12 @@ module TestDive
             filter_type: 'direct',
             column: 'role',
             operator: 'eq'
+          },
+          {
+            id: 'address2',
+            filter_type: 'direct',
+            column: 'address2',
+            operator: 'present'
           }
         ]
       }
