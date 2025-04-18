@@ -1,7 +1,7 @@
 # Columns
 # +------------------+-------------------+----------------------------+
 # | backtrace        | text[]            |                            |
-# | created_at       | timestamp         | required                   |
+# | created_at       | timestamp(6)      | required                   |
 # | created_by_id    | uuid              | indexed                    |
 # | created_by_name  | text              | required                   |
 # | duration         | double precision  |                            |
@@ -11,12 +11,12 @@
 # | log_content_type | character varying |                            |
 # | log_file_name    | character varying |                            |
 # | log_file_size    | bigint            |                            |
-# | log_updated_at   | timestamp         |                            |
+# | log_updated_at   | timestamp(6)      |                            |
 # | org_id           | text              |                            |
 # | script_body      | text              |                            |
 # | script_id        | uuid              | required, indexed          |
 # | status           | character varying | required, default: success |
-# | updated_at       | timestamp         | required                   |
+# | updated_at       | timestamp(6)      | required                   |
 # | updated_by_id    | uuid              | indexed                    |
 # | updated_by_name  | text              |                            |
 # +------------------+-------------------+----------------------------+

@@ -22,13 +22,14 @@
 # +---------------------+--------------+-----------------------+
 # 
 # Associations
-# +------------+---------------+-------------+
-# | Belongs To | created_by    | User        |
-# | Belongs To | dd_dive_group | DdDiveGroup |
-# | Has Many   | dd_dive_runs  | DdDiveRun   |
-# | Belongs To | owner         | User        |
-# | Belongs To | updated_by    | User        |
-# +------------+---------------+-------------+
+# +------------+-----------------------+--------------------+
+# | Belongs To | created_by            | User               |
+# | Has Many   | dd_dive_distributions | DdDiveDistribution |
+# | Belongs To | dd_dive_group         | DdDiveGroup        |
+# | Has Many   | dd_dive_runs          | DdDiveRun          |
+# | Belongs To | owner                 | User               |
+# | Belongs To | updated_by            | User               |
+# +------------+-----------------------+--------------------+
 class DdDive < ApplicationRecord
 
   def self.metadata
@@ -58,8 +59,10 @@ class DdDive < ApplicationRecord
 
   ## Delivery
 
-  emails_field :delivery_recipients
+  has_many :dd_dive_distributions, dependent: :restrict_with_error
 
+  # deprecated
+  emails_field :delivery_recipients
   json_field :delivery_schedule, {}, 'RegularSchedule'
 
 

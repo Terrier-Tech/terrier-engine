@@ -68,7 +68,7 @@
 		}
 	}
 
-	.dive-delivery-list {
+	.dive-delivery-list{
 		.run {
 			display: flex;
 			gap: var(--tt-gap);
@@ -89,6 +89,19 @@
 		a {
 			@include tt-scale-push;
 			font-size: 125%;
+		}
+	}
+
+	.distribution {
+		display: flex;
+		flex-direction: column;
+		--tt-scale-push-factor: 0.02;
+		@include tt-scale-push;
+		> div {
+			text-align: center;
+		}
+		.schedule {
+			font-weight: bold;
 		}
 	}
 }

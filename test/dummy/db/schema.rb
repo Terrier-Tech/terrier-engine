@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
+ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -33,6 +33,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
     t.index ["location_id"], name: "index_contacts_on_location_id"
     t.index ["updated_by_id"], name: "index_contacts_on_updated_by_id"
     t.index ["user_id"], name: "index_contacts_on_user_id"
+  end
+
+  create_table "dd_dive_distributions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.uuid "dd_dive_id"
+    t.text "recipients", default: [], array: true
+    t.jsonb "schedule", default: {}, null: false
+    t.text "notes"
+    t.index ["_state"], name: "index_dd_dive_distributions_on__state"
+    t.index ["created_by_id"], name: "index_dd_dive_distributions_on_created_by_id"
+    t.index ["dd_dive_id"], name: "index_dd_dive_distributions_on_dd_dive_id"
+    t.index ["extern_id"], name: "index_dd_dive_distributions_on_extern_id"
+    t.index ["updated_by_id"], name: "index_dd_dive_distributions_on_updated_by_id"
   end
 
   create_table "dd_dive_groups", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -90,10 +110,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
     t.jsonb "output_data"
     t.jsonb "output_file_data"
     t.text "status", null: false
+    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_data"
+    t.uuid "dd_dive_distribution_id"
     t.index ["_state"], name: "index_dd_dive_runs_on__state"
     t.index ["created_by_id"], name: "index_dd_dive_runs_on_created_by_id"
+    t.index ["dd_dive_distribution_id"], name: "index_dd_dive_runs_on_dd_dive_distribution_id"
     t.index ["dd_dive_id"], name: "index_dd_dive_runs_on_dd_dive_id"
     t.index ["delivery_recipients"], name: "index_dd_dive_runs_on_delivery_recipients", using: :gin
     t.index ["extern_id"], name: "index_dd_dive_runs_on_extern_id"
@@ -118,6 +141,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
     t.integer "sort_order"
     t.jsonb "query_data"
     t.text "dive_types", default: [], null: false, array: true
+    t.text "delivery_mode"
     t.text "delivery_recipients", array: true
     t.jsonb "delivery_schedule"
     t.index ["_state"], name: "index_dd_dives_on__state"
@@ -321,11 +345,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_141635) do
   add_foreign_key "contacts", "users"
   add_foreign_key "contacts", "users", column: "created_by_id"
   add_foreign_key "contacts", "users", column: "updated_by_id"
+  add_foreign_key "dd_dive_distributions", "dd_dives"
+  add_foreign_key "dd_dive_distributions", "users", column: "created_by_id"
+  add_foreign_key "dd_dive_distributions", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "created_by_id"
   add_foreign_key "dd_dive_groups", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_plots", "dd_dives"
   add_foreign_key "dd_dive_plots", "users", column: "created_by_id"
   add_foreign_key "dd_dive_plots", "users", column: "updated_by_id"
+  add_foreign_key "dd_dive_runs", "dd_dive_distributions"
   add_foreign_key "dd_dive_runs", "dd_dives"
   add_foreign_key "dd_dive_runs", "users", column: "created_by_id"
   add_foreign_key "dd_dive_runs", "users", column: "updated_by_id"

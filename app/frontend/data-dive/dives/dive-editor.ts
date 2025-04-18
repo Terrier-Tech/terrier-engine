@@ -18,7 +18,7 @@ import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import {FormFields} from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
-import {DiveDeliveryForm} from "./dive-delivery"
+import {DiveDeliveryPanel} from "./dive-delivery"
 import DivePlotList from "../plots/dive-plot-list"
 import {DivePage} from "./dive-page"
 
@@ -40,7 +40,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     queryTabs!: TabContainerPart
     settingsTabs!: TabContainerPart
 
-    deliveryForm!: DiveDeliveryForm
+    deliveryPanel!: DiveDeliveryPanel
 
     plotList!: DivePlotList
 
@@ -119,17 +119,17 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             })
         })
 
+        this.deliveryPanel = this.settingsTabs.upsertTab({
+            key: 'delivery',
+            title: "Delivery",
+            icon: "glyp-email"
+        }, DiveDeliveryPanel, this.state)
+
         this.plotList = this.settingsTabs.upsertTab({
             key: 'plots',
             title: "Plots",
             icon: "glyp-differential"
         }, DivePlotList, this.state)
-
-        this.deliveryForm = this.settingsTabs.upsertTab({
-            key: 'delivery',
-            title: "Delivery",
-            icon: "glyp-email"
-        }, DiveDeliveryForm, this.state)
     }
 
     /**
@@ -176,12 +176,8 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     async serialize(): Promise<DdDive> {
         const queries = this.queries
 
-        const deliverySettings = await this.deliveryForm.serialize()
-
         return {
             ...this.state.dive,
-            delivery_schedule: deliverySettings.delivery_schedule,
-            delivery_recipients: deliverySettings.delivery_recipients,
             query_data: {queries}
         }
     }

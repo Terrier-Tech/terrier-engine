@@ -1,27 +1,30 @@
 # Columns
-# +---------------------+--------------+----------+
-# | created_at          | timestamp(6) | required |
-# | created_by_id       | uuid         | indexed  |
-# | created_by_name     | text         | required |
-# | dd_dive_id          | uuid         | indexed  |
-# | delivery_data       | jsonb        |          |
-# | delivery_recipients | text[]       | indexed  |
-# | extern_id           | text         | indexed  |
-# | input_data          | jsonb        |          |
-# | output_data         | jsonb        |          |
-# | output_file_data    | jsonb        |          |
-# | status              | text         | required |
-# | updated_at          | timestamp(6) | required |
-# | updated_by_id       | uuid         | indexed  |
-# | updated_by_name     | text         |          |
-# +---------------------+--------------+----------+
+# +-------------------------+--------------+----------+
+# | created_at              | timestamp(6) | required |
+# | created_by_id           | uuid         | indexed  |
+# | created_by_name         | text         | required |
+# | dd_dive_distribution_id | uuid         | indexed  |
+# | dd_dive_id              | uuid         | indexed  |
+# | delivery_data           | jsonb        |          |
+# | delivery_mode           | text         |          |
+# | delivery_recipients     | text[]       | indexed  |
+# | extern_id               | text         | indexed  |
+# | input_data              | jsonb        |          |
+# | output_data             | jsonb        |          |
+# | output_file_data        | jsonb        |          |
+# | status                  | text         | required |
+# | updated_at              | timestamp(6) | required |
+# | updated_by_id           | uuid         | indexed  |
+# | updated_by_name         | text         |          |
+# +-------------------------+--------------+----------+
 # 
 # Associations
-# +------------+------------+--------+
-# | Belongs To | created_by | User   |
-# | Belongs To | dd_dive    | DdDive |
-# | Belongs To | updated_by | User   |
-# +------------+------------+--------+
+# +------------+----------------------+--------------------+
+# | Belongs To | created_by           | User               |
+# | Belongs To | dd_dive              | DdDive             |
+# | Belongs To | dd_dive_distribution | DdDiveDistribution |
+# | Belongs To | updated_by           | User               |
+# +------------+----------------------+--------------------+
 class DdDiveRun < ApplicationRecord
 
   def self.metadata
@@ -44,6 +47,8 @@ class DdDiveRun < ApplicationRecord
 
 
   ## Delivery
+
+  belongs_to :dd_dive_distribution
 
   emails_field :delivery_recipients
 

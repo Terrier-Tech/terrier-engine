@@ -1,4 +1,4 @@
-// This file was automatically generated on 2024-09-06 11:24:15 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-04-18 11:01:55 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -35,6 +35,7 @@ export type DdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -42,6 +43,7 @@ export type DdDive = {
     dd_dive_group?: DdDiveGroup
     dd_dive_runs?: DdDiveRun[]
     owner?: DdUser
+    dd_dive_distributions?: DdDiveDistribution[]
 }
 
 export type UnpersistedDdDive = {
@@ -63,6 +65,7 @@ export type UnpersistedDdDive = {
     sort_order?: number
     query_data?: { queries: Query[] }
     dive_types: string[]
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_schedule?: RegularSchedule
     created_by?: DdUser
@@ -70,10 +73,49 @@ export type UnpersistedDdDive = {
     dd_dive_group?: DdDiveGroup
     dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_id">[]
     owner?: DdUser
+    dd_dive_distributions?: OptionalProps<UnpersistedDdDiveDistribution, "dd_dive_id">[]
 }
 
 export const DdDiveEnumFields = {
     visibility: ["public", "private"] as const,
+}
+
+export type DdDiveDistribution = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    dd_dive_id?: string
+    recipients?: string[]
+    schedule: RegularSchedule
+    notes?: string
+    created_by?: DdUser
+    updated_by?: DdUser
+    dd_dive_runs?: DdDiveRun[]
+}
+
+export type UnpersistedDdDiveDistribution = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    dd_dive_id?: string
+    recipients?: string[]
+    schedule: RegularSchedule
+    notes?: string
+    created_by?: DdUser
+    updated_by?: DdUser
+    dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_distribution_id">[]
 }
 
 export type DdDiveGroup = {
@@ -171,11 +213,14 @@ export type DdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
+    dd_dive_distribution_id?: string
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive
+    dd_dive_distribution?: DdDiveDistribution
     output_file?: File
 }
 
@@ -194,11 +239,14 @@ export type UnpersistedDdDiveRun = {
     output_data?: object
     output_file_data?: Attachment | { path: string }
     status: "initial" | "running" | "success" | "error"
+    delivery_mode?: string
     delivery_recipients?: string[]
     delivery_data?: object
+    dd_dive_distribution_id?: string
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive?: DdDive
+    dd_dive_distribution?: DdDiveDistribution
     output_file?: File
 }
 
@@ -211,6 +259,7 @@ export const DdDiveRunEnumFields = {
  */
 export type PersistedModelTypeMap = {
     dd_dive: DdDive
+    dd_dive_distribution: DdDiveDistribution
     dd_dive_group: DdDiveGroup
     dd_dive_plot: DdDivePlot
     dd_dive_run: DdDiveRun
@@ -221,6 +270,7 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
     dd_dive: UnpersistedDdDive
+    dd_dive_distribution: UnpersistedDdDiveDistribution
     dd_dive_group: UnpersistedDdDiveGroup
     dd_dive_plot: UnpersistedDdDivePlot
     dd_dive_run: UnpersistedDdDiveRun
@@ -230,20 +280,22 @@ export type UnpersistedModelTypeMap = {
  * Map model names to their association names.
  */
 export type ModelIncludesMap = {
-    dd_dive: "created_by" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
+    dd_dive: "created_by" | "dd_dive_distributions" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
+    dd_dive_distribution: "created_by" | "dd_dive_runs" | "updated_by"
     dd_dive_group: "created_by" | "dd_dives" | "updated_by"
     dd_dive_plot: "created_by" | "dd_dive" | "updated_by"
-    dd_dive_run: "created_by" | "dd_dive" | "updated_by"
+    dd_dive_run: "created_by" | "dd_dive" | "dd_dive_distribution" | "updated_by"
 }
 
 /**
  * Map model names to an array of association names.
  */
 export const ModelIncludesArrayMap = {
-    dd_dive: ["created_by", "dd_dive_group", "dd_dive_runs", "owner", "updated_by"] as const,
+    dd_dive: ["created_by", "dd_dive_distributions", "dd_dive_group", "dd_dive_runs", "owner", "updated_by"] as const,
+    dd_dive_distribution: ["created_by", "dd_dive_runs", "updated_by"] as const,
     dd_dive_group: ["created_by", "dd_dives", "updated_by"] as const,
     dd_dive_plot: ["created_by", "dd_dive", "updated_by"] as const,
-    dd_dive_run: ["created_by", "dd_dive", "updated_by"] as const,
+    dd_dive_run: ["created_by", "dd_dive", "dd_dive_distribution", "updated_by"] as const,
 }
 
 /**

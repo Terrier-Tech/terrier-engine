@@ -86,6 +86,11 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
 
     scheduleTypeChangeKey = Messages.typedKey<{schedule_type: ScheduleType}>()
 
+    /**
+     * Set false to not render the 'none' option
+     */
+    showNoneOption: boolean = true
+
     constructor(part: TerrierPart<any>, data: CombinedRegularSchedule) {
         super(part, data)
 
@@ -102,11 +107,13 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
 
     render(parent: PartTag): any {
         parent.div('.tt-flex.column.gap.regular-schedule-form.tt-form', col => {
-            col.label('.caption-size', label => {
-                this.radio(label, 'schedule_type', 'none')
-                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'none'})
-                label.span().text("Do Not Deliver")
-            })
+            if (this.showNoneOption) {
+                col.label('.caption-size', label => {
+                    this.radio(label, 'schedule_type', 'none')
+                        .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'none' })
+                    label.span().text("Do Not Deliver")
+                })
+            }
 
             col.label('.caption-size', label => {
                 this.radio(label, 'schedule_type', 'daily')
