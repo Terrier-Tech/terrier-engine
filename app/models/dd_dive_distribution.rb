@@ -27,4 +27,7 @@ class DdDiveDistribution < ApplicationRecord
 
   json_field :schedule, {}, 'RegularSchedule'
 
+  # there's a currently unused notes column
+
+
 end

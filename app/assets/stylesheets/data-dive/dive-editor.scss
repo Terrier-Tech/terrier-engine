@@ -95,13 +95,22 @@
 	.distribution {
 		display: flex;
 		flex-direction: column;
+		gap: 0.5em;
 		--tt-scale-push-factor: 0.02;
 		@include tt-scale-push;
+		@include tt-inset-box;
+		border: 1px solid var(--tt-border-color);
+		padding: 0.5em;
 		> div {
 			text-align: center;
 		}
 		.schedule {
 			font-weight: bold;
+		}
+		.recipient {
+			line-height: 1.2;
+			max-width: 320px;
+			@include tt-single-line;
 		}
 	}
 }
