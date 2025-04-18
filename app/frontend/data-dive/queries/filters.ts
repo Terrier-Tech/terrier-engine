@@ -31,7 +31,7 @@ type BaseFilter = {
     edit_label?: string
 }
 
-const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'present', 'contains', 'excludes', 'any'] as const
+const directOperators = ['eq', 'ne', 'ilike', 'lt', 'gt', 'lte', 'gte', 'present', 'empty', 'contains', 'excludes', 'any'] as const
 export type DirectOperator = typeof directOperators[number]
 
 /**
@@ -48,13 +48,13 @@ function operatorOptions(colDef?: ColumnDef): SelectOptions {
                 operators = ['contains', 'excludes', 'any']
             }
             else {
-                operators = ['eq', 'ne', 'ilike', 'present']
+                operators = ['eq', 'ne', 'ilike', 'present', 'empty']
             }
             break
         case 'float':
         case 'integer':
         case 'cents':
-            operators = ['eq', 'ne', 'lt', 'gt', 'lte', 'gte', 'present']
+            operators = ['eq', 'ne', 'lt', 'gt', 'lte', 'gte', 'present', 'empty']
             break
     }
     return operators.map(op => {
@@ -119,12 +119,14 @@ function operatorDisplay(op: DirectOperator): string {
             return '≥'
         case 'present':
             return "Is Present?"
+        case 'empty':
+            return "Is Empty?"
         case 'contains':
-            return "Contains ALL of:"
+            return "Contains ALL of"
         case 'excludes':
-            return "Contains NONE of:"
+            return "Contains NONE of"
         case 'any':
-            return "Contains ANY of:"
+            return "Contains ANY of"
         default:
             return op
     }
@@ -135,7 +137,7 @@ function operatorDisplay(op: DirectOperator): string {
  * @param op
  */
 function operatorNeedsArgument(op: DirectOperator): boolean {
-    return op != 'present';
+    return !(op == 'present' || op == 'empty');
 }
 
 

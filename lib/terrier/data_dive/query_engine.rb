@@ -285,6 +285,8 @@ class Filter < QueryModel
       '<='
     when 'present'
       'is not null'
+    when 'empty'
+      'is null'
     when 'ilike'
       'ilike'
     when 'contains'
@@ -300,7 +302,7 @@ class Filter < QueryModel
 
   # @return [Boolean] true if the operator needs an argument passed
   def operator_needs_argument?
-    @operator != 'present'
+    @operator != 'present' && @operator != 'empty'
   end
 
   def build(builder, table, params={})
@@ -350,6 +352,13 @@ class Filter < QueryModel
             builder.where "length(#{table.alias}.#{@column}) > 0"
           else
             builder.where "#{table.alias}.#{@column} <> 0"
+          end
+        elsif @operator == 'empty'
+          if @column_type == 'text'
+            # this is treated like rails empty
+            builder.where "#{table.alias}.#{@column} IS NULL OR length(#{table.alias}.#{@column}) = 0"
+          else
+            builder.where "#{table.alias}.#{@column} IS NULL OR #{table.alias}.#{@column} = 0"
           end
         else
           clause = "#{table.alias}.#{@column} #{op}"
