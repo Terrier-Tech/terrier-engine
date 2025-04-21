@@ -391,7 +391,7 @@ module Terrier::Model
       record.assign_attributes attrs
       record.before_upsert!
       unless record.valid?
-        raise ValidationError.new("#{self.name} is not valid", record.errors)
+        raise ValidationError.new("#{self.name} is not valid: #{record.errors.full_messages.join(', ')}", record.errors)
       end
 
       upsert_belongs_tos! record, belongs_tos, change_user

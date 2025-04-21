@@ -8,7 +8,7 @@ class DdDiveDistributions < ActiveRecord::Migration[7.1]
       t.text :notes
     end
 
-    add_foreign_key_column :dd_dive_runs, :dd_dive_distributions, type: :uuid
+    add_foreign_key_column :dd_dive_runs, :dd_dive_distributions, type: :uuid, null: true
 
   end
 end

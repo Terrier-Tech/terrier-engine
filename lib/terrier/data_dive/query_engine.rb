@@ -240,17 +240,16 @@ class Filter < QueryModel
   # this should match the implementation of `Filters.toInput` on the frontend
   def compute_input_name(table)
     key = "#{table.model}.#{@column}"
-    key = case @filter_type
-          when 'inclusion'
-            "#{key} in"
-          when 'date_range'
-            "#{key} range"
-          when 'direct'
-            "#{key} #{@operator}"
-          else
-            raise "Don't know how to compute an input_name for a #{@filter_type} filter"
-          end
-    "#{key}"
+    case @filter_type
+    when 'inclusion'
+      "#{key} in"
+    when 'date_range'
+      "#{key} range"
+    when 'direct'
+      "#{key} #{@operator}"
+    else
+      raise "Don't know how to compute an input_name for a #{@filter_type} filter"
+    end
   end
 
   def compute_column_metadata(table)

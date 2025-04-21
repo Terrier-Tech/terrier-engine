@@ -48,7 +48,7 @@ class DdDiveRun < ApplicationRecord
 
   ## Delivery
 
-  belongs_to :dd_dive_distribution
+  belongs_to :dd_dive_distribution, optional: true
 
   emails_field :delivery_recipients
 
