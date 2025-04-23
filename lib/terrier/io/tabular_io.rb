@@ -517,7 +517,8 @@ module TabularIo
 
   # creates a sheet inside an xlsx workbook
   def self.create_sheet_xlsx(book, data, options)
-    book.write_worksheet(name: options[:sheet_name], use_shared_strings: true) do |sheet|
+    sheet_name = options[:sheet_name].force_encoding('UTF-8')
+    book.write_worksheet(name: sheet_name, use_shared_strings: true) do |sheet|
       columns, columns_s = self.compute_columns data, options
       sheet << columns_s #Sheet header
 
@@ -536,7 +537,7 @@ module TabularIo
       titleize_columns: false
     }.merge options
 
-    Xlsxtream::Workbook.open(abs_path) do |book|
+    Xlsxtream::Workbook.open(abs_path.to_s.force_encoding('UTF-8')) do |book|
       if data.is_a?(Hash)
         data.each do |sheet_name, _data|
           options[:sheet_name] = sheet_name.to_s

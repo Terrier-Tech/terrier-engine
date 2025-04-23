@@ -476,7 +476,8 @@ class DataDive::QueryEngine
   end
 
   def to_sql(params={})
-    self.to_sql_builder(params).to_sql
+    self
+    ql_builder(params).to_sql
   end
 
 

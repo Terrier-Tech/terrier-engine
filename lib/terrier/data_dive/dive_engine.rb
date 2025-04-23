@@ -146,12 +146,12 @@ class DataDive::DiveEngine
 
   # formats a raw value for output based on the column type
   def format_value(val, type)
-    return val.to_s unless type.present?
+    return val unless type.present?
     case type
     when 'cents'
       val.to_i / 100.0
     else
-      val.to_s
+      val
     end
   end
 
