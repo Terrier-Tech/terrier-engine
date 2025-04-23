@@ -1,4 +1,3 @@
-
 _classRegex = /\.[\w-]+/g
 _idRegex = /#[\w-]+/g
 
@@ -112,3 +111,8 @@ window.tinyTemplate.parseClasses = (classes) ->
 		classes.split /[\s\.]+/
 	else
 		classes
+
+# adds a custom global tag function that can be used with tiny template
+# pass in the name of the tag as a camelcase function name: 'myCustomTag'
+# this function will create a corresponding 'my-custom-tag' element
+window.tinyTemplate.addCustomTag = makeTagFunc
