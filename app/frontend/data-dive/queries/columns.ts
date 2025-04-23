@@ -173,7 +173,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         this.onClick(addSingleKey, m => {
-            this.addColumn(m.data.name)
+            this.addColumn(m.data)
         })
 
         this.onClick(addKey, m => {
@@ -186,15 +186,10 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
     }
 
-    addColumn(col: string) {
-        const colDef = this.modelDef.columns[col]
-        log.info(`Add column ${col}`, colDef)
-        if (colDef) {
-            this.addEditor({name: colDef.name})
-            this.dirty()
-        } else {
-            alert(`Unknown column name '${col}'`)
-        }
+    addColumn(col: ColumnRef) {
+        log.info(`Add column ${col.name}`, col)
+        this.addEditor(col)
+        this.dirty()
     }
 
     get currentEditorStates(): ColumnState[] {
@@ -399,8 +394,11 @@ class ColumnEditor extends TerrierPart<ColumnState> {
 // Add Column Dropdown
 ////////////////////////////////////////////////////////////////////////////////
 
-type SelectableColumn = ColumnDef & {
+type SelectableColumn = {
+    ref: ColumnRef
+    def: ColumnDef
     included: boolean
+    description: string
     sortOrder: string
 }
 
@@ -410,7 +408,7 @@ type SelectableColumn = ColumnDef & {
 class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
 
     addAllKey = Messages.untypedKey()
-    addKey = Messages.typedKey<{ name: string }>()
+    addKey = Messages.typedKey<ColumnRef>()
     checked: Set<string> = new Set()
     columns!: SelectableColumn[]
     modelDef!: ModelDef
@@ -426,16 +424,39 @@ class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
 
         // sort the columns by whether they're in the editor already
         const includedNames = this.state.editor.currentColumnNames
-        this.columns = Object.values(this.modelDef.columns).map(col => {
-            const included = includedNames.has(col.name)
-            const sortOrder = `${included ? '1' : '0'}${col.name}`
-            return {included, sortOrder,...col}
+        this.columns = Object.values(this.modelDef.columns).map(colDef => {
+            const included = includedNames.has(colDef.name)
+            const sortOrder = `${included ? '1' : '0'}${colDef.name}`
+            const description = colDef.metadata?.description || ''
+            return {
+                def: colDef,
+                ref: {name: colDef.name},
+                included,
+                sortOrder, description}
         })
         this.columns = Arrays.sortBy(this.columns, 'sortOrder')
 
+        // add an option for a "count" column
+        const idDef = this.modelDef.columns['id']
+        if (idDef) {
+            const countColumn: SelectableColumn = {
+                def: idDef,
+                ref: {
+                    name: idDef.name,
+                    alias: 'count',
+                    function: 'count'
+                },
+                included: false,
+                sortOrder: '',
+                description: "Count all matching rows (when grouped)"
+            }
+            this.columns = this.columns.concat([countColumn])
+        }
+
         this.onClick(this.addKey, m => {
-            log.info(`Adding column ${m.data.name}`)
-            this.state.editor.addColumn(m.data.name)
+            const colRef = m.data
+            log.info(`Adding column ${colRef.name}`)
+            this.state.editor.addColumn(colRef)
 
             // remove the link
             const link = Dom.queryAncestorClass(m.event.target as HTMLInputElement, 'column')
@@ -443,10 +464,10 @@ class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
         })
 
         this.onClick(this.addAllKey, _ => {
-            // add all of the unincluded columns and close the dropdown
+            // add all the unincluded, non-function columns and close the dropdown
             for (const col of this.columns) {
-                if (!col.included) {
-                    this.state.editor.addColumn(col.name)
+                if (!col.included && !col.ref.function?.length) {
+                    this.state.editor.addColumn(col.ref)
                 }
             }
             this.clear()
@@ -459,18 +480,48 @@ class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
     }
 
     renderContent(parent: PartTag) {
+        // keep track of the last column rendered to see if we need a separator
+        let lastCol: SelectableColumn | null = null
         for (const col of this.columns) {
+            const colRef = col.ref
+            const colDef = col.def
+
+            // add a separator if necessary
+            if (lastCol) {
+                if ((!lastCol.included && col.included)) {
+                    parent.div('.separator')
+                }
+                if ((!lastCol.ref.function?.length && colRef.function?.length)) {
+                    parent.div('.separator')
+                }
+            }
+
+            // the actual link
             parent.a('.column', a => {
-                a.div('.name').text(col.name)
-                a.div('.right-title').text(col.type)
+                if (colRef.function?.length) {
+                    if (colRef.function == 'count') {
+                        // no point showing the column name or type for count()
+                        a.div('.name').text("count(*)")
+                    }
+                    else {
+                        // non-count function, so show the type
+                        a.div('.name').text(`${colRef.function}(${colDef.name})`)
+                        a.div('.right-title').text(colDef.type)
+                    }
+                }
+                else {
+                    a.div('.name').text(colDef.name)
+                    a.div('.right-title').text(colDef.type)
+                }
                 if (col.included) {
                     // style the columns that are already included differently
                     a.class('inactive')
                 }
-                if (col.metadata?.description?.length) {
-                    a.div('.subtitle').text(col.metadata.description)
+                if (col.description?.length) {
+                    a.div('.subtitle').text(col.description)
                 }
-            }).emitClick(this.addKey, {name: col.name})
+            }).emitClick(this.addKey, col.ref)
+            lastCol = col
         }
 
         parent.a('.primary', a => {

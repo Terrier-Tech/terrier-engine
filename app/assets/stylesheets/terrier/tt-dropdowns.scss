@@ -118,4 +118,10 @@
 			filter: none;
 		}
 	}
+
+	--tt-separator-color: #{rgba(#fff, 0.25)};
+	.separator {
+		height: 0.5px;
+		background-color: var(--tt-separator-color);
+	}
 }
