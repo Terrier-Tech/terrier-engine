@@ -32,11 +32,17 @@ function validateQuery(query: Query): QueryClientValidation {
 
     const usedNames: Set<string> = new Set<string>()
 
+    const aggCols: ColumnRef[] = [] // keep track of columns with an aggregate function
     let isGrouped = false
     const groupedTables: Set<TableRef> = new Set()
     Queries.eachColumn(query, (table, col) => {
         // clear the errors
         col.errors = undefined
+
+        // determine if there's an aggregate function
+        if (col.function?.length && Columns.functionType(col.function) == 'aggregate') {
+            aggCols.push(col)
+        }
 
         // determine if there's a _group by_ in the query
         if (col.grouped) {
@@ -55,13 +61,19 @@ function validateQuery(query: Query): QueryClientValidation {
         usedNames.add(selectName)
     })
 
-    // if the query is grouped, ensure that all other column refs
-    // are either grouped, have an aggregate function, or are on a grouped table
     if (isGrouped) {
+        // if the query is grouped, ensure that all other column refs
+        // are either grouped, have an aggregate function, or are on a grouped table
         Queries.eachColumn(query, (table, col) => {
             if (!col.grouped && Columns.functionType(col.function) != 'aggregate' && !groupedTables.has(table)) {
                 addColumnError(col, `<strong>${col.name}</strong> must be grouped or have an aggregate function`)
             }
+        })
+    }
+    else if (aggCols.length) {
+        // if the query isn't grouped, aggregate functions are an error
+        aggCols.forEach(col => {
+            addColumnError(col, `<strong>${col.name}</strong> has an aggregate function but the query isn't grouped`)
         })
     }
 

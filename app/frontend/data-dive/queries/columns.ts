@@ -130,12 +130,6 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     tableFields!: FormFields<TableRef>
 
-    addEditor(col: ColumnRef) {
-        this.columnCount += 1
-        const state = {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col}
-        this.columnEditors[state.id] = this.makePart(ColumnEditor, state)
-    }
-
 
     async init () {
         this.table = this.state.tableView.table
@@ -190,6 +184,25 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         log.info(`Add column ${col.name}`, col)
         this.addEditor(col)
         this.dirty()
+    }
+
+    addEditor(col: ColumnRef) {
+        this.columnCount += 1
+        const state = {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col}
+        this.columnEditors[state.id] = this.makePart(ColumnEditor, state)
+        this.validate().then()
+    }
+
+    removeEditor(id: string) {
+        const editor = this.columnEditors[id]
+        if (editor) {
+            log.info(`Removing column ${id}`)
+            this.removeChild(editor)
+            delete this.columnEditors[id]
+            this.validate().then()
+        } else {
+            log.warn(`No editor for column ${id}`)
+        }
     }
 
     get currentEditorStates(): ColumnState[] {
@@ -255,18 +268,6 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             })
         }
 
-    }
-
-    removeEditor(id: string) {
-        const editor = this.columnEditors[id]
-        if (editor) {
-            log.info(`Removing column ${id}`)
-            this.removeChild(editor)
-            delete this.columnEditors[id]
-        }
-        else {
-            log.warn(`No editor for column ${id}`)
-        }
     }
 
     async serialize(): Promise<ColumnRef[]> {
