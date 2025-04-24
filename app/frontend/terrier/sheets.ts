@@ -1,3 +1,4 @@
+import { GlypName } from "./glyps"
 import {Action, IconName} from "./theme"
 import TerrierPart from "./parts/terrier-part"
 import {PartTag} from "tuff-core/parts"
@@ -6,6 +7,19 @@ import {Logger} from "tuff-core/logging"
 import Messages from "tuff-core/messages"
 
 const log = new Logger('Sheets')
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Inputs
+////////////////////////////////////////////////////////////////////////////////
+
+export type SheetInput = {
+    type: 'text'
+    key: string
+    value: string
+    label?: string
+    icon?: GlypName
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,11 +32,17 @@ export type SheetState = {
     body: string
     primaryActions?: Action[]
     secondaryActions?: Action[]
+    inputs?: SheetInput[]
 }
 
 const clearKey = Messages.untypedKey()
 
+/**
+ * Show a little popup sheet at the bottom of the screen that's much nicer than a native alert() or confirm().
+ */
 export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
+
+    inputChangedKey = Messages.typedKey<{key: string}>()
 
     /**
      * Removes itself from the DOM.
@@ -36,6 +56,17 @@ export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
         this.onClick(clearKey, _ => {
             this.clear()
         })
+
+        this.onChange(this.inputChangedKey, m => {
+            const key = m.data.key
+            const value = m.value
+            log.info(`Input ${key} changed to ${value}`)
+            this.state.inputs?.forEach(input => {
+                if (input.key === key) {
+                    input.value = value
+                }
+            })
+        })
     }
 
     get parentClasses(): Array<string> {
@@ -48,8 +79,11 @@ export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
             .title(this.state.title)
             .icon(this.state.icon)
             .content(panel => {
-                panel.class('padded')
+                panel.class('padded', 'tt-form')
                 panel.div('.body').text(this.state.body)
+                for (const input of this.state.inputs || []) {
+                    this.renderInput(panel, input)
+                }
             })
         for (const action of this.state.primaryActions || []) {
             // if it doesn't have a click key, it must be a close button
@@ -64,12 +98,22 @@ export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
         panel.render(parent)
     }
 
+    renderInput(parent: PartTag, input: SheetInput) {
+        parent.div('.tt-sheet-input', container => {
+            if (input.label?.length) {
+                container.label().text(input.label)
+            }
+            container.input({type: 'text', value: input.value})
+                .data({key: input.key})
+                .emitChange(this.inputChangedKey, {key: input.key})
+        })
+    }
+
     update(_elem: HTMLElement) {
         setTimeout(
             () => _elem.classList.add('show'),
             10
         )
-
     }
 }
 
@@ -81,7 +125,7 @@ export class Sheet<TState extends SheetState> extends TerrierPart<TState> {
 /**
  * State type for a sheet that asks the user to confirm a choice.
  */
-export type ConfirmSheetState = Pick<SheetState, 'title' | 'body' | 'icon'>
+export type ConfirmSheetState = Pick<SheetState, 'title' | 'body' | 'icon' | 'inputs'>
 
 /**
  * State type for a sheet that tells the user something with no options.

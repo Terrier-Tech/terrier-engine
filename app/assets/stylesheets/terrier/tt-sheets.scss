@@ -19,6 +19,9 @@
 		transition: transform var(--tt-animation-duration) ease;
 		.panel-content {
 			padding-bottom: 2em;
+			display: flex;
+			flex-direction: column;
+			gap: var(--tt-gap);
 		}
 	}
 	&.show .tt-panel {

@@ -183,6 +183,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     addColumn(col: ColumnRef) {
         log.info(`Add column ${col.name}`, col)
         this.addEditor(col)
+        this.validate().then()
         this.dirty()
     }
 
@@ -190,7 +191,6 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         this.columnCount += 1
         const state = {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col}
         this.columnEditors[state.id] = this.makePart(ColumnEditor, state)
-        this.validate().then()
     }
 
     removeEditor(id: string) {

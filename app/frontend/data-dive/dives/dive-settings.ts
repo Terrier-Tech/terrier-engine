@@ -1,6 +1,7 @@
 import TerrierPart from "../../terrier/parts/terrier-part"
 import {Logger} from "tuff-core/logging"
 import {PartTag} from "tuff-core/parts"
+import { SheetInput } from "../../terrier/sheets"
 import {DdDive, DdDiveEnumFields, UnpersistedDdDive} from "../gen/models"
 import * as inflection from "inflection"
 import {SchemaDef} from "../../terrier/schema"
@@ -111,6 +112,7 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
     modelPicker!: QueryModelPicker
     saveKey = Messages.untypedKey()
     deleteKey = Messages.untypedKey()
+    duplicateKey = Messages.untypedKey()
     isNew = true
 
     async init() {
@@ -135,12 +137,20 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
             click: {key: this.saveKey}
         })
 
-        if (!this.isNew && Dives.canDelete(this.state.dive, this.state.session)) {
+        if (!this.isNew) {
+            if (Dives.canDelete(this.state.dive, this.state.session)) {
+                this.addAction({
+                    title: 'Delete',
+                    icon: 'glyp-delete',
+                    classes: ['alert'],
+                    click: {key: this.deleteKey}
+                }, 'secondary')
+            }
+
             this.addAction({
-                title: 'Delete',
-                icon: 'glyp-delete',
-                classes: ['alert'],
-                click: {key: this.deleteKey}
+                title: 'Duplicate',
+                icon: 'glyp-duplicate',
+                click: {key: this.duplicateKey}
             }, 'secondary')
         }
 
@@ -151,6 +161,23 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
         this.onClick(this.deleteKey, async _ => {
             this.app.confirm({title: 'Delete this dive?', body: "Are you sure you want to delete this dive?", icon: 'glyp-delete'}, () => {
                 this.delete()
+            })
+        })
+
+        this.onClick(this.duplicateKey, async _ => {
+            const nameInput: SheetInput = {
+                type: 'text',
+                key: 'name',
+                value: this.state.dive.name + ' (Copy)',
+                label: "New Dive Name"
+            }
+            this.app.confirm({
+                title: 'Duplicate this dive?',
+                body: "Are you sure you want to duplicate this dive?",
+                icon: 'glyp-duplicate',
+                inputs: [nameInput]
+            }, () => {
+                this.duplicate(nameInput.value)
             })
         })
     }
@@ -220,6 +247,19 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
             Nav.visit(routes.list.path({}))
         } else {
             this.settingsForm.setErrors(res.errors)
+        }
+    }
+
+    async duplicate(name: string) {
+        const dive = {...this.state.dive, name}
+        delete dive.id
+        const res = await Db().upsert('dd_dive', dive)
+        if (res.status == 'success') {
+            this.pop()
+            this.successToast(`Duplicated dive ${dive.name}`)
+            Nav.visit(routes.list.path({}))
+        } else {
+            this.alertToast(`Error duplicating dive: ${res.message}`)
         }
     }
 
