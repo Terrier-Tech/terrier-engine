@@ -517,7 +517,10 @@ module TabularIo
 
   # creates a sheet inside an xlsx workbook
   def self.create_sheet_xlsx(book, data, options)
-    sheet_name = options[:sheet_name].force_encoding('UTF-8')
+    sheet_name = options[:sheet_name]
+    sheet_name = sheet_name.dup if sheet_name.frozen?
+    sheet_name = sheet_name.force_encoding('UTF-8')
+
     book.write_worksheet(name: sheet_name, use_shared_strings: true) do |sheet|
       columns, columns_s = self.compute_columns data, options
       sheet << columns_s #Sheet header
@@ -527,7 +530,7 @@ module TabularIo
       end
     end # Saves are performed on block close
   end
-  
+
   # writes an xlsx file
   # data can be either an array of hashes or a hash of array of hashes
   def self.save_xlsx(data, rel_path, options={})
