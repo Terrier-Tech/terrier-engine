@@ -13,8 +13,8 @@ _ropeCase = (s) ->
 	).trim()
 
 makeTagFunc = (t) ->
-	rct = _ropeCase(tag)
-	window[tag] = (selector, attrs, func) ->
+	rct = _ropeCase(t)
+	window[t] = (selector, attrs, func) ->
 		appendTag(rct, selector, attrs, func)
 for tag in _tags
 	makeTagFunc tag
