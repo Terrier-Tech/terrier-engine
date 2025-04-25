@@ -1,3 +1,3 @@
 module Terrier
-  VERSION = '4.50.1'.freeze
+  VERSION = '4.50.2'.freeze
 end

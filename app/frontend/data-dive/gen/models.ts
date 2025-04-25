@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-04-18 11:01:55 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-04-25 14:11:58 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
@@ -97,6 +97,7 @@ export type DdDiveDistribution = {
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_runs?: DdDiveRun[]
+    dd_dive?: DdDive
 }
 
 export type UnpersistedDdDiveDistribution = {
@@ -116,6 +117,7 @@ export type UnpersistedDdDiveDistribution = {
     created_by?: DdUser
     updated_by?: DdUser
     dd_dive_runs?: OptionalProps<UnpersistedDdDiveRun, "dd_dive_distribution_id">[]
+    dd_dive?: DdDive
 }
 
 export type DdDiveGroup = {
@@ -281,7 +283,7 @@ export type UnpersistedModelTypeMap = {
  */
 export type ModelIncludesMap = {
     dd_dive: "created_by" | "dd_dive_distributions" | "dd_dive_group" | "dd_dive_runs" | "owner" | "updated_by"
-    dd_dive_distribution: "created_by" | "dd_dive_runs" | "updated_by"
+    dd_dive_distribution: "created_by" | "dd_dive" | "dd_dive_runs" | "updated_by"
     dd_dive_group: "created_by" | "dd_dives" | "updated_by"
     dd_dive_plot: "created_by" | "dd_dive" | "updated_by"
     dd_dive_run: "created_by" | "dd_dive" | "dd_dive_distribution" | "updated_by"
@@ -292,7 +294,7 @@ export type ModelIncludesMap = {
  */
 export const ModelIncludesArrayMap = {
     dd_dive: ["created_by", "dd_dive_distributions", "dd_dive_group", "dd_dive_runs", "owner", "updated_by"] as const,
-    dd_dive_distribution: ["created_by", "dd_dive_runs", "updated_by"] as const,
+    dd_dive_distribution: ["created_by", "dd_dive", "dd_dive_runs", "updated_by"] as const,
     dd_dive_group: ["created_by", "dd_dives", "updated_by"] as const,
     dd_dive_plot: ["created_by", "dd_dive", "updated_by"] as const,
     dd_dive_run: ["created_by", "dd_dive", "dd_dive_distribution", "updated_by"] as const,
