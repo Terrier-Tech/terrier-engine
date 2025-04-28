@@ -212,6 +212,7 @@
 			left: calc(-0.5 * var(--chicken-foot-size) - var(--chicken-foot-width)/2);
 			top: calc(-0.5 * var(--chicken-foot-size) - var(--chicken-foot-width)/2);
 			transform: rotate(45deg);
+			box-sizing: content-box; // this is needed to override the default border-box on clypboard
 		}
 	}
 
