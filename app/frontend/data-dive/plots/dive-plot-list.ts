@@ -114,7 +114,8 @@ export default class DivePlotList extends TerrierPart<DiveEditorState> {
     render(parent: PartTag): any {
         this.renderCollection(parent, "plots")
 
-        Fragments.button(parent, this.theme, "New Plot", "glyp-plus_outline", "secondary")
+        Fragments.button(parent, this.theme, "New Plot", "glyp-plus_outline")
+            .class('secondary')
             .emitClick(this.newKey)
     }
 

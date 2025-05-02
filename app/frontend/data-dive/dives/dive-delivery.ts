@@ -87,7 +87,8 @@ export class DiveDeliveryPanel extends TerrierPart<DiveEditorState> {
                 this.renderDistribution(distContainer, dist)
             }
         })
-        Fragments.button(parent, this.theme, "New", "glyp-plus_outline", "secondary")
+        Fragments.button(parent, this.theme, "New", "glyp-plus_outline")
+            .class('secondary')
             .emitClick(this.newKey)
 
         // deliveries
