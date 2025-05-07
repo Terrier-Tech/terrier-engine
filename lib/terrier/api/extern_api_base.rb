@@ -6,10 +6,6 @@ require 'colorize'
 class ExternApiBase
   include Loggable
 
-  def api_root
-    raise "Subclasses must provide an api_root"
-  end
-
   def get_json(url, params)
     t = Time.now
     url = url[1..-1] if url.start_with?('/')
@@ -36,7 +32,7 @@ class ExternApiBase
   def post_json(url, params)
     t = Time.now
     full_url = "#{api_root}/#{url}"
-    params_printed = "{#{params&.map { |k, v| "#{k}: (#{v&.try(:size)} values)" }&.join(', ')}}"
+    params_printed = "{#{params&.map { |k, v| "#{k}: (#{v&.try(:size) || 0} values)" }&.join(', ')}}"
     info "Posting to #{full_url.bold} with params #{params_printed.italic}"
     raw = HTTP.post(full_url, json: params, ssl_context: make_ssl_context)
     begin
