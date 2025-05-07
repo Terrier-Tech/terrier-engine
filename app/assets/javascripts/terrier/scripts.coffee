@@ -1041,20 +1041,21 @@ class Workspace
 		@scriptMap = {}
 		@itemMap = {}
 
-		@layout.registerComponent 'editor', (container, state) =>
+		parent = @
+		@layout.registerComponent 'editor', (container, state) ->
 			if state?.id?.length
 				$.get(
 					"/scripts/#{state.id}.json"
 					(res) =>
 						if res.status == 'success'
-							@scriptMap[res.script.id] = res.script
-							@itemMap[res.script.id] = container
-							editor = new Editor(res.script, container, @constants)
+							parent.scriptMap[res.script.id] = res.script
+							parent.itemMap[res.script.id] = container
+							editor = new Editor(res.script, container, parent.constants)
 						else
 							alert res.message
 				)
 			else # new script
-				editor = new Editor({title: 'New Script'}, container, @constants)
+				editor = new Editor({title: 'New Script'}, container, parent.constants)
 
 		@layout.on 'itemDestroyed', (evt) =>
 			id = evt.config?.componentState?.id
