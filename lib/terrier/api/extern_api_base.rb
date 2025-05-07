@@ -36,7 +36,8 @@ class ExternApiBase
   def post_json(url, params)
     t = Time.now
     full_url = "#{api_root}/#{url}"
-    info "Posting to #{full_url.bold} with params #{params.inspect.italic}"
+    params_printed = "{#{params&.map { |k, v| "#{k}: (#{v&.try(:size)} values)" }&.join(', ')}}"
+    info "Posting to #{full_url.bold} with params #{params_printed.italic}"
     raw = HTTP.post(full_url, json: params, ssl_context: make_ssl_context)
     begin
       res = JSON.parse raw.to_s
