@@ -6,6 +6,10 @@ require 'colorize'
 class ExternApiBase
   include Loggable
 
+  def api_root
+    raise "Subclasses must provide an api_root"
+  end
+
   def get_json(url, params)
     t = Time.now
     url = url[1..-1] if url.start_with?('/')
