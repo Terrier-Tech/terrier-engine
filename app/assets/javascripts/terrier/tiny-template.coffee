@@ -95,6 +95,8 @@ appendTag = (tag, selector, attrs, func) ->
 window.tinyTemplate = (root) ->
 	(args...) ->
 		_context = {content: ''}
+		# Replace nulls with undefined so arg defaults are used (if defined)
+		args = args.map (arg) -> if arg == null then undefined else arg
 		root(args...)
 		_context.content
 
