@@ -18,6 +18,7 @@
     "@types/turbolinks": "^5.2.0",
     "dayjs": "^1.11.7",
     "inflection": "^2.0.1",
+    "interactjs": "^1.10.27",
     "mime-types": "^2.1.35",
     "tuff-core": "latest",
     "tuff-plot": "latest",
