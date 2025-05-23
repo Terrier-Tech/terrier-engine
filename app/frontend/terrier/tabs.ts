@@ -41,6 +41,44 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabs = {} as Record<string, TabDefinition>
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
+    // Contains the permutation as a list of indexes. A convenience method is defined to reorder an array given the
+    // permutation.
+    static readonly tabReorderedKey = Messages.typedKey<{ permutation: number[] }>()
+
+    /**
+     * Reorders an array given a permutation list. The original array is not mutated.
+     * 
+     * @param array The array to reorder.
+     * @param permutation A permutation list. Must contain each natural number exactly once up to the given length.
+     * @returns The reordered array.
+     * @throws {Error} when the arrays are not the same length
+     */
+    static reorderByPermutation(array: any[], permutation: number[]): any[] {
+        if (array.length != permutation.length)
+            throw Error(`Arrays must be the same length (original: ${array.length}, permutation: ${permutation.length})`)
+        return permutation.reduce((reordered, index) => {
+            reordered.push(array[index])
+            return reordered
+        }, [] as any[])
+    }
+
+    /**
+     * Given two arrays containing the same set of items.
+     *
+     * @param before The array before permutation.
+     * @param after The array after the permutation.
+     * @returns An array representing the permutation.
+     * @throws {Error} when the arrays have any elements that are not in common.
+     */
+    static getPermutationArray(before: any[], after: any[]): number[] {
+        return before.
+            map(beforeItem =>
+                after.findIndex(afterItem => afterItem === beforeItem)).
+            map(index => {
+                if (index == -1) throw new Error('"before" and "after" don\'t contain exactly the same elements')
+                return index
+            })
+    }
 
     async init() {
         this.onClick(this.changeTabKey, m => {
@@ -57,18 +95,22 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.makePlugin(SortablePlugin, {
             zoneClass: 'tt-tab-list',
             targetClass: 'tab',
-            onSorted: (_, evt) =>
+            onSorted: (_, evt) => {
                 this.renumberTabs(evt.toChildren)
-
+            }
         })
     }
 
     renumberTabs(tabElementsMaybe?: HTMLElement[]) {
         const tabElements = tabElementsMaybe ??
             Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
-        tabElements.forEach((tabElement, index) =>
-            this.tabs[tabElement.dataset.key!].position = index
-        )
+        const permutation = tabElements.map((tabElement, index) => {
+            const tab = this.tabs[tabElement.dataset.key!]
+            const oldPosition = tab.position
+            tab.position = index
+            return oldPosition
+        })
+        this.emitMessage(TabContainerPart.tabReorderedKey, { permutation })
     }
 
     /**
