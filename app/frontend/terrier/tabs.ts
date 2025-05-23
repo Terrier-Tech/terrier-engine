@@ -1,8 +1,9 @@
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 import Messages from "tuff-core/messages"
-import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
+import { Part, PartParent, PartTag, StatelessPart } from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import {Action, IconName, Packet} from "./theme"
+import { Action, IconName, Packet } from "./theme"
+import SortablePlugin from "tuff-sortable/sortable-plugin"
 
 const log = new Logger("Tabs")
 
@@ -31,7 +32,8 @@ export type TabSide = typeof Sides[number]
 
 export type TabContainerState = {
     side: TabSide
-    currentTab? : string
+    reorderable?: boolean
+    currentTab?: string
 }
 
 export class TabContainerPart extends TerrierPart<TabContainerState> {
@@ -39,8 +41,46 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabs = {} as Record<string, TabDefinition>
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
+    tabReorderedKey = Messages.typedKey<{ newOrder: string[] }>()
+
+    /**
+     * Reorders an array given a permutation list. The original array is not mutatede
+     * 
+     * @param array The array to reorder.
+     * @param permutation A permutation list. Must contain each natural number exactly once up to the given length.
+     * @returns The reordered array.
+     * @throws {Error} when the arrays are not the same length
+     */
+    static reorderByPermutation(array: any[], permutation: number[]): any[] {
+        if (array.length != permutation.length)
+            throw Error(`Arrays must be the same length (original: ${array.length}, permutation: ${permutation.length})`)
+        return permutation.reduce((reordered, index) => {
+            reordered.push(array[index])
+            return reordered
+        }, [] as any[])
+    }
+
+    /**
+     * Given two arrays containing the same set of items.
+     *
+     * @param before The array before permutation.
+     * @param after The array after the permutation.
+     * @returns An array representing the permutation.
+     * @throws {Error} when the arrays have any elements that are not in common.
+     */
+    static getPermutationArray(before: any[], after: any[]): number[] {
+        return before.
+            map(beforeItem =>
+                after.findIndex(afterItem => afterItem === beforeItem)).
+            map(index => {
+                if (index == -1) throw new Error('"before" and "after" don\'t contain exactly the same elements')
+                return index
+            })
+    }
 
     async init() {
+        Object.assign(this.state, { reorderable: false }, this.state)
+
         this.onClick(this.changeTabKey, m => {
             log.info(`Clicked on tab ${m.data.tabKey}`)
             this.showTab(m.data.tabKey)
@@ -51,6 +91,23 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
             this.state.side = m.data.side
             this.dirty()
         })
+
+        if (this.state.reorderable) {
+            this.makePlugin(SortablePlugin, {
+                zoneClass: 'tt-tab-list',
+                targetClass: 'tab',
+                onSorted: (_, evt) => {
+                    this.renumberTabs(evt.toChildren)
+                }
+            })
+        }
+    }
+
+    renumberTabs(tabElementsMaybe?: HTMLElement[]) {
+        const tabElements = tabElementsMaybe ??
+            Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
+        const newOrder = tabElements.map(tabElement => tabElement.dataset.key)
+        this.emitMessage(this.tabReorderedKey, { newOrder })
     }
 
     /**
@@ -65,7 +122,10 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         state: InferredPartStateType
     ): PartType {
         const existingTab = this.tabs[tab.key] ?? {}
-        this.tabs[tab.key] = Object.assign(existingTab, {state: 'enabled'}, tab)
+        this.tabs[tab.key] = Object.assign(existingTab, {
+            state: 'enabled',
+        }, tab)
+        this.renumberTabs()
         const part = this.makePart(constructor, state)
         existingTab.part = part
         this.dirty()
@@ -89,16 +149,14 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      */
     removeTab(key: string) {
         const tab = this.tabs[key]
-        if (tab) {
-            log.info(`Removing tab ${key}`, tab)
-            delete this.tabs[key]
-            this.removeChild(tab.part)
-            this.state.currentTab = undefined
-            this.dirty()
-        }
-        else {
-            log.warn(`No tab ${key} to remove!`)
-        }
+        if (!tab) return log.warn(`No tab ${key} to remove!`)
+
+        log.info(`Removing tab ${key}`, tab)
+        delete this.tabs[key]
+        this.renumberTabs()
+        this.removeChild(tab.part)
+        this.state.currentTab = undefined
+        this.dirty()
     }
 
     /**
@@ -149,38 +207,32 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
                 if (this._beforeActions.length) {
-                    this.theme.renderActions(tabList, this._beforeActions, {defaultClass: 'action'})
+                    this.theme.renderActions(tabList, this._beforeActions, { defaultClass: 'action' })
                 }
                 for (const tab of Object.values(this.tabs)) {
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
+                        a.attrs({ draggable: this.state.reorderable })
+                        a.data({ key: tab.key })
                         a.class(tab.state || 'enabled')
-                        if (tab.key === currentTabKey) {
-                            a.class('active')
-                        }
-                        if (tab.icon) {
-                            this.theme.renderIcon(a, tab.icon)
-                        }
-                        a.span({text: tab.title})
-                        a.emitClick(this.changeTabKey, {tabKey: tab.key})
-                        if (tab.click) {
-                            a.emitClick(tab.click.key, tab.click.data || {})
-                        }
+                        if (tab.key === currentTabKey) a.class('active')
+                        if (tab.icon) this.theme.renderIcon(a, tab.icon)
+                        a.span({ text: tab.title })
+                        a.emitClick(this.changeTabKey, { tabKey: tab.key })
+                        if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
                     })
                 }
                 if (this._afterActions.length) {
                     tabList.div('.spacer')
-                    this.theme.renderActions(tabList, this._afterActions, {defaultClass: 'action'})
+                    this.theme.renderActions(tabList, this._afterActions, { defaultClass: 'action' })
                 }
             })
 
             if (currentTabKey) {
                 const currentTab = this.tabs[currentTabKey]
                 container.div('.tt-tab-content', panel => {
-                    if (currentTab.classes?.length) {
-                        panel.class(...currentTab.classes)
-                    }
+                    if (currentTab.classes?.length) panel.class(...currentTab.classes)
                     panel.part(currentTab.part as StatelessPart)
                 })
             }
