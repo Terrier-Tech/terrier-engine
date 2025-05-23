@@ -43,41 +43,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
     tabReorderedKey = Messages.typedKey<{ newOrder: string[] }>()
 
-    /**
-     * Reorders an array given a permutation list. The original array is not mutatede
-     * 
-     * @param array The array to reorder.
-     * @param permutation A permutation list. Must contain each natural number exactly once up to the given length.
-     * @returns The reordered array.
-     * @throws {Error} when the arrays are not the same length
-     */
-    static reorderByPermutation(array: any[], permutation: number[]): any[] {
-        if (array.length != permutation.length)
-            throw Error(`Arrays must be the same length (original: ${array.length}, permutation: ${permutation.length})`)
-        return permutation.reduce((reordered, index) => {
-            reordered.push(array[index])
-            return reordered
-        }, [] as any[])
-    }
-
-    /**
-     * Given two arrays containing the same set of items.
-     *
-     * @param before The array before permutation.
-     * @param after The array after the permutation.
-     * @returns An array representing the permutation.
-     * @throws {Error} when the arrays have any elements that are not in common.
-     */
-    static getPermutationArray(before: any[], after: any[]): number[] {
-        return before.
-            map(beforeItem =>
-                after.findIndex(afterItem => afterItem === beforeItem)).
-            map(index => {
-                if (index == -1) throw new Error('"before" and "after" don\'t contain exactly the same elements')
-                return index
-            })
-    }
-
     async init() {
         Object.assign(this.state, { reorderable: false }, this.state)
 

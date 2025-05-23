@@ -15,7 +15,6 @@ import DdSession from "../dd-session"
 import { DiveRunModal } from "./dive-runs"
 import Nav from "tuff-core/nav"
 import Messages from "tuff-core/messages"
-import Arrays from "tuff-core/arrays"
 import { FormFields } from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
 import { DiveDeliveryPanel } from "./dive-delivery"
@@ -49,10 +48,12 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     static readonly diveChangedKey = Messages.untypedKey()
 
-    queries = new Array<Query>()
+    queries = new Map<string, Query>()
+    // Array of map keys to give the queries a sort order.
+    queryOrder = new Array<string>()
 
     async init() {
-        this.queryTabs = this.makePart(TabContainerPart, { side: 'top' })
+        this.queryTabs = this.makePart(TabContainerPart, { side: 'top', reorderable: true })
         this.settingsTabs = this.makePart(TabContainerPart, { side: 'top' })
 
         this.queryTabs.addBeforeAction({
@@ -78,8 +79,9 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             click: { key: this.newQueryKey }
         })
 
-        this.queries = this.state.dive.query_data?.queries || []
-        for (const query of this.queries) {
+        this.queries = new Map()
+        for (const query of this.state.dive.query_data?.queries || []) {
+            this.queries.set(query.id, query)
             this.addQueryTab(query)
         }
 
@@ -89,6 +91,12 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             this.queryTabs.updateTab({ key: query.id, title: query.name })
         })
 
+        // Reorder queries in the list when the tab sort order is updated.
+        this.listenMessage(this.queryTabs.tabReorderedKey, m => {
+            const { newOrder } = m.data
+            this.queryOrder = newOrder
+        })
+
         this.onClick(this.newQueryKey, _ => {
             this.app.showModal(NewQueryModal, { editor: this as DiveEditor, schema: this.state.schema })
         })
@@ -96,7 +104,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         this.onClick(this.duplicateQueryKey, _ => {
             const id = this.queryTabs.currentTagKey
             if (id?.length) {
-                const query = this.queries.find(q => q.id == id)
+                const query = this.queries.get(id)
                 if (query) {
                     this.app.showModal(DuplicateQueryModal, {
                         editor: this as DiveEditor,
@@ -137,7 +145,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      * @param query
      */
     addQuery(query: Query) {
-        this.queries.push(query)
+        this.queries.set(query.id, query)
         this.addQueryTab(query)
     }
 
@@ -152,10 +160,11 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     deleteQuery(id: string) {
         log.info(`Deleting query ${id}`)
-        if (Arrays.deleteIf(this.queries, q => q.id == id) > 0) {
-            this.queryTabs.removeTab(id)
-            this.dirty()
-        }
+        if (!this.queries.has(id)) return
+
+        this.queries.delete(id)
+        this.queryTabs.removeTab(id)
+        this.dirty()
     }
 
     get parentClasses(): Array<string> {
@@ -178,7 +187,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         return {
             ...this.state.dive,
-            query_data: { queries }
+            query_data: { queries: this.queryOrder.map(id => queries.get(id)!) }
         }
     }
 
@@ -429,4 +438,3 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         })
     }
 }
-
