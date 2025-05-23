@@ -24,7 +24,6 @@ export type TabParams = {
  */
 export type TabDefinition = TabParams & {
     part: Part<unknown>
-    position: number
 }
 
 const Sides = ['top', 'left', 'bottom', 'right'] as const
@@ -41,12 +40,10 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabs = {} as Record<string, TabDefinition>
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
-    // Contains the permutation as a list of indexes. A convenience method is defined to reorder an array given the
-    // permutation.
-    static readonly tabReorderedKey = Messages.typedKey<{ permutation: number[] }>()
+    tabReorderedKey = Messages.typedKey<{ newOrder: string[] }>()
 
     /**
-     * Reorders an array given a permutation list. The original array is not mutated.
+     * Reorders an array given a permutation list. The original array is not mutatede
      * 
      * @param array The array to reorder.
      * @param permutation A permutation list. Must contain each natural number exactly once up to the given length.
@@ -104,13 +101,8 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     renumberTabs(tabElementsMaybe?: HTMLElement[]) {
         const tabElements = tabElementsMaybe ??
             Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
-        const permutation = tabElements.map((tabElement, index) => {
-            const tab = this.tabs[tabElement.dataset.key!]
-            const oldPosition = tab.position
-            tab.position = index
-            return oldPosition
-        })
-        this.emitMessage(TabContainerPart.tabReorderedKey, { permutation })
+        const newOrder = tabElements.map(tabElement => tabElement.dataset.key)
+        this.emitMessage(this.tabReorderedKey, { newOrder })
     }
 
     /**
@@ -127,7 +119,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         const existingTab = this.tabs[tab.key] ?? {}
         this.tabs[tab.key] = Object.assign(existingTab, {
             state: 'enabled',
-            position: Object.values(this.tabs).length
         }, tab)
         this.renumberTabs()
         const part = this.makePart(constructor, state)
@@ -213,9 +204,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                 if (this._beforeActions.length) {
                     this.theme.renderActions(tabList, this._beforeActions, { defaultClass: 'action' })
                 }
-                const tabs = Object.values(this.tabs)
-                    .sort((a, b) => a.position - b.position)
-                for (const tab of tabs) {
+                for (const tab of Object.values(this.tabs)) {
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
