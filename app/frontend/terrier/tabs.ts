@@ -1,8 +1,9 @@
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 import Messages from "tuff-core/messages"
-import {Part, PartParent, PartTag, StatelessPart} from "tuff-core/parts"
+import { Part, PartParent, PartTag, StatelessPart } from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import {Action, IconName, Packet} from "./theme"
+import { Action, IconName, Packet } from "./theme"
+import SortablePlugin from "tuff-sortable/sortable-plugin"
 
 const log = new Logger("Tabs")
 
@@ -23,6 +24,7 @@ export type TabParams = {
  */
 export type TabDefinition = TabParams & {
     part: Part<unknown>
+    position: number
 }
 
 const Sides = ['top', 'left', 'bottom', 'right'] as const
@@ -31,7 +33,7 @@ export type TabSide = typeof Sides[number]
 
 export type TabContainerState = {
     side: TabSide
-    currentTab? : string
+    currentTab?: string
 }
 
 export class TabContainerPart extends TerrierPart<TabContainerState> {
@@ -51,6 +53,22 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
             this.state.side = m.data.side
             this.dirty()
         })
+
+        this.makePlugin(SortablePlugin, {
+            zoneClass: 'tt-tab-list',
+            targetClass: 'tab',
+            onSorted: (_, evt) =>
+                this.renumberTabs(evt.toChildren)
+
+        })
+    }
+
+    renumberTabs(tabElementsMaybe?: HTMLElement[]) {
+        const tabElements = tabElementsMaybe ??
+            Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
+        tabElements.forEach((tabElement, index) =>
+            this.tabs[tabElement.dataset.key!].position = index
+        )
     }
 
     /**
@@ -65,7 +83,11 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         state: InferredPartStateType
     ): PartType {
         const existingTab = this.tabs[tab.key] ?? {}
-        this.tabs[tab.key] = Object.assign(existingTab, {state: 'enabled'}, tab)
+        this.tabs[tab.key] = Object.assign(existingTab, {
+            state: 'enabled',
+            position: Object.values(this.tabs).length
+        }, tab)
+        this.renumberTabs()
         const part = this.makePart(constructor, state)
         existingTab.part = part
         this.dirty()
@@ -89,16 +111,14 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      */
     removeTab(key: string) {
         const tab = this.tabs[key]
-        if (tab) {
-            log.info(`Removing tab ${key}`, tab)
-            delete this.tabs[key]
-            this.removeChild(tab.part)
-            this.state.currentTab = undefined
-            this.dirty()
-        }
-        else {
-            log.warn(`No tab ${key} to remove!`)
-        }
+        if (!tab) return log.warn(`No tab ${key} to remove!`)
+
+        log.info(`Removing tab ${key}`, tab)
+        delete this.tabs[key]
+        this.renumberTabs()
+        this.removeChild(tab.part)
+        this.state.currentTab = undefined
+        this.dirty()
     }
 
     /**
@@ -149,38 +169,34 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
                 if (this._beforeActions.length) {
-                    this.theme.renderActions(tabList, this._beforeActions, {defaultClass: 'action'})
+                    this.theme.renderActions(tabList, this._beforeActions, { defaultClass: 'action' })
                 }
-                for (const tab of Object.values(this.tabs)) {
+                const tabs = Object.values(this.tabs)
+                    .sort((a, b) => a.position - b.position)
+                for (const tab of tabs) {
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
+                        a.attrs({ draggable: true })
+                        a.data({ key: tab.key })
                         a.class(tab.state || 'enabled')
-                        if (tab.key === currentTabKey) {
-                            a.class('active')
-                        }
-                        if (tab.icon) {
-                            this.theme.renderIcon(a, tab.icon)
-                        }
-                        a.span({text: tab.title})
-                        a.emitClick(this.changeTabKey, {tabKey: tab.key})
-                        if (tab.click) {
-                            a.emitClick(tab.click.key, tab.click.data || {})
-                        }
+                        if (tab.key === currentTabKey) a.class('active')
+                        if (tab.icon) this.theme.renderIcon(a, tab.icon)
+                        a.span({ text: tab.title })
+                        a.emitClick(this.changeTabKey, { tabKey: tab.key })
+                        if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
                     })
                 }
                 if (this._afterActions.length) {
                     tabList.div('.spacer')
-                    this.theme.renderActions(tabList, this._afterActions, {defaultClass: 'action'})
+                    this.theme.renderActions(tabList, this._afterActions, { defaultClass: 'action' })
                 }
             })
 
             if (currentTabKey) {
                 const currentTab = this.tabs[currentTabKey]
                 container.div('.tt-tab-content', panel => {
-                    if (currentTab.classes?.length) {
-                        panel.class(...currentTab.classes)
-                    }
+                    if (currentTab.classes?.length) panel.class(...currentTab.classes)
                     panel.part(currentTab.part as StatelessPart)
                 })
             }
