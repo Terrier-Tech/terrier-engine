@@ -89,6 +89,14 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             this.queryTabs.updateTab({ key: query.id, title: query.name })
         })
 
+        // Reorder queries in the list when the tab sort order is updated.
+        this.listenMessage(TabContainerPart.tabReorderedKey, m => {
+            const { permutation } = m.data
+            try {
+                this.queries = TabContainerPart.reorderByPermutation(this.queries, permutation)
+            } catch (Error) { /* Skip if permutation is out of sync */ }
+        })
+
         this.onClick(this.newQueryKey, _ => {
             this.app.showModal(NewQueryModal, { editor: this as DiveEditor, schema: this.state.schema })
         })
@@ -429,4 +437,3 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         })
     }
 }
-
