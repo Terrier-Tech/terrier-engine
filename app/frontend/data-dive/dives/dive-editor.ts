@@ -82,6 +82,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         this.queries = new Map()
         for (const query of this.state.dive.query_data?.queries || []) {
             this.queries.set(query.id, query)
+            this.queryOrder.push(query.id)
             this.addQueryTab(query)
         }
 
@@ -92,7 +93,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         })
 
         // Reorder queries in the list when the tab sort order is updated.
-        this.listenMessage(this.queryTabs.tabReorderedKey, m => {
+        this.listenMessage(this.queryTabs.tabsModifiedKey, m => {
             const { newOrder } = m.data
             this.queryOrder = newOrder
         })
