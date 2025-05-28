@@ -1,26 +1,25 @@
-import Schema, {SchemaDef} from "../../terrier/schema"
-import {PartTag} from "tuff-core/parts"
+import Schema, { SchemaDef } from "../../terrier/schema"
+import { PartTag } from "tuff-core/parts"
 import Dives from "./dives"
-import Queries, {Query, QueryModelPicker} from "../queries/queries"
+import Queries, { Query, QueryModelPicker } from "../queries/queries"
 import QueryEditor from "../queries/query-editor"
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 import QueryForm from "../queries/query-form"
-import {TabContainerPart} from "../../terrier/tabs"
+import { TabContainerPart } from "../../terrier/tabs"
 import ContentPart from "../../terrier/parts/content-part"
-import {ModalPart} from "../../terrier/modals"
-import {DdDive} from "../gen/models"
+import { ModalPart } from "../../terrier/modals"
+import { DdDive } from "../gen/models"
 import Ids from "../../terrier/ids"
 import Db from "../dd-db"
 import DdSession from "../dd-session"
-import {DiveRunModal} from "./dive-runs"
+import { DiveRunModal } from "./dive-runs"
 import Nav from "tuff-core/nav"
 import Messages from "tuff-core/messages"
-import Arrays from "tuff-core/arrays"
-import {FormFields} from "tuff-core/forms"
+import { FormFields } from "tuff-core/forms"
 import Fragments from "../../terrier/fragments"
-import {DiveDeliveryPanel} from "./dive-delivery"
+import { DiveDeliveryPanel } from "./dive-delivery"
 import DivePlotList from "../plots/dive-plot-list"
-import {DivePage} from "./dive-page"
+import { DivePage } from "./dive-page"
 
 const log = new Logger("DiveEditor")
 
@@ -49,11 +48,13 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
     static readonly diveChangedKey = Messages.untypedKey()
 
-    queries = new Array<Query>()
+    queries = new Map<string, Query>()
+    // Array of map keys to give the queries a sort order.
+    queryOrder = new Array<string>()
 
     async init() {
-        this.queryTabs = this.makePart(TabContainerPart, {side: 'top'})
-        this.settingsTabs = this.makePart(TabContainerPart, {side: 'top'})
+        this.queryTabs = this.makePart(TabContainerPart, { side: 'top', reorderable: true })
+        this.settingsTabs = this.makePart(TabContainerPart, { side: 'top' })
 
         this.queryTabs.addBeforeAction({
             title: 'Queries:',
@@ -63,40 +64,47 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             title: "Add Another Query",
             classes: ['dd-hint', 'arrow-right', 'glyp-hint'],
             tooltip: "Each query represents a separate tab in the resulting spreadsheet",
-            click: {key: this.newQueryKey}
+            click: { key: this.newQueryKey }
         })
         this.queryTabs.addAfterAction({
             icon: 'glyp-copy',
             classes: ['duplicate-query'],
             tooltip: "Duplicate this query",
-            click: {key: this.duplicateQueryKey}
+            click: { key: this.duplicateQueryKey }
         })
         this.queryTabs.addAfterAction({
             icon: 'glyp-plus_outline',
             classes: ['new-query'],
             tooltip: "Add a new query to this Dive",
-            click: {key: this.newQueryKey}
+            click: { key: this.newQueryKey }
         })
 
-        this.queries = this.state.dive.query_data?.queries || []
-        for (const query of this.queries) {
+        this.queries = new Map()
+        for (const query of this.state.dive.query_data?.queries || []) {
+            this.queries.set(query.id, query)
             this.addQueryTab(query)
         }
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {
             const query = m.data
             log.info(`Query settings changed`, query)
-            this.queryTabs.updateTab({key: query.id, title: query.name})
+            this.queryTabs.updateTab({ key: query.id, title: query.name })
+        })
+
+        // Reorder queries in the list when the tab sort order is updated.
+        this.listenMessage(this.queryTabs.tabReorderedKey, m => {
+            const { newOrder } = m.data
+            this.queryOrder = newOrder
         })
 
         this.onClick(this.newQueryKey, _ => {
-            this.app.showModal(NewQueryModal, {editor: this as DiveEditor, schema: this.state.schema})
+            this.app.showModal(NewQueryModal, { editor: this as DiveEditor, schema: this.state.schema })
         })
 
         this.onClick(this.duplicateQueryKey, _ => {
             const id = this.queryTabs.currentTagKey
             if (id?.length) {
-                const query = this.queries.find(q => q.id == id)
+                const query = this.queries.get(id)
                 if (query) {
                     this.app.showModal(DuplicateQueryModal, {
                         editor: this as DiveEditor,
@@ -114,7 +122,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         })
 
         this.onClick(DiveEditor.deleteQueryKey, m => {
-            this.app.confirm({title: "Delete Query", icon: 'glyp-delete', body: "Are you sure you want to delete this query?"}, () => {
+            this.app.confirm({ title: "Delete Query", icon: 'glyp-delete', body: "Are you sure you want to delete this query?" }, () => {
                 this.deleteQuery(m.data.id)
             })
         })
@@ -137,7 +145,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      * @param query
      */
     addQuery(query: Query) {
-        this.queries.push(query)
+        this.queries.set(query.id, query)
         this.addQueryTab(query)
     }
 
@@ -146,16 +154,17 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
      * @param query
      */
     private addQueryTab(query: Query) {
-        const state = {...this.state, query}
-        this.queryTabs.upsertTab({key: query.id, title: query.name}, QueryEditor, state)
+        const state = { ...this.state, query }
+        this.queryTabs.upsertTab({ key: query.id, title: query.name }, QueryEditor, state)
     }
 
     deleteQuery(id: string) {
         log.info(`Deleting query ${id}`)
-        if (Arrays.deleteIf(this.queries, q => q.id == id) > 0) {
-            this.queryTabs.removeTab(id)
-            this.dirty()
-        }
+        if (!this.queries.has(id)) return
+
+        this.queries.delete(id)
+        this.queryTabs.removeTab(id)
+        this.dirty()
     }
 
     get parentClasses(): Array<string> {
@@ -178,7 +187,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         return {
             ...this.state.dive,
-            query_data: {queries}
+            query_data: { queries: this.queryOrder.map(id => queries.get(id)!) }
         }
     }
 
@@ -189,7 +198,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 // Editor Page
 ////////////////////////////////////////////////////////////////////////////////
 
-export class DiveEditorPage extends DivePage<{id: string}> {
+export class DiveEditorPage extends DivePage<{ id: string }> {
 
     editor!: DiveEditor
     session!: DdSession
@@ -205,7 +214,7 @@ export class DiveEditorPage extends DivePage<{id: string}> {
         const schema = await Schema.get()
         this.session = await DdSession.get()
         const dive = await Dives.get(this.state.id)
-        this.editor = this.makePart(DiveEditor, {schema, dive, session: this.session})
+        this.editor = this.makePart(DiveEditor, { schema, dive, session: this.session })
 
         this.mainContentWidth = 'wide'
 
@@ -240,20 +249,20 @@ export class DiveEditorPage extends DivePage<{id: string}> {
             title: 'Discard',
             icon: 'glyp-cancelled',
             classes: ['discard-dive-action'],
-            click: {key: this.discardKey}
+            click: { key: this.discardKey }
         }, 'tertiary')
 
         this.addAction({
             title: 'Save',
             icon: 'glyp-complete',
             classes: ['save-dive-action'],
-            click: {key: this.saveKey}
+            click: { key: this.saveKey }
         }, 'tertiary')
 
         this.addAction({
             title: 'Run',
             icon: 'glyp-play',
-            click: {key: this.runKey}
+            click: { key: this.runKey }
         }, 'tertiary')
 
         this.onClick(this.discardKey, _ => {
@@ -275,7 +284,7 @@ export class DiveEditorPage extends DivePage<{id: string}> {
         this.listenMessage(DiveEditor.diveChangedKey, _ => {
             log.info("Dive changed")
             this.element?.classList.add('changed')
-        }, {attach: 'passive'})
+        }, { attach: 'passive' })
 
         this.dirty()
     }
@@ -303,7 +312,7 @@ export class DiveEditorPage extends DivePage<{id: string}> {
 
     async run() {
         const dive = await this.editor.serialize()
-        this.app.showModal(DiveRunModal, {dive})
+        this.app.showModal(DiveRunModal, { dive })
     }
 }
 
@@ -324,8 +333,8 @@ class NewQueryModal extends ModalPart<NewQueryState> {
     modelPicker!: QueryModelPicker
 
     async init() {
-        this.settingsForm = this.makePart(QueryForm, {query: {id: 'new', name: '', notes: ''}})
-        this.modelPicker = this.makePart(QueryModelPicker, {schema: this.state.schema})
+        this.settingsForm = this.makePart(QueryForm, { query: { id: 'new', name: '', notes: '' } })
+        this.modelPicker = this.makePart(QueryModelPicker, { schema: this.state.schema })
 
         this.setIcon('glyp-data_dive_query')
         this.setTitle("New Query")
@@ -333,7 +342,7 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         this.addAction({
             title: "Add",
             icon: 'glyp-plus',
-            click: {key: this.addKey}
+            click: { key: this.addKey }
         })
 
         this.onClick(this.addKey, async _ => {
@@ -361,16 +370,16 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         log.info(`Saving new query`)
         const settings = await this.settingsForm.fields.serialize()
         if (!settings.name?.length) {
-            this.showToast("Please enter a query name", {color: 'alert'})
+            this.showToast("Please enter a query name", { color: 'alert' })
             this.dirty()
             return
         }
         const model = this.modelPicker.model
         if (!model) {
-            this.showToast("Please select a model", {color: 'alert'})
+            this.showToast("Please select a model", { color: 'alert' })
             return
         }
-        const query = {...settings, id: Ids.makeUuid(), from: {model: model.name}}
+        const query = { ...settings, id: Ids.makeUuid(), from: { model: model.name } }
         this.state.editor.addQuery(query)
         this.state.editor.queryTabs.showTab(query.id)
         this.pop()
@@ -398,13 +407,13 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         this.setIcon('glyp-data_dive_query')
         this.setTitle("Duplicate Query")
 
-        const newQuery = {...this.state.query, name: `${this.state.query.name} Copy`}
+        const newQuery = { ...this.state.query, name: `${this.state.query.name} Copy` }
         this.fields = new FormFields<Query>(this, newQuery)
 
         this.addAction({
             title: "Duplicate",
             icon: 'glyp-checkmark',
-            click: {key: this.dupKey}
+            click: { key: this.dupKey }
         })
 
         this.onClick(this.dupKey, async _ => {
@@ -414,7 +423,7 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
 
     async save() {
         const newName = this.fields.data.name
-        const query = {...Queries.duplicate(this.state.query), name: newName}
+        const query = { ...Queries.duplicate(this.state.query), name: newName }
         this.state.editor.addQuery(query)
         this.state.editor.queryTabs.showTab(query.id)
         this.pop()
@@ -429,4 +438,3 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         })
     }
 }
-
