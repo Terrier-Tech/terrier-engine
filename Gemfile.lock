@@ -20,7 +20,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.51.2)
+    terrier-engine (4.52.0)
       amazing_print
       coderay
       colorize
@@ -384,7 +384,7 @@ GEM
       rack-proxy (~> 0.6, >= 0.6.1)
       zeitwerk (~> 2.2)
     webrick (1.8.2)
-    websocket-driver (0.7.7)
+    websocket-driver (0.8.0)
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
