@@ -44,7 +44,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     tabReorderedKey = Messages.typedKey<{ newOrder: string[] }>()
 
     async init() {
-        Object.assign(this.state, { reorderable: false }, this.state)
+        this.state = Object.assign({ reorderable: false }, this.state)
 
         this.onClick(this.changeTabKey, m => {
             log.info(`Clicked on tab ${m.data.tabKey}`)
