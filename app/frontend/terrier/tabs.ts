@@ -41,7 +41,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabs = {} as Record<string, TabDefinition>
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
-    tabReorderedKey = Messages.typedKey<{ newOrder: string[] }>()
+    tabsModifiedKey = Messages.typedKey<{ newOrder: string[] }>()
 
     async init() {
         this.state = Object.assign({ reorderable: false }, this.state)
@@ -62,17 +62,17 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                 zoneClass: 'tt-tab-list',
                 targetClass: 'tab',
                 onSorted: (_, evt) => {
-                    this.renumberTabs(evt.toChildren)
+                    this.onTabsModified(evt.toChildren)
                 }
             })
         }
     }
 
-    renumberTabs(tabElementsMaybe?: HTMLElement[]) {
+    onTabsModified(tabElementsMaybe?: HTMLElement[]) {
         const tabElements = tabElementsMaybe ??
             Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
         const newOrder = tabElements.map(tabElement => tabElement.dataset.key)
-        this.emitMessage(this.tabReorderedKey, { newOrder })
+        this.emitMessage(this.tabsModifiedKey, { newOrder })
     }
 
     /**
@@ -90,7 +90,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.tabs[tab.key] = Object.assign(existingTab, {
             state: 'enabled',
         }, tab)
-        this.renumberTabs()
+        this.onTabsModified()
         const part = this.makePart(constructor, state)
         existingTab.part = part
         this.dirty()
@@ -118,8 +118,8 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
 
         log.info(`Removing tab ${key}`, tab)
         delete this.tabs[key]
-        this.renumberTabs()
         this.removeChild(tab.part)
+        this.onTabsModified()
         this.state.currentTab = undefined
         this.dirty()
     }
