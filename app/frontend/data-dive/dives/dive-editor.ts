@@ -49,8 +49,6 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
     static readonly diveChangedKey = Messages.untypedKey()
 
     queries = new Map<string, Query>()
-    // Array of map keys to give the queries a sort order.
-    queryOrder = new Array<string>()
 
     async init() {
         this.queryTabs = this.makePart(TabContainerPart, { side: 'top', reorderable: true })
@@ -82,7 +80,6 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
         this.queries = new Map()
         for (const query of this.state.dive.query_data?.queries || []) {
             this.queries.set(query.id, query)
-            this.queryOrder.push(query.id)
             this.addQueryTab(query)
         }
 
@@ -90,12 +87,6 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
             const query = m.data
             log.info(`Query settings changed`, query)
             this.queryTabs.updateTab({ key: query.id, title: query.name })
-        })
-
-        // Reorder queries in the list when the tab sort order is updated.
-        this.listenMessage(this.queryTabs.tabsModifiedKey, m => {
-            const { newOrder } = m.data
-            this.queryOrder = newOrder
         })
 
         this.onClick(this.newQueryKey, _ => {
@@ -188,7 +179,7 @@ export default class DiveEditor extends ContentPart<DiveEditorState> {
 
         return {
             ...this.state.dive,
-            query_data: { queries: this.queryOrder.map(id => queries.get(id)!) }
+            query_data: { queries: this.queryTabs.getTabOrder().map(id => queries.get(id)!) }
         }
     }
 
