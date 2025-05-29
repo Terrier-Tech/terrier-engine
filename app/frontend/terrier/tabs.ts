@@ -38,10 +38,11 @@ export type TabContainerState = {
 
 export class TabContainerPart extends TerrierPart<TabContainerState> {
 
-    private tabs = {} as Record<string, TabDefinition>
+    private tabs = new Map as Map<string, TabDefinition>
+    private tabOrder = [] as string[]
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
-    tabsModifiedKey = Messages.typedKey<{ newOrder: string[] }>()
+    tabsModifiedKey = Messages.untypedKey()
 
     async init() {
         this.state = Object.assign({ reorderable: false }, this.state)
@@ -59,21 +60,28 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
 
         if (this.state.reorderable) {
             this.makePlugin(SortablePlugin, {
-                zoneClass: 'tt-tab-list',
+                zoneClass: `tablist-${this.id}`,
                 targetClass: 'tab',
-                onSorted: (_, evt) => {
-                    this.onTabsModified(evt.toChildren)
+                onSorted: () => {
+                    // Get only our tab container, as other tab contains may exist inside this one.
+                    const ourTabList = this.element?.getElementsByClassName(`tablist-${this.id}`)[0]
+                    const tabElements = Array.from(ourTabList?.getElementsByClassName('tab') || []) as HTMLElement[]
+                    this.tabOrder = tabElements.map(tabElement => tabElement.dataset?.key!)
+                    this.#onTabsModified()
+                    this.dirty()
                 }
             })
         }
     }
 
-    onTabsModified(tabElementsMaybe?: HTMLElement[]) {
-        const tabElements = tabElementsMaybe ??
-            Array.from(this.element?.querySelectorAll('.tt-tab-list') ?? [])
-        const newOrder = tabElements.map(tabElement => tabElement.dataset.key)
-        this.emitMessage(this.tabsModifiedKey, { newOrder })
+    #onTabsModified() {
+        this.emitMessage(this.tabsModifiedKey, null)
     }
+
+    /**
+     * Gets the current tab order as an array of keys.
+     */
+    getTabOrder = () => [...this.tabOrder]
 
     /**
      * Adds or overwrites an existing tab.
@@ -86,13 +94,15 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         constructor: { new(p: PartParent, id: string, state: PartStateType): PartType; },
         state: InferredPartStateType
     ): PartType {
-        const existingTab = this.tabs[tab.key] ?? {}
-        this.tabs[tab.key] = Object.assign(existingTab, {
-            state: 'enabled',
-        }, tab)
-        this.onTabsModified()
+        const existingTab = this.tabs.get(tab.key) ?? {}
         const part = this.makePart(constructor, state)
-        existingTab.part = part
+        this.tabs.set(tab.key, Object.assign(existingTab, {
+            state: 'enabled',
+            part
+        }, tab))
+        if (!this.tabOrder.includes(tab.key))
+            this.tabOrder.push(tab.key)
+        this.#onTabsModified()
         this.dirty()
         return part
     }
@@ -102,7 +112,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * @param tab
      */
     updateTab(tab: TabParams): void {
-        const existingTab = this.tabs[tab.key]
+        const existingTab = this.tabs.get(tab.key)
         if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
         Object.assign(existingTab, tab)
         this.dirty()
@@ -113,13 +123,14 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * @param key
      */
     removeTab(key: string) {
-        const tab = this.tabs[key]
+        const tab = this.tabs.get(key)
         if (!tab) return log.warn(`No tab ${key} to remove!`)
 
         log.info(`Removing tab ${key}`, tab)
-        delete this.tabs[key]
+        this.tabs.delete(key)
+        this.tabOrder.splice(this.tabOrder.indexOf(key), 1)
         this.removeChild(tab.part)
-        this.onTabsModified()
+        this.#onTabsModified()
         this.state.currentTab = undefined
         this.dirty()
     }
@@ -129,10 +140,10 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * @param tabKey
      */
     showTab(tabKey: string) {
-        if (!(tabKey in this.tabs)) {
+        if (!this.tabs.has(tabKey)) {
             throw `Unknown tab key ${tabKey}`
         }
-        if (this.tabs[tabKey].state != 'enabled') return // tab exists but is not enabled
+        if (this.tabs.get(tabKey)?.state != 'enabled') return // tab exists but is not enabled
         if (this.state.currentTab === tabKey) return // tab is already selected
 
         this.state.currentTab = tabKey
@@ -143,7 +154,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * Gets the current tab key.
      */
     get currentTagKey(): string | undefined {
-        return this.state.currentTab || Object.keys(this.tabs)[0]
+        return this.state.currentTab || this.tabOrder[0]
     }
 
 
@@ -161,20 +172,20 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.dirty()
     }
 
-
-
     render(parent: PartTag) {
         let currentTabKey = this.state.currentTab
         if (!currentTabKey) {
             log.debug("no current tab specified, selecting first enabled tab")
-            currentTabKey = Object.values(this.tabs).find(t => t.state == 'enabled')?.key
+            currentTabKey = this.tabs.values().find(t => t.state == 'enabled')?.key
         }
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
+                tabList.class(`tablist-${this.id}`)
                 if (this._beforeActions.length) {
                     this.theme.renderActions(tabList, this._beforeActions, { defaultClass: 'action' })
                 }
-                for (const tab of Object.values(this.tabs)) {
+                for (const tabKey of this.tabOrder) {
+                    const tab = this.tabs.get(tabKey)!
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
@@ -195,7 +206,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
             })
 
             if (currentTabKey) {
-                const currentTab = this.tabs[currentTabKey]
+                const currentTab = this.tabs.get(currentTabKey)!
                 container.div('.tt-tab-content', panel => {
                     if (currentTab.classes?.length) panel.class(...currentTab.classes)
                     panel.part(currentTab.part as StatelessPart)
