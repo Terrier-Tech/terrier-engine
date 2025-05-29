@@ -21,7 +21,7 @@ export type LoadOnScrollOptions<TState> = {
     loadNextStates: (existingStates: TState[]) => Promise<TState[] | undefined>
     // The root element whose viewport is scrolling. If not provided, the document viewport is used.
     // Usually not required, but if using intersectThreshold on a scrollable element, might be necessary.
-    intersectRootSelector: string
+    intersectRootSelector?: string
     // Percentage of the last item in the collection that must be visible before the next state is loaded.
     // If not provided, a default value of 25% is used. Must be between 0 and 1.
     intersectThreshold?: number
