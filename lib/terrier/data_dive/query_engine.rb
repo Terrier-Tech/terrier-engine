@@ -206,23 +206,23 @@ class ColumnRef < QueryModel
 
   # @return [ColumnMetadata]
   def compute_metadata(table)
-    metadata = ColumnMetadata.new @engine, { column_name: @name }
-
-    # the full name of the selected column, including alias and table prefix
-    metadata.select_name = [table.prefix.presence, @alias.presence || name].compact.join
-
-    # the type
     model = table.model_class
     ar_column = model.columns_hash[@name]
     unless ar_column
       warn "Unknown column '#{@name}' for #{model.name}"
       return nil
     end
-    sql_type_metadata = ar_column.sql_type_metadata
-    metadata.null = ar_column.null
-    metadata.type = model.custom_type(@name).presence || sql_type_metadata.type.to_s
 
-    metadata
+    type = model.custom_type(@name).presence || ar_column.sql_type_metadata.type.to_s
+    type = 'text' if type == 'string'
+
+    ColumnMetadata.new @engine, {
+      column_name: @name,
+      # the full name of the selected column, including alias and table prefix
+      select_name: [table.prefix.presence, @alias.presence || name].compact.join,
+      null: ar_column.null,
+      type:
+    }
   end
 end
 
@@ -249,9 +249,6 @@ class Filter < QueryModel
   end
 
   def compute_column_metadata(table)
-    metadata = ColumnMetadata.new @engine, { column_name: @column }
-
-    # the type
     model = table.model_class
     ar_column = model.columns_hash[@column]
     unless ar_column
@@ -259,9 +256,14 @@ class Filter < QueryModel
       return nil
     end
     sql_type_metadata = ar_column.sql_type_metadata
-    metadata.null = ar_column.null
-    metadata.type = model.custom_type(@column).presence || sql_type_metadata.type.to_s
-    metadata
+    type = model.custom_type(@column).presence || sql_type_metadata.type.to_s
+    type = 'text' if type == 'string'
+
+    ColumnMetadata.new @engine, {
+      column_name: @column,
+      null: ar_column.null,
+      type:
+    }
   end
 
   def sql_operator
