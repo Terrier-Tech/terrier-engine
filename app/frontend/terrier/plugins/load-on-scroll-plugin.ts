@@ -72,6 +72,11 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
         this.observer.observe(lastElement)
     }
 
+    remove() {
+        this.observer?.disconnect()
+        this.observer = undefined
+    }
+
     private onIntersect(entries: IntersectionObserverEntry[], obs: IntersectionObserver) {
         if (this.isLoading) return
         if (entries.length == 0 || !entries[0].isIntersecting) return
@@ -85,8 +90,6 @@ export default class LoadOnScrollPlugin<TState> extends PartPlugin<LoadOnScrollO
         const nextState = await this.state.loadNextStates(partStates)
         if (nextState === undefined) {
             // No more states to load; remove the plugin to avoid additional loads
-            this.observer?.disconnect()
-            this.observer = undefined
             this.part.removePlugin(this.id)
             return
         }
