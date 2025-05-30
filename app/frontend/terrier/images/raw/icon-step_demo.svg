@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-step_demo</title>
+    <g id="icon-step_demo" stroke="none" fill="none" fill-rule="evenodd">
+        <rect id="Rectangle" stroke="#000000" stroke-width="2" fill-opacity="0.25" fill="#000000" stroke-linejoin="round" x="5" y="7" width="22" height="14"></rect>
+        <rect id="Rectangle" fill="#000000" x="14" y="21" width="4" height="3"></rect>
+        <rect id="Rectangle" fill="#000000" x="12" y="24" width="8" height="2" rx="1"></rect>
+        <path d="M13,9.90212382 L13,18.0978762 C13,18.3740186 13.2238576,18.5978762 13.5,18.5978762 C13.5937099,18.5978762 13.6855337,18.5715415 13.7649995,18.5218753 L20.3216014,14.4239992 C20.5557696,14.277644 20.6269562,13.9691688 20.480601,13.7350005 C20.4403607,13.670616 20.3859859,13.6162412 20.3216014,13.5760008 L13.7649995,9.47812467 C13.5308312,9.3317695 13.222356,9.40295609 13.0760008,9.63712435 C13.0263347,9.71659015 13,9.80841396 13,9.90212382 Z" id="Path" fill="#000000"></path>
+    </g>
+</svg>
