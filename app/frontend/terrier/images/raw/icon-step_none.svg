@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>icon-steps_none</title>
+    <g id="icon-steps_none" stroke="none" fill="none" fill-opacity="0.25" fill-rule="nonzero">
+        <circle id="Oval" fill="#000000" cx="7.5" cy="7.5" r="3.5"></circle>
+        <circle id="Oval-Copy" fill="#000000" cx="16" cy="7.5" r="3.5"></circle>
+        <circle id="Oval-Copy-2" fill="#000000" cx="24.5" cy="7.5" r="3.5"></circle>
+        <circle id="Oval-Copy-6" fill="#000000" cx="7.5" cy="16" r="3.5"></circle>
+        <circle id="Oval-Copy-5" fill="#000000" cx="16" cy="16" r="3.5"></circle>
+        <circle id="Oval-Copy-4" fill="#000000" cx="24.5" cy="16" r="3.5"></circle>
+        <circle id="Oval-Copy-10" fill="#000000" cx="7.5" cy="24.5" r="3.5"></circle>
+        <circle id="Oval-Copy-9" fill="#000000" cx="16" cy="24.5" r="3.5"></circle>
+        <circle id="Oval-Copy-8" fill="#000000" cx="24.5" cy="24.5" r="3.5"></circle>
+    </g>
+</svg>
