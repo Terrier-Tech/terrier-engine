@@ -56,11 +56,12 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
         // collect the column options
         const query = this.state.query
         const existingColumns = new Set<string>()
-        Queries.eachColumn(query, (table, col) => {
-            const name = Columns.computeSelectName(table, col)
+        for (const { table, column } of Queries.columns(query)) {
+            const name = Columns.computeSelectName(table, column)
             existingColumns.add(name)
-            this.columnOptions.push({title: name, value: name})
-        })
+            this.columnOptions.push({ title: name, value: name })
+
+        }
 
         // initialize the order-bys from the query, if present
         if (query.order_by?.length) {

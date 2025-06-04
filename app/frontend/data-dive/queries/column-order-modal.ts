@@ -45,13 +45,13 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
         }
 
         // ensure that all columns in the query are represented, regardless of whether they're stored
-        Queries.eachColumn(query, (table, col) => {
-            const name = Columns.computeSelectName(table, col)
+        for (const { table, column } of Queries.columns(query)) {
+            const name = Columns.computeSelectName(table, column)
             if (!this.columns.includes(name)) {
                 this.columns.push(name)
                 initialColumns.delete(name)
             }
-        })
+        }
 
         // remove any of the initial columns that aren't in the query anymore
         Arrays.deleteIf(this.columns, (c) => initialColumns.has(c))

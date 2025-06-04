@@ -42,74 +42,46 @@ export type Query = {
 // Utilities
 ////////////////////////////////////////////////////////////////////////////////
 
-type TableFunction = (table: TableRef) => any
+function* childTables(table: TableRef): Generator<TableRef, void, void> {
+    if (!table.joins) return
 
-function eachChildTable(table: TableRef, fn: TableFunction) {
-    if (!table.joins) {
-        return
-    }
     for (const joinedTable of Object.values(table.joins)) {
-        fn(joinedTable)
-        eachChildTable(joinedTable, fn)
+        yield joinedTable
+        yield* childTables(joinedTable)
     }
 }
 
-/**
- * Recursively iterates through each table reference in the query and evaluates the function.
- * @param query
- * @param fn
- */
-function eachTable(query: Query, fn: TableFunction) {
-    fn(query.from)
-    eachChildTable(query.from, fn)
+function* tables(query: Query): Generator<TableRef, void, void> {
+    yield query.from
+    yield* childTables(query.from)
 }
 
-export type ColumnFunction = (table: TableRef, col: ColumnRef) => any
+function* tableColumns(table: TableRef): Generator<{ table: TableRef, column: ColumnRef }, void, void> {
+    if (table.columns)
+        for (const column of table.columns)
+            yield { table, column }
 
-function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
-    if (table.columns) {
-        for (const col of table.columns) {
-            fn(table, col)
-        }
-    }
-    if (table.joins) {
-        for (const joinedTable of Object.values(table.joins)) {
-            eachColumnForTable(joinedTable, fn)
-        }
-    }
+    if (table.joins)
+        for (const joinedTable of Object.values(table.joins))
+            yield* tableColumns(joinedTable)
 }
 
-/**
- * Recursively iterates over all columns in a query.
- * @param query
- * @param fn a function to evaluate for each column in the query
- */
-function eachColumn(query: Query, fn: ColumnFunction) {
-    eachColumnForTable(query.from, fn)
+function columns(query: Query) {
+    return tableColumns(query.from)
 }
 
-export type FilterFunction = (table: TableRef, filter: Filter) => any
+function* tableFilters(table: TableRef): Generator<{ table: TableRef, filter: Filter }, void, void> {
+    if (table.filters)
+        for (const filter of table.filters)
+            yield ({ table, filter })
 
-function eachFilterForTable(table: TableRef, fn: FilterFunction) {
-    if (table.filters) {
-        for (const filter of table.filters) {
-            fn(table, filter)
-        }
-    }
-    if (table.joins) {
-        for (const joinedTable of Object.values(table.joins)) {
-            eachFilterForTable(joinedTable, fn)
-        }
-    }
+    if (table.joins)
+        for (const joinedTable of Object.values(table.joins))
+            yield* tableFilters(joinedTable)
 }
 
-/**
- * Recursively iterates over all filters in the query and executes the given function for each.
- * @param query
- * @param fn a function to evaluate on each filter
- */
-function eachFilter(query: Query, fn: FilterFunction) {
-    eachFilterForTable(query.from, fn)
+function filters(query: Query) {
+    return tableFilters(query.from)
 }
 
 /**
@@ -122,9 +94,8 @@ function duplicate(query: Query): Query {
     newQuery.id = Ids.makeUuid()
 
     // filters need new IDs, otherwise they won't be able to be set differently than the original query's filters
-    eachFilter(newQuery, (_, filter) => {
-        filter.id = Ids.makeUuid()
-    })
+    filters(query)
+        .forEach(({ filter }) => filter.id = Ids.makeUuid())
 
     return newQuery
 }
@@ -364,6 +335,12 @@ const Queries = {
     eachColumn,
     eachTable,
     eachFilter,
+    childTables,
+    tables,
+    tableColumns,
+    columns,
+    tableFilters,
+    filters,
     duplicate,
     validate,
     preview,

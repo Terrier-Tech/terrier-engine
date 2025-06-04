@@ -133,9 +133,9 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
         this.axisOptions = []
         if (query) {
             log.info(`Computing axis options for query`, query)
-            Queries.eachColumn(query, (table, column) => {
+            for (const { table, column } of Queries.columns(query)) {
                 this.axisOptions.push(Columns.computeSelectName(table, column))
-            })
+            }
         }
         else {
             log.warn(`No query with id ${queryId}`)

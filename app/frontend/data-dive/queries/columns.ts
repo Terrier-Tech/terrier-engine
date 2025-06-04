@@ -288,12 +288,12 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         // make a deep copy of the query and update this table's columns and settings
         this.table._id = this.id // we need this to identify the table after the deep copy
         const query = Objects.deepCopy(this.state.query)
-        Queries.eachTable(query, table => {
-            if (table._id == this.id) {
-                table.columns = columns
-                table.prefix = tableData.prefix
-            }
-        })
+        const tables = Queries.tables(query).
+            filter(table => table._id == this.id)
+        for (const table of tables) {
+            table.columns = columns
+            table.prefix = tableData.prefix
+        }
 
         // validate the temporary query
         log.info(`Validating temporary query with column changes`, query)
