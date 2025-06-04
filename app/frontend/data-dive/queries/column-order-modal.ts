@@ -1,11 +1,11 @@
 import Arrays from "tuff-core/arrays"
 import { PartTag } from "tuff-core/parts"
-import {ModalPart} from "../../terrier/modals"
+import { ModalPart } from "../../terrier/modals"
 import Columns from "./columns"
-import Queries, {Query} from "./queries"
+import Queries, { Query } from "./queries"
 import Messages from "tuff-core/messages"
 import SortablePlugin from "tuff-sortable/sortable-plugin"
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 
 const log = new Logger("ColumnOrderModal")
 
@@ -26,7 +26,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
         this.addAction({
             title: "Apply",
             icon: "glyp-checkmark",
-            click: {key: this.submitKey}
+            click: { key: this.submitKey }
         })
 
         this.onClick(this.submitKey, _ => {
@@ -72,7 +72,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
             container.p().text("Drag and drop the columns to change their order:")
             container.div(".dive-column-sort-zone", zone => {
                 for (const col of this.columns) {
-                    zone.div(".column").data({column: col}).text(col)
+                    zone.div(".column").data({ column: col }).text(col)
                 }
             })
         })

@@ -1,18 +1,18 @@
 import { Filter } from "./filters"
-import {TableRef} from "./tables"
-import api, {ApiResponse} from "../../terrier/api"
-import {PartTag} from "tuff-core/parts"
-import {TableCellTag} from "tuff-core/html"
+import { TableRef } from "./tables"
+import api, { ApiResponse } from "../../terrier/api"
+import { PartTag } from "tuff-core/parts"
+import { TableCellTag } from "tuff-core/html"
 import dayjs from "dayjs"
 import QueryEditor from "./query-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
-import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
-import {Logger} from "tuff-core/logging"
+import Schema, { ModelDef, SchemaDef } from "../../terrier/schema"
+import { Logger } from "tuff-core/logging"
 import * as inflection from "inflection"
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
 import Arrays from "tuff-core/arrays"
-import {ColumnRef} from "./columns"
+import { ColumnRef } from "./columns"
 import Ids from "../../terrier/ids";
 import Objects from "tuff-core/objects";
 
@@ -151,7 +151,7 @@ export type QueryServerValidation = ApiResponse & {
  * @param query
  */
 async function validate(query: Query): Promise<QueryServerValidation> {
-    return await api.post<QueryServerValidation>("/data_dive/validate_query.json", {query})
+    return await api.post<QueryServerValidation>("/data_dive/validate_query.json", { query })
 }
 
 
@@ -184,7 +184,7 @@ export type QueryResult = ApiResponse & {
  * @param query
  */
 async function preview(query: Query): Promise<QueryResult> {
-    return await api.post<QueryResult>("/data_dive/preview_query.json", {query})
+    return await api.post<QueryResult>("/data_dive/preview_query.json", { query })
 }
 
 
@@ -211,15 +211,15 @@ function renderCell(td: TableCellTag, col: QueryResultColumn, val: any): any {
             return td.div('.dollars').text(`\$${dollars}`)
         case 'cents':
             const cents = parseInt(val)
-            const d = (cents/100.0).toFixed(2)
+            const d = (cents / 100.0).toFixed(2)
             return td.div('.dollars').text(`\$${d}`)
         case 'string':
             if (col.select_name.endsWith('id')) {
                 const id = val.toString()
                 td.a('.id')
-                    .data({tooltip: id})
-                    .text(`...${id.substring(id.length-6)}`)
-                    .emitClick(QueryEditor.copyToClipboardKey, {value: id})
+                    .data({ tooltip: id })
+                    .text(`...${id.substring(id.length - 6)}`)
+                    .emitClick(QueryEditor.copyToClipboardKey, { value: id })
             }
             else {
                 td.text(val.toString())
@@ -307,8 +307,8 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 
     renderModelOption(parent: PartTag, model: ModelDef) {
         parent.label('.model-option', label => {
-            label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
-                .emitChange(this.pickedKey, {model: model.name})
+            label.input({ type: 'radio', name: `new-query-model-${this.id}`, value: model.name })
+                .emitChange(this.pickedKey, { model: model.name })
             label.div(col => {
                 const name = inflection.pluralize(Strings.titleize(model.name))
                 col.div('.name').text(name)

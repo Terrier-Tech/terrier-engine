@@ -1,6 +1,6 @@
-import Queries, {Query} from "./queries"
-import Columns, {ColumnRef} from "./columns"
-import {TableRef} from "./tables"
+import Queries, { Query } from "./queries"
+import Columns, { ColumnRef } from "./columns"
+import { TableRef } from "./tables"
 
 export type ColumnValidationError = {
     message: string
@@ -24,7 +24,7 @@ function validateQuery(query: Query): QueryClientValidation {
     }
 
     function addColumnError(col: ColumnRef, message: string) {
-        const error = {message}
+        const error = { message }
         col.errors ||= []
         col.errors.push(error)
         validation.columns.push(error)
@@ -35,31 +35,31 @@ function validateQuery(query: Query): QueryClientValidation {
     const aggCols: ColumnRef[] = [] // keep track of columns with an aggregate function
     let isGrouped = false
     const groupedTables: Set<TableRef> = new Set()
-    Queries.eachColumn(query, (table, col) => {
+    for (const { table, column } of Queries.columns(query)) {
         // clear the errors
-        col.errors = undefined
+        column.errors = undefined
 
         // determine if there's an aggregate function
-        if (col.function?.length && Columns.functionType(col.function) == 'aggregate') {
-            aggCols.push(col)
+        if (column.function?.length && Columns.functionType(column.function) == 'aggregate') {
+            aggCols.push(column)
         }
 
         // determine if there's a _group by_ in the query
-        if (col.grouped) {
+        if (column.grouped) {
             isGrouped = true
-            if (col.name == 'id') {
+            if (column.name == 'id') {
                 // ungrouped columns on this table are okay
                 groupedTables.add(table)
             }
         }
 
         // each select name should only be used once
-        const selectName = Columns.computeSelectName(table, col)
+        const selectName = Columns.computeSelectName(table, column)
         if (usedNames.has(selectName)) {
-            addColumnError(col, `<strong>${selectName}</strong> has already been selected for a different column`)
+            addColumnError(column, `<strong>${selectName}</strong> has already been selected for a different column`)
         }
         usedNames.add(selectName)
-    })
+    }
 
     if (isGrouped) {
         // if the query is grouped, ensure that all other column refs

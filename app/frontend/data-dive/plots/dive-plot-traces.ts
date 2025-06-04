@@ -1,16 +1,16 @@
-import {MarkerStyle, PlotTrace, TraceType, YAxisName} from "tuff-plot/trace"
+import { MarkerStyle, PlotTrace, TraceType, YAxisName } from "tuff-plot/trace"
 import { PartTag } from "tuff-core/parts"
-import {ModalPart} from "../../terrier/modals"
+import { ModalPart } from "../../terrier/modals"
 import Ids from "../../terrier/ids"
-import {DivePlotEditorState} from "./dive-plot-editor"
-import {TerrierFormFields} from "../../terrier/forms"
-import {UnpersistedDdDivePlot} from "../gen/models"
-import {SelectOptions} from "tuff-core/forms"
-import Queries, {Query, QueryResult} from "../queries/queries"
-import {Logger} from "tuff-core/logging"
+import { DivePlotEditorState } from "./dive-plot-editor"
+import { TerrierFormFields } from "../../terrier/forms"
+import { UnpersistedDdDivePlot } from "../gen/models"
+import { SelectOptions } from "tuff-core/forms"
+import Queries, { Query, QueryResult } from "../queries/queries"
+import { Logger } from "tuff-core/logging"
 import Columns from "../queries/columns"
 import Messages from "tuff-core/messages"
-import DivePlotStyles, {DivePlotTraceStyle, TraceStyleFields} from "./dive-plot-styles"
+import DivePlotStyles, { DivePlotTraceStyle, TraceStyleFields } from "./dive-plot-styles"
 import TerrierPart from "../../terrier/parts/terrier-part"
 
 const log = new Logger("DivePlotTraces")
@@ -86,7 +86,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
         this.queries = this.state.dive.query_data?.queries || []
         this.queryOptions = this.queries.map(query => {
-            return {value: query.id, title: query.name}
+            return { value: query.id, title: query.name }
         }) || []
 
         this.trace.query_id ||= this.queries.at(0)?.id || ''
@@ -100,13 +100,13 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
         this.addAction({
             title: "Save",
             icon: "glyp-checkmark",
-            click: {key: this.saveKey}
+            click: { key: this.saveKey }
         })
 
         this.addAction({
             title: "Delete",
             icon: "glyp-delete",
-            click: {key: this.deleteKey},
+            click: { key: this.deleteKey },
             classes: ['alert']
         }, 'secondary')
 
@@ -180,7 +180,7 @@ export class DivePlotTraceEditor extends ModalPart<DivePlotTraceEditorState> {
 
     async save() {
         const data = await this.fields.serialize()
-        this.trace = {...this.trace, ...data}
+        this.trace = { ...this.trace, ...data }
         this.trace.style = await this.styleFields.serialize()
         log.info("Saving plot trace", this.trace)
         this.state.onSave(this.trace)
@@ -224,9 +224,9 @@ export class DivePlotTraceRow extends TerrierPart<DivePlotTraceRowState> {
                 // style
                 content.div('.style', stylePreview => {
                     DivePlotStyles.renderPreview(stylePreview, style, this.state.index)
-                }).data({tooltip: `${style.colorName} ${style.strokeWidthName} ${style.strokeDasharrayName}`})
+                }).data({ tooltip: `${style.colorName} ${style.strokeWidthName} ${style.strokeDasharrayName}` })
             })
-        }).emitClick(editKey, {id: trace.id})
+        }).emitClick(editKey, { id: trace.id })
     }
 
 }
