@@ -12,6 +12,7 @@ import Messages from "tuff-core/messages"
 import Validation, { QueryClientValidation } from "./validation"
 import ColumnOrderModal from "./column-order-modal"
 import RowOrderModal from "./row-order-modal"
+import Columns from "./columns"
 
 const log = new Logger("QueryEditor")
 
@@ -68,6 +69,8 @@ class SortingPart extends ContentPart<SubEditorState> {
     async init() {
         this.onClick(this.sortColumnsKey, _ => {
             log.info("Sorting columns")
+            this.state.query.columns = Array.from(Queries.tableColumns(this.state.query.from)).
+                map(({ table, column }) => Columns.computeSelectName(table, column))
             this.app.showModal(ColumnOrderModal, {
                 query: this.state.query,
                 onSorted: (newColumns) => {

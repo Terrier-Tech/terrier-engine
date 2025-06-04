@@ -36,25 +36,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
 
         // initialize the columns from the query, if present
         const query = this.state.query
-        const initialColumns = new Set<string>() // keep track of the initial columns
-        if (query.columns?.length) {
-            this.columns = query.columns
-            this.columns.forEach(c => {
-                initialColumns.add(c)
-            })
-        }
-
-        // ensure that all columns in the query are represented, regardless of whether they're stored
-        for (const { table, column } of Queries.columns(query)) {
-            const name = Columns.computeSelectName(table, column)
-            if (!this.columns.includes(name)) {
-                this.columns.push(name)
-                initialColumns.delete(name)
-            }
-        }
-
-        // remove any of the initial columns that aren't in the query anymore
-        Arrays.deleteIf(this.columns, (c) => initialColumns.has(c))
+        if (query.columns?.length) this.columns = Array.from(query.columns)
 
         // make the list sortable
         this.makePlugin(SortablePlugin, {
