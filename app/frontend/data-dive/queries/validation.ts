@@ -64,11 +64,12 @@ function validateQuery(query: Query): QueryClientValidation {
     if (isGrouped) {
         // if the query is grouped, ensure that all other column refs
         // are either grouped, have an aggregate function, or are on a grouped table
-        Queries.eachColumn(query, (table, col) => {
-            if (!col.grouped && Columns.functionType(col.function) != 'aggregate' && !groupedTables.has(table)) {
-                addColumnError(col, `<strong>${col.name}</strong> must be grouped or have an aggregate function`)
-            }
-        })
+        const columns = Queries.columns(query)
+            .filter(({ table, column }) =>
+                !column.grouped && Columns.functionType(column.function) != 'aggregate' && !groupedTables.has(table))
+        for (const { column } of columns) {
+            addColumnError(column, `<strong>${column.name}</strong> must be grouped or have an aggregate function`)
+        }
     }
     else if (aggCols.length) {
         // if the query isn't grouped, aggregate functions are an error
