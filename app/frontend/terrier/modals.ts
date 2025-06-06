@@ -1,6 +1,6 @@
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 import TerrierPart from "./parts/terrier-part"
-import {PartConstructor, PartTag} from "tuff-core/parts"
+import { PartConstructor, PartTag } from "tuff-core/parts"
 import ContentPart from "./parts/content-part"
 import Messages from "tuff-core/messages"
 
@@ -27,13 +27,13 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
         this.emitMessage(modalPopKey, {}, { scope: 'bubble' })
     }
 
-    render(parent: PartTag)  {
+    render(parent: PartTag) {
         parent.div('.modal-header', header => {
             if (this._icon) {
                 this.theme.renderIcon(header, this._icon, 'secondary')
             }
-            header.h2({text: this._title || 'Call setTitle()'})
-            this.theme.renderActions(header, this.getActions('tertiary'), {defaultClass: 'secondary'})
+            header.h2({ text: this._title || 'Call setTitle()' })
+            this.theme.renderActions(header, this.getActions('tertiary'), { defaultClass: 'secondary' })
             header.a('.close-modal', closeButton => {
                 this.theme.renderCloseIcon(closeButton)
             }).emitClick(modalPopKey)
@@ -165,7 +165,7 @@ export class ModalStackPart extends TerrierPart<{}> {
         if (this.displayClass == 'show') {
             classes.push(this.displayClass)
         }
-        parent.div('.tt-modal-stack', {classes}, stack => {
+        parent.div('.tt-modal-stack', { classes }, stack => {
             stack.div('.modal-container', container => {
                 this.eachChild(part => {
                     container.part(part)

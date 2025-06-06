@@ -1,17 +1,18 @@
-import {PartTag} from "tuff-core/parts"
-import Queries, {Query, QueryResult, QueryServerValidation} from "./queries"
-import Tables, {FromTableView} from "./tables"
-import {Logger} from "tuff-core/logging"
-import QueryForm, {QuerySettings, QuerySettingsColumns} from "./query-form"
-import DiveEditor, {DiveEditorState} from "../dives/dive-editor"
+import { PartTag } from "tuff-core/parts"
+import Queries, { Query, QueryResult, QueryServerValidation } from "./queries"
+import Tables, { FromTableView } from "./tables"
+import { Logger } from "tuff-core/logging"
+import QueryForm, { QuerySettings, QuerySettingsColumns } from "./query-form"
+import DiveEditor, { DiveEditorState } from "../dives/dive-editor"
 import Objects from "tuff-core/objects"
 import Html from "tuff-core/html"
 import ContentPart from "../../terrier/parts/content-part"
-import {TabContainerPart} from "../../terrier/tabs"
+import { TabContainerPart } from "../../terrier/tabs"
 import Messages from "tuff-core/messages"
-import Validation, {QueryClientValidation} from "./validation"
+import Validation, { QueryClientValidation } from "./validation"
 import ColumnOrderModal from "./column-order-modal"
 import RowOrderModal from "./row-order-modal"
+import Columns from "./columns"
 
 const log = new Logger("QueryEditor")
 
@@ -32,7 +33,7 @@ class SettingsPart extends ContentPart<SubEditorState> {
     form!: QueryForm
 
     async init() {
-        this.form = this.makePart(QueryForm, {query: Objects.slice(this.state.query, ...QuerySettingsColumns)})
+        this.form = this.makePart(QueryForm, { query: Objects.slice(this.state.query, ...QuerySettingsColumns) })
     }
 
 
@@ -48,8 +49,8 @@ class SettingsPart extends ContentPart<SubEditorState> {
             })
             row.a('.alert.tt-flex', a => {
                 a.i('.glyp-delete')
-                a.span({text: "Delete"})
-            }).emitClick(DiveEditor.deleteQueryKey, {id: this.state.query.id})
+                a.span({ text: "Delete" })
+            }).emitClick(DiveEditor.deleteQueryKey, { id: this.state.query.id })
         })
     }
 
@@ -68,9 +69,11 @@ class SortingPart extends ContentPart<SubEditorState> {
     async init() {
         this.onClick(this.sortColumnsKey, _ => {
             log.info("Sorting columns")
+            this.state.query.columns = Array.from(Queries.tableColumns(this.state.query.from)).
+                map(({ table, column }) => Columns.computeSelectName(table, column))
             this.app.showModal(ColumnOrderModal, {
                 query: this.state.query,
-                onSorted: (newColumns) =>  {
+                onSorted: (newColumns) => {
                     this.state.query.columns = newColumns
                     this.state.editor.dirty()
                     this.emitMessage(DiveEditor.diveChangedKey, {})
@@ -82,7 +85,7 @@ class SortingPart extends ContentPart<SubEditorState> {
             log.info("Sorting rows")
             this.app.showModal(RowOrderModal, {
                 query: this.state.query,
-                onSorted: (newOrderBys) =>  {
+                onSorted: (newOrderBys) => {
                     log.info(`New row sort order`, newOrderBys)
                     this.state.query.order_by = newOrderBys
                     this.state.editor.dirty()
@@ -170,7 +173,7 @@ class SqlPart extends ContentPart<SubEditorState> {
                 })
             }
             else {
-                row.div({text: 'SQL Goes Here'})
+                row.div({ text: 'SQL Goes Here' })
             }
         })
     }
@@ -266,12 +269,12 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
 
         log.info("Initializing query editor", query)
 
-        this.tabs = this.makePart(TabContainerPart, {side: 'left'})
-        this.settingsPart = this.tabs.upsertTab({key: 'settings', title: 'Settings', icon: 'glyp-settings'},
-            SettingsPart, {editor: this, query})
+        this.tabs = this.makePart(TabContainerPart, { side: 'left' })
+        this.settingsPart = this.tabs.upsertTab({ key: 'settings', title: 'Settings', icon: 'glyp-settings' },
+            SettingsPart, { editor: this, query })
 
-        this.sortingPart = this.tabs.upsertTab({key: 'sorting', title: 'Sorting', icon: 'glyp-sort'},
-            SortingPart, {editor: this, query})
+        this.sortingPart = this.tabs.upsertTab({ key: 'sorting', title: 'Sorting', icon: 'glyp-sort' },
+            SortingPart, { editor: this, query })
 
 
         this.listenMessage(QueryForm.settingsChangedKey, m => {
@@ -279,13 +282,13 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
             this.updateSettings(m.data)
         })
 
-        this.sqlPart = this.tabs.upsertTab({key: 'sql', title: 'SQL', icon: 'glyp-code'},
-            SqlPart, {editor: this, query})
+        this.sqlPart = this.tabs.upsertTab({ key: 'sql', title: 'SQL', icon: 'glyp-code' },
+            SqlPart, { editor: this, query })
 
-        this.previewPart = this.tabs.upsertTab({key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: {key: this.updatePreviewKey}},
-            PreviewPart, {editor: this, query})
+        this.previewPart = this.tabs.upsertTab({ key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: { key: this.updatePreviewKey } },
+            PreviewPart, { editor: this, query })
 
-        this.tableEditor = this.makePart(FromTableView, {schema: this.state.schema, queryEditor: this, table: this.state.query.from})
+        this.tableEditor = this.makePart(FromTableView, { schema: this.state.schema, queryEditor: this, table: this.state.query.from })
 
         this.listenMessage(Tables.updatedKey, m => {
             log.info(`Table ${m.data.model} updated`, m.data)
@@ -300,7 +303,7 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
         this.onClick(QueryEditor.copyToClipboardKey, async m => {
             log.info(`Copy value to clipboard: ${m.data.value}`)
             await navigator.clipboard.writeText(m.data.value)
-            this.showToast(`Copied '${m.data.value}' to clipboard`, {color: 'primary'})
+            this.showToast(`Copied '${m.data.value}' to clipboard`, { color: 'primary' })
         })
 
         this.validate().then()

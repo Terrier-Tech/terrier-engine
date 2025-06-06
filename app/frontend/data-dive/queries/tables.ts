@@ -1,18 +1,18 @@
-import {PartTag} from "tuff-core/parts"
-import Schema, {BelongsToDef, ModelDef, SchemaDef} from "../../terrier/schema"
+import { PartTag } from "tuff-core/parts"
+import Schema, { BelongsToDef, ModelDef, SchemaDef } from "../../terrier/schema"
 import * as inflection from "inflection"
-import Filters, {Filter, FilterInput, FiltersEditorModal} from "./filters"
-import Columns, {ColumnRef, ColumnsEditorModal} from "./columns"
-import {Logger} from "tuff-core/logging"
+import Filters, { Filter, FilterInput, FiltersEditorModal } from "./filters"
+import Columns, { ColumnRef, ColumnsEditorModal } from "./columns"
+import { Logger } from "tuff-core/logging"
 import ContentPart from "../../terrier/parts/content-part"
-import {ActionsDropdown} from "../../terrier/dropdowns"
-import {ModalPart} from "../../terrier/modals"
+import { ActionsDropdown } from "../../terrier/dropdowns"
+import { ModalPart } from "../../terrier/modals"
 import TerrierFormPart from "../../terrier/parts/terrier-form-part"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import QueryEditor from "./query-editor"
-import {Query} from "./queries";
+import { Query } from "./queries";
 
 const log = new Logger("Tables")
 
@@ -85,7 +85,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
     editColumnsKey = Messages.untypedKey()
     editFiltersKey = Messages.untypedKey()
     newJoinedKey = Messages.untypedKey()
-    createJoinedKey = Messages.typedKey<{name: string}>()
+    createJoinedKey = Messages.typedKey<{ name: string }>()
 
     async init() {
         this.schema = this.state.schema
@@ -102,12 +102,12 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
 
         this.onClick(this.editColumnsKey, _ => {
             log.info(`Edit ${this.displayName} Columns`)
-            this.app.showModal(ColumnsEditorModal, {schema: this.schema, query: this.query, tableView: this as TableView<TableRef>})
+            this.app.showModal(ColumnsEditorModal, { schema: this.schema, query: this.query, tableView: this as TableView<TableRef> })
         })
 
         this.onClick(this.editFiltersKey, _ => {
             log.info(`Edit ${this.displayName} Filters`)
-            this.app.showModal(FiltersEditorModal, {schema: this.schema, tableView: this as TableView<TableRef>})
+            this.app.showModal(FiltersEditorModal, { schema: this.schema, tableView: this as TableView<TableRef> })
         })
 
         // show the new join dropdown
@@ -127,19 +127,19 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 const common = model.metadata?.visibility == 'common' ? '0' : '1'
                 return `${common}${bt.name}`
             })
-            .map(bt => {
-                const model = this.schema.models[bt.model]
-                const isCommon = model.metadata?.visibility == 'common'
-                // put a border between the common and uncommon
-                const classes = showingCommon && !isCommon ? ['border-top'] : []
-                showingCommon = isCommon
-                return {
-                    title: Schema.belongsToDisplay(bt),
-                    subtitle: model.metadata?.description,
-                    classes,
-                    click: {key: this.createJoinedKey, data: {name: bt.name}}
-                }
-            })
+                .map(bt => {
+                    const model = this.schema.models[bt.model]
+                    const isCommon = model.metadata?.visibility == 'common'
+                    // put a border between the common and uncommon
+                    const classes = showingCommon && !isCommon ? ['border-top'] : []
+                    showingCommon = isCommon
+                    return {
+                        title: Schema.belongsToDisplay(bt),
+                        subtitle: model.metadata?.description,
+                        classes,
+                        click: { key: this.createJoinedKey, data: { name: bt.name } }
+                    }
+                })
 
 
             // don't show the dropdown if there are no more belongs-tos left
@@ -147,7 +147,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 this.toggleDropdown(ActionsDropdown, actions, m.event.target)
             }
             else {
-                this.showToast(`No more possible joins for ${this.displayName}`, {color: 'pending'})
+                this.showToast(`No more possible joins for ${this.displayName}`, { color: 'pending' })
             }
         })
 
@@ -170,13 +170,13 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                         this.dirty()
                     }
                 }
-                this.app.showModal(JoinedTableEditorModal, {table, belongsTo, callback, parentTable: this.state.table as TableRef})
+                this.app.showModal(JoinedTableEditorModal, { table, belongsTo, callback, parentTable: this.state.table as TableRef })
             }
         })
     }
 
     addJoinedPart(joinedTable: JoinedTableRef) {
-        const state = {schema: this.schema, queryEditor: this.state.queryEditor, table: joinedTable}
+        const state = { schema: this.schema, queryEditor: this.state.queryEditor, table: joinedTable }
         const part = this.makePart(JoinedTableView, state)
         part.parentView = this
         this.joinParts[joinedTable.belongs_to] = part
@@ -241,8 +241,8 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                 panel.a('.dd-hint.joins.arrow-top.glyp-hint', hint => {
                     hint.div('.title').text("Join More Tables")
                 })
-                .emitClick(this.newJoinedKey)
-                .data({tooltip: "Include data from other tables that are related to this one"})
+                    .emitClick(this.newJoinedKey)
+                    .data({ tooltip: "Include data from other tables that are related to this one" })
             }
         })
 
@@ -252,7 +252,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         parent.section(section => {
             section.div('.title', title => {
                 title.i(".glyp-columns")
-                title.span({text: "Columns"})
+                title.span({ text: "Columns" })
                 if (this.table.prefix?.length) {
                     title.span('.prefix').text(`${this.table.prefix}*`)
                 }
@@ -285,7 +285,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
         parent.section('.filters', section => {
             section.div('.title', title => {
                 title.i(".glyp-filter")
-                title.span({text: "Filters"})
+                title.span({ text: "Filters" })
             })
             if (this.table.filters?.length) {
                 for (const filter of this.table.filters) {
@@ -439,7 +439,7 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
         this.addAction({
             title: "Apply",
             icon: 'glyp-checkmark',
-            click: {key: this.applyKey}
+            click: { key: this.applyKey }
         }, 'primary')
 
         this.onClick(this.applyKey, async _ => {
@@ -455,7 +455,7 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
             this.addAction({
                 title: "Delete",
                 icon: "glyp-delete",
-                click: {key: this.deleteKey},
+                click: { key: this.deleteKey },
                 classes: ['alert']
             }, 'secondary')
 
