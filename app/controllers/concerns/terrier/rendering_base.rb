@@ -81,7 +81,18 @@ module Terrier::RenderingBase
       @message = ex.message
       @backtrace = ex.backtrace
       respond_to do |format|
-        format.json {render json: {status: 'error', message: @message, backtrace: ex.backtrace}}
+        format.json do
+          json = {
+            status: 'error',
+            message: @message,
+            exception_type: ex.class.name,
+            backtrace: @backtrace,
+          }
+
+          json[:errors] = ex.record&.errors&.as_json if ex.is_a?(ActiveRecord::RecordInvalid)
+
+          render(json:)
+        end
         format.csv {render plain: "error\n#{@message}"}
         format.html do
           if Rails.configuration.try(:consider_all_requests_local)
