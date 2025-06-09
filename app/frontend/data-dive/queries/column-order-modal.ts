@@ -1,11 +1,9 @@
-import Arrays from "tuff-core/arrays"
-import { PartTag } from "tuff-core/parts"
-import { ModalPart } from "../../terrier/modals"
-import Columns from "./columns"
-import Queries, { Query } from "./queries"
-import Messages from "tuff-core/messages"
-import SortablePlugin from "tuff-sortable/sortable-plugin"
 import { Logger } from "tuff-core/logging"
+import Messages from "tuff-core/messages"
+import { PartTag } from "tuff-core/parts"
+import SortablePlugin from "tuff-sortable/sortable-plugin"
+import { ModalPart } from "../../terrier/modals"
+import { Query } from "./queries"
 
 const log = new Logger("ColumnOrderModal")
 
