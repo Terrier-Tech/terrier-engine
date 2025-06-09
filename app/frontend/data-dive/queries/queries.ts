@@ -332,9 +332,6 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 ////////////////////////////////////////////////////////////////////////////////
 
 const Queries = {
-    eachColumn,
-    eachTable,
-    eachFilter,
     childTables,
     tables,
     tableColumns,
