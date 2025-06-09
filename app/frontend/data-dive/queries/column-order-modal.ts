@@ -1,11 +1,11 @@
 import Arrays from "tuff-core/arrays"
 import { PartTag } from "tuff-core/parts"
-import {ModalPart} from "../../terrier/modals"
+import { ModalPart } from "../../terrier/modals"
 import Columns from "./columns"
-import Queries, {Query} from "./queries"
+import Queries, { Query } from "./queries"
 import Messages from "tuff-core/messages"
 import SortablePlugin from "tuff-sortable/sortable-plugin"
-import {Logger} from "tuff-core/logging"
+import { Logger } from "tuff-core/logging"
 
 const log = new Logger("ColumnOrderModal")
 
@@ -26,7 +26,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
         this.addAction({
             title: "Apply",
             icon: "glyp-checkmark",
-            click: {key: this.submitKey}
+            click: { key: this.submitKey }
         })
 
         this.onClick(this.submitKey, _ => {
@@ -36,25 +36,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
 
         // initialize the columns from the query, if present
         const query = this.state.query
-        const initialColumns = new Set<string>() // keep track of the initial columns
-        if (query.columns?.length) {
-            this.columns = query.columns
-            this.columns.forEach(c => {
-                initialColumns.add(c)
-            })
-        }
-
-        // ensure that all columns in the query are represented, regardless of whether they're stored
-        Queries.eachColumn(query, (table, col) => {
-            const name = Columns.computeSelectName(table, col)
-            if (!this.columns.includes(name)) {
-                this.columns.push(name)
-                initialColumns.delete(name)
-            }
-        })
-
-        // remove any of the initial columns that aren't in the query anymore
-        Arrays.deleteIf(this.columns, (c) => initialColumns.has(c))
+        if (query.columns?.length) this.columns = Array.from(query.columns)
 
         // make the list sortable
         this.makePlugin(SortablePlugin, {
@@ -72,7 +54,7 @@ export default class ColumnOrderModal extends ModalPart<ColumnOrderState> {
             container.p().text("Drag and drop the columns to change their order:")
             container.div(".dive-column-sort-zone", zone => {
                 for (const col of this.columns) {
-                    zone.div(".column").data({column: col}).text(col)
+                    zone.div(".column").data({ column: col }).text(col)
                 }
             })
         })

@@ -1,10 +1,10 @@
-import {ModalPart} from "../../terrier/modals"
+import { ModalPart } from "../../terrier/modals"
 import Columns from "./columns"
-import Queries, {OrderBy, Query} from "./queries"
+import Queries, { OrderBy, Query } from "./queries"
 import Messages from "tuff-core/messages"
-import {PartTag} from "tuff-core/parts"
-import {optionsForSelect, SelectOption} from "tuff-core/forms"
-import {Logger} from "tuff-core/logging"
+import { PartTag } from "tuff-core/parts"
+import { optionsForSelect, SelectOption } from "tuff-core/forms"
+import { Logger } from "tuff-core/logging"
 import Forms from "../../terrier/forms"
 import SortablePlugin from "tuff-sortable/sortable-plugin";
 
@@ -22,7 +22,7 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
     changedKey = Messages.untypedKey()
     orderBys: OrderBy[] = []
     columnOptions: SelectOption[] = []
-    removeClauseKey = Messages.typedKey<{index: number}>()
+    removeClauseKey = Messages.typedKey<{ index: number }>()
 
     async init() {
         this.setTitle("Row Order")
@@ -31,7 +31,7 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
         this.addAction({
             title: "Apply",
             icon: "glyp-checkmark",
-            click: {key: this.submitKey}
+            click: { key: this.submitKey }
         })
 
         this.onClick(this.submitKey, _ => {
@@ -42,7 +42,7 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
         this.addAction({
             title: "New Clause",
             icon: "glyp-plus",
-            click: {key: this.newClauseKey}
+            click: { key: this.newClauseKey }
         }, 'secondary')
 
         this.onClick(this.newClauseKey, _ => {
@@ -56,11 +56,12 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
         // collect the column options
         const query = this.state.query
         const existingColumns = new Set<string>()
-        Queries.eachColumn(query, (table, col) => {
-            const name = Columns.computeSelectName(table, col)
+        for (const { table, column } of Queries.columns(query)) {
+            const name = Columns.computeSelectName(table, column)
             existingColumns.add(name)
-            this.columnOptions.push({title: name, value: name})
-        })
+            this.columnOptions.push({ title: name, value: name })
+
+        }
 
         // initialize the order-bys from the query, if present
         if (query.order_by?.length) {
@@ -88,7 +89,7 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
     }
 
     addClause() {
-        this.orderBys.push({column: this.columnOptions[0]?.value || '', dir: 'asc'})
+        this.orderBys.push({ column: this.columnOptions[0]?.value || '', dir: 'asc' })
         log.info(`Added a line, orderBys is now ${this.orderBys.length} long`, this.orderBys)
         this.dirty()
     }
@@ -107,7 +108,7 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
             this.element.querySelectorAll<HTMLElement>(".order-by").forEach(line => {
                 const column = line.querySelector<HTMLSelectElement>("select.column")?.value!!
                 const dir = Forms.getRadioValue(line, "input.dir") || "asc"
-                this.orderBys.push({column, dir})
+                this.orderBys.push({ column, dir })
             })
             log.info("Serialized", this.orderBys)
         }
@@ -119,9 +120,9 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
             container.div(".dive-row-sort-zone", zone => {
                 let index = 0 // for making unique radio names
                 for (const orderBy of this.orderBys) {
-                    zone.div(".order-by", {data: {index: index.toString()}}, line => {
+                    zone.div(".order-by", { data: { index: index.toString() } }, line => {
                         line.a(".drag.glyp-navicon")
-                            .data({tooltip: "Re-order this clause"})
+                            .data({ tooltip: "Re-order this clause" })
                         line.select('.column', colSelect => {
                             optionsForSelect(colSelect, this.columnOptions, orderBy.column)
                         }).emitChange(this.changedKey)
@@ -144,8 +145,8 @@ export default class RowOrderModal extends ModalPart<RowOrderState> {
                             label.span().text("descending")
                         })
                         line.a(".remove.glyp-close")
-                            .data({tooltip: "Remove this clause"})
-                            .emitClick(this.removeClauseKey, {index})
+                            .data({ tooltip: "Remove this clause" })
+                            .emitClick(this.removeClauseKey, { index })
                     })
                     index += 1
                 }

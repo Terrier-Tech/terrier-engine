@@ -1,18 +1,18 @@
 import { Filter } from "./filters"
-import {TableRef} from "./tables"
-import api, {ApiResponse} from "../../terrier/api"
-import {PartTag} from "tuff-core/parts"
-import {TableCellTag} from "tuff-core/html"
+import { TableRef } from "./tables"
+import api, { ApiResponse } from "../../terrier/api"
+import { PartTag } from "tuff-core/parts"
+import { TableCellTag } from "tuff-core/html"
 import dayjs from "dayjs"
 import QueryEditor from "./query-editor"
 import TerrierPart from "../../terrier/parts/terrier-part"
-import Schema, {ModelDef, SchemaDef} from "../../terrier/schema"
-import {Logger} from "tuff-core/logging"
+import Schema, { ModelDef, SchemaDef } from "../../terrier/schema"
+import { Logger } from "tuff-core/logging"
 import * as inflection from "inflection"
 import Messages from "tuff-core/messages"
 import Strings from "tuff-core/strings"
 import Arrays from "tuff-core/arrays"
-import {ColumnRef} from "./columns"
+import { ColumnRef } from "./columns"
 import Ids from "../../terrier/ids";
 import Objects from "tuff-core/objects";
 
@@ -42,74 +42,46 @@ export type Query = {
 // Utilities
 ////////////////////////////////////////////////////////////////////////////////
 
-type TableFunction = (table: TableRef) => any
+function* childTables(table: TableRef): Generator<TableRef, void, void> {
+    if (!table.joins) return
 
-function eachChildTable(table: TableRef, fn: TableFunction) {
-    if (!table.joins) {
-        return
-    }
     for (const joinedTable of Object.values(table.joins)) {
-        fn(joinedTable)
-        eachChildTable(joinedTable, fn)
+        yield joinedTable
+        yield* childTables(joinedTable)
     }
 }
 
-/**
- * Recursively iterates through each table reference in the query and evaluates the function.
- * @param query
- * @param fn
- */
-function eachTable(query: Query, fn: TableFunction) {
-    fn(query.from)
-    eachChildTable(query.from, fn)
+function* tables(query: Query): Generator<TableRef, void, void> {
+    yield query.from
+    yield* childTables(query.from)
 }
 
-export type ColumnFunction = (table: TableRef, col: ColumnRef) => any
+function* tableColumns(table: TableRef): Generator<{ table: TableRef, column: ColumnRef }, void, void> {
+    if (table.columns)
+        for (const column of table.columns)
+            yield { table, column }
 
-function eachColumnForTable(table: TableRef, fn: ColumnFunction) {
-    if (table.columns) {
-        for (const col of table.columns) {
-            fn(table, col)
-        }
-    }
-    if (table.joins) {
-        for (const joinedTable of Object.values(table.joins)) {
-            eachColumnForTable(joinedTable, fn)
-        }
-    }
+    if (table.joins)
+        for (const joinedTable of Object.values(table.joins))
+            yield* tableColumns(joinedTable)
 }
 
-/**
- * Recursively iterates over all columns in a query.
- * @param query
- * @param fn a function to evaluate for each column in the query
- */
-function eachColumn(query: Query, fn: ColumnFunction) {
-    eachColumnForTable(query.from, fn)
+function columns(query: Query) {
+    return tableColumns(query.from)
 }
 
-export type FilterFunction = (table: TableRef, filter: Filter) => any
+function* tableFilters(table: TableRef): Generator<{ table: TableRef, filter: Filter }, void, void> {
+    if (table.filters)
+        for (const filter of table.filters)
+            yield ({ table, filter })
 
-function eachFilterForTable(table: TableRef, fn: FilterFunction) {
-    if (table.filters) {
-        for (const filter of table.filters) {
-            fn(table, filter)
-        }
-    }
-    if (table.joins) {
-        for (const joinedTable of Object.values(table.joins)) {
-            eachFilterForTable(joinedTable, fn)
-        }
-    }
+    if (table.joins)
+        for (const joinedTable of Object.values(table.joins))
+            yield* tableFilters(joinedTable)
 }
 
-/**
- * Recursively iterates over all filters in the query and executes the given function for each.
- * @param query
- * @param fn a function to evaluate on each filter
- */
-function eachFilter(query: Query, fn: FilterFunction) {
-    eachFilterForTable(query.from, fn)
+function filters(query: Query) {
+    return tableFilters(query.from)
 }
 
 /**
@@ -122,9 +94,8 @@ function duplicate(query: Query): Query {
     newQuery.id = Ids.makeUuid()
 
     // filters need new IDs, otherwise they won't be able to be set differently than the original query's filters
-    eachFilter(newQuery, (_, filter) => {
-        filter.id = Ids.makeUuid()
-    })
+    filters(query)
+        .forEach(({ filter }) => filter.id = Ids.makeUuid())
 
     return newQuery
 }
@@ -151,7 +122,7 @@ export type QueryServerValidation = ApiResponse & {
  * @param query
  */
 async function validate(query: Query): Promise<QueryServerValidation> {
-    return await api.post<QueryServerValidation>("/data_dive/validate_query.json", {query})
+    return await api.post<QueryServerValidation>("/data_dive/validate_query.json", { query })
 }
 
 
@@ -184,7 +155,7 @@ export type QueryResult = ApiResponse & {
  * @param query
  */
 async function preview(query: Query): Promise<QueryResult> {
-    return await api.post<QueryResult>("/data_dive/preview_query.json", {query})
+    return await api.post<QueryResult>("/data_dive/preview_query.json", { query })
 }
 
 
@@ -211,15 +182,15 @@ function renderCell(td: TableCellTag, col: QueryResultColumn, val: any): any {
             return td.div('.dollars').text(`\$${dollars}`)
         case 'cents':
             const cents = parseInt(val)
-            const d = (cents/100.0).toFixed(2)
+            const d = (cents / 100.0).toFixed(2)
             return td.div('.dollars').text(`\$${d}`)
         case 'string':
             if (col.select_name.endsWith('id')) {
                 const id = val.toString()
                 td.a('.id')
-                    .data({tooltip: id})
-                    .text(`...${id.substring(id.length-6)}`)
-                    .emitClick(QueryEditor.copyToClipboardKey, {value: id})
+                    .data({ tooltip: id })
+                    .text(`...${id.substring(id.length - 6)}`)
+                    .emitClick(QueryEditor.copyToClipboardKey, { value: id })
             }
             else {
                 td.text(val.toString())
@@ -307,8 +278,8 @@ export class QueryModelPicker extends TerrierPart<QueryModelPickerState> {
 
     renderModelOption(parent: PartTag, model: ModelDef) {
         parent.label('.model-option', label => {
-            label.input({type: 'radio', name: `new-query-model-${this.id}`, value: model.name})
-                .emitChange(this.pickedKey, {model: model.name})
+            label.input({ type: 'radio', name: `new-query-model-${this.id}`, value: model.name })
+                .emitChange(this.pickedKey, { model: model.name })
             label.div(col => {
                 const name = inflection.pluralize(Strings.titleize(model.name))
                 col.div('.name').text(name)
@@ -364,6 +335,12 @@ const Queries = {
     eachColumn,
     eachTable,
     eachFilter,
+    childTables,
+    tables,
+    tableColumns,
+    columns,
+    tableFilters,
+    filters,
     duplicate,
     validate,
     preview,

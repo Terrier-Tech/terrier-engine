@@ -1,18 +1,18 @@
-import {PartTag} from "tuff-core/parts"
-import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
-import {TableRef, TableView} from "./tables"
-import {Logger} from "tuff-core/logging"
-import Forms, {FormFields, SelectOptions} from "tuff-core/forms"
+import { PartTag } from "tuff-core/parts"
+import { ColumnDef, ModelDef, SchemaDef } from "../../terrier/schema"
+import { TableRef, TableView } from "./tables"
+import { Logger } from "tuff-core/logging"
+import Forms, { FormFields, SelectOptions } from "tuff-core/forms"
 import Objects from "tuff-core/objects"
-import {ModalPart} from "../../terrier/modals"
-import {Dropdown} from "../../terrier/dropdowns"
+import { ModalPart } from "../../terrier/modals"
+import { Dropdown } from "../../terrier/dropdowns"
 import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import Dom from "tuff-core/dom"
-import Validation, {ColumnValidationError} from "./validation"
-import Queries, {Query} from "./queries"
-import {TerrierFormFields} from "../../terrier/forms"
+import Validation, { ColumnValidationError } from "./validation"
+import Queries, { Query } from "./queries"
+import { TerrierFormFields } from "../../terrier/forms"
 import TerrierPart from "../../terrier/parts/terrier-part"
 
 const log = new Logger("Columns")
@@ -115,7 +115,7 @@ export type ColumnsEditorState = {
 const saveKey = Messages.untypedKey()
 const addKey = Messages.untypedKey()
 const addSingleKey = Messages.typedKey<{ name: string }>()
-const removeKey = Messages.typedKey<{id: string}>()
+const removeKey = Messages.typedKey<{ id: string }>()
 const valueChangedKey = Messages.untypedKey()
 
 /**
@@ -131,11 +131,11 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     tableFields!: FormFields<TableRef>
 
 
-    async init () {
+    async init() {
         this.table = this.state.tableView.table
         this.modelDef = this.state.tableView.modelDef
 
-        this.tableFields = new FormFields(this, {...this.table})
+        this.tableFields = new FormFields(this, { ...this.table })
 
         // initialize the columns states
         const columns: ColumnRef[] = this.table.columns || []
@@ -149,13 +149,13 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         this.addAction({
             title: 'Apply',
             icon: 'glyp-checkmark',
-            click: {key: saveKey}
+            click: { key: saveKey }
         }, 'primary')
 
         this.addAction({
             title: 'Add Columns',
             icon: 'glyp-plus',
-            click: {key: addKey}
+            click: { key: addKey }
         }, 'secondary')
 
         this.onClick(saveKey, _ => {
@@ -171,7 +171,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         })
 
         this.onClick(addKey, m => {
-            this.toggleDropdown(SelectColumnsDropdown, {editor: this as ColumnsEditorModal}, m.event.target)
+            this.toggleDropdown(SelectColumnsDropdown, { editor: this as ColumnsEditorModal }, m.event.target)
         })
 
         this.onChange(valueChangedKey, m => {
@@ -189,7 +189,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
 
     addEditor(col: ColumnRef) {
         this.columnCount += 1
-        const state = {schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col}
+        const state = { schema: this.state.schema, columnsEditor: this, id: `column-${this.columnCount}`, column: col }
         this.columnEditors[state.id] = this.makePart(ColumnEditor, state)
     }
 
@@ -227,10 +227,10 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         // the table of column editors
         parent.div('.dd-columns-editor-table', table => {
             table.div('.dd-editor-header', header => {
-                header.div('.name').label({text: "Name"})
-                header.div('.alias').label({text: "Alias"})
-                header.div('.function').label({text: "Function"})
-                header.div('.group-by').label({text: "Group By?"})
+                header.div('.name').label({ text: "Name" })
+                header.div('.alias').label({ text: "Alias" })
+                header.div('.function').label({ text: "Function" })
+                header.div('.group-by').label({ text: "Group By?" })
             })
             table.div('dd-editor-row-container', container => {
                 for (const id of Object.keys(this.columnEditors)) {
@@ -261,7 +261,7 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
                             tr.td('.description').text(colDef.metadata?.description || '')
                             tr.td().a('.add-column.tt-button.secondary.circle.compact.inline', a => {
                                 a.i('.glyp-plus')
-                            }).emitClick(addSingleKey, {name: colDef.name})
+                            }).emitClick(addSingleKey, { name: colDef.name })
                         })
                     }
                 })
@@ -288,12 +288,12 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
         // make a deep copy of the query and update this table's columns and settings
         this.table._id = this.id // we need this to identify the table after the deep copy
         const query = Objects.deepCopy(this.state.query)
-        Queries.eachTable(query, table => {
-            if (table._id == this.id) {
-                table.columns = columns
-                table.prefix = tableData.prefix
-            }
-        })
+        const tables = Queries.tables(query).
+            filter(table => table._id == this.id)
+        for (const table of tables) {
+            table.columns = columns
+            table.prefix = tableData.prefix
+        }
 
         // validate the temporary query
         log.info(`Validating temporary query with column changes`, query)
@@ -358,10 +358,10 @@ class ColumnEditor extends TerrierPart<ColumnState> {
 
     render(parent: PartTag) {
         parent.div('.name', col => {
-            col.div('.tt-readonly-field', {text: this.columnRef.name})
+            col.div('.tt-readonly-field', { text: this.columnRef.name })
         })
         parent.div('.alias', col => {
-            this.fields.textInput(col, "alias", {placeholder: "Alias"})
+            this.fields.textInput(col, "alias", { placeholder: "Alias" })
                 .emitChange(valueChangedKey)
         })
         parent.div('.function', col => {
@@ -375,7 +375,7 @@ class ColumnEditor extends TerrierPart<ColumnState> {
         parent.div('.actions', actions => {
             actions.a(a => {
                 a.i('.glyp-close')
-            }).emitClick(removeKey, {id: this.state.id})
+            }).emitClick(removeKey, { id: this.state.id })
         })
         if (this.columnRef.errors?.length) {
             for (const error of this.columnRef.errors) {
@@ -387,7 +387,7 @@ class ColumnEditor extends TerrierPart<ColumnState> {
     async serialize() {
         return await this.fields.serialize()
     }
-    
+
 }
 
 
@@ -406,7 +406,7 @@ type SelectableColumn = {
 /**
  * Shows a dropdown that allows the user to select one or more columns from the given model.
  */
-class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
+class SelectColumnsDropdown extends Dropdown<{ editor: ColumnsEditorModal }> {
 
     addAllKey = Messages.untypedKey()
     addKey = Messages.typedKey<ColumnRef>()
@@ -431,9 +431,11 @@ class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
             const description = colDef.metadata?.description || ''
             return {
                 def: colDef,
-                ref: {name: colDef.name},
+                ref: { name: colDef.name },
                 included,
-                sortOrder, description}
+                sortOrder,
+                description
+            }
         })
         this.columns = Arrays.sortBy(this.columns, 'sortOrder')
 
@@ -527,7 +529,7 @@ class SelectColumnsDropdown extends Dropdown<{editor: ColumnsEditorModal}> {
 
         parent.a('.primary', a => {
             a.i('.glyp-check_all')
-            a.span({text: "Add All"})
+            a.span({ text: "Add All" })
         }).emitClick(this.addAllKey)
     }
 
