@@ -29,7 +29,7 @@ window.leftPad = (s, width) ->
 # Formatting
 ########################################################################################
 
-_upcaseValues = ['cod', 'csr', 'html', 'pdf', 'ach', 'eft', 'wdi', 'wdo']
+_upcaseValues = ['cod', 'csr', 'html', 'pdf', 'ach', 'eft', 'wdi', 'wdo', 'sds']
 _upcaseBlacklist = ['at', 'by', 'to', 'is', 'or', 'of']
 
 # capitalizes the first character or the first 2 if conditions allow
