@@ -82,7 +82,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
     /// Toolbar Fields
 
     protected _toolbarFieldsOrder: string[] = []
-    protected _toolbarFields: Record<string, ToolbarFieldDef> = {}
+    protected _toolbarFields: Map<string, ToolbarFieldDef> = new Map<string, ToolbarFieldDef>()
 
     protected get hasToolbarFields() {
         return this._toolbarFieldsOrder.length > 0
@@ -109,8 +109,10 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
     }
 
     protected addToolbarFieldDef(def: ToolbarFieldDef) {
-        this._toolbarFieldsOrder.push(def.name)
-        this._toolbarFields[def.name] = def
+        if (!this._toolbarFields.has(def.name)) {
+            this._toolbarFieldsOrder.push(def.name)
+        }
+        this._toolbarFields.set(def.name, def)
     }
 
     /// Rendering
@@ -187,7 +189,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
     protected renderToolbarFields(parent: PartTag) {
         parent.div('.fields', fields => {
             for (const name of this._toolbarFieldsOrder) {
-                const def = this._toolbarFields[name]
+                const def = this._toolbarFields.get(name)
                 if (!def) {
                     log.warn(`No select def with name ${name} could be found!`)
                     continue;
