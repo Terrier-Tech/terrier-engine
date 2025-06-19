@@ -52,10 +52,6 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
         return []
     }
 
-    protected get contentClasses(): string[] {
-        return []
-    }
-
     render(parent: PartTag) {
         const collapsibleConfig = this.state.collapsible
         parent.div('.tt-panel', panel => {

@@ -135,6 +135,7 @@ export default abstract class PagePart<TState> extends ContentPart<TState> {
             page.div('.lighting')
             page.div('.full-width-page', conatiner => {
                 conatiner.div('.page-content', main => {
+                    main.class(...this.contentClasses)
                     this.renderContent(main)
                     main.div('.page-actions', actions => {
                         this.renderActions(actions, 'secondary', { defaultClass: 'secondary' })

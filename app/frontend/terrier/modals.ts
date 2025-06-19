@@ -39,6 +39,7 @@ export abstract class ModalPart<TState> extends ContentPart<TState> {
             }).emitClick(modalPopKey)
         })
         parent.div('.modal-content', content => {
+            content.class(...this.contentClasses)
             this.renderContent(content)
         })
         const secondaryActions = this.getActions('secondary')

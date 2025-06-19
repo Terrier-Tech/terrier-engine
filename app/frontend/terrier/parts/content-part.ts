@@ -14,6 +14,10 @@ export type ActionLevel = keyof PanelActions
  */
 export default abstract class ContentPart<TState> extends TerrierPart<TState> {
 
+    get contentClasses(): string[] {
+        return []
+    }
+
     /**
      * All ContentParts must implement this to render their actual content.
      * @param parent
