@@ -133,7 +133,7 @@ export class TerrierFormFields<T extends FormPartData> extends FormFields<T> {
         return new CompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
     }
 
-    fileCompoundField<Key extends KeyOfType<T, File> & string>(parent: PartTag, key: Key, ...classes: string[]): FileCompoundFieldBuilder<T, Key> {
+    fileCompoundField<Key extends KeyOfType<T, File | FileList> & string>(parent: PartTag, key: Key, ...classes: string[]): FileCompoundFieldBuilder<T, Key> {
         return new FileCompoundFieldBuilder(this, parent, key, (this.part as TerrierPart<any>).theme, ...classes)
     }
 
@@ -287,9 +287,9 @@ class CompoundFieldBuilder<T extends Record<string, unknown>, K extends keyof T 
     }
 }
 
-class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, File> & string> extends CompoundFieldBuilder<T, K> {
-    fileInput(attrs?: InputTagAttrs): this {
-        this.formFields.fileInput(this.field, this.key, attrs ?? {})
+class FileCompoundFieldBuilder<T extends Record<string, unknown>, K extends KeyOfType<T, File | FileList> & string> extends CompoundFieldBuilder<T, K> {
+    fileInput(attrs?: InputTagAttrs, serializerType?: FieldConstructor<T[K], HTMLInputElement>): this {
+        this.formFields.fileInput(this.field, this.key, attrs ?? {}, serializerType)
         return this
     }
 }
