@@ -171,4 +171,10 @@ CSV
       end
     end
   end
+
+  test 'optional throw_error_on_blank_row parameter does not throw error when there is no blank row' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      TabularIo.load "/test/input/correct_#{ ext }.#{ ext }", output: :standardized
+    end
+  end
 end
