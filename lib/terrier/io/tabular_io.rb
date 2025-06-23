@@ -5,6 +5,11 @@ require 'xlsxtream'
 
 module TabularIo
 
+  # the error that is thrown when the throw_error_on_blank_row parameter
+  # is passed in, and a blank row is encountered in the file
+  class BlankRowError < StandardError
+  end
+
   ## Paths
 
   # uses some logic to convert a relative path to an absolute one:
@@ -99,7 +104,7 @@ module TabularIo
         consecutive_blank_rows += 1
         # Throw error if the row is blank and throw_error_on_blank_row is true
         if throw_error_on_blank_row
-          raise "Blank row encountered in sheet"
+          raise BlankRowError, "Blank row encountered in sheet"
         end
         # Break if exceeding allowed blank rows
         if consecutive_blank_rows > n_blank_allowed
@@ -137,7 +142,7 @@ module TabularIo
         consecutive_blank_rows += 1
         # Throw error if the row is blank and throw_error_on_blank_row is true
         if throw_error_on_blank_row
-          raise "Blank row encountered in sheet"
+          raise BlankRowError, "Blank row encountered in sheet"
         end
         # Break if exceeding allowed blank rows
         if consecutive_blank_rows > n_blank_allowed
@@ -238,7 +243,7 @@ module TabularIo
           consecutive_blank_rows += 1
           # Throw error if the row is blank and throw_error_on_blank_row is true
           if throw_error_on_blank_row
-            raise "Blank row encountered in sheet #{sheet.name}."
+            raise BlankRowError, "Blank row encountered in sheet #{sheet.name}."
           end
           # Log and break if the number of consecutive blank rows exceeds the limit
           if consecutive_blank_rows > n_blank_allowed
@@ -280,7 +285,7 @@ module TabularIo
           consecutive_blank_rows += 1
           # Throw error if the row is blank and throw_error_on_blank_row is true
           if throw_error_on_blank_row
-            raise "Blank row encountered in sheet #{sheet.name}."
+            raise BlankRowError, "Blank row encountered in sheet #{sheet.name}."
           end
           # Log and break if the number of consecutive blank rows exceeds the limit
           if consecutive_blank_rows > n_blank_allowed

@@ -164,5 +164,11 @@ CSV
     end
   end
 
-
+  test 'optional throw_error_on_blank_row parameter throws error when there is a blank row' do
+    ['csv', 'xls', 'xlsx'].each do |ext|
+      assert_raises(TabularIo::BlankRowError) do
+        TabularIo.load "/test/input/missing_row_#{ ext }.#{ ext }", output: :standardized, throw_error_on_blank_row: true
+      end
+    end
+  end
 end
