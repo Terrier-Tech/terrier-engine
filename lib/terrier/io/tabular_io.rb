@@ -7,8 +7,7 @@ module TabularIo
 
   # the error that is thrown when the throw_error_on_blank_row parameter
   # is passed in, and a blank row is encountered in the file
-  class BlankRowError < StandardError
-  end
+  class BlankRowError < StandardError; end
 
   ## Paths
 
