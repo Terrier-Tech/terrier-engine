@@ -1,8 +1,8 @@
 GIT
   remote: git@github.com:Terrier-Tech/sql_builder.git
-  revision: 0545e429fceee6c85df713dc50ae6c9678e3e8ce
+  revision: 3479a1b7369996a17cb2d16da5d8989d8dc6a755
   specs:
-    sql_builder (1.4.1)
+    sql_builder (1.5.0)
 
 GIT
   remote: https://github.com/Terrier-Tech/terrier_auth.git

@@ -86,15 +86,21 @@ module TabularIo
 
 
   def self.load_csv(rel_path, options={})
-    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
     abs_path = self.rel_to_abs_path rel_path
     headers = nil
     data = []
     consecutive_blank_rows = 0
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+    throw_error_on_blank_row = options.fetch(:throw_error_on_blank_row, false)
+
     CSV.open(abs_path, 'r:bom|utf-8').each do |row|
       if row.compact.empty?
         # Increment blank row counter
         consecutive_blank_rows += 1
+        # Throw error if the row is blank and throw_error_on_blank_row is true
+        if throw_error_on_blank_row
+          raise "Blank row encountered in sheet"
+        end
         # Break if exceeding allowed blank rows
         if consecutive_blank_rows > n_blank_allowed
           puts "Stopping processing after encountering #{consecutive_blank_rows} consecutive blank rows."
@@ -121,15 +127,35 @@ module TabularIo
     abs_path = self.rel_to_abs_path rel_path
     headers = nil
     data = []
+    consecutive_blank_rows = 0
+    n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+    throw_error_on_blank_row = options.fetch(:throw_error_on_blank_row, false)
+
     CSV.open(abs_path, 'r:bom|utf-8', col_sep: "\t").each do |row|
-      if headers
-        record = {}
-        row.each_with_index do |val, i|
-          record[headers[i]] = val
+      if row.compact.empty?
+        # Increment blank row counter
+        consecutive_blank_rows += 1
+        # Throw error if the row is blank and throw_error_on_blank_row is true
+        if throw_error_on_blank_row
+          raise "Blank row encountered in sheet"
         end
-        data << record
+        # Break if exceeding allowed blank rows
+        if consecutive_blank_rows > n_blank_allowed
+          puts "Stopping processing after encountering #{consecutive_blank_rows} consecutive blank rows."
+          break
+        end
       else
-        headers = self.sanitize_csv_header row
+        consecutive_blank_rows = 0
+
+        if headers
+          record = {}
+          row.each_with_index do |val, i|
+            record[headers[i]] = val
+          end
+          data << record
+        else
+          headers = self.sanitize_csv_header row
+        end
       end
     end
     data
@@ -192,6 +218,7 @@ module TabularIo
     output = {}
     sheets_to_import = options[:sheets]
     n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+    throw_error_on_blank_row = options.fetch(:throw_error_on_blank_row, false)
 
     x.sheets.each do |sheet|
       next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
@@ -209,6 +236,10 @@ module TabularIo
         # Check if the row is blank
         if row.compact.empty?
           consecutive_blank_rows += 1
+          # Throw error if the row is blank and throw_error_on_blank_row is true
+          if throw_error_on_blank_row
+            raise "Blank row encountered in sheet #{sheet.name}."
+          end
           # Log and break if the number of consecutive blank rows exceeds the limit
           if consecutive_blank_rows > n_blank_allowed
             puts "Stopping processing of sheet '#{sheet.name}' after encountering #{consecutive_blank_rows} consecutive blank rows."
@@ -234,6 +265,7 @@ module TabularIo
     output = {}
     sheets_to_import = options[:sheets]
     n_blank_allowed = options.fetch(:n_blank_allowed, 0)
+    throw_error_on_blank_row = options.fetch(:throw_error_on_blank_row, false)
 
     book.worksheets.each do |sheet|
       next if sheets_to_import.present? && !sheets_to_import.include?(sheet.name)
@@ -246,6 +278,10 @@ module TabularIo
         # Check if the row is blank
         if row.all?(&:nil?)
           consecutive_blank_rows += 1
+          # Throw error if the row is blank and throw_error_on_blank_row is true
+          if throw_error_on_blank_row
+            raise "Blank row encountered in sheet #{sheet.name}."
+          end
           # Log and break if the number of consecutive blank rows exceeds the limit
           if consecutive_blank_rows > n_blank_allowed
             puts "Stopping processing of sheet '#{sheet.name}' after encountering #{consecutive_blank_rows} consecutive blank rows."
