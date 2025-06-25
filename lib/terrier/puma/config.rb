@@ -38,7 +38,7 @@ def stop_server(pid_path)
   was_killed
 end
 
-command = ARGV.reject! { |arg| arg.start_with?('-') }.first || 'restart'
+command = ARGV.reject { |arg| arg.start_with?('-') }.first || 'restart'
 case command
 when 'restart'
   if stop_server pid_path
