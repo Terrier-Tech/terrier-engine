@@ -228,8 +228,11 @@ class DiveDistributionModal extends ModalPart<DiveDistributionEditorState> {
 
         this.setIcon('glyp-email')
 
-        this.scheduleFields = new RegularScheduleFields(this, this.dist.schedule)
-        this.scheduleFields.showNoneOption = false
+        this.scheduleFields = new RegularScheduleFields(this, this.dist.schedule, {
+            showNoneOption: false,
+            optionTitle: (type, title) =>
+                `${type == 'monthanchored' ? "Deliver on" : "Deliver"} ${title}`
+        })
         this.recipientsForm = this.makePart(EmailListForm, { emails: this.dist.recipients || [] })
 
         // save

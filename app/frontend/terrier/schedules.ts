@@ -97,17 +97,21 @@ const ScheduleTypeOptions = {
 // Form
 ////////////////////////////////////////////////////////////////////////////////
 
+export type RegularScheduleFieldsOptions = {
+    // Show the option to select "none" schedule type (default true)
+    showNoneOption?: boolean
+    // Format the title of each schedule type option
+    optionTitle?: (type: ScheduleType, title: string) => string
+}
+
 export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
 
     scheduleTypeChangeKey = Messages.typedKey<{ schedule_type: ScheduleType }>()
 
-    /**
-     * Set false to not render the 'none' option
-     */
-    showNoneOption: boolean = true
-
-    constructor(part: TerrierPart<any>, data: RegularSchedule) {
+    constructor(part: TerrierPart<any>, data: RegularSchedule, public options: RegularScheduleFieldsOptions = {}) {
         super(part, data)
+
+        this.options.showNoneOption ??= true
 
         this.part.onChange(this.scheduleTypeChangeKey, m => {
             log.info(`Schedule type changed to ${m.data.schedule_type}`)
@@ -118,7 +122,7 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
 
     render(parent: PartTag): any {
         parent.div('.tt-flex.column.gap.regular-schedule-form.tt-form', col => {
-            if (this.showNoneOption) {
+            if (this.options.showNoneOption) {
                 this.renderSection(col, 'none')
             }
 
@@ -133,7 +137,11 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
         parent.label('.caption-size', label => {
             this.radio(label, 'schedule_type', scheduleType)
                 .emitChange(this.scheduleTypeChangeKey, { schedule_type: scheduleType })
-            label.span().text(ScheduleTypeOptions[scheduleType])
+            let optionTitle: string = ScheduleTypeOptions[scheduleType]
+            if (this.options.optionTitle) {
+                optionTitle = this.options.optionTitle(scheduleType, optionTitle)
+            }
+            label.span().text(optionTitle)
         })
         if (scheduleType != 'none' && this.data.schedule_type == scheduleType) {
             parent.div(`.schedule-type-fields.tt-flex.small-gap.align-center.shrink-items`, row => {
