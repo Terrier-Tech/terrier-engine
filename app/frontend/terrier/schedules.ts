@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import * as inflection from "inflection"
+import Forms from "tuff-core/forms"
 import { Logger } from "tuff-core/logging"
 import Messages from "tuff-core/messages"
 import { PartTag } from "tuff-core/parts"
@@ -61,12 +62,35 @@ export type MonthlySchedule = BaseSchedule & {
     day_of_month: DayOfMonth
 }
 
+export const MonthAnchors = {
+    first_day: "First day",
+    first_weekday: "First weekday",
+    last_day: "Last day",
+    last_weekday: "Last weekday",
+} as const
+export type MonthAnchor = keyof typeof MonthAnchors
+
+const MonthAnchorOptions = Forms.objectToSelectOptions(MonthAnchors)
+
+export type MonthAnchoredSchedule = BaseSchedule & {
+    schedule_type: 'monthanchored'
+    anchor: MonthAnchor
+}
+
 /**
  * A schedule for something that happens on a regular daily/weekly/monthly basis.
  */
-export type RegularSchedule = EmptySchedule | DailySchedule | WeeklySchedule | MonthlySchedule
+export type RegularSchedule = EmptySchedule | DailySchedule | WeeklySchedule | MonthlySchedule | MonthAnchoredSchedule
 
-export type ScheduleType = 'none' | 'daily' | 'weekly' | 'monthly'
+export type ScheduleType = RegularSchedule['schedule_type']
+
+const ScheduleTypeOptions = {
+    none: "None",
+    daily: "Daily",
+    weekly: "Weekly",
+    monthly: "Monthly",
+    monthanchored: "Anchored Date",
+} as const satisfies Record<ScheduleType, string>
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,53 +119,69 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
     render(parent: PartTag): any {
         parent.div('.tt-flex.column.gap.regular-schedule-form.tt-form', col => {
             if (this.showNoneOption) {
-                col.label('.caption-size', label => {
-                    this.radio(label, 'schedule_type', 'none')
-                        .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'none' })
-                    label.span().text("Do Not Deliver")
-                })
+                this.renderSection(col, 'none')
             }
 
-            col.label('.caption-size', label => {
-                this.radio(label, 'schedule_type', 'daily')
-                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'daily' })
-                label.span().text("Deliver Daily")
-            })
-            if (this.data.schedule_type == 'daily') {
-                const dailyFields = this as TerrierFormFields<DailySchedule>
-                col.div('.schedule-type-fields.daily.tt-flex.gap', row => {
-                    dailyFields.select(row, 'hour_of_day', HourOfDayOptions)
-                })
-            }
-
-            col.label('.caption-size', label => {
-                this.radio(label, 'schedule_type', 'weekly')
-                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'weekly' })
-                label.span().text("Deliver Weekly")
-            })
-            if (this.data.schedule_type == 'weekly') {
-                col.div('.schedule-type-fields.weekly.tt-flex.gap', row => {
-                    const weeklyFields = this as TerrierFormFields<WeeklySchedule>
-                    weeklyFields.select(row, 'day_of_week', DayOfWeekOptions)
-                        .data({ tooltip: "Day of the week" })
-                    weeklyFields.select(row, 'hour_of_day', HourOfDayOptions)
-                })
-            }
-
-            col.label('.caption-size', label => {
-                this.radio(label, 'schedule_type', 'monthly')
-                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'monthly' })
-                label.span().text("Deliver Monthly")
-            })
-            if (this.data.schedule_type == 'monthly') {
-                col.div('.schedule-type-fields.monthly.tt-flex.gap', row => {
-                    const monthlyFields = this as TerrierFormFields<MonthlySchedule>
-                    monthlyFields.select(row, 'day_of_month', DayOfMonthOptions)
-                        .data({ tooltip: "Day of the month" })
-                    monthlyFields.select(row, 'hour_of_day', HourOfDayOptions)
-                })
-            }
+            this.renderSection(col, 'daily')
+            this.renderSection(col, 'weekly')
+            this.renderSection(col, 'monthly')
+            this.renderSection(col, 'monthanchored')
         })
+    }
+
+    private renderSection(parent: PartTag, scheduleType: ScheduleType): void {
+        parent.label('.caption-size', label => {
+            this.radio(label, 'schedule_type', scheduleType)
+                .emitChange(this.scheduleTypeChangeKey, { schedule_type: scheduleType })
+            label.span().text(ScheduleTypeOptions[scheduleType])
+        })
+        if (scheduleType != 'none' && this.data.schedule_type == scheduleType) {
+            parent.div(`.schedule-type-fields.tt-flex.small-gap.align-center.shrink-items`, row => {
+                row.class(scheduleType)
+
+                switch (scheduleType) {
+                    case "daily":
+                        this.renderDailyFields(row, this as TerrierFormFields<DailySchedule>)
+                        break
+                    case "weekly":
+                        this.renderWeeklyFields(row, this as TerrierFormFields<WeeklySchedule>)
+                        break
+                    case "monthly":
+                        this.renderMonthlyFields(row, this as TerrierFormFields<MonthlySchedule>)
+                        break
+                    case "monthanchored":
+                        this.renderMonthAnchoredFields(row, this as TerrierFormFields<MonthAnchoredSchedule>)
+                        break
+                    default:
+                        unreachable(scheduleType)
+                }
+            })
+        }
+    }
+
+    private renderDailyFields(parent: PartTag, formFields: TerrierFormFields<DailySchedule>): void {
+        formFields.select(parent, 'hour_of_day', HourOfDayOptions)
+    }
+
+    private renderWeeklyFields(parent: PartTag, formFields: TerrierFormFields<WeeklySchedule>): void {
+        parent.span().text("Every")
+        formFields.select(parent.div(), 'day_of_week', DayOfWeekOptions)
+            .data({ tooltip: "Day of the week" })
+        parent.span().text("at")
+        formFields.select(parent.div(), 'hour_of_day', HourOfDayOptions)
+    }
+
+    private renderMonthlyFields(parent: PartTag, formFields: TerrierFormFields<MonthlySchedule>): void {
+        formFields.select(parent.div(), 'day_of_month', DayOfMonthOptions)
+            .data({ tooltip: "Day of the month" })
+        parent.span().text("of every month at")
+        formFields.select(parent.div(), 'hour_of_day', HourOfDayOptions)
+    }
+
+    private renderMonthAnchoredFields(parent: PartTag, formFields: TerrierFormFields<MonthAnchoredSchedule>): void {
+        formFields.select(parent.div(), 'anchor', MonthAnchorOptions)
+        parent.span().text("of every month at")
+        formFields.select(parent.div(), 'hour_of_day', HourOfDayOptions)
     }
 
 
@@ -158,7 +198,7 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
             return { schedule_type }
         }
 
-        const hour_of_day = raw.hour_of_day || '0'
+        const hour_of_day = raw.hour_of_day ?? '0'
         switch (schedule_type) {
             case 'daily':
                 return { schedule_type, hour_of_day }
@@ -166,6 +206,8 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
                 return { schedule_type, hour_of_day, day_of_week: raw.day_of_week ?? 'sunday' }
             case 'monthly':
                 return { schedule_type, hour_of_day, day_of_month: raw.day_of_month ?? '1' }
+            case 'monthanchored':
+                return { schedule_type, hour_of_day, anchor: raw.anchor ?? 'first_day' }
             default:
                 unreachable(schedule_type)
         }
@@ -187,14 +229,17 @@ function describeRegular(schedule: RegularSchedule): string {
         return "Unscheduled"
     }
 
-    const timeString = dayjs().hour(parseInt(schedule.hour_of_day || '0')).format('h A')
+    const timeString = dayjs().hour(parseInt(schedule.hour_of_day ?? '0')).format('h A')
     switch (schedule.schedule_type) {
         case 'daily':
             return `Daily at ${timeString}`
         case 'weekly':
-            return `Every ${inflection.titleize(schedule.day_of_week || 'sunday')} at ${timeString}`
+            return `Every ${inflection.titleize(schedule.day_of_week ?? 'sunday')} at ${timeString}`
         case 'monthly':
-            return `Every ${inflection.ordinalize(schedule.day_of_month || '1')} of the month at ${timeString}`
+            return `The ${inflection.ordinalize(schedule.day_of_month ?? '1')} of every month at ${timeString}`
+        case 'monthanchored':
+            const anchor = MonthAnchors[schedule.anchor ?? 'first_day'].toLocaleLowerCase()
+            return `The ${anchor} of every month at ${timeString}`
         default:
             unreachable(schedule)
     }
