@@ -29,5 +29,10 @@ class DdDiveDistribution < ApplicationRecord
 
   belongs_to :dd_dive
 
+  # Returns this distribution's schedule as a RegularSchedule
+  # @return [RegularSchedule, nil]
+  def regular_schedule
+    RegularSchedule.new(self.schedule) if self.schedule.present?
+  end
 
 end
