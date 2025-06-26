@@ -5,6 +5,7 @@ import Messages from "tuff-core/messages"
 import { PartTag } from "tuff-core/parts"
 import { TerrierFormFields } from "./forms"
 import TerrierPart from "./parts/terrier-part"
+import { unreachable } from "./utils"
 
 const log = new Logger("Schedules")
 
@@ -67,22 +68,12 @@ export type RegularSchedule = EmptySchedule | DailySchedule | WeeklySchedule | M
 
 export type ScheduleType = 'none' | 'daily' | 'weekly' | 'monthly'
 
-/**
- * All possible variations of RegularSchedule.
- */
-export type CombinedRegularSchedule = {
-    schedule_type: ScheduleType
-    hour_of_day?: HourOfDay
-    day_of_week?: DayOfWeek
-    day_of_month?: DayOfMonth
-}
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Form
 ////////////////////////////////////////////////////////////////////////////////
 
-export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSchedule> {
+export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
 
     scheduleTypeChangeKey = Messages.typedKey<{ schedule_type: ScheduleType }>()
 
@@ -91,12 +82,12 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
      */
     showNoneOption: boolean = true
 
-    constructor(part: TerrierPart<any>, data: CombinedRegularSchedule) {
+    constructor(part: TerrierPart<any>, data: RegularSchedule) {
         super(part, data)
 
         this.part.onChange(this.scheduleTypeChangeKey, m => {
             log.info(`Schedule type changed to ${m.data.schedule_type}`)
-            this.data = m.data
+            this.data = m.data as RegularSchedule
             this.part.dirty()
         })
     }
@@ -117,8 +108,9 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
                 label.span().text("Deliver Daily")
             })
             if (this.data.schedule_type == 'daily') {
+                const dailyFields = this as TerrierFormFields<DailySchedule>
                 col.div('.schedule-type-fields.daily.tt-flex.gap', row => {
-                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                    dailyFields.select(row, 'hour_of_day', HourOfDayOptions)
                 })
             }
 
@@ -129,9 +121,10 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
             })
             if (this.data.schedule_type == 'weekly') {
                 col.div('.schedule-type-fields.weekly.tt-flex.gap', row => {
-                    this.select(row, 'day_of_week', DayOfWeekOptions)
+                    const weeklyFields = this as TerrierFormFields<WeeklySchedule>
+                    weeklyFields.select(row, 'day_of_week', DayOfWeekOptions)
                         .data({ tooltip: "Day of the week" })
-                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                    weeklyFields.select(row, 'hour_of_day', HourOfDayOptions)
                 })
             }
 
@@ -142,9 +135,10 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
             })
             if (this.data.schedule_type == 'monthly') {
                 col.div('.schedule-type-fields.monthly.tt-flex.gap', row => {
-                    this.select(row, 'day_of_month', DayOfMonthOptions)
+                    const monthlyFields = this as TerrierFormFields<MonthlySchedule>
+                    monthlyFields.select(row, 'day_of_month', DayOfMonthOptions)
                         .data({ tooltip: "Day of the month" })
-                    this.select(row, 'hour_of_day', HourOfDayOptions)
+                    monthlyFields.select(row, 'hour_of_day', HourOfDayOptions)
                 })
             }
         })
@@ -157,11 +151,15 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
     async serializeConcrete(): Promise<RegularSchedule> {
         const raw = await this.serialize()
         const schedule_type = raw.schedule_type
-        const hour_of_day = raw.hour_of_day || '0'
+
         log.info(`Serializing schedule type ${schedule_type}`, raw)
+
+        if (schedule_type == 'none') {
+            return { schedule_type }
+        }
+
+        const hour_of_day = raw.hour_of_day || '0'
         switch (schedule_type) {
-            case 'none':
-                return { schedule_type }
             case 'daily':
                 return { schedule_type, hour_of_day }
             case 'weekly':
@@ -169,7 +167,7 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
             case 'monthly':
                 return { schedule_type, hour_of_day, day_of_month: raw.day_of_month ?? '1' }
             default:
-                throw `Invalid schedule type: ${schedule_type}`
+                unreachable(schedule_type)
         }
     }
 
@@ -184,11 +182,13 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
  * Generate an english description of the given regular schedule.
  * @param schedule
  */
-function describeRegular(schedule: CombinedRegularSchedule): string {
+function describeRegular(schedule: RegularSchedule): string {
+    if (schedule.schedule_type == 'none') {
+        return "Unscheduled"
+    }
+
     const timeString = dayjs().hour(parseInt(schedule.hour_of_day || '0')).format('h A')
     switch (schedule.schedule_type) {
-        case 'none':
-            return "Unscheduled"
         case 'daily':
             return `Daily at ${timeString}`
         case 'weekly':
@@ -196,7 +196,7 @@ function describeRegular(schedule: CombinedRegularSchedule): string {
         case 'monthly':
             return `Every ${inflection.ordinalize(schedule.day_of_month || '1')} of the month at ${timeString}`
         default:
-            throw `Invalid schedule type: ${schedule.schedule_type}`
+            unreachable(schedule)
     }
 }
 
