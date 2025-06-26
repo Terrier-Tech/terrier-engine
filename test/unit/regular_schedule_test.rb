@@ -2,40 +2,70 @@ require 'test_helper'
 
 class RegularScheduleTest < ActiveSupport::TestCase
 
-  test 'daily' do
-    schedule = RegularSchedule.new({schedule_type: 'daily', hour_of_day: '14'})
-
-    period = DatePeriod.parse '2024-05'
-    times = schedule.times_for_period period
-    assert_equal 31, times.count
-
-    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-01'))
-    assert_equal true, schedule.is_this_hour?(Time.parse('2024-05-01 14:14:14'))
-    assert_equal false, schedule.is_this_hour?(Time.parse('2024-05-01 13:13:13'))
+  setup do
+    @daily = RegularSchedule.new(schedule_type: 'daily', hour_of_day: '14')
+    @weekly = RegularSchedule.new(schedule_type: 'weekly', hour_of_day: '14', day_of_week: 'wednesday')
+    @monthly = RegularSchedule.new(schedule_type: 'monthly', hour_of_day: '14', day_of_month: '12')
   end
 
-  test 'weekly' do
-    schedule = RegularSchedule.new({schedule_type: 'weekly', hour_of_day: '14', day_of_week: 'wednesday'})
+  test 'daily schedule times_for_period should match every day in month' do
+    period = DatePeriod.parse('2024-05')
+    actual = @daily.times_for_period(period)
+    expected = (1..31).map { |n| Time.new(2024, 5, n, 14) }
 
-    period = DatePeriod.parse '2024-05'
-    times = schedule.times_for_period period
-    assert_equal 5, times.count # there were 5 wednesdays in May 2024
-
-    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-22'))
-    assert_equal false, schedule.is_this_day?(Date.parse('2024-05-23'))
+    assert_equal expected, actual
   end
 
-  test 'monthly' do
-    day_of_month = '12'
-    schedule = RegularSchedule.new({schedule_type: 'monthly', hour_of_day: '14', day_of_month: day_of_month})
+  test 'weekly schedule times_for_period should match every wednesday in month' do
+    period = DatePeriod.parse('2024-05')
+    actual = @weekly.times_for_period(period)
+    expected = [
+      Time.new(2024, 5, 1, 14),
+      Time.new(2024, 5, 8, 14),
+      Time.new(2024, 5, 15, 14),
+      Time.new(2024, 5, 22, 14),
+      Time.new(2024, 5, 29, 14),
+    ]
 
-    period = DatePeriod.parse '2024-05'
-    times = schedule.times_for_period period
-    assert_equal 1, times.count
-    assert_equal "2024-05-#{day_of_month}", times[0].to_date.to_s
+    assert_equal expected, actual
+  end
 
-    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-12'))
-    assert_equal false, schedule.is_this_day?(Date.parse('2024-05-13'))
+  test 'monthly schedule times_for_period should match 12th day of month' do
+    period = DatePeriod.parse('2024-05')
+    actual = @monthly.times_for_period(period)
+    expected = [
+      Time.new(2024, 5, 12, 14),
+    ]
+
+    assert_equal expected, actual
+  end
+
+  test 'daily schedule is_this_day? should match any day' do
+    assert_equal true, @daily.is_this_day?(Date.parse('2024-05-01'))
+  end
+
+  test 'daily schedule is_this_hour? should match correct time on any date' do
+    assert_equal true, @daily.is_this_hour?(Time.parse('2024-05-01 14:14:14'))
+  end
+
+  test 'daily schedule is_this_hour? should not match incorrect time' do
+    assert_equal false, @daily.is_this_hour?(Time.parse('2024-05-01 13:13:13'))
+  end
+
+  test 'weekly schedule is_this_day? should match correct day of any week' do
+    assert_equal true, @weekly.is_this_day?(Date.parse('2024-05-01'))
+  end
+
+  test 'weekly schedule is_this_day? should not match incorrect day of week' do
+    assert_equal false, @weekly.is_this_day?(Date.parse('2024-05-02'))
+  end
+
+  test 'monthly schedule is_this_day? should match correct day of month' do
+    assert_equal true, @monthly.is_this_day?(Date.parse('2024-05-12'))
+  end
+
+  test 'monthly schedule is_this_day? should not match incorrect day of month' do
+    assert_equal false, @monthly.is_this_day?(Date.parse('2024-05-13'))
   end
 
 end
