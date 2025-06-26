@@ -4,6 +4,7 @@ class RegularScheduleTest < ActiveSupport::TestCase
 
   setup do
     @daily = RegularSchedule.new(schedule_type: 'daily', hour_of_day: '14')
+    @weekdaily = RegularSchedule.new(schedule_type: 'weekdaily', hour_of_day: '14')
     @weekly = RegularSchedule.new(schedule_type: 'weekly', hour_of_day: '14', day_of_week: 'wednesday')
     @monthly = RegularSchedule.new(schedule_type: 'monthly', hour_of_day: '14', day_of_month: '12')
   end
@@ -12,6 +13,38 @@ class RegularScheduleTest < ActiveSupport::TestCase
     period = DatePeriod.parse('2024-05')
     actual = @daily.times_for_period(period)
     expected = (1..31).map { |n| Time.new(2024, 5, n, 14) }
+
+    assert_equal expected, actual
+  end
+
+  test 'weekdaily schedule times_for_period should match every weekday in month' do
+    period = DatePeriod.parse('2024-05')
+    actual = @weekdaily.times_for_period(period)
+    expected = [
+      Time.new(2024, 5, 1, 14),
+      Time.new(2024, 5, 2, 14),
+      Time.new(2024, 5, 3, 14),
+      Time.new(2024, 5, 6, 14),
+      Time.new(2024, 5, 7, 14),
+      Time.new(2024, 5, 8, 14),
+      Time.new(2024, 5, 9, 14),
+      Time.new(2024, 5, 10, 14),
+      Time.new(2024, 5, 13, 14),
+      Time.new(2024, 5, 14, 14),
+      Time.new(2024, 5, 15, 14),
+      Time.new(2024, 5, 16, 14),
+      Time.new(2024, 5, 17, 14),
+      Time.new(2024, 5, 20, 14),
+      Time.new(2024, 5, 21, 14),
+      Time.new(2024, 5, 22, 14),
+      Time.new(2024, 5, 23, 14),
+      Time.new(2024, 5, 24, 14),
+      Time.new(2024, 5, 27, 14),
+      Time.new(2024, 5, 28, 14),
+      Time.new(2024, 5, 29, 14),
+      Time.new(2024, 5, 30, 14),
+      Time.new(2024, 5, 31, 14),
+    ]
 
     assert_equal expected, actual
   end
@@ -50,6 +83,14 @@ class RegularScheduleTest < ActiveSupport::TestCase
 
   test 'daily schedule is_this_hour? should not match incorrect time' do
     assert_equal false, @daily.is_this_hour?(Time.parse('2024-05-01 13:13:13'))
+  end
+
+  test 'weekly schedule is_this_day? should match monday' do
+    assert_equal true, @weekdaily.is_this_day?(Date.parse('2024-05-06'))
+  end
+
+  test 'weekly schedule is_this_day? should not match sunday' do
+    assert_equal false, @weekdaily.is_this_day?(Date.parse('2024-05-05'))
   end
 
   test 'weekly schedule is_this_day? should match correct day of any week' do
