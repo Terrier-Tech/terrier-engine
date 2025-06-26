@@ -5,10 +5,10 @@ require 'terrier/logging/loggable'
 class RegularSchedule
   include Loggable
 
-  attr_reader :schedule_type, :hour_of_day, :day_of_week, :day_of_month,  :anchor
+  attr_reader :schedule_type, :hour_of_day, :day_of_week, :day_of_month, :anchor
 
   # @param [Hash] raw the raw attributes for the schedule
-  # @option raw [String] :schedule_type should be 'daily', 'weekly', 'monthly', or 'none'
+  # @option raw [String] :schedule_type should be 'daily', 'weekdaily', 'weekly', 'monthly', 'monthanchored', or 'none'
   # @option raw [String,Fixnum] :hour_of_day and integer between 0 and 23
   def initialize(raw)
     h = ActiveSupport::HashWithIndifferentAccess.new raw
@@ -50,6 +50,8 @@ class RegularSchedule
     case @schedule_type
     when 'daily'
       true
+    when 'weekdaily'
+      date.wday.between?(1, 5)
     when 'weekly'
       date.strftime('%A').downcase == @day_of_week
     when 'monthly'

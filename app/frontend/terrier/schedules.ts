@@ -44,6 +44,10 @@ export type DailySchedule = BaseSchedule & {
     schedule_type: 'daily'
 }
 
+export type WeekdailySchedule = BaseSchedule & {
+    schedule_type: 'weekdaily'
+}
+
 export type WeeklySchedule = BaseSchedule & {
     schedule_type: 'weekly'
     day_of_week: DayOfWeek
@@ -80,13 +84,14 @@ export type MonthAnchoredSchedule = BaseSchedule & {
 /**
  * A schedule for something that happens on a regular daily/weekly/monthly basis.
  */
-export type RegularSchedule = EmptySchedule | DailySchedule | WeeklySchedule | MonthlySchedule | MonthAnchoredSchedule
+export type RegularSchedule = EmptySchedule | DailySchedule | WeekdailySchedule | WeeklySchedule | MonthlySchedule | MonthAnchoredSchedule
 
 export type ScheduleType = RegularSchedule['schedule_type']
 
 const ScheduleTypeOptions = {
     none: "None",
     daily: "Daily",
+    weekdaily: "Every Weekday",
     weekly: "Weekly",
     monthly: "Monthly",
     monthanchored: "Anchored Date",
@@ -127,6 +132,7 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
             }
 
             this.renderSection(col, 'daily')
+            this.renderSection(col, 'weekdaily')
             this.renderSection(col, 'weekly')
             this.renderSection(col, 'monthly')
             this.renderSection(col, 'monthanchored')
@@ -149,6 +155,7 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
 
                 switch (scheduleType) {
                     case "daily":
+                    case "weekdaily":
                         this.renderDailyFields(row, this as TerrierFormFields<DailySchedule>)
                         break
                     case "weekly":
@@ -209,6 +216,7 @@ export class RegularScheduleFields extends TerrierFormFields<RegularSchedule> {
         const hour_of_day = raw.hour_of_day ?? '0'
         switch (schedule_type) {
             case 'daily':
+            case 'weekdaily':
                 return { schedule_type, hour_of_day }
             case 'weekly':
                 return { schedule_type, hour_of_day, day_of_week: raw.day_of_week ?? 'sunday' }
@@ -241,6 +249,8 @@ function describeRegular(schedule: RegularSchedule): string {
     switch (schedule.schedule_type) {
         case 'daily':
             return `Daily at ${timeString}`
+        case 'weekdaily':
+            return `Every Weekday at ${timeString}`
         case 'weekly':
             return `Every ${inflection.titleize(schedule.day_of_week ?? 'sunday')} at ${timeString}`
         case 'monthly':
