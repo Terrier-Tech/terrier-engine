@@ -25,23 +25,15 @@
 		flex: 0 0 auto;
 	}
 
-	> div, > label, > a.stretch {
+	> div, > label, > *.stretch, &.shrink-items > *.stretch {
 		// default is stretch
 		@include stretch;
 		min-width: 1em;
 		min-height: 1em;
-
-		&.shrink {
-			@include shrink;
-		}
 	}
 
-	&.shrink-items > div, &.shrink-items > label {
+	&.shrink-items > div, &.shrink-items > label, &.shrink-items > *.shrink, > *.shrink {
 		@include shrink;
-
-		&.stretch {
-			@include stretch;
-		}
 	}
 }
 
