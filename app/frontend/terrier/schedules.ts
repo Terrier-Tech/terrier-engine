@@ -1,9 +1,9 @@
-import {PartTag} from "tuff-core/parts"
-import * as inflection from "inflection"
-import Messages from "tuff-core/messages"
-import {Logger} from "tuff-core/logging"
 import dayjs from "dayjs"
-import {TerrierFormFields} from "./forms"
+import * as inflection from "inflection"
+import { Logger } from "tuff-core/logging"
+import Messages from "tuff-core/messages"
+import { PartTag } from "tuff-core/parts"
+import { TerrierFormFields } from "./forms"
 import TerrierPart from "./parts/terrier-part"
 
 const log = new Logger("Schedules")
@@ -23,7 +23,7 @@ const HoursOfDay = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
 export type HourOfDay = typeof HoursOfDay[number]
 
 const HourOfDayOptions = HoursOfDay.map(h => {
-    return {value: h.toString(), title: dayjs().hour(parseInt(h)).format('h A')}
+    return { value: h.toString(), title: dayjs().hour(parseInt(h)).format('h A') }
 })
 
 type BaseSchedule = {
@@ -35,7 +35,7 @@ const DaysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'fri
 export type DayOfWeek = typeof DaysOfWeek[number]
 
 const DayOfWeekOptions = DaysOfWeek.map(d => {
-    return {value: d.toString(), title: inflection.capitalize(d)}
+    return { value: d.toString(), title: inflection.capitalize(d) }
 })
 
 export type DailySchedule = BaseSchedule & {
@@ -52,7 +52,7 @@ const DaysOfMonth = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '1
 export type DayOfMonth = typeof DaysOfMonth[number]
 
 const DayOfMonthOptions = DaysOfMonth.map(d => {
-    return {value: d, title: inflection.ordinalize(d)}
+    return { value: d, title: inflection.ordinalize(d) }
 })
 
 export type MonthlySchedule = BaseSchedule & {
@@ -84,7 +84,7 @@ export type CombinedRegularSchedule = {
 
 export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSchedule> {
 
-    scheduleTypeChangeKey = Messages.typedKey<{schedule_type: ScheduleType}>()
+    scheduleTypeChangeKey = Messages.typedKey<{ schedule_type: ScheduleType }>()
 
     /**
      * Set false to not render the 'none' option
@@ -117,7 +117,7 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
 
             col.label('.caption-size', label => {
                 this.radio(label, 'schedule_type', 'daily')
-                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'daily'})
+                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'daily' })
                 label.span().text("Deliver Daily")
             })
             if (this.data.schedule_type == 'daily') {
@@ -128,26 +128,26 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
 
             col.label('.caption-size', label => {
                 this.radio(label, 'schedule_type', 'weekly')
-                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'weekly'})
+                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'weekly' })
                 label.span().text("Deliver Weekly")
             })
             if (this.data.schedule_type == 'weekly') {
                 col.div('.schedule-type-fields.weekly.tt-flex.gap', row => {
                     this.select(row, 'day_of_week', DayOfWeekOptions)
-                        .data({tooltip: "Day of the week"})
+                        .data({ tooltip: "Day of the week" })
                     this.select(row, 'hour_of_day', HourOfDayOptions)
                 })
             }
 
             col.label('.caption-size', label => {
                 this.radio(label, 'schedule_type', 'monthly')
-                    .emitChange(this.scheduleTypeChangeKey, {schedule_type: 'monthly'})
+                    .emitChange(this.scheduleTypeChangeKey, { schedule_type: 'monthly' })
                 label.span().text("Deliver Monthly")
             })
             if (this.data.schedule_type == 'monthly') {
                 col.div('.schedule-type-fields.monthly.tt-flex.gap', row => {
                     this.select(row, 'day_of_month', DayOfMonthOptions)
-                        .data({tooltip: "Day of the month"})
+                        .data({ tooltip: "Day of the month" })
                     this.select(row, 'hour_of_day', HourOfDayOptions)
                 })
             }
@@ -165,13 +165,13 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
         log.info(`Serializing schedule type ${schedule_type}`, raw)
         switch (schedule_type) {
             case 'none':
-                return {schedule_type}
+                return { schedule_type }
             case 'daily':
-                return {schedule_type, hour_of_day}
+                return { schedule_type, hour_of_day }
             case 'weekly':
-                return {schedule_type, hour_of_day, day_of_week: raw.day_of_week || 'sunday'}
+                return { schedule_type, hour_of_day, day_of_week: raw.day_of_week ?? 'sunday' }
             case 'monthly':
-                return {schedule_type, hour_of_day, day_of_month: raw.day_of_month || '1'}
+                return { schedule_type, hour_of_day, day_of_month: raw.day_of_month ?? '1' }
             default:
                 throw `Invalid schedule type: ${schedule_type}`
         }
