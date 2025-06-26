@@ -1864,819 +1864,825 @@ glyphs:
 - glyph: tmp/glyp/released.svg
   name: released
   code: 57964
+- glyph: tmp/glyp/remote_camera.svg
+  name: remote_camera
+  code: 57965
+- glyph: tmp/glyp/remote_photo.svg
+  name: remote_photo
+  code: 57966
 - glyph: tmp/glyp/remove.svg
   name: remove
-  code: 57965
+  code: 57967
 - glyph: tmp/glyp/renew.svg
   name: renew
-  code: 57966
+  code: 57968
 - glyph: tmp/glyp/renewal.svg
   name: renewal
-  code: 57967
+  code: 57969
 - glyph: tmp/glyp/report.svg
   name: report
-  code: 57968
+  code: 57970
 - glyph: tmp/glyp/required_input.svg
   name: required_input
-  code: 57969
+  code: 57971
 - glyph: tmp/glyp/reschedule.svg
   name: reschedule
-  code: 57970
+  code: 57972
 - glyph: tmp/glyp/restaurant_bar.svg
   name: restaurant_bar
-  code: 57971
+  code: 57973
 - glyph: tmp/glyp/revenue.svg
   name: revenue
-  code: 57972
+  code: 57974
 - glyph: tmp/glyp/review.svg
   name: review
-  code: 57973
+  code: 57975
 - glyph: tmp/glyp/rfid.svg
   name: rfid
-  code: 57974
+  code: 57976
 - glyph: tmp/glyp/ride_along.svg
   name: ride_along
-  code: 57975
+  code: 57977
 - glyph: tmp/glyp/rodent_exclusion.svg
   name: rodent_exclusion
-  code: 57976
+  code: 57978
 - glyph: tmp/glyp/role_admin.svg
   name: role_admin
-  code: 57977
+  code: 57979
 - glyph: tmp/glyp/role_customer.svg
   name: role_customer
-  code: 57978
+  code: 57980
 - glyph: tmp/glyp/role_super.svg
   name: role_super
-  code: 57979
+  code: 57981
 - glyph: tmp/glyp/role_tech.svg
   name: role_tech
-  code: 57980
+  code: 57982
 - glyph: tmp/glyp/roster.svg
   name: roster
-  code: 57981
+  code: 57983
 - glyph: tmp/glyp/route_change.svg
   name: route_change
-  code: 57982
+  code: 57984
 - glyph: tmp/glyp/route_optimization.svg
   name: route_optimization
-  code: 57983
+  code: 57985
 - glyph: tmp/glyp/rows.svg
   name: rows
-  code: 57984
+  code: 57986
 - glyph: tmp/glyp/ruby.svg
   name: ruby
-  code: 57985
+  code: 57987
 - glyph: tmp/glyp/ruler.svg
   name: ruler
-  code: 57986
+  code: 57988
 - glyph: tmp/glyp/sales.svg
   name: sales
-  code: 57987
+  code: 57989
 - glyph: tmp/glyp/sales_contest.svg
   name: sales_contest
-  code: 57988
+  code: 57990
 - glyph: tmp/glyp/sales_pipeline.svg
   name: sales_pipeline
-  code: 57989
+  code: 57991
 - glyph: tmp/glyp/sales_tax.svg
   name: sales_tax
-  code: 57990
+  code: 57992
 - glyph: tmp/glyp/sales_tax_exemption.svg
   name: sales_tax_exemption
-  code: 57991
+  code: 57993
 - glyph: tmp/glyp/schedule_lock.svg
   name: schedule_lock
-  code: 57992
+  code: 57994
 - glyph: tmp/glyp/schedule_lock_afternoon.svg
   name: schedule_lock_afternoon
-  code: 57993
+  code: 57995
 - glyph: tmp/glyp/schedule_lock_day.svg
   name: schedule_lock_day
-  code: 57994
+  code: 57996
 - glyph: tmp/glyp/schedule_lock_exact.svg
   name: schedule_lock_exact
-  code: 57995
+  code: 57997
 - glyph: tmp/glyp/schedule_lock_four_hour.svg
   name: schedule_lock_four_hour
-  code: 57996
+  code: 57998
 - glyph: tmp/glyp/schedule_lock_morning.svg
   name: schedule_lock_morning
-  code: 57997
+  code: 57999
 - glyph: tmp/glyp/schedule_lock_none.svg
   name: schedule_lock_none
-  code: 57998
+  code: 58000
 - glyph: tmp/glyp/schedule_lock_two_day.svg
   name: schedule_lock_two_day
-  code: 57999
+  code: 58001
 - glyph: tmp/glyp/schedule_lock_two_hour.svg
   name: schedule_lock_two_hour
-  code: 58000
+  code: 58002
 - glyph: tmp/glyp/schedule_lock_week.svg
   name: schedule_lock_week
-  code: 58001
+  code: 58003
 - glyph: tmp/glyp/schedule_tyoe_every.svg
   name: schedule_tyoe_every
-  code: 58002
+  code: 58004
 - glyph: tmp/glyp/schedule_type_every.svg
   name: schedule_type_every
-  code: 58003
+  code: 58005
 - glyph: tmp/glyp/schedule_type_none.svg
   name: schedule_type_none
-  code: 58004
+  code: 58006
 - glyph: tmp/glyp/schedule_type_on_demand.svg
   name: schedule_type_on_demand
-  code: 58005
+  code: 58007
 - glyph: tmp/glyp/schedule_type_schedule.svg
   name: schedule_type_schedule
-  code: 58006
+  code: 58008
 - glyph: tmp/glyp/scheduled.svg
   name: scheduled
-  code: 58007
+  code: 58009
 - glyph: tmp/glyp/scheduling.svg
   name: scheduling
-  code: 58008
+  code: 58010
 - glyph: tmp/glyp/scheduling_comment.svg
   name: scheduling_comment
-  code: 58009
+  code: 58011
 - glyph: tmp/glyp/school_church.svg
   name: school_church
-  code: 58010
+  code: 58012
 - glyph: tmp/glyp/scope.svg
   name: scope
-  code: 58011
+  code: 58013
 - glyph: tmp/glyp/scoreboard.svg
   name: scoreboard
-  code: 58012
+  code: 58014
 - glyph: tmp/glyp/scrape.svg
   name: scrape
-  code: 58013
+  code: 58015
 - glyph: tmp/glyp/script.svg
   name: script
-  code: 58014
+  code: 58016
 - glyph: tmp/glyp/search.svg
   name: search
-  code: 58015
+  code: 58017
 - glyph: tmp/glyp/seeding.svg
   name: seeding
-  code: 58016
+  code: 58018
 - glyph: tmp/glyp/segment.svg
   name: segment
-  code: 58017
+  code: 58019
 - glyph: tmp/glyp/send.svg
   name: send
-  code: 58018
+  code: 58020
 - glyph: tmp/glyp/sent.svg
   name: sent
-  code: 58019
+  code: 58021
 - glyph: tmp/glyp/sentricon.svg
   name: sentricon
-  code: 58020
+  code: 58022
 - glyph: tmp/glyp/service_agreement.svg
   name: service_agreement
-  code: 58021
+  code: 58023
 - glyph: tmp/glyp/service_digest.svg
   name: service_digest
-  code: 58022
+  code: 58024
 - glyph: tmp/glyp/service_form.svg
   name: service_form
-  code: 58023
+  code: 58025
 - glyph: tmp/glyp/service_form_new.svg
   name: service_form_new
-  code: 58024
+  code: 58026
 - glyph: tmp/glyp/service_form_settings.svg
   name: service_form_settings
-  code: 58025
+  code: 58027
 - glyph: tmp/glyp/service_form_template.svg
   name: service_form_template
-  code: 58026
+  code: 58028
 - glyph: tmp/glyp/service_miscellaneous.svg
   name: service_miscellaneous
-  code: 58027
+  code: 58029
 - glyph: tmp/glyp/service_reminder.svg
   name: service_reminder
-  code: 58028
+  code: 58030
 - glyph: tmp/glyp/service_report.svg
   name: service_report
-  code: 58029
+  code: 58031
 - glyph: tmp/glyp/service_request.svg
   name: service_request
-  code: 58030
+  code: 58032
 - glyph: tmp/glyp/services.svg
   name: services
-  code: 58031
+  code: 58033
 - glyph: tmp/glyp/settings.svg
   name: settings
-  code: 58032
+  code: 58034
 - glyph: tmp/glyp/setup.svg
   name: setup
-  code: 58033
+  code: 58035
 - glyph: tmp/glyp/signature.svg
   name: signature
-  code: 58034
+  code: 58036
 - glyph: tmp/glyp/simulator.svg
   name: simulator
-  code: 58035
+  code: 58037
 - glyph: tmp/glyp/site_map.svg
   name: site_map
-  code: 58036
+  code: 58038
 - glyph: tmp/glyp/site_map_annotation.svg
   name: site_map_annotation
-  code: 58037
+  code: 58039
 - glyph: tmp/glyp/site_map_chemical.svg
   name: site_map_chemical
-  code: 58038
+  code: 58040
 - glyph: tmp/glyp/site_map_edit_details.svg
   name: site_map_edit_details
-  code: 58039
+  code: 58041
 - glyph: tmp/glyp/site_map_edit_geo.svg
   name: site_map_edit_geo
-  code: 58040
+  code: 58042
 - glyph: tmp/glyp/site_map_equipment.svg
   name: site_map_equipment
-  code: 58041
+  code: 58043
 - glyph: tmp/glyp/site_map_exterior.svg
   name: site_map_exterior
-  code: 58042
+  code: 58044
 - glyph: tmp/glyp/site_map_foundation.svg
   name: site_map_foundation
-  code: 58043
+  code: 58045
 - glyph: tmp/glyp/site_map_icon.svg
   name: site_map_icon
-  code: 58044
+  code: 58046
 - glyph: tmp/glyp/site_map_interior.svg
   name: site_map_interior
-  code: 58045
+  code: 58047
 - glyph: tmp/glyp/site_map_label.svg
   name: site_map_label
-  code: 58046
+  code: 58048
 - glyph: tmp/glyp/site_map_perimeter.svg
   name: site_map_perimeter
-  code: 58047
+  code: 58049
 - glyph: tmp/glyp/site_map_settings_left.svg
   name: site_map_settings_left
-  code: 58048
+  code: 58050
 - glyph: tmp/glyp/site_map_settings_right.svg
   name: site_map_settings_right
-  code: 58049
+  code: 58051
 - glyph: tmp/glyp/site_map_template.svg
   name: site_map_template
-  code: 58050
+  code: 58052
 - glyph: tmp/glyp/skill.svg
   name: skill
-  code: 58051
+  code: 58053
 - glyph: tmp/glyp/skip.svg
   name: skip
-  code: 58052
+  code: 58054
 - glyph: tmp/glyp/slope.svg
   name: slope
-  code: 58053
+  code: 58055
 - glyph: tmp/glyp/smart_traps.svg
   name: smart_traps
-  code: 58054
+  code: 58056
 - glyph: tmp/glyp/sms.svg
   name: sms
-  code: 58055
+  code: 58057
 - glyph: tmp/glyp/snow_removal.svg
   name: snow_removal
-  code: 58056
+  code: 58058
 - glyph: tmp/glyp/sort.svg
   name: sort
-  code: 58057
+  code: 58059
 - glyph: tmp/glyp/special.svg
   name: special
-  code: 58058
+  code: 58060
 - glyph: tmp/glyp/split.svg
   name: split
-  code: 58059
+  code: 58061
 - glyph: tmp/glyp/spp_scorecard.svg
   name: spp_scorecard
-  code: 58060
+  code: 58062
 - glyph: tmp/glyp/square_edge.svg
   name: square_edge
-  code: 58061
+  code: 58063
 - glyph: tmp/glyp/start_sheet.svg
   name: start_sheet
-  code: 58062
+  code: 58064
 - glyph: tmp/glyp/start_time.svg
   name: start_time
-  code: 58063
+  code: 58065
 - glyph: tmp/glyp/state_ak.svg
   name: state_ak
-  code: 58064
+  code: 58066
 - glyph: tmp/glyp/state_al.svg
   name: state_al
-  code: 58065
+  code: 58067
 - glyph: tmp/glyp/state_ar.svg
   name: state_ar
-  code: 58066
+  code: 58068
 - glyph: tmp/glyp/state_az.svg
   name: state_az
-  code: 58067
+  code: 58069
 - glyph: tmp/glyp/state_ca.svg
   name: state_ca
-  code: 58068
+  code: 58070
 - glyph: tmp/glyp/state_co.svg
   name: state_co
-  code: 58069
+  code: 58071
 - glyph: tmp/glyp/state_ct.svg
   name: state_ct
-  code: 58070
+  code: 58072
 - glyph: tmp/glyp/state_dc.svg
   name: state_dc
-  code: 58071
+  code: 58073
 - glyph: tmp/glyp/state_de.svg
   name: state_de
-  code: 58072
+  code: 58074
 - glyph: tmp/glyp/state_fl.svg
   name: state_fl
-  code: 58073
+  code: 58075
 - glyph: tmp/glyp/state_ga.svg
   name: state_ga
-  code: 58074
+  code: 58076
 - glyph: tmp/glyp/state_hi.svg
   name: state_hi
-  code: 58075
+  code: 58077
 - glyph: tmp/glyp/state_ia.svg
   name: state_ia
-  code: 58076
+  code: 58078
 - glyph: tmp/glyp/state_id.svg
   name: state_id
-  code: 58077
+  code: 58079
 - glyph: tmp/glyp/state_il.svg
   name: state_il
-  code: 58078
+  code: 58080
 - glyph: tmp/glyp/state_in.svg
   name: state_in
-  code: 58079
+  code: 58081
 - glyph: tmp/glyp/state_ks.svg
   name: state_ks
-  code: 58080
+  code: 58082
 - glyph: tmp/glyp/state_ky.svg
   name: state_ky
-  code: 58081
+  code: 58083
 - glyph: tmp/glyp/state_la.svg
   name: state_la
-  code: 58082
+  code: 58084
 - glyph: tmp/glyp/state_ma.svg
   name: state_ma
-  code: 58083
+  code: 58085
 - glyph: tmp/glyp/state_mb.svg
   name: state_mb
-  code: 58084
+  code: 58086
 - glyph: tmp/glyp/state_md.svg
   name: state_md
-  code: 58085
+  code: 58087
 - glyph: tmp/glyp/state_me.svg
   name: state_me
-  code: 58086
+  code: 58088
 - glyph: tmp/glyp/state_mi.svg
   name: state_mi
-  code: 58087
+  code: 58089
 - glyph: tmp/glyp/state_mn.svg
   name: state_mn
-  code: 58088
+  code: 58090
 - glyph: tmp/glyp/state_mo.svg
   name: state_mo
-  code: 58089
+  code: 58091
 - glyph: tmp/glyp/state_ms.svg
   name: state_ms
-  code: 58090
+  code: 58092
 - glyph: tmp/glyp/state_mt.svg
   name: state_mt
-  code: 58091
+  code: 58093
 - glyph: tmp/glyp/state_nc.svg
   name: state_nc
-  code: 58092
+  code: 58094
 - glyph: tmp/glyp/state_nd.svg
   name: state_nd
-  code: 58093
+  code: 58095
 - glyph: tmp/glyp/state_ne.svg
   name: state_ne
-  code: 58094
+  code: 58096
 - glyph: tmp/glyp/state_nh.svg
   name: state_nh
-  code: 58095
+  code: 58097
 - glyph: tmp/glyp/state_nj.svg
   name: state_nj
-  code: 58096
+  code: 58098
 - glyph: tmp/glyp/state_nm.svg
   name: state_nm
-  code: 58097
+  code: 58099
 - glyph: tmp/glyp/state_nv.svg
   name: state_nv
-  code: 58098
+  code: 58100
 - glyph: tmp/glyp/state_ny.svg
   name: state_ny
-  code: 58099
+  code: 58101
 - glyph: tmp/glyp/state_oh.svg
   name: state_oh
-  code: 58100
+  code: 58102
 - glyph: tmp/glyp/state_ok.svg
   name: state_ok
-  code: 58101
+  code: 58103
 - glyph: tmp/glyp/state_or.svg
   name: state_or
-  code: 58102
+  code: 58104
 - glyph: tmp/glyp/state_pa.svg
   name: state_pa
-  code: 58103
+  code: 58105
 - glyph: tmp/glyp/state_ri.svg
   name: state_ri
-  code: 58104
+  code: 58106
 - glyph: tmp/glyp/state_sc.svg
   name: state_sc
-  code: 58105
+  code: 58107
 - glyph: tmp/glyp/state_sd.svg
   name: state_sd
-  code: 58106
+  code: 58108
 - glyph: tmp/glyp/state_tn.svg
   name: state_tn
-  code: 58107
+  code: 58109
 - glyph: tmp/glyp/state_tx.svg
   name: state_tx
-  code: 58108
+  code: 58110
 - glyph: tmp/glyp/state_ut.svg
   name: state_ut
-  code: 58109
+  code: 58111
 - glyph: tmp/glyp/state_va.svg
   name: state_va
-  code: 58110
+  code: 58112
 - glyph: tmp/glyp/state_vt.svg
   name: state_vt
-  code: 58111
+  code: 58113
 - glyph: tmp/glyp/state_wa.svg
   name: state_wa
-  code: 58112
+  code: 58114
 - glyph: tmp/glyp/state_wi.svg
   name: state_wi
-  code: 58113
+  code: 58115
 - glyph: tmp/glyp/state_wv.svg
   name: state_wv
-  code: 58114
+  code: 58116
 - glyph: tmp/glyp/state_wy.svg
   name: state_wy
-  code: 58115
+  code: 58117
 - glyph: tmp/glyp/statement.svg
   name: statement
-  code: 58116
+  code: 58118
 - glyph: tmp/glyp/states.svg
   name: states
-  code: 58117
+  code: 58119
 - glyph: tmp/glyp/steps.svg
   name: steps
-  code: 58118
+  code: 58120
 - glyph: tmp/glyp/sticky.svg
   name: sticky
-  code: 58119
+  code: 58121
 - glyph: tmp/glyp/stop_time.svg
   name: stop_time
-  code: 58120
+  code: 58122
 - glyph: tmp/glyp/store_material.svg
   name: store_material
-  code: 58121
+  code: 58123
 - glyph: tmp/glyp/store_order.svg
   name: store_order
-  code: 58122
+  code: 58124
 - glyph: tmp/glyp/store_order_back_order.svg
   name: store_order_back_order
-  code: 58123
+  code: 58125
 - glyph: tmp/glyp/store_order_cancelled.svg
   name: store_order_cancelled
-  code: 58124
+  code: 58126
 - glyph: tmp/glyp/store_order_complete.svg
   name: store_order_complete
-  code: 58125
+  code: 58127
 - glyph: tmp/glyp/store_order_pending.svg
   name: store_order_pending
-  code: 58126
+  code: 58128
 - glyph: tmp/glyp/store_order_pending_return.svg
   name: store_order_pending_return
-  code: 58127
+  code: 58129
 - glyph: tmp/glyp/store_order_pre_order.svg
   name: store_order_pre_order
-  code: 58128
+  code: 58130
 - glyph: tmp/glyp/store_order_returned.svg
   name: store_order_returned
-  code: 58129
+  code: 58131
 - glyph: tmp/glyp/stores.svg
   name: stores
-  code: 58130
+  code: 58132
 - glyph: tmp/glyp/styling.svg
   name: styling
-  code: 58131
+  code: 58133
 - glyph: tmp/glyp/subscribe.svg
   name: subscribe
-  code: 58132
+  code: 58134
 - glyph: tmp/glyp/subscription.svg
   name: subscription
-  code: 58133
+  code: 58135
 - glyph: tmp/glyp/supplemental.svg
   name: supplemental
-  code: 58134
+  code: 58136
 - glyph: tmp/glyp/support.svg
   name: support
-  code: 58135
+  code: 58137
 - glyph: tmp/glyp/sync.svg
   name: sync
-  code: 58136
+  code: 58138
 - glyph: tmp/glyp/sync_down.svg
   name: sync_down
-  code: 58137
+  code: 58139
 - glyph: tmp/glyp/sync_up.svg
   name: sync_up
-  code: 58138
+  code: 58140
 - glyph: tmp/glyp/table.svg
   name: table
-  code: 58139
+  code: 58141
 - glyph: tmp/glyp/tablet.svg
   name: tablet
-  code: 58140
+  code: 58142
 - glyph: tmp/glyp/tablets.svg
   name: tablets
-  code: 58141
+  code: 58143
 - glyph: tmp/glyp/tactacam.svg
   name: tactacam
-  code: 58142
+  code: 58144
 - glyph: tmp/glyp/tag.svg
   name: tag
-  code: 58143
+  code: 58145
 - glyph: tmp/glyp/tag_manager.svg
   name: tag_manager
-  code: 58144
+  code: 58146
 - glyph: tmp/glyp/tags.svg
   name: tags
-  code: 58145
+  code: 58147
 - glyph: tmp/glyp/task_runs.svg
   name: task_runs
-  code: 58146
+  code: 58148
 - glyph: tmp/glyp/taxability.svg
   name: taxability
-  code: 58147
+  code: 58149
 - glyph: tmp/glyp/tech_cert.svg
   name: tech_cert
-  code: 58148
+  code: 58150
 - glyph: tmp/glyp/tech_cert_type.svg
   name: tech_cert_type
-  code: 58149
+  code: 58151
 - glyph: tmp/glyp/tech_pest_sightings.svg
   name: tech_pest_sightings
-  code: 58150
+  code: 58152
 - glyph: tmp/glyp/technician.svg
   name: technician
-  code: 58151
+  code: 58153
 - glyph: tmp/glyp/technician_approach.svg
   name: technician_approach
-  code: 58152
+  code: 58154
 - glyph: tmp/glyp/template.svg
   name: template
-  code: 58153
+  code: 58155
 - glyph: tmp/glyp/termite_fumigation.svg
   name: termite_fumigation
-  code: 58154
+  code: 58156
 - glyph: tmp/glyp/terrier.svg
   name: terrier
-  code: 58155
+  code: 58157
 - glyph: tmp/glyp/terrier_hub.svg
   name: terrier_hub
-  code: 58156
+  code: 58158
 - glyph: tmp/glyp/terrier_sync.svg
   name: terrier_sync
-  code: 58157
+  code: 58159
 - glyph: tmp/glyp/territory.svg
   name: territory
-  code: 58158
+  code: 58160
 - glyph: tmp/glyp/text.svg
   name: text
-  code: 58159
+  code: 58161
 - glyph: tmp/glyp/thermometer.svg
   name: thermometer
-  code: 58160
+  code: 58162
 - glyph: tmp/glyp/third_party.svg
   name: third_party
-  code: 58161
+  code: 58163
 - glyph: tmp/glyp/third_party_billing.svg
   name: third_party_billing
-  code: 58162
+  code: 58164
 - glyph: tmp/glyp/threshold.svg
   name: threshold
-  code: 58163
+  code: 58165
 - glyph: tmp/glyp/ticket.svg
   name: ticket
-  code: 58164
+  code: 58166
 - glyph: tmp/glyp/ticket_type.svg
   name: ticket_type
-  code: 58165
+  code: 58167
 - glyph: tmp/glyp/tickets.svg
   name: tickets
-  code: 58166
+  code: 58168
 - glyph: tmp/glyp/tidy.svg
   name: tidy
-  code: 58167
+  code: 58169
 - glyph: tmp/glyp/time.svg
   name: time
-  code: 58168
+  code: 58170
 - glyph: tmp/glyp/time_entry.svg
   name: time_entry
-  code: 58169
+  code: 58171
 - glyph: tmp/glyp/timeline.svg
   name: timeline
-  code: 58170
+  code: 58172
 - glyph: tmp/glyp/timer.svg
   name: timer
-  code: 58171
+  code: 58173
 - glyph: tmp/glyp/toolbox.svg
   name: toolbox
-  code: 58172
+  code: 58174
 - glyph: tmp/glyp/tqi.svg
   name: tqi
-  code: 58173
+  code: 58175
 - glyph: tmp/glyp/tracker.svg
   name: tracker
-  code: 58174
+  code: 58176
 - glyph: tmp/glyp/tracking.svg
   name: tracking
-  code: 58175
+  code: 58177
 - glyph: tmp/glyp/training_course.svg
   name: training_course
-  code: 58176
+  code: 58178
 - glyph: tmp/glyp/treatment_split.svg
   name: treatment_split
-  code: 58177
+  code: 58179
 - glyph: tmp/glyp/trends.svg
   name: trends
-  code: 58178
+  code: 58180
 - glyph: tmp/glyp/trial.svg
   name: trial
-  code: 58179
+  code: 58181
 - glyph: tmp/glyp/trip_charge.svg
   name: trip_charge
-  code: 58180
+  code: 58182
 - glyph: tmp/glyp/ui_type.svg
   name: ui_type
-  code: 58181
+  code: 58183
 - glyph: tmp/glyp/unarchive.svg
   name: unarchive
-  code: 58182
+  code: 58184
 - glyph: tmp/glyp/unassign.svg
   name: unassign
-  code: 58183
+  code: 58185
 - glyph: tmp/glyp/unassign_all.svg
   name: unassign_all
-  code: 58184
+  code: 58186
 - glyph: tmp/glyp/unchecked.svg
   name: unchecked
-  code: 58185
+  code: 58187
 - glyph: tmp/glyp/undo.svg
   name: undo
-  code: 58186
+  code: 58188
 - glyph: tmp/glyp/unfavorite.svg
   name: unfavorite
-  code: 58187
+  code: 58189
 - glyph: tmp/glyp/unit_sweep.svg
   name: unit_sweep
-  code: 58188
+  code: 58190
 - glyph: tmp/glyp/unit_tag.svg
   name: unit_tag
-  code: 58189
+  code: 58191
 - glyph: tmp/glyp/university.svg
   name: university
-  code: 58190
+  code: 58192
 - glyph: tmp/glyp/unlocked.svg
   name: unlocked
-  code: 58191
+  code: 58193
 - glyph: tmp/glyp/unmute.svg
   name: unmute
-  code: 58192
+  code: 58194
 - glyph: tmp/glyp/unscheduled.svg
   name: unscheduled
-  code: 58193
+  code: 58195
 - glyph: tmp/glyp/update_check_positions.svg
   name: update_check_positions
-  code: 58194
+  code: 58196
 - glyph: tmp/glyp/upload.svg
   name: upload
-  code: 58195
+  code: 58197
 - glyph: tmp/glyp/user.svg
   name: user
-  code: 58196
+  code: 58198
 - glyph: tmp/glyp/user_credit.svg
   name: user_credit
-  code: 58197
+  code: 58199
 - glyph: tmp/glyp/user_tags.svg
   name: user_tags
-  code: 58198
+  code: 58200
 - glyph: tmp/glyp/users.svg
   name: users
-  code: 58199
+  code: 58201
 - glyph: tmp/glyp/utility.svg
   name: utility
-  code: 58200
+  code: 58202
 - glyph: tmp/glyp/vacation.svg
   name: vacation
-  code: 58201
+  code: 58203
 - glyph: tmp/glyp/vacuum.svg
   name: vacuum
-  code: 58202
+  code: 58204
 - glyph: tmp/glyp/variant.svg
   name: variant
-  code: 58203
+  code: 58205
 - glyph: tmp/glyp/vendor.svg
   name: vendor
-  code: 58204
+  code: 58206
 - glyph: tmp/glyp/versions.svg
   name: versions
-  code: 58205
+  code: 58207
 - glyph: tmp/glyp/video.svg
   name: video
-  code: 58206
+  code: 58208
 - glyph: tmp/glyp/visible.svg
   name: visible
-  code: 58207
+  code: 58209
 - glyph: tmp/glyp/warehouse.svg
   name: warehouse
-  code: 58208
+  code: 58210
 - glyph: tmp/glyp/wdi.svg
   name: wdi
-  code: 58209
+  code: 58211
 - glyph: tmp/glyp/wdi_az.svg
   name: wdi_az
-  code: 58210
+  code: 58212
 - glyph: tmp/glyp/wdi_ca.svg
   name: wdi_ca
-  code: 58211
+  code: 58213
 - glyph: tmp/glyp/wdi_npma.svg
   name: wdi_npma
-  code: 58212
+  code: 58214
 - glyph: tmp/glyp/wdi_nv.svg
   name: wdi_nv
-  code: 58213
+  code: 58215
 - glyph: tmp/glyp/wdo.svg
   name: wdo
-  code: 58214
+  code: 58216
 - glyph: tmp/glyp/web_dusting.svg
   name: web_dusting
-  code: 58215
+  code: 58217
 - glyph: tmp/glyp/website.svg
   name: website
-  code: 58216
+  code: 58218
 - glyph: tmp/glyp/wildlife.svg
   name: wildlife
-  code: 58217
+  code: 58219
 - glyph: tmp/glyp/wildlife_exclusion.svg
   name: wildlife_exclusion
-  code: 58218
+  code: 58220
 - glyph: tmp/glyp/winter_check.svg
   name: winter_check
-  code: 58219
+  code: 58221
 - glyph: tmp/glyp/wizard.svg
   name: wizard
-  code: 58220
+  code: 58222
 - glyph: tmp/glyp/work.svg
   name: work
-  code: 58221
+  code: 58223
 - glyph: tmp/glyp/work_class.svg
   name: work_class
-  code: 58222
+  code: 58224
 - glyph: tmp/glyp/work_code.svg
   name: work_code
-  code: 58223
+  code: 58225
 - glyph: tmp/glyp/work_order.svg
   name: work_order
-  code: 58224
+  code: 58226
 - glyph: tmp/glyp/work_production.svg
   name: work_production
-  code: 58225
+  code: 58227
 - glyph: tmp/glyp/work_progress.svg
   name: work_progress
-  code: 58226
+  code: 58228
 - glyph: tmp/glyp/work_yield.svg
   name: work_yield
-  code: 58227
+  code: 58229
 - glyph: tmp/glyp/year.svg
   name: year
-  code: 58228
+  code: 58230
 - glyph: tmp/glyp/yield.svg
   name: yield
-  code: 58229
+  code: 58231
 - glyph: tmp/glyp/zip_code.svg
   name: zip_code
-  code: 58230
+  code: 58232
 - glyph: tmp/glyp/zone_adjacent.svg
   name: zone_adjacent
-  code: 58231
+  code: 58233
 - glyph: tmp/glyp/zone_check.svg
   name: zone_check
-  code: 58232
+  code: 58234
 - glyph: tmp/glyp/zone_production.svg
   name: zone_production
-  code: 58233
+  code: 58235
 - glyph: tmp/glyp/zone_remote.svg
   name: zone_remote
-  code: 58234
+  code: 58236
 - glyph: tmp/glyp/zoom.svg
   name: zoom
-  code: 58235
+  code: 58237
 - glyph: tmp/glyp/zoom_fit.svg
   name: zoom_fit
-  code: 58236
+  code: 58238
