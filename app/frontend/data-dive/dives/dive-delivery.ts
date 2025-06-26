@@ -269,7 +269,7 @@ class DiveDistributionModal extends ModalPart<DiveDistributionEditorState> {
 
 
     renderContent(parent: PartTag): void {
-        parent.div(".tt-flex.padded.large-gap", row => {
+        parent.div(".tt-grid.padded.large-gap", row => {
             row.div('.stretch.tt-flex.column.gap', col => {
                 col.h3(".glyp-setup.text-center").text("Schedule")
                 this.scheduleFields.render(col)
