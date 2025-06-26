@@ -101,10 +101,6 @@ export class RegularScheduleFields extends TerrierFormFields<CombinedRegularSche
         })
     }
 
-    get parentClasses(): Array<string> {
-        return ['tt-flex', 'column', 'gap', 'regular-schedule-form', 'tt-form']
-    }
-
     render(parent: PartTag): any {
         parent.div('.tt-flex.column.gap.regular-schedule-form.tt-form', col => {
             if (this.showNoneOption) {
