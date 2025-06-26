@@ -68,4 +68,58 @@ class RegularScheduleTest < ActiveSupport::TestCase
     assert_equal false, @monthly.is_this_day?(Date.parse('2024-05-13'))
   end
 
+  test 'monthanchored schedule is_this_day? first_day should match first day of month' do
+    schedule = month_anchored_schedule(anchor: 'first_day')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-01'))
+  end
+
+  test 'monthanchored schedule is_this_day? first_day should not match second day of month' do
+    schedule = month_anchored_schedule(anchor: 'first_day')
+    assert_equal false, schedule.is_this_day?(Date.parse('2024-05-02'))
+  end
+
+  test 'monthanchored schedule is_this_day? first_weekday should match first of month starting on a weekday' do
+    schedule = month_anchored_schedule(anchor: 'first_weekday')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-01'))
+  end
+
+  test 'monthanchored schedule is_this_day? first_weekday should match first monday of month starting on a weekend' do
+    schedule = month_anchored_schedule(anchor: 'first_weekday')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-06-03'))
+  end
+
+  test 'monthanchored schedule is_this_day? first_weekday should not match first of month starting on a weekend' do
+    schedule = month_anchored_schedule(anchor: 'first_weekday')
+    assert_equal false, schedule.is_this_day?(Date.parse('2024-06-01'))
+  end
+
+  test 'monthanchored schedule is_this_day? last_weekday should match last day of month ending on a weekday' do
+    schedule = month_anchored_schedule(anchor: 'last_weekday')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-07-31'))
+  end
+
+  test 'monthanchored schedule is_this_day? last_weekday should match last friday of month ending on a weekend' do
+    schedule = month_anchored_schedule(anchor: 'last_weekday')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-06-28'))
+  end
+
+  test 'monthanchored schedule is_this_day? last_weekday should not match saturday of month' do
+    schedule = month_anchored_schedule(anchor: 'last_weekday')
+    assert_equal false, schedule.is_this_day?(Date.parse('2024-05-11'))
+  end
+
+  test 'monthanchored schedule is_this_day? last_day should match last day of month' do
+    schedule = month_anchored_schedule(anchor: 'last_day')
+    assert_equal true, schedule.is_this_day?(Date.parse('2024-05-31'))
+  end
+
+  test 'monthanchored schedule is_this_day? last_day should not match day before last day of month' do
+    schedule = month_anchored_schedule(anchor: 'last_day')
+    assert_equal false, schedule.is_this_day?(Date.parse('2024-05-30'))
+  end
+
+  def month_anchored_schedule(anchor:)
+    RegularSchedule.new(schedule_type: 'monthanchored', hour_of_day: '14', anchor:)
+  end
+
 end
