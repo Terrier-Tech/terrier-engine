@@ -1,7 +1,8 @@
 {
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "vitest"
+    "test": "vitest",
+    "dev": "bin/vite dev"
   },
   "devDependencies": {
     "vite": "^7.0.0",
