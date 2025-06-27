@@ -182,6 +182,10 @@ export class DiveSettingsModal extends ModalPart<DiveSettingsState> {
         })
     }
 
+    get contentClasses() {
+        return ['padded', ...super.contentClasses]
+    }
+
     renderContent(parent: PartTag): void {
         parent.div('.tt-flex.tt-form.padded.column.gap.dd-new-dive-form', col => {
             col.part(this.settingsForm)

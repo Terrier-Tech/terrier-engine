@@ -351,8 +351,12 @@ class NewQueryModal extends ModalPart<NewQueryState> {
         })
     }
 
+    get contentClasses() {
+        return ['padded', ...super.contentClasses]
+    }
+
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.tt-form.padded.column.gap.dd-new-query-form', col => {
+        parent.div('.tt-flex.tt-form.column.gap.dd-new-query-form', col => {
             col.part(this.settingsForm)
             col.part(this.modelPicker)
         })
@@ -423,8 +427,12 @@ class DuplicateQueryModal extends ModalPart<DuplicateQueryState> {
         this.emitMessage(DiveEditor.diveChangedKey, {})
     }
 
+    get contentClasses() {
+        return ['padded', ...super.contentClasses]
+    }
+
     renderContent(parent: PartTag): void {
-        parent.div(".tt-flex.column.padded.gap", col => {
+        parent.div(".tt-flex.column.gap", col => {
             Fragments.simpleHeading(col, this.theme, "Name")
             this.fields.textInput(col, 'name')
         })

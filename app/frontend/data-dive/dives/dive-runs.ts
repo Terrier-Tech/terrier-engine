@@ -183,9 +183,12 @@ export class DiveRunModal extends ModalPart<{dive: DdDive }> {
             })
     }
 
+    get contentClasses() {
+        return ['padded', ...super.contentClasses]
+    }
 
     renderContent(parent: PartTag): void {
-        parent.div('.tt-flex.padded.gap.column', col => {
+        parent.div('.tt-flex.gap.column', col => {
             col.part(this.progressBar)
 
             // inputs and outputs row

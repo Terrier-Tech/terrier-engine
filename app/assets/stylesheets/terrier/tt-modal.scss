@@ -121,6 +121,14 @@
 		min-height: 0;
 		overflow-y: scroll;
 		overflow-x: hidden;
+
+		&.padded {
+			padding: var(--tt-pad);
+		}
+
+		&.h-padded {
+			padding: 0 var(--tt-pad);
+		}
 	}
 
 	&.v-shrink {
