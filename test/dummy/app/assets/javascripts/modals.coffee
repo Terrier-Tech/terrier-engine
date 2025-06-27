@@ -94,6 +94,57 @@ $(document).on 'click', 'a.alert-modal-alert', ->
 	)
 
 
+## Async Alerts
+
+$(document).on 'click', 'a.async-custom-modal-alert', ->
+	tinyModal.async.showAlert(
+		title: "This is an async Alert!"
+		body: "Here's some more information about the alert. It can contain <strong>markup</strong>"
+		actions: [
+			{
+				name: 'do-something'
+				title: 'Do Something'
+				classes: 'alert'
+			}
+			{
+				title: 'Scripts'
+				href: '/scripts'
+			}
+		]
+	).then (action) ->
+		if action.name == 'do-something'
+			alert "here's a native alert"
+
+$(document).on 'click', 'a.async-confirm-modal-alert', ->
+	tinyModal.async.confirmAlert(
+		"Are you sure?",
+		"This is a confirm alert modal",
+		icon: 'ion-ios-help-outline'
+	).then (confirmed) ->
+		if confirmed
+			alert("User clicked Okay")
+		else
+			alert("User clicked Cancel")
+
+$(document).on 'click', 'a.async-notice-modal-alert', ->
+	tinyModal.async.noticeAlert(
+		"Something happened!"
+		"This is a notice alert modal"
+		{
+			title: 'Got It'
+		}
+		icon: 'ion-alert'
+	).then ->
+		alert("User acknowledged")
+
+$(document).on 'click', 'a.async-alert-modal-alert', ->
+	tinyModal.async.alertAlert(
+		"Something happened!"
+		"This is an ALERT alert modal"
+	).then ->
+		alert("User acknowledged the alert")
+
+
 ## Reload
 
 $(document).on 'click', 'a.modal-reload', ->
