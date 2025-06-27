@@ -1,4 +1,5 @@
 window.tinyModal = {}
+window.tinyModal.async ||= {}
 
 # this can be overridden to customize the class of the close button icon
 window.tinyModal.closeIconClass = '.glyp-close'
@@ -466,12 +467,17 @@ _alertTemplate = tinyTemplate (options) ->
 # - title
 # - href
 # - icon
+# - name
 # - classes
 # - callback
 # Add an action with the close class to close the alert.
 # If none is provided, one will automatically be inserted.
 tinyModal.showAlert = (options) ->
-	showOverlay()
+	tinyModal.async.showAlert(options)
+	undefined
+
+# Shows a modal alert and returns a promise that resolves with the action that was clicked
+tinyModal.async.showAlert = (options) ->
 	showOverlay()
 
 	$('#modal-alert').remove()
@@ -494,16 +500,21 @@ tinyModal.showAlert = (options) ->
 
 	ui.find('a.close').click -> tinyModal.closeAlert()
 
-	for i in [0..options.actions.length-1]
-		action = options.actions[i]
-		if action.callback?
-			ui.find(".action-#{i}").click action.callback
+	{ promise, resolve } = Promise.withResolvers()
+	[0..options.actions.length-1].forEach (i) ->
+		ui.find(".action-#{i}").click ->
+			action = options.actions[i]
+			resolve(action)
+			if action.callback?
+				action.callback()
 
 	setTimeout(
 		->
 			ui.addClass 'show'
 		10
 	)
+
+	promise
 
 tinyModal.closeAlert = ->
 	unless $('#modal-window').hasClass('show')
@@ -518,49 +529,72 @@ tinyModal.closeAlert = ->
 # Shows an alert modal pre-populated with an Okay and Cancel action.
 # The Okay action calls the callback while the Cancel action just closes the alert.
 tinyModal.confirmAlert = (title, body, callback, options={}) ->
+	tinyModal.async.confirmAlert(title, body, options).then (confirmed) ->
+		if confirmed
+			callback()
+	undefined
+
+# Shows an alert modal with an Okay and Cancel action and returns a Promise<boolean>.
+# The promise resolves with true when the Okay button is clicked, and resolves with false when the Cancel button is clicked.
+tinyModal.async.confirmAlert = (title, body, options={}) ->
 	Object.assign options, {
 		title: title
 		body: body
 	}
 	options.actions = [
 		{
+			name: 'confirm'
 			title: options.confirmTitle || 'Okay'
-			classes: options.confirmClasses || 'primary'
-			callback: ->
-				tinyModal.closeAlert()
-				callback()
 			icon: options.confirmIcon || 'ion-checkmark-round lyph-checkmark glyp-checkmark'
+			classes: tinyTemplate.parseClasses(options.confirmClasses || 'primary').concat(['close'])
 		}
 		{
+			name: 'cancel'
 			title: options.cancelTitle || 'Cancel'
-			classes: tinyTemplate.parseClasses(options.cancelClasses || 'secondary').concat(['cancel', 'close'])
 			icon: options.cancelIcon || 'lyph-close glyp-close'
+			classes: tinyTemplate.parseClasses(options.cancelClasses || 'secondary').concat(['cancel', 'close'])
 		}
 	]
-	tinyModal.showAlert options
+	tinyModal.async.showAlert(options).then (action) ->
+		action.name == 'confirm'
 
 # Shows an alert modal pre-populated with an Okay action.
 # The Okay action just closes the alert.
 # Optionally, the action attributes can be overridden with the action argument.
 tinyModal.noticeAlert = (title, body, action={}, options={}) ->
+	tinyModal.async.noticeAlert(title, body, action={}, options={})
+	undefined
+
+# Shows an alert modal pre-populated with an Okay action and returns a promise.
+# The promise resolves when the Okay button is clicked.
+tinyModal.async.noticeAlert = (title, body, action={}, options={}) ->
 	Object.assign options, {
 		title: title
 		body: body
 	}
-	okayAction = {title: 'Okay', icon: 'lyph-checkmark glyp-checkmark', classes: ['secondary']}
+
+	okayAction = { title: 'Okay', icon: 'lyph-checkmark glyp-checkmark', classes: ['secondary'] }
 	okayAction = Object.assign okayAction, action
-	okayAction.classes ||= 'close'
 	classes = tinyTemplate.parseClasses okayAction.classes
 	unless classes.includes('close')
 		classes.push 'close'
 		okayAction.classes = classes
 	options.actions = [okayAction]
-	tinyModal.showAlert options
+
+	tinyModal.async.showAlert(options).then (action) ->
+		if action.callback?
+			action.callback()
+		undefined
 
 # Same as tinyModal.noticeAlert, but defaults to .alert and with an alert icon
 tinyModal.alertAlert = (title, body, action={}, options={}) ->
+	tinyModal.async.alertAlert(title, body, action, options)
+	undefined
+
+# Same as tinyModal.async.noticeAlert, but defaults to .alert with an alert icon
+tinyModal.async.alertAlert = (title, body, action={}, options={}) ->
 	options.icon ||= 'lyph-alert glyp-alert'
 	classes = tinyTemplate.parseClasses options.classes
 	classes.push 'alert'
 	options.classes = classes
-	tinyModal.noticeAlert title, body, action, options
+	tinyModal.async.noticeAlert(title, body, action, options)
