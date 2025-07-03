@@ -562,7 +562,7 @@ tinyModal.async.confirmAlert = (title, body, options={}) ->
 # The Okay action just closes the alert.
 # Optionally, the action attributes can be overridden with the action argument.
 tinyModal.noticeAlert = (title, body, action={}, options={}) ->
-	tinyModal.async.noticeAlert(title, body, action={}, options={})
+	tinyModal.async.noticeAlert(title, body, action, options)
 	undefined
 
 # Shows an alert modal pre-populated with an Okay action and returns a promise.
