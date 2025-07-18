@@ -160,14 +160,14 @@ export class ModalStackPart extends TerrierPart<{}> {
         this.modals.push(modal)
 
         const container = this.element?.querySelector<HTMLElement>('.modal-container')
-        if (container) {
+        if (!container || this.displayClass !== 'show') {
+            // haven't rendered yet, or was previously closed, make sure the stack is shown, then render
+            this.displayClass = 'show'
+            this.dirty()
+        } else {
             // already rendered, append the modal to the stack without re-rendering the rest of the stack
             modal.appendIntoContainer(container).classList.add('hide')
             this.stale()
-        } else {
-            // haven't rendered yet, make sure the stack is shown, then render
-            this.displayClass = 'show'
-            this.dirty()
         }
 
         return modal
