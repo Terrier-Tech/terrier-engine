@@ -9,6 +9,7 @@
     "vite-plugin-ruby": "^5.1.1"
   },
   "dependencies": {
+    "@faker-js/faker": "^9.9.0",
     "tuff-core": "latest"
   }
 }

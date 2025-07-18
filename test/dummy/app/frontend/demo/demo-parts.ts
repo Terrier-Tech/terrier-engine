@@ -17,6 +17,7 @@ import Messages from "tuff-core/messages"
 import { NoState, PartTag } from "tuff-core/parts"
 import Strings from "tuff-core/strings"
 import Time from "tuff-core/time"
+import { faker } from '@faker-js/faker'
 
 const log = new Logger("Demo Parts")
 
@@ -176,6 +177,8 @@ class Panel extends PanelPart<NoState> {
 
 class Modal extends ModalPart<NoState> {
 
+    private paragraphs: string[] = []
+
     async init() {
         this.setTitle("Modal Header")
 
@@ -195,10 +198,19 @@ class Modal extends ModalPart<NoState> {
             classes: ['secondary'],
             click: {key: modalPopKey}
         }, "secondary")
+
+        const count = Math.ceil(Math.random() * 4)
+        for (let i = 0; i < count; i++) {
+            this.paragraphs.push(faker.lorem.paragraphs({ min: 3, max: 15 }))
+        }
     }
 
     renderContent(parent: PartTag): void {
-        parent.p({text: "Modal Content"})
+        parent.div('.tt-flex.padded.column.gap', div => {
+            for (const paragraph of this.paragraphs) {
+                div.p().text(paragraph)
+            }
+        })
     }
 
 }
