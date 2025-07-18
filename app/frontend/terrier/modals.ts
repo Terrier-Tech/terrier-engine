@@ -1,8 +1,8 @@
 import { Logger } from "tuff-core/logging"
-import TerrierPart from "./parts/terrier-part"
+import Messages from "tuff-core/messages"
 import { PartConstructor, PartTag } from "tuff-core/parts"
 import ContentPart from "./parts/content-part"
-import Messages from "tuff-core/messages"
+import TerrierPart from "./parts/terrier-part"
 
 const log = new Logger('Modals')
 
@@ -124,12 +124,13 @@ export class ModalStackPart extends TerrierPart<{}> {
         }
         const modal = this.modals.pop()
         if (modal) {
+            // remove the modal element with
+            modal.element?.remove()
             this.removeChild(modal)
         }
         if (this.modals.length == 0) {
             this.close()
         }
-        this.dirty()
     }
 
     close() {
@@ -141,6 +142,8 @@ export class ModalStackPart extends TerrierPart<{}> {
                 stackElem.classList.remove('show')
             }
         }
+
+        this.dirty()
     }
 
     /**
@@ -155,11 +158,20 @@ export class ModalStackPart extends TerrierPart<{}> {
         log.info(`Making modal`, constructor.name)
         const modal = this.makePart(constructor, state)
         this.modals.push(modal)
-        this.displayClass = 'show'
-        this.dirty()
+
+        const container = this.element?.querySelector<HTMLElement>('.modal-container')
+        if (container) {
+            // already rendered, append the modal to the stack without re-rendering the rest of the stack
+            modal.appendIntoContainer(container).classList.add('hide')
+            this.stale()
+        } else {
+            // haven't rendered yet, make sure the stack is shown, then render
+            this.displayClass = 'show'
+            this.dirty()
+        }
+
         return modal
     }
-
 
     render(parent: PartTag) {
         const classes = [`stack-${this.modals.length}`]

@@ -45,7 +45,14 @@
 .tt-modal-stack .modal-part {
 	@include tt-rounded-corners;
 	@include tt-box-shadow;
-	@include tt-absolute-fill;
+
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	max-height: 100%;
+	min-height: 50%;
+
 	margin: 0 auto;
 	background: var(--tt-panel-background);
 	display: flex;
@@ -136,21 +143,30 @@
 		bottom: unset;
 	}
 
-	&:last-child {
-		transform: scale(0);
+	transition: transform 0.2s ease, opacity 0.2s ease;
+
+	// offset up 50% of height to center vertically
+	transform: translate(20%, -50%);
+	opacity: 0;
+
+	// lower modals in the stack are slightly blurred and can't be interacted with
+	&:not(:last-child) {
+		filter: blur(var(--tt-blur-width, 3px));
+		pointer-events: none;
 	}
 
-	transition: transform 0.2s ease;
-
-	// fan out the models based on their position in the stack
+	// fan out the modals based on their position in the stack
 	&.show {
 		&:last-child {
-			transform: scale(1);
+			transform: translate(0, -50%);
+			opacity: 1;
 		}
 
+		// offset slightly left and smaller
 		@for $i from 1 through 6 {
 			&:nth-last-child(#{$i + 1}) {
-				transform: translate(calc(-#{$i}*var(--tt-pad)*3), 0) scale(100%-$i*4%);
+				transform: translate(calc(-#{$i}*var(--tt-pad)*3), -50%) scale(100%-$i*4%);
+				opacity: 1;
 			}
 		}
 	}
