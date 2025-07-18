@@ -89,7 +89,6 @@ export abstract class TerrierApp<TState> extends TerrierPart<TState> {
     ): ModalType {
         const modalStack = this.overlayPart.getOrCreateLayer(ModalStackPart, {}, 'modal')
         const modal = modalStack.pushModal(constructor, state)
-        modalStack.dirty()
         return modal as ModalType
     }
 
