@@ -69,7 +69,7 @@ class ScriptExecutor
         puts script_email_log if script_email_log
       end
       true
-    rescue => ex
+    rescue Exception => ex
       line = ex.backtrace[0].split(':')[1].to_i
       write_raw 'error', "Error on line #{line}: #{ex.message}"
       script_run.status = 'error'
