@@ -3,6 +3,7 @@ import {GlypName} from "./glyps"
 import HubIcons, {HubIconName} from "./gen/hub-icons"
 import {Key} from "tuff-core/messages"
 import Hints, {Hint, HintRenderOptions} from "./hints";
+import { DefaultTag } from "tuff-core/html";
 
 export interface ThemeType {
     readonly icons: string
@@ -59,13 +60,14 @@ export type RenderActionOptions = {
 
 export default class Theme {
     
-    renderIcon(parent: PartTag, icon: IconName, color?: ColorName | null): void {
+    renderIcon(parent: PartTag, icon: IconName, color?: ColorName | null): DefaultTag {
         if (HubIcons.Names.includes(icon as HubIconName)) {
-            HubIcons.renderIcon(parent, icon as HubIconName, color)
+            return HubIcons.renderIcon(parent, icon as HubIconName, color)
         }
         else { // a regular font icon
             const iconElem = parent.i('.icon', icon)
             if (color?.length) iconElem.class(color)
+            return iconElem
         }
     }
 
