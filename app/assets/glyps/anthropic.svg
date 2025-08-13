@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>anthropic</title>
+    <g id="anthropic" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M28,12 L43,50 L35,50 L32,42 L15.5,42 L12,50 L4,50 L19,12 L28,12 Z M23.5,22 L18,35 L29,35 L23.5,22 Z" id="Path-2" fill="#000000"></path>
+        <polygon id="Path" fill="#000000" points="36 12 52 50 60 50 44 12"></polygon>
+    </g>
+</svg>
