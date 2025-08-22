@@ -248,7 +248,7 @@ class CompoundFieldBuilder<T extends Record<string, unknown>, K extends keyof T 
     }
 
     label(text: string, ...classes: string[]): this {
-        this.field.label({ text, htmlFor: this.formFields.inputName(this.key), classes })
+        this.formFields.labelFor(this.field, this.key, text, ...classes)
         return this
     }
 
