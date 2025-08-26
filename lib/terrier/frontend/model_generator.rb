@@ -178,6 +178,77 @@ class ModelGenerator < BaseGenerator
     models
   end
 
+  def build_typescript_model_type(model_name, model, is_unpersisted = false)
+    type_str = "#{model_name} = { "
+    model_class = model[:model_class]
+
+    fields = []
+    columns = model[:columns]
+
+    enum_dependency_strings = []
+    if model_class.enum_dependencies
+      model_class.enum_dependencies.each do |dep_field, deps|
+        used_enum_values = []
+        deps.each do |enum_val, required_field|
+          enum_type_str = <<~TS
+            ({#{dep_field}: '#{enum_val}'; #{required_field}: #{typescript_type(model_class.columns_hash[required_field.to_s], model_class)}} 
+          TS
+
+          remaining_enum_values = model[:enum_fields][dep_field] - [enum_val.to_s]
+
+          enum_type_str += <<~TS 
+            | {#{dep_field}: #{remaining_enum_values.map { |v| "'#{v}'" }.join(' | ')}; #{typescript_field(model_class.columns_hash[required_field.to_s], model_class)}})
+          TS
+
+          enum_dependency_strings.push enum_type_str.strip
+
+          columns.delete dep_field
+          columns.delete required_field
+        end
+      end
+    end
+
+    # columns
+    columns.each do |col|
+      next if model[:attachments].include?(col.name.to_sym)
+      fields.push typescript_field(col, model_class, model[:enum_fields][col.name.to_sym], is_unpersisted)
+    end
+
+    # reflections (associations)
+    model[:reflections].each do |ref_name, ref|
+      ref_type = compute_ref_type(ref)
+      next unless ref_type
+      if is_unpersisted && ref_type.include?('[]')
+        fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id"
+        ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]"
+      end
+      fields.push "#{ref_name}?: #{ref_type}"
+    end
+
+    # attachments
+    model[:attachments].each do |attachment|
+      fields.push "#{attachment}?: File"
+    end
+
+    type_str += fields.join(', ') + " }"
+    if enum_dependency_strings.present?
+      type_str += " & #{enum_dependency_strings.join(' & ')}"
+    end
+    type_str
+  end
+
+  def typescript_field(col, model_class, enum_fields = nil, is_unpersisted = false)
+    str = col.name
+
+    if is_unpersisted
+      str += col.null || %w[id created_at created_by_name updated_at _state].include?(col.name) ? '?' : ''
+    else
+      str += col.null ? '?' : ''
+    end
+    str += ': ' + typescript_type(col, model_class, enum_fields)
+    str
+  end
+
   # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
     if model_class.respond_to?(:embedded_fields)
