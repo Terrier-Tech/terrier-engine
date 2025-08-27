@@ -507,6 +507,21 @@ module Terrier::Model
         end
       end
     end
+    
+    ## enum dependencies.
+    # @param field [String] The enum field that will set a rule for presence of another field
+    # @param value_requirement [Hash]
+    #   key: the value of the enum field
+    #   value: the other field on this model that will never be null if the enum field is set to the value specified by the key
+    def enum_dependencies(field = nil, value_requirement = nil)
+      @enum_dependencies ||= {}
+
+      if field.nil?
+        @enum_dependencies
+      else
+        @enum_dependencies[field.to_sym] = value_requirement
+      end
+    end
 
 
   end
