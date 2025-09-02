@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_02_143532) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -171,6 +171,41 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
     t.index ["extern_id"], name: "index_invoices_on_extern_id"
     t.index ["location_id"], name: "index_invoices_on_location_id"
     t.index ["updated_by_id"], name: "index_invoices_on_updated_by_id"
+  end
+
+  create_table "location_tag_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.uuid "location_id", null: false
+    t.uuid "location_tag_id", null: false
+    t.index ["_state"], name: "index_location_tag_locations_on__state"
+    t.index ["created_by_id"], name: "index_location_tag_locations_on_created_by_id"
+    t.index ["extern_id"], name: "index_location_tag_locations_on_extern_id"
+    t.index ["location_id"], name: "index_location_tag_locations_on_location_id"
+    t.index ["location_tag_id"], name: "index_location_tag_locations_on_location_tag_id"
+    t.index ["updated_by_id"], name: "index_location_tag_locations_on_updated_by_id"
+  end
+
+  create_table "location_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.text "name", null: false
+    t.index ["_state"], name: "index_location_tags_on__state"
+    t.index ["created_by_id"], name: "index_location_tags_on_created_by_id"
+    t.index ["extern_id"], name: "index_location_tags_on_extern_id"
+    t.index ["updated_by_id"], name: "index_location_tags_on_updated_by_id"
   end
 
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -364,6 +399,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
   add_foreign_key "invoices", "locations"
   add_foreign_key "invoices", "users", column: "created_by_id"
   add_foreign_key "invoices", "users", column: "updated_by_id"
+  add_foreign_key "location_tag_locations", "location_tags"
+  add_foreign_key "location_tag_locations", "locations"
+  add_foreign_key "location_tag_locations", "users", column: "created_by_id"
+  add_foreign_key "location_tag_locations", "users", column: "updated_by_id"
+  add_foreign_key "location_tags", "users", column: "created_by_id"
+  add_foreign_key "location_tags", "users", column: "updated_by_id"
   add_foreign_key "locations", "users", column: "created_by_id"
   add_foreign_key "locations", "users", column: "updated_by_id"
   add_foreign_key "script_runs", "scripts"
