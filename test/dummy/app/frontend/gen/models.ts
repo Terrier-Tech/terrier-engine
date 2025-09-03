@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-09-02 10:37:57 -0400, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-09-02 12:04:58 -0400, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -115,6 +115,7 @@ export type Location = {
     work_orders?: WorkOrder[]
     invoices?: Invoice[]
     contacts?: Contact[]
+    location_tags?: LocationTag[]
 }
 
 export type UnpersistedLocation = {
@@ -144,6 +145,7 @@ export type UnpersistedLocation = {
     work_orders?: OptionalProps<UnpersistedWorkOrder, "location_id">[]
     invoices?: OptionalProps<UnpersistedInvoice, "location_id">[]
     contacts?: OptionalProps<UnpersistedContact, "location_id">[]
+    location_tags?: UnpersistedLocationTag[]
 }
 
 export const LocationEnumFields = {
@@ -164,7 +166,7 @@ export type LocationTag = {
     created_by?: User
     updated_by?: User
     location_tag_locations?: LocationTagLocation[]
-    locations?: Location
+    locations?: Location[]
 }
 
 export type UnpersistedLocationTag = {
@@ -181,7 +183,7 @@ export type UnpersistedLocationTag = {
     created_by?: User
     updated_by?: User
     location_tag_locations?: OptionalProps<UnpersistedLocationTagLocation, "location_tag_id">[]
-    locations?: Location
+    locations?: UnpersistedLocation[]
 }
 
 export type LocationTagLocation = {
@@ -543,7 +545,7 @@ export type UnpersistedModelTypeMap = {
 export type ModelIncludesMap = {
     contact: "created_by" | "location" | "updated_by" | "user"
     invoice: "created_by" | "location" | "updated_by" | "work_orders"
-    location: "contacts" | "created_by" | "invoices" | "updated_by" | "work_orders"
+    location: "contacts" | "created_by" | "invoices" | "location_tags" | "updated_by" | "work_orders"
     location_tag: "created_by" | "location_tag_locations" | "locations" | "updated_by"
     location_tag_location: "created_by" | "location" | "location_tag" | "updated_by"
     script: "created_by" | "script_runs" | "updated_by"
@@ -559,7 +561,7 @@ export type ModelIncludesMap = {
 export const ModelIncludesArrayMap = {
     contact: ["created_by", "location", "updated_by", "user"] as const,
     invoice: ["created_by", "location", "updated_by", "work_orders"] as const,
-    location: ["contacts", "created_by", "invoices", "updated_by", "work_orders"] as const,
+    location: ["contacts", "created_by", "invoices", "location_tags", "updated_by", "work_orders"] as const,
     location_tag: ["created_by", "location_tag_locations", "locations", "updated_by"] as const,
     location_tag_location: ["created_by", "location", "location_tag", "updated_by"] as const,
     script: ["created_by", "script_runs", "updated_by"] as const,
