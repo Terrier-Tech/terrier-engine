@@ -370,8 +370,8 @@ class ModelGenerator < BaseGenerator
     else
       t
     end
-    is_array_type = ref.is_a?(ActiveRecord::Reflection::HasManyReflection) ||
-                    (ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
+    is_array_type = !(ref.is_a?(ActiveRecord::Reflection::ThroughReflection) && ref.through_reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)) &&
+                    (ref.is_a?(ActiveRecord::Reflection::HasManyReflection) || ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
 
     t += "[]" if is_array_type
     t
