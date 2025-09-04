@@ -34,7 +34,8 @@ class Location < ApplicationRecord
   has_many :work_orders, dependent: :restrict_with_error
   has_many :invoices, dependent: :restrict_with_error
   has_many :contacts, dependent: :restrict_with_error
-
+  has_many :location_tags
+  
   validates :display_name, presence: true
   validates :number, presence: true
 

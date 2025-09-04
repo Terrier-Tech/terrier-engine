@@ -220,7 +220,9 @@ class ModelGenerator < BaseGenerator
       next unless ref_type
       if is_unpersisted && ref_type.include?('[]')
         fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id"
-        ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]"
+        if ref.class_name.classify.constantize.column_names.include?(fk)
+          ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]"
+        end
       end
       fields.push "#{ref_name}?: #{ref_type}"
     end
@@ -368,9 +370,10 @@ class ModelGenerator < BaseGenerator
     else
       t
     end
-    if ref.class == ActiveRecord::Reflection::HasManyReflection
-      t = "#{t}[]"
-    end
+    is_array_type = !(ref.is_a?(ActiveRecord::Reflection::ThroughReflection) && ref.through_reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)) &&
+                    (ref.is_a?(ActiveRecord::Reflection::HasManyReflection) || ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
+
+    t += "[]" if is_array_type
     t
   end
 
