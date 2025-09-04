@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-09-02 12:04:58 -0400, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-09-04 11:06:40 -0400, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -42,6 +42,38 @@ export type UnpersistedContact = {
 
 export const ContactEnumFields = {
     contact_type: ["customer", "employee"] as const,
+}
+
+export type Contract = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    program_id: string
+    created_by?: User
+    updated_by?: User
+    program?: Program
+}
+
+export type UnpersistedContract = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    program_id: string
+    created_by?: User
+    updated_by?: User
+    program?: Program
 }
 
 export type Invoice = {
@@ -145,11 +177,45 @@ export type UnpersistedLocation = {
     work_orders?: OptionalProps<UnpersistedWorkOrder, "location_id">[]
     invoices?: OptionalProps<UnpersistedInvoice, "location_id">[]
     contacts?: OptionalProps<UnpersistedContact, "location_id">[]
-    location_tags?: UnpersistedLocationTag[]
+    location_tags?: LocationTag[]
 }
 
 export const LocationEnumFields = {
     status: ["onetime", "contract"] as const,
+}
+
+export type LocationSale = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    contract_id: string
+    created_by?: User
+    updated_by?: User
+    contract?: Contract
+    program?: Program
+}
+
+export type UnpersistedLocationSale = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    contract_id: string
+    created_by?: User
+    updated_by?: User
+    contract?: Contract
+    program?: Program
 }
 
 export type LocationTag = {
@@ -183,7 +249,7 @@ export type UnpersistedLocationTag = {
     created_by?: User
     updated_by?: User
     location_tag_locations?: OptionalProps<UnpersistedLocationTagLocation, "location_tag_id">[]
-    locations?: UnpersistedLocation[]
+    locations?: Location[]
 }
 
 export type LocationTagLocation = {
@@ -220,6 +286,34 @@ export type UnpersistedLocationTagLocation = {
     updated_by?: User
     location?: Location
     location_tag?: LocationTag
+}
+
+export type Program = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    created_by?: User
+    updated_by?: User
+}
+
+export type UnpersistedProgram = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    created_by?: User
+    updated_by?: User
 }
 
 export type Script = {
@@ -512,10 +606,13 @@ export const WorkOrderEnumFields = {
  */
 export type PersistedModelTypeMap = {
     contact: Contact
+    contract: Contract
     invoice: Invoice
     location: Location
+    location_sale: LocationSale
     location_tag: LocationTag
     location_tag_location: LocationTagLocation
+    program: Program
     script: Script
     script_run: ScriptRun
     target: Target
@@ -528,10 +625,13 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
     contact: UnpersistedContact
+    contract: UnpersistedContract
     invoice: UnpersistedInvoice
     location: UnpersistedLocation
+    location_sale: UnpersistedLocationSale
     location_tag: UnpersistedLocationTag
     location_tag_location: UnpersistedLocationTagLocation
+    program: UnpersistedProgram
     script: UnpersistedScript
     script_run: UnpersistedScriptRun
     target: UnpersistedTarget
@@ -544,10 +644,13 @@ export type UnpersistedModelTypeMap = {
  */
 export type ModelIncludesMap = {
     contact: "created_by" | "location" | "updated_by" | "user"
+    contract: "created_by" | "program" | "updated_by"
     invoice: "created_by" | "location" | "updated_by" | "work_orders"
     location: "contacts" | "created_by" | "invoices" | "location_tags" | "updated_by" | "work_orders"
+    location_sale: "contract" | "created_by" | "program" | "updated_by"
     location_tag: "created_by" | "location_tag_locations" | "locations" | "updated_by"
     location_tag_location: "created_by" | "location" | "location_tag" | "updated_by"
+    program: "created_by" | "updated_by"
     script: "created_by" | "script_runs" | "updated_by"
     script_run: "created_by" | "script" | "updated_by"
     target: "created_by" | "updated_by" | "work_orders"
@@ -560,10 +663,13 @@ export type ModelIncludesMap = {
  */
 export const ModelIncludesArrayMap = {
     contact: ["created_by", "location", "updated_by", "user"] as const,
+    contract: ["created_by", "program", "updated_by"] as const,
     invoice: ["created_by", "location", "updated_by", "work_orders"] as const,
     location: ["contacts", "created_by", "invoices", "location_tags", "updated_by", "work_orders"] as const,
+    location_sale: ["contract", "created_by", "program", "updated_by"] as const,
     location_tag: ["created_by", "location_tag_locations", "locations", "updated_by"] as const,
     location_tag_location: ["created_by", "location", "location_tag", "updated_by"] as const,
+    program: ["created_by", "updated_by"] as const,
     script: ["created_by", "script_runs", "updated_by"] as const,
     script_run: ["created_by", "script", "updated_by"] as const,
     target: ["created_by", "updated_by", "work_orders"] as const,
