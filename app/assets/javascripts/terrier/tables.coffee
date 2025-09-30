@@ -8,12 +8,19 @@ _numberRegex = /^(?=.)([+-]?([0-9]*)(\.([0-9]+))?)$/g # pos/neg integer/float
 
 window.tables.initSortable = (ui = $(document), col = null, dir = null) ->
 	params = getUrlParams()
+	path = window.location.pathname
+	table = ui.find 'table.sortable'
+	key = table.data 'sortable-persistence-key'
+	[storedCol, storedDir] = if key?
+		window.localStorage.getItem("sortable:#{key}:#{path}")?.split(',') ? [null, null]
+	else
+		[null, null]
 
-	col = col ? params.sortable_col
-	dir = dir ? params.sortable_dir
+	col = col ? params.sortable_col ? storedCol 
+	dir = dir ? params.sortable_dir ? storedDir
 	
 	return unless col && dir
-	ui.find("table.sortable th a[data-column=#{col}]").each (_, link) ->
+	table.find("th a[data-column=#{col}]").each (_, link) ->
 		window.tables.sortByColLink($(link), col, dir)
 
 # computes the sorting value using a) input values, b) data-column attributes, or c) the text of the cell
@@ -51,6 +58,11 @@ _blanksLast = (s) ->
 window.tables.sortByColLink = (link, col = null, dir = null) ->
 	window.setLinkLoading? link
 	table = link.parents 'table'
+
+	# Save sort preferences
+	path = window.location.pathname
+	key = table.data 'sortable-persistence-key'
+	window.localStorage.setItem("sortable:#{key}:#{path}", [col, dir].join(',')) if key?
 
 	# need to let the loading animation start
 	{ promise, resolve } = Promise.withResolvers()
