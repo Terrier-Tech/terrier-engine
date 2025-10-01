@@ -59,11 +59,6 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 	window.setLinkLoading? link
 	table = link.parents 'table'
 
-	# Save sort preferences
-	path = window.location.pathname
-	key = table.data 'sortable-persistence-key'
-	window.localStorage.setItem("sortable:#{key}:#{path}", [col, dir].join(',')) if key?
-
 	# need to let the loading animation start
 	{ promise, resolve } = Promise.withResolvers()
 	setTimeout(resolve, 5)
@@ -79,6 +74,11 @@ window.tables.sortByColLink = (link, col = null, dir = null) ->
 		else
 			'asc'
 		urls.replaceParam 'sortable_dir', dir
+
+	# Save sort preferences
+	path = window.location.pathname
+	key = table.data 'sortable-persistence-key'
+	window.localStorage.setItem("sortable:#{key}:#{path}", [col, dir].join(',')) if key?
 
 	table.find('th a').removeClass('asc').removeClass('desc')
 	link.addClass dir
