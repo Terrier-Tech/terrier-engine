@@ -2,7 +2,12 @@ namespace :db do
 
   def comment_schema(path)
     return if path.index 'application_record'
-    model = File.basename(path).split('.').first.classify.constantize
+
+    # compute the namespaced name of the class
+    path_comps = path.split('/')
+    model_comps = [File.basename(path).split('.').first.classify]
+    model_comps.unshift path_comps[-2].titleize unless path_comps[-2] == 'models'
+    model = model_comps.join('::').constantize
     puts "\n== #{model.name.bold} =="
     lines = []
 
@@ -78,7 +83,7 @@ namespace :db do
 
   desc 'Puts the schema of each table as comments at the top of the model files'
   task comment_schema: :environment do
-    Dir.glob(Rails.root.join('app/models/*.rb')).each do |path|
+    Dir[Rails.root.join('app/models/**/*.rb')].each do |path|
       comment_schema path
     end
   end

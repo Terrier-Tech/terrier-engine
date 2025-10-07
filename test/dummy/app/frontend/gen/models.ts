@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-09-04 11:06:40 -0400, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-10-07 13:04:56 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -439,6 +439,46 @@ export const ScriptRunEnumFields = {
     status: ["running", "success", "error", "cancelled", "cleared"] as const,
 }
 
+export type SmartFeature = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    feature_type: "test"
+    description?: string
+    data: object
+    created_by?: User
+    updated_by?: User
+}
+
+export type UnpersistedSmartFeature = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    feature_type: "test"
+    description?: string
+    data: object
+    created_by?: User
+    updated_by?: User
+}
+
+export const SmartFeatureEnumFields = {
+    feature_type: ["test"] as const,
+}
+
 export type Target = {
     id: string
     created_at: string
@@ -615,6 +655,7 @@ export type PersistedModelTypeMap = {
     program: Program
     script: Script
     script_run: ScriptRun
+    smart_feature: SmartFeature
     target: Target
     user: User
     work_order: WorkOrder
@@ -634,6 +675,7 @@ export type UnpersistedModelTypeMap = {
     program: UnpersistedProgram
     script: UnpersistedScript
     script_run: UnpersistedScriptRun
+    smart_feature: UnpersistedSmartFeature
     target: UnpersistedTarget
     user: UnpersistedUser
     work_order: UnpersistedWorkOrder
@@ -653,6 +695,7 @@ export type ModelIncludesMap = {
     program: "created_by" | "updated_by"
     script: "created_by" | "script_runs" | "updated_by"
     script_run: "created_by" | "script" | "updated_by"
+    smart_feature: "created_by" | "updated_by"
     target: "created_by" | "updated_by" | "work_orders"
     user: "contacts" | "created_by" | "updated_by" | "work_orders"
     work_order: "created_by" | "invoice" | "location" | "target" | "updated_by" | "user"
@@ -672,6 +715,7 @@ export const ModelIncludesArrayMap = {
     program: ["created_by", "updated_by"] as const,
     script: ["created_by", "script_runs", "updated_by"] as const,
     script_run: ["created_by", "script", "updated_by"] as const,
+    smart_feature: ["created_by", "updated_by"] as const,
     target: ["created_by", "updated_by", "work_orders"] as const,
     user: ["contacts", "created_by", "updated_by", "work_orders"] as const,
     work_order: ["created_by", "invoice", "location", "target", "updated_by", "user"] as const,

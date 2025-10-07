@@ -22,13 +22,14 @@
 # +-----------------+--------------+-------------------+
 # 
 # Associations
-# +------------+-------------+-----------+
-# | Has Many   | contacts    | Contact   |
-# | Belongs To | created_by  | User      |
-# | Has Many   | invoices    | Invoice   |
-# | Belongs To | updated_by  | User      |
-# | Has Many   | work_orders | WorkOrder |
-# +------------+-------------+-----------+
+# +------------+---------------+-------------+
+# | Has Many   | contacts      | Contact     |
+# | Belongs To | created_by    | User        |
+# | Has Many   | invoices      | Invoice     |
+# | Has Many   | location_tags | LocationTag |
+# | Belongs To | updated_by    | User        |
+# | Has Many   | work_orders   | WorkOrder   |
+# +------------+---------------+-------------+
 class Location < ApplicationRecord
 
   has_many :work_orders, dependent: :restrict_with_error

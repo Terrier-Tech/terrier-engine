@@ -179,7 +179,8 @@ class ModelGenerator < BaseGenerator
   end
 
   def build_typescript_model_type(model_name, model, is_unpersisted = false)
-    type_str = "#{model_name} = { "
+    unnamespaced_model_name = model_name.split('::').last
+    type_str = "#{unnamespaced_model_name} = { "
     model_class = model[:model_class]
 
     fields = []

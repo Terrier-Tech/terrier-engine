@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_04_141910) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_07_174502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -344,6 +344,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_04_141910) do
     t.index ["updated_by_id"], name: "index_scripts_on_updated_by_id"
   end
 
+  create_table "smart_features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.string "name", null: false
+    t.string "feature_type", null: false
+    t.text "description"
+    t.jsonb "data", default: {}, null: false
+    t.index ["_state"], name: "index_smart_features_on__state"
+    t.index ["created_by_id"], name: "index_smart_features_on_created_by_id"
+    t.index ["extern_id"], name: "index_smart_features_on_extern_id"
+    t.index ["updated_by_id"], name: "index_smart_features_on_updated_by_id"
+  end
+
   create_table "targets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -469,6 +488,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_04_141910) do
   add_foreign_key "script_runs", "users", column: "updated_by_id"
   add_foreign_key "scripts", "users", column: "created_by_id"
   add_foreign_key "scripts", "users", column: "updated_by_id"
+  add_foreign_key "smart_features", "users", column: "created_by_id"
+  add_foreign_key "smart_features", "users", column: "updated_by_id"
   add_foreign_key "targets", "users", column: "created_by_id"
   add_foreign_key "targets", "users", column: "updated_by_id"
   add_foreign_key "users", "users", column: "created_by_id"

@@ -12,7 +12,7 @@
   export type Unpersisted<%= build_typescript_model_type(model_name, model, true) %>
 
   <% if model[:enum_fields].present? -%>
-    export const <%= model_name %>EnumFields = {
+    export const <%= model_name.split('::').last %>EnumFields = {
     <% model[:enum_fields].each do |col, values| -%>
       <% next if model[:enum_fields].blank? -%>
       <%= col %>: [<%= values.select(&:present?).map{|f| "'#{f}'"}.join(',') %>] as const,
@@ -27,7 +27,7 @@
  */
 export type PersistedModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
-    <%= model_name.tableize.singularize %>: <%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= model_name.split('::').last %>
   <% end -%>
 }
 
@@ -36,7 +36,7 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
-    <%= model_name.tableize.singularize %>: Unpersisted<%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: Unpersisted<%= model_name.split('::').last %>
   <% end -%>
 }
 
@@ -46,7 +46,7 @@ export type UnpersistedModelTypeMap = {
 export type ModelIncludesMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% refs = models[model_name][:reflections] -%>
-    <%= model_name.tableize.singularize %>: <%= refs.empty? ? 'never' : refs.keys.sort.map{|r| "'#{r}'"}.join(' | ') %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= refs.empty? ? 'never' : refs.keys.sort.map{|r| "'#{r}'"}.join(' | ') %>
   <% end -%>
 }
 
@@ -56,7 +56,7 @@ export type ModelIncludesMap = {
 export const ModelIncludesArrayMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% refs = models[model_name][:reflections] -%>
-    <%= model_name.tableize.singularize %>: [<%= refs.keys.sort.map{|r| "'#{r}'"}.join(', ') %>] as const,
+    <%= model_name.tableize.singularize.split('/').last %>: [<%= refs.keys.sort.map{|r| "'#{r}'"}.join(', ') %>] as const,
   <% end -%>
 }
 
@@ -66,7 +66,7 @@ export const ModelIncludesArrayMap = {
 export type SluggableModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% next unless models[model_name][:columns].map(&:name).include?('slug') -%>
-    <%= model_name.tableize.singularize %>: <%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= model_name.split('::').last %>
   <% end -%>
 }
 
