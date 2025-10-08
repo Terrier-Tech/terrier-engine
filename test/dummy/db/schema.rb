@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_07_174502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -33,6 +33,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
     t.index ["location_id"], name: "index_contacts_on_location_id"
     t.index ["updated_by_id"], name: "index_contacts_on_updated_by_id"
     t.index ["user_id"], name: "index_contacts_on_user_id"
+  end
+
+  create_table "contracts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.uuid "program_id", null: false
+    t.index ["_state"], name: "index_contracts_on__state"
+    t.index ["created_by_id"], name: "index_contracts_on_created_by_id"
+    t.index ["extern_id"], name: "index_contracts_on_extern_id"
+    t.index ["program_id"], name: "index_contracts_on_program_id"
+    t.index ["updated_by_id"], name: "index_contracts_on_updated_by_id"
   end
 
   create_table "dd_dive_distributions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -173,6 +190,58 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
     t.index ["updated_by_id"], name: "index_invoices_on_updated_by_id"
   end
 
+  create_table "location_sales", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.uuid "contract_id", null: false
+    t.index ["_state"], name: "index_location_sales_on__state"
+    t.index ["contract_id"], name: "index_location_sales_on_contract_id"
+    t.index ["created_by_id"], name: "index_location_sales_on_created_by_id"
+    t.index ["extern_id"], name: "index_location_sales_on_extern_id"
+    t.index ["updated_by_id"], name: "index_location_sales_on_updated_by_id"
+  end
+
+  create_table "location_tag_locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.uuid "location_id", null: false
+    t.uuid "location_tag_id", null: false
+    t.index ["_state"], name: "index_location_tag_locations_on__state"
+    t.index ["created_by_id"], name: "index_location_tag_locations_on_created_by_id"
+    t.index ["extern_id"], name: "index_location_tag_locations_on_extern_id"
+    t.index ["location_id"], name: "index_location_tag_locations_on_location_id"
+    t.index ["location_tag_id"], name: "index_location_tag_locations_on_location_tag_id"
+    t.index ["updated_by_id"], name: "index_location_tag_locations_on_updated_by_id"
+  end
+
+  create_table "location_tags", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.text "name", null: false
+    t.index ["_state"], name: "index_location_tags_on__state"
+    t.index ["created_by_id"], name: "index_location_tags_on_created_by_id"
+    t.index ["extern_id"], name: "index_location_tags_on_extern_id"
+    t.index ["updated_by_id"], name: "index_location_tags_on_updated_by_id"
+  end
+
   create_table "locations", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -201,6 +270,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
     t.index ["status"], name: "index_locations_on_status"
     t.index ["tags"], name: "index_locations_on_tags"
     t.index ["updated_by_id"], name: "index_locations_on_updated_by_id"
+  end
+
+  create_table "programs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.index ["_state"], name: "index_programs_on__state"
+    t.index ["created_by_id"], name: "index_programs_on_created_by_id"
+    t.index ["extern_id"], name: "index_programs_on_extern_id"
+    t.index ["updated_by_id"], name: "index_programs_on_updated_by_id"
   end
 
   create_table "script_runs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -258,6 +342,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
     t.index ["created_by_id"], name: "index_scripts_on_created_by_id"
     t.index ["extern_id"], name: "index_scripts_on_extern_id"
     t.index ["updated_by_id"], name: "index_scripts_on_updated_by_id"
+  end
+
+  create_table "smart_features", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "_state", default: 0, null: false
+    t.uuid "created_by_id"
+    t.text "created_by_name", null: false
+    t.text "extern_id"
+    t.uuid "updated_by_id"
+    t.text "updated_by_name"
+    t.string "name", null: false
+    t.string "feature_type", null: false
+    t.text "description"
+    t.jsonb "data", default: {}, null: false
+    t.index ["_state"], name: "index_smart_features_on__state"
+    t.index ["created_by_id"], name: "index_smart_features_on_created_by_id"
+    t.index ["extern_id"], name: "index_smart_features_on_extern_id"
+    t.index ["updated_by_id"], name: "index_smart_features_on_updated_by_id"
   end
 
   create_table "targets", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -345,6 +448,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
   add_foreign_key "contacts", "users"
   add_foreign_key "contacts", "users", column: "created_by_id"
   add_foreign_key "contacts", "users", column: "updated_by_id"
+  add_foreign_key "contracts", "programs"
+  add_foreign_key "contracts", "users", column: "created_by_id"
+  add_foreign_key "contracts", "users", column: "updated_by_id"
   add_foreign_key "dd_dive_distributions", "dd_dives"
   add_foreign_key "dd_dive_distributions", "users", column: "created_by_id"
   add_foreign_key "dd_dive_distributions", "users", column: "updated_by_id"
@@ -364,13 +470,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_18_131835) do
   add_foreign_key "invoices", "locations"
   add_foreign_key "invoices", "users", column: "created_by_id"
   add_foreign_key "invoices", "users", column: "updated_by_id"
+  add_foreign_key "location_sales", "contracts"
+  add_foreign_key "location_sales", "users", column: "created_by_id"
+  add_foreign_key "location_sales", "users", column: "updated_by_id"
+  add_foreign_key "location_tag_locations", "location_tags"
+  add_foreign_key "location_tag_locations", "locations"
+  add_foreign_key "location_tag_locations", "users", column: "created_by_id"
+  add_foreign_key "location_tag_locations", "users", column: "updated_by_id"
+  add_foreign_key "location_tags", "users", column: "created_by_id"
+  add_foreign_key "location_tags", "users", column: "updated_by_id"
   add_foreign_key "locations", "users", column: "created_by_id"
   add_foreign_key "locations", "users", column: "updated_by_id"
+  add_foreign_key "programs", "users", column: "created_by_id"
+  add_foreign_key "programs", "users", column: "updated_by_id"
   add_foreign_key "script_runs", "scripts"
   add_foreign_key "script_runs", "users", column: "created_by_id"
   add_foreign_key "script_runs", "users", column: "updated_by_id"
   add_foreign_key "scripts", "users", column: "created_by_id"
   add_foreign_key "scripts", "users", column: "updated_by_id"
+  add_foreign_key "smart_features", "users", column: "created_by_id"
+  add_foreign_key "smart_features", "users", column: "updated_by_id"
   add_foreign_key "targets", "users", column: "created_by_id"
   add_foreign_key "targets", "users", column: "updated_by_id"
   add_foreign_key "users", "users", column: "created_by_id"

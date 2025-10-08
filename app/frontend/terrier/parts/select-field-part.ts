@@ -69,8 +69,8 @@ export class SelectFieldPart<T extends SelectFieldState> extends TerrierPart<T> 
 
             // find the option where title is empty and use that as the blank option value
             return options.find((opt) => {
-                if ('title' in opt) {
-                    return opt.title == ''
+                if ('value' in opt) {
+                    return opt.value == ''
                 } else return false
             }) || option
         } else {

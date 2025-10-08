@@ -60,7 +60,7 @@
 
 	.modal-header, .modal-actions {
 		display: flex;
-		padding: var(--tt-pad);
+		padding: calc(var(--tt-pad) / 2) var(--tt-pad);
 		gap: var(--tt-gap);
 		flex: 0 0 auto;
 		align-items: center;

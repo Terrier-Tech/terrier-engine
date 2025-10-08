@@ -8,11 +8,20 @@ _numberRegex = /^(?=.)([+-]?([0-9]*)(\.([0-9]+))?)$/g # pos/neg integer/float
 
 window.tables.initSortable = (ui = $(document), col = null, dir = null) ->
 	params = getUrlParams()
-	col = if col then col else params.sortable_col
-	dir = if dir then dir else params.sortable_dir
-	if col && dir
-		ui.find("table.sortable th a[data-column=#{col}]").each (_, link) ->
-			window.tables.sortByColLink($(link), col, dir)
+	path = window.location.pathname
+	table = ui.find 'table.sortable'
+	key = table.data 'sortable-persistence-key'
+	[storedCol, storedDir] = if key?
+		window.localStorage.getItem("sortable:#{key}:#{path}")?.split(',') ? [null, null]
+	else
+		[null, null]
+
+	col = col ? params.sortable_col ? storedCol 
+	dir = dir ? params.sortable_dir ? storedDir
+	
+	return unless col && dir
+	table.find("th a[data-column=#{col}]").each (_, link) ->
+		window.tables.sortByColLink($(link), col, dir)
 
 # computes the sorting value using a) input values, b) data-column attributes, or c) the text of the cell
 _computeCellValue = (cell) ->
@@ -32,7 +41,7 @@ _computeCellValue = (cell) ->
 
 	# return float if this value is numeric (starts with numbers or decimal point)
 	floatVal = parseFloat(val)
-	if !_.isNaN(floatVal) and val.toString().match(_numberRegex)
+	if !_.isNaN(floatVal) && val.toString().match(_numberRegex)
 		return floatVal
 
 	# use string data value or c) use raw text
@@ -47,53 +56,59 @@ _blanksLast = (s) ->
 		Number.MAX_SAFE_INTEGER.toString()
 
 window.tables.sortByColLink = (link, col = null, dir = null) ->
-	if window.setLinkLoading?
-		window.setLinkLoading link
+	window.setLinkLoading? link
 	table = link.parents 'table'
-	setTimeout(# need to let the loading animation start
-		->
-			unless col
-				col = link.data 'column'
-				urls.replaceParam 'sortable_col', col
-			unless dir
-				descOnly = table.hasClass 'desc-only'
-				dir = if descOnly or link.hasClass('asc')
-					'desc'
-				else
-					'asc'
-				urls.replaceParam 'sortable_dir', dir
 
-			table.find('th a').removeClass('asc').removeClass('desc')
-			link.addClass dir
+	# need to let the loading animation start
+	{ promise, resolve } = Promise.withResolvers()
+	setTimeout(resolve, 5)
+	await promise
+	
+	unless col
+		col = link.data 'column'
+		urls.replaceParam 'sortable_col', col
+	unless dir
+		descOnly = table.hasClass 'desc-only'
+		dir = if descOnly or link.hasClass('asc')
+			'desc'
+		else
+			'asc'
+		urls.replaceParam 'sortable_dir', dir
 
-			# sort the rows
-			t = performance.now()
-			rows = table.find('tbody tr').not('.always-top')
-			rows.sort (a, b) ->
-				aCol = $(a).find(".col-#{col}, .column-#{col}")
-				aVal = _computeCellValue aCol
-				bCol = $(b).find(".col-#{col}, .column-#{col}")
-				bVal = _computeCellValue bCol
-				comp = if aVal > bVal
-					1
-				else
-					-1
-				if dir == 'desc'
-					return -comp
-				comp
-			puts "Sorted rows in #{(performance.now() - t).toFixed(2)} ms"
+	# Save sort preferences
+	path = window.location.pathname
+	key = table.data 'sortable-persistence-key'
+	window.localStorage.setItem("sortable:#{key}:#{path}", [col, dir].join(',')) if key?
 
-			t = performance.now()
-			alwaysTopRow = table.find('tr.always-top')
-			if alwaysTopRow.length > 0
-				table.find('tbody').prepend(alwaysTopRow)
-			rows.detach().appendTo table.find('tbody')
-			table.find('tbody tr.total').detach().appendTo table.find('tbody')
-			puts "Re-attached rows in #{(performance.now() - t).toFixed(2)} ms"
-			if window.unsetLinkLoading?
-				window.unsetLinkLoading link
-		5
-	)
+	table.find('th a').removeClass('asc').removeClass('desc')
+	link.addClass dir
+
+	# sort the rows
+	t = performance.now()
+	rows = table.find('tbody tr').not('.always-top')
+	rows.sort (a, b) ->
+		aCol = $(a).find(".col-#{col}, .column-#{col}")
+		aVal = _computeCellValue aCol
+		bCol = $(b).find(".col-#{col}, .column-#{col}")
+		bVal = _computeCellValue bCol
+		comp = if aVal > bVal
+			1
+		else
+			-1
+		if dir == 'desc'
+			return -comp
+		comp
+	console.log "Sorted rows in #{(performance.now() - t).toFixed(2)} ms"
+
+	t = performance.now()
+	alwaysTopRow = table.find('tr.always-top')
+	if alwaysTopRow.length > 0
+		table.find('tbody').prepend(alwaysTopRow)
+	rows.detach().appendTo table.find('tbody')
+	table.find('tbody tr.total').detach().appendTo table.find('tbody')
+	console.log "Re-attached rows in #{(performance.now() - t).toFixed(2)} ms"
+	if window.unsetLinkLoading?
+		window.unsetLinkLoading link
 
 $(document).on 'click', 'table.sortable th a[data-column]', (evt) ->
 	evt.stopPropagation()

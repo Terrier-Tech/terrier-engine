@@ -7,42 +7,12 @@
 <% models.keys.sort.each do |model_name| %>
   <% model = models[model_name] %>
 
-  export type <%= model_name %> = {
-    <% model[:columns].each do |col| -%>
-      <% next if model[:attachments].include?(col.name.to_sym) -%>
-      <%= col.name %><%= col.null ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
-    <% end -%>
-    <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = compute_ref_type(ref) -%>
-      <% next unless ref_type -%>
-      <%= ref_name %> ? : <%= ref_type %>
-    <% end -%>
-    <% model[:attachments].each do |attachment| -%>
-      <%= attachment %> ? : File
-    <% end -%>
-  }
-
-  export type Unpersisted<%= model_name %> = {
-    <% model[:columns].each do |col| -%>
-      <% next if model[:attachments].include?(col.name.to_sym) -%>
-      <%= col.name %><%= col.null || unpersisted_columns.include?(col.name) ? '?' : '' %>: <%= typescript_type(col, model[:model_class], model[:enum_fields][col.name.to_sym]) %>
-    <% end -%>
-    <% model[:reflections].each do |ref_name, ref| -%>
-      <% ref_type = compute_ref_type(ref) -%>
-      <% next unless ref_type -%>
-      <% if ref_type.include?('[]') -%>
-        <% fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id" -%>
-        <% ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]" -%>
-      <% end -%>
-      <%= ref_name %>?: <%= ref_type %>
-    <% end -%>
-    <% model[:attachments].each do |attachment| -%>
-      <%= attachment %>?: File
-    <% end -%>
-  }
+  export type <%= build_typescript_model_type(model_name, model) %>
+  
+  export type Unpersisted<%= build_typescript_model_type(model_name, model, true) %>
 
   <% if model[:enum_fields].present? -%>
-    export const <%= model_name %>EnumFields = {
+    export const <%= model_name.split('::').last %>EnumFields = {
     <% model[:enum_fields].each do |col, values| -%>
       <% next if model[:enum_fields].blank? -%>
       <%= col %>: [<%= values.select(&:present?).map{|f| "'#{f}'"}.join(',') %>] as const,
@@ -57,7 +27,7 @@
  */
 export type PersistedModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
-    <%= model_name.tableize.singularize %>: <%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= model_name.split('::').last %>
   <% end -%>
 }
 
@@ -66,7 +36,7 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
-    <%= model_name.tableize.singularize %>: Unpersisted<%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: Unpersisted<%= model_name.split('::').last %>
   <% end -%>
 }
 
@@ -76,7 +46,7 @@ export type UnpersistedModelTypeMap = {
 export type ModelIncludesMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% refs = models[model_name][:reflections] -%>
-    <%= model_name.tableize.singularize %>: <%= refs.empty? ? 'never' : refs.keys.sort.map{|r| "'#{r}'"}.join(' | ') %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= refs.empty? ? 'never' : refs.keys.sort.map{|r| "'#{r}'"}.join(' | ') %>
   <% end -%>
 }
 
@@ -86,7 +56,7 @@ export type ModelIncludesMap = {
 export const ModelIncludesArrayMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% refs = models[model_name][:reflections] -%>
-    <%= model_name.tableize.singularize %>: [<%= refs.keys.sort.map{|r| "'#{r}'"}.join(', ') %>] as const,
+    <%= model_name.tableize.singularize.split('/').last %>: [<%= refs.keys.sort.map{|r| "'#{r}'"}.join(', ') %>] as const,
   <% end -%>
 }
 
@@ -96,7 +66,7 @@ export const ModelIncludesArrayMap = {
 export type SluggableModelTypeMap = {
   <% models.keys.sort.each do |model_name| -%>
     <% next unless models[model_name][:columns].map(&:name).include?('slug') -%>
-    <%= model_name.tableize.singularize %>: <%= model_name %>
+    <%= model_name.tableize.singularize.split('/').last %>: <%= model_name.split('::').last %>
   <% end -%>
 }
 

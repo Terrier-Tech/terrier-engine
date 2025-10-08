@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-04-11 15:53:00 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-10-07 13:04:56 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -42,6 +42,38 @@ export type UnpersistedContact = {
 
 export const ContactEnumFields = {
     contact_type: ["customer", "employee"] as const,
+}
+
+export type Contract = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    program_id: string
+    created_by?: User
+    updated_by?: User
+    program?: Program
+}
+
+export type UnpersistedContract = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    program_id: string
+    created_by?: User
+    updated_by?: User
+    program?: Program
 }
 
 export type Invoice = {
@@ -115,6 +147,7 @@ export type Location = {
     work_orders?: WorkOrder[]
     invoices?: Invoice[]
     contacts?: Contact[]
+    location_tags?: LocationTag[]
 }
 
 export type UnpersistedLocation = {
@@ -144,10 +177,143 @@ export type UnpersistedLocation = {
     work_orders?: OptionalProps<UnpersistedWorkOrder, "location_id">[]
     invoices?: OptionalProps<UnpersistedInvoice, "location_id">[]
     contacts?: OptionalProps<UnpersistedContact, "location_id">[]
+    location_tags?: LocationTag[]
 }
 
 export const LocationEnumFields = {
     status: ["onetime", "contract"] as const,
+}
+
+export type LocationSale = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    contract_id: string
+    created_by?: User
+    updated_by?: User
+    contract?: Contract
+    program?: Program
+}
+
+export type UnpersistedLocationSale = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    contract_id: string
+    created_by?: User
+    updated_by?: User
+    contract?: Contract
+    program?: Program
+}
+
+export type LocationTag = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    created_by?: User
+    updated_by?: User
+    location_tag_locations?: LocationTagLocation[]
+    locations?: Location[]
+}
+
+export type UnpersistedLocationTag = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    created_by?: User
+    updated_by?: User
+    location_tag_locations?: OptionalProps<UnpersistedLocationTagLocation, "location_tag_id">[]
+    locations?: Location[]
+}
+
+export type LocationTagLocation = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    location_id: string
+    location_tag_id: string
+    created_by?: User
+    updated_by?: User
+    location?: Location
+    location_tag?: LocationTag
+}
+
+export type UnpersistedLocationTagLocation = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    location_id: string
+    location_tag_id: string
+    created_by?: User
+    updated_by?: User
+    location?: Location
+    location_tag?: LocationTag
+}
+
+export type Program = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    created_by?: User
+    updated_by?: User
+}
+
+export type UnpersistedProgram = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    created_by?: User
+    updated_by?: User
 }
 
 export type Script = {
@@ -271,6 +437,46 @@ export type UnpersistedScriptRun = {
 
 export const ScriptRunEnumFields = {
     status: ["running", "success", "error", "cancelled", "cleared"] as const,
+}
+
+export type SmartFeature = {
+    id: string
+    created_at: string
+    updated_at: string
+    _state: number
+    created_by_id?: string
+    created_by_name: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    feature_type: "test"
+    description?: string
+    data: object
+    created_by?: User
+    updated_by?: User
+}
+
+export type UnpersistedSmartFeature = {
+    id?: string
+    created_at?: string
+    updated_at?: string
+    _state?: number
+    created_by_id?: string
+    created_by_name?: string
+    extern_id?: string
+    updated_by_id?: string
+    updated_by_name?: string
+    name: string
+    feature_type: "test"
+    description?: string
+    data: object
+    created_by?: User
+    updated_by?: User
+}
+
+export const SmartFeatureEnumFields = {
+    feature_type: ["test"] as const,
 }
 
 export type Target = {
@@ -440,10 +646,16 @@ export const WorkOrderEnumFields = {
  */
 export type PersistedModelTypeMap = {
     contact: Contact
+    contract: Contract
     invoice: Invoice
     location: Location
+    location_sale: LocationSale
+    location_tag: LocationTag
+    location_tag_location: LocationTagLocation
+    program: Program
     script: Script
     script_run: ScriptRun
+    smart_feature: SmartFeature
     target: Target
     user: User
     work_order: WorkOrder
@@ -454,10 +666,16 @@ export type PersistedModelTypeMap = {
  */
 export type UnpersistedModelTypeMap = {
     contact: UnpersistedContact
+    contract: UnpersistedContract
     invoice: UnpersistedInvoice
     location: UnpersistedLocation
+    location_sale: UnpersistedLocationSale
+    location_tag: UnpersistedLocationTag
+    location_tag_location: UnpersistedLocationTagLocation
+    program: UnpersistedProgram
     script: UnpersistedScript
     script_run: UnpersistedScriptRun
+    smart_feature: UnpersistedSmartFeature
     target: UnpersistedTarget
     user: UnpersistedUser
     work_order: UnpersistedWorkOrder
@@ -468,10 +686,16 @@ export type UnpersistedModelTypeMap = {
  */
 export type ModelIncludesMap = {
     contact: "created_by" | "location" | "updated_by" | "user"
+    contract: "created_by" | "program" | "updated_by"
     invoice: "created_by" | "location" | "updated_by" | "work_orders"
-    location: "contacts" | "created_by" | "invoices" | "updated_by" | "work_orders"
+    location: "contacts" | "created_by" | "invoices" | "location_tags" | "updated_by" | "work_orders"
+    location_sale: "contract" | "created_by" | "program" | "updated_by"
+    location_tag: "created_by" | "location_tag_locations" | "locations" | "updated_by"
+    location_tag_location: "created_by" | "location" | "location_tag" | "updated_by"
+    program: "created_by" | "updated_by"
     script: "created_by" | "script_runs" | "updated_by"
     script_run: "created_by" | "script" | "updated_by"
+    smart_feature: "created_by" | "updated_by"
     target: "created_by" | "updated_by" | "work_orders"
     user: "contacts" | "created_by" | "updated_by" | "work_orders"
     work_order: "created_by" | "invoice" | "location" | "target" | "updated_by" | "user"
@@ -482,10 +706,16 @@ export type ModelIncludesMap = {
  */
 export const ModelIncludesArrayMap = {
     contact: ["created_by", "location", "updated_by", "user"] as const,
+    contract: ["created_by", "program", "updated_by"] as const,
     invoice: ["created_by", "location", "updated_by", "work_orders"] as const,
-    location: ["contacts", "created_by", "invoices", "updated_by", "work_orders"] as const,
+    location: ["contacts", "created_by", "invoices", "location_tags", "updated_by", "work_orders"] as const,
+    location_sale: ["contract", "created_by", "program", "updated_by"] as const,
+    location_tag: ["created_by", "location_tag_locations", "locations", "updated_by"] as const,
+    location_tag_location: ["created_by", "location", "location_tag", "updated_by"] as const,
+    program: ["created_by", "updated_by"] as const,
     script: ["created_by", "script_runs", "updated_by"] as const,
     script_run: ["created_by", "script", "updated_by"] as const,
+    smart_feature: ["created_by", "updated_by"] as const,
     target: ["created_by", "updated_by", "work_orders"] as const,
     user: ["contacts", "created_by", "updated_by", "work_orders"] as const,
     work_order: ["created_by", "invoice", "location", "target", "updated_by", "user"] as const,

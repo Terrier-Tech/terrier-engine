@@ -76,12 +76,12 @@
 			padding-bottom: var(--tt-pad);
 		}
 
-		.content-container {
+		> .content-container {
 			display: flex;
 			flex-direction: column;
 		}
 
-		&.gap .content-container {
+		&.gap, &.gap > .content-container {
 			gap: var(--tt-gap);
 		}
 	}
