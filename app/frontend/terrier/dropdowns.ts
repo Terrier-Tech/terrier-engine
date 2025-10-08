@@ -9,7 +9,7 @@ import Arrays from "tuff-core/arrays"
 
 const log = new Logger('Dropdowns')
 
-const clearDropdownKey = Messages.untypedKey()
+export const clearDropdownKey = Messages.untypedKey()
 
 /**
  * Abstract base class for dropdown parts.
