@@ -3,6 +3,7 @@ import {GlypName} from "./glyps"
 import HubIcons, {HubIconName} from "./gen/hub-icons"
 import {Key} from "tuff-core/messages"
 import Hints, {Hint, HintRenderOptions} from "./hints";
+import {clearDropdownKey} from "./dropdowns";
 
 export interface ThemeType {
     readonly icons: string
@@ -125,6 +126,8 @@ export default class Theme {
                 }
                 if (action.click) {
                     a.emitClick(action.click.key, action.click.data || {})
+                } else {
+                    a.emitClick(clearDropdownKey)
                 }
                 if (action.badge?.length) {
                     const badgeColor = options?.badgeColor || 'alert'
