@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-06-03 15:21:22 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-10-28 11:24:27 -0500, DO NOT EDIT IT MANUALLY!
 
 import {ColorName} from "../theme"
 import {PartTag} from "tuff-core/parts"
@@ -169,6 +169,10 @@ import HomeRaw from '../images/icons/home.svg?raw'
 // @ts-ignore
 import HomeSrc from '../images/icons/home.svg'
 // @ts-ignore
+import HundredRaw from '../images/icons/hundred.svg?raw'
+// @ts-ignore
+import HundredSrc from '../images/icons/hundred.svg'
+// @ts-ignore
 import ImageRaw from '../images/icons/image.svg?raw'
 // @ts-ignore
 import ImageSrc from '../images/icons/image.svg'
@@ -237,6 +241,10 @@ import ListViewRaw from '../images/icons/list_view.svg?raw'
 // @ts-ignore
 import ListViewSrc from '../images/icons/list_view.svg'
 // @ts-ignore
+import LolRaw from '../images/icons/lol.svg?raw'
+// @ts-ignore
+import LolSrc from '../images/icons/lol.svg'
+// @ts-ignore
 import MetricsRaw from '../images/icons/metrics.svg?raw'
 // @ts-ignore
 import MetricsSrc from '../images/icons/metrics.svg'
@@ -297,9 +305,17 @@ import PrioritizedRaw from '../images/icons/prioritized.svg?raw'
 // @ts-ignore
 import PrioritizedSrc from '../images/icons/prioritized.svg'
 // @ts-ignore
+import PrivateRaw from '../images/icons/private.svg?raw'
+// @ts-ignore
+import PrivateSrc from '../images/icons/private.svg'
+// @ts-ignore
 import ProjectRaw from '../images/icons/project.svg?raw'
 // @ts-ignore
 import ProjectSrc from '../images/icons/project.svg'
+// @ts-ignore
+import PublicRaw from '../images/icons/public.svg?raw'
+// @ts-ignore
+import PublicSrc from '../images/icons/public.svg'
 // @ts-ignore
 import QuestionRaw from '../images/icons/question.svg?raw'
 // @ts-ignore
@@ -412,6 +428,10 @@ import UnprioritizedSrc from '../images/icons/unprioritized.svg'
 import UploadRaw from '../images/icons/upload.svg?raw'
 // @ts-ignore
 import UploadSrc from '../images/icons/upload.svg'
+// @ts-ignore
+import UpvoteRaw from '../images/icons/upvote.svg?raw'
+// @ts-ignore
+import UpvoteSrc from '../images/icons/upvote.svg'
 // @ts-ignore
 import UserRaw from '../images/icons/user.svg?raw'
 // @ts-ignore
@@ -594,6 +614,10 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
         raw: HomeRaw,
         src: HomeSrc,
     },
+    "hub-hundred": {
+        raw: HundredRaw,
+        src: HundredSrc,
+    },
     "hub-image": {
         raw: ImageRaw,
         src: ImageSrc,
@@ -662,6 +686,10 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
         raw: ListViewRaw,
         src: ListViewSrc,
     },
+    "hub-lol": {
+        raw: LolRaw,
+        src: LolSrc,
+    },
     "hub-metrics": {
         raw: MetricsRaw,
         src: MetricsSrc,
@@ -722,9 +750,17 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
         raw: PrioritizedRaw,
         src: PrioritizedSrc,
     },
+    "hub-private": {
+        raw: PrivateRaw,
+        src: PrivateSrc,
+    },
     "hub-project": {
         raw: ProjectRaw,
         src: ProjectSrc,
+    },
+    "hub-public": {
+        raw: PublicRaw,
+        src: PublicSrc,
     },
     "hub-question": {
         raw: QuestionRaw,
@@ -838,6 +874,10 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
         raw: UploadRaw,
         src: UploadSrc,
     },
+    "hub-upvote": {
+        raw: UpvoteRaw,
+        src: UpvoteSrc,
+    },
     "hub-user": {
         raw: UserRaw,
         src: UserSrc,
@@ -857,7 +897,7 @@ export const IconDefs: Record<HubIconName,{ raw: string, src: string }> = {
 }
 
 const Names = [
-    'hub-active', 'hub-admin', 'hub-archive', 'hub-arrow_down', 'hub-arrow_left', 'hub-arrow_right', 'hub-arrow_up', 'hub-assign', 'hub-attachment', 'hub-back', 'hub-badge', 'hub-board', 'hub-bookmark', 'hub-bookmark_add', 'hub-bookmark_remove', 'hub-bookmarked', 'hub-bookmarks', 'hub-branch', 'hub-bug', 'hub-calculator', 'hub-checkmark', 'hub-close', 'hub-clypboard', 'hub-comment', 'hub-complete', 'hub-dashboard', 'hub-data_pull', 'hub-data_update', 'hub-database', 'hub-day', 'hub-delete', 'hub-documentation', 'hub-edit', 'hub-existing_child', 'hub-existing_parent', 'hub-feature', 'hub-flex', 'hub-forward', 'hub-github', 'hub-history', 'hub-home', 'hub-image', 'hub-inbox', 'hub-info', 'hub-internal', 'hub-issue', 'hub-lane', 'hub-lane_asap', 'hub-lane_days', 'hub-lane_hours', 'hub-lane_weeks', 'hub-lanes_board', 'hub-level_complete', 'hub-level_highway', 'hub-level_on_ramp', 'hub-level_parking', 'hub-link', 'hub-list_view', 'hub-metrics', 'hub-minus', 'hub-new_child', 'hub-new_parent', 'hub-night', 'hub-origin', 'hub-pending', 'hub-plot', 'hub-plus', 'hub-post', 'hub-posts', 'hub-pr_closed', 'hub-pr_merged', 'hub-pr_open', 'hub-prioritized', 'hub-project', 'hub-question', 'hub-reaction', 'hub-recent', 'hub-refresh', 'hub-related_posts', 'hub-releases', 'hub-request', 'hub-settings', 'hub-split_view', 'hub-status', 'hub-step_demo', 'hub-step_deploy', 'hub-step_develop', 'hub-step_investigate', 'hub-step_none', 'hub-step_required', 'hub-step_review', 'hub-step_test', 'hub-steps', 'hub-steps_board', 'hub-subscribe', 'hub-support', 'hub-team', 'hub-terrier', 'hub-thumbs_up', 'hub-type', 'hub-unprioritized', 'hub-upload', 'hub-user', 'hub-users', 'hub-website', 'hub-week'
+    'hub-active', 'hub-admin', 'hub-archive', 'hub-arrow_down', 'hub-arrow_left', 'hub-arrow_right', 'hub-arrow_up', 'hub-assign', 'hub-attachment', 'hub-back', 'hub-badge', 'hub-board', 'hub-bookmark', 'hub-bookmark_add', 'hub-bookmark_remove', 'hub-bookmarked', 'hub-bookmarks', 'hub-branch', 'hub-bug', 'hub-calculator', 'hub-checkmark', 'hub-close', 'hub-clypboard', 'hub-comment', 'hub-complete', 'hub-dashboard', 'hub-data_pull', 'hub-data_update', 'hub-database', 'hub-day', 'hub-delete', 'hub-documentation', 'hub-edit', 'hub-existing_child', 'hub-existing_parent', 'hub-feature', 'hub-flex', 'hub-forward', 'hub-github', 'hub-history', 'hub-home', 'hub-hundred', 'hub-image', 'hub-inbox', 'hub-info', 'hub-internal', 'hub-issue', 'hub-lane', 'hub-lane_asap', 'hub-lane_days', 'hub-lane_hours', 'hub-lane_weeks', 'hub-lanes_board', 'hub-level_complete', 'hub-level_highway', 'hub-level_on_ramp', 'hub-level_parking', 'hub-link', 'hub-list_view', 'hub-lol', 'hub-metrics', 'hub-minus', 'hub-new_child', 'hub-new_parent', 'hub-night', 'hub-origin', 'hub-pending', 'hub-plot', 'hub-plus', 'hub-post', 'hub-posts', 'hub-pr_closed', 'hub-pr_merged', 'hub-pr_open', 'hub-prioritized', 'hub-private', 'hub-project', 'hub-public', 'hub-question', 'hub-reaction', 'hub-recent', 'hub-refresh', 'hub-related_posts', 'hub-releases', 'hub-request', 'hub-settings', 'hub-split_view', 'hub-status', 'hub-step_demo', 'hub-step_deploy', 'hub-step_develop', 'hub-step_investigate', 'hub-step_none', 'hub-step_required', 'hub-step_review', 'hub-step_test', 'hub-steps', 'hub-steps_board', 'hub-subscribe', 'hub-support', 'hub-team', 'hub-terrier', 'hub-thumbs_up', 'hub-type', 'hub-unprioritized', 'hub-upload', 'hub-upvote', 'hub-user', 'hub-users', 'hub-website', 'hub-week'
 ] as const
 
 export type HubIconName = typeof Names[number]
