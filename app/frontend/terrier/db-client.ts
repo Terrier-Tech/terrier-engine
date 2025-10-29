@@ -11,7 +11,13 @@ log.level = 'debug'
  */
 type ModelTypeMap = {
     [name: string]: any
-}
+};
+
+/**
+ * A version of a record where all fields are optional and can be null, while preserving the key set.
+ * Includes an optional `id` for convenience with upserts/updates.
+ */
+type PartialRecord<T> = { [K in keyof T]?: T[K] | null } & { id?: string }
 
 type ModelIncludesMap<M extends ModelTypeMap> = Record<keyof M, any>
 
@@ -243,6 +249,21 @@ export default class DbClient<PM extends ModelTypeMap, UM extends ModelTypeMap, 
         const url = `/db/model/${modelType}/upsert.json`
         const body = {record, includes}
         log.debug(`Updating ${modelType} at ${url} with body`, body)
+        return await Api.post<DbUpsertResponse<PM,T>>(url, body)
+    }
+
+    /**
+     * Updates the given record without requiring the entire record.
+     * @param modelType the camel_case name of the model
+     * @param id the id of the record
+     * @param record the record to update
+     * @param includes relations to include in the returned record
+     */
+    async partialUpdate<T extends keyof PM & string>(modelType: T, id: string, record: PartialRecord<UM[T]>, includes: Includes<PM,T,I> = {}): Promise<DbUpsertResponse<PM,T> & ApiResponse> {
+        const url = `/db/model/${modelType}/upsert.json`
+        record.id = id
+        const body = {record, includes}
+        log.debug(`Partially updating ${modelType} ${id} at ${url} with body`, body)
         return await Api.post<DbUpsertResponse<PM,T>>(url, body)
     }
 

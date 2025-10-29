@@ -198,7 +198,7 @@ async function getDistributions(dive: DdDive): Promise<DdDiveDistribution[]> {
  */
 async function softDeleteDistribution(dist: DdDiveDistribution) {
     dist._state = 2
-    return await Db().update('dd_dive_distribution', dist)
+    return await Db().partialUpdate('dd_dive_distribution', dist.id, {_state: 2})
 }
 
 

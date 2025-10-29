@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-04-25 14:11:58 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-10-29 09:38:49 -0500, DO NOT EDIT IT MANUALLY!
 
 import { Query } from "../queries/queries"
 
