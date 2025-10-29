@@ -6,6 +6,8 @@ namespace :db do
     # compute the namespaced name of the class
     path_comps = path.split('/')
     model_comps = [File.basename(path).split('.').first.classify]
+    return puts "-- Skipping, #{model_comps} is not a model" if path_comps[-2] == 'concerns'
+
     model_comps.unshift path_comps[-2].titleize unless path_comps[-2] == 'models'
     model = model_comps.join('::').constantize
     puts "\n== #{model.name.bold} =="
