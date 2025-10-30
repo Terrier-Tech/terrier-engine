@@ -85,7 +85,7 @@ export default class Theme {
     }
 
     /**
-     * Renders one ore more `Action`s into a parent tag.
+     * Renders one or more `Action`s into a parent tag.
      * @param parent the HTML element in which to render the action
      * @param actions the action or actions to render
      * @param options additional rendering options

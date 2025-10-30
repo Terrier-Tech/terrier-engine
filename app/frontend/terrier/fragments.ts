@@ -81,6 +81,16 @@ export class PanelFragment extends ContentFragment {
         return this
     }
 
+    protected _customActions?: (parent: HtmlParentTag) => void
+
+    /**
+     * @param fun a function that renders custom content in between the primary and secondary actions
+     */
+    customActions(fun: (parent: HtmlParentTag) => void) {
+        this._customActions = fun
+        return this
+    }
+
     /**
      * Renders the panel into the given parent tag
      * @param parent
@@ -104,7 +114,7 @@ export class PanelFragment extends ContentFragment {
                     this._content(content)
                 }
             })
-            panelActions(panel, this.actions, this.theme)
+            panelActions(panel, this.actions, this.theme, this._customActions)
         }).class(...this._classes)
     }
 
@@ -115,19 +125,34 @@ export class PanelFragment extends ContentFragment {
  * @param panel the .panel container
  * @param actions the actions
  * @param theme the theme with which to render actions
+ * @param customRender a custom function to render in between the primary and secondary actions
  */
-function panelActions(panel: PartTag, actions: PanelActions, theme: Theme) {
-    if (actions.primary.length || actions.secondary.length) {
-        panel.div('.panel-actions', actionsContainer => {
-            for (const level of ['secondary', 'primary'] as const) {
-                const levelActions = actions[level]
-                if (!levelActions?.length) continue;
-                actionsContainer.div(`.${level}-actions`, container => {
-                    theme.renderActions(container, levelActions, { defaultClass: level })
-                })
-            }
-        })
-    }
+function panelActions(panel: PartTag, actions: PanelActions, theme: Theme, customRender?: (parent: HtmlParentTag) => void) {
+    if (!actions.primary.length && !actions.secondary.length && !customRender) return;
+    panel.div('.panel-actions', actionsContainer => {
+        // secondary actions
+        const secondaryActions = actions.secondary
+        if (secondaryActions.length) {
+            actionsContainer.div('.secondary-actions', container => {
+                theme.renderActions(container, secondaryActions, { defaultClass: 'secondary' })
+            })
+        }
+
+        // custom render
+        if (customRender) {
+            actionsContainer.div('.custom-actions', container => {
+                customRender(container)
+            })
+        }
+
+        // primary actions
+        const primaryActions = actions.primary
+        if (primaryActions.length) {
+            actionsContainer.div('.primary-actions', container => {
+                theme.renderActions(container, primaryActions, { defaultClass: 'primary' })
+            })
+        }
+    })
 }
 
 

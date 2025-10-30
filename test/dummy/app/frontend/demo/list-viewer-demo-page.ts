@@ -54,6 +54,10 @@ class DemoDetailPart extends TerrierPart<DemoPanelItem> {
                 panel.class('padded')
                 panel.div('.details').text(this.state.details + ` at ${dayjs().format('h:mm:ss A')}`)
             })
+            .addAction({title: "Primary Action", icon: "glyp-checkmark"})
+            .customActions(parent => {
+                parent.div().text("Custom Action")
+            })
             .render(parent)
         log.info(`DemoDetailPart ${this.state.listId} render`, this.element)
     }
