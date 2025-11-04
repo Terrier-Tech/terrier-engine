@@ -260,4 +260,10 @@ class ScriptExecutor
     self.script.save_by_user!(self.me)
   end
 
+  def change_user
+    str = self.script.title
+    str += " (#{self.me.full_name})" if self.me.present?
+    str
+  end
+
 end
