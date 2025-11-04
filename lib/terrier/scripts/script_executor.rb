@@ -261,7 +261,7 @@ class ScriptExecutor
   end
 
   def change_user
-    str = self.script.title
+    str = self.script.title.presence || 'Untitled'
     str += " (#{self.me.full_name})" if self.me.present?
     str
   end
