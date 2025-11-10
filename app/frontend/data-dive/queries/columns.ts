@@ -385,7 +385,8 @@ class ColumnEditor extends TerrierPart<ColumnState> {
     }
 
     async serialize() {
-        return await this.fields.serialize()
+        let formData = await this.fields.serialize()
+        return Object.assign(formData, this.fields.data)
     }
 
 }
