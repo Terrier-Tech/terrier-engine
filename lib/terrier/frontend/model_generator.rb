@@ -24,6 +24,7 @@ class ModelGenerator < BaseGenerator
 
   def each_model
     ApplicationRecord.descendants.each do |model|
+      next unless model.base_class? # exclude STI child classes
       next if model.respond_to?(:exclude_from_frontend?) && model.exclude_from_frontend? # we don't need these on the frontend
       next if @prefix.present? && !@prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by prefix
       next if @exclude_prefix.present? && @exclude_prefix.any? { |prefix| model.name.start_with?(prefix) } # filter by exclude prefix
@@ -47,13 +48,21 @@ class ModelGenerator < BaseGenerator
       end
 
       column_names = Set.new columns.map(&:name)
-      enum_fields = model.validators.each_with_object({}) do |validator, enum_fields|
+      enum_fields = {}.with_indifferent_access
+      model.validators.each do |validator|
         column, *other_columns = validator.attributes
         values = validator.options[:in]
         if !other_columns.present? && column.to_s.in?(column_names) && values.present? && !values.is_a?(Proc)
           # if values is a proc, the values aren't known at compile time and shouldn't be included in the typescript type
           enum_fields[column] = values
         end
+      end
+
+      if model.has_attribute?(model.inheritance_column) && !enum_fields.has_key?(model.inheritance_column)
+        # this model uses single table inheritance; add descendants as enum values for the inheritance column
+        descendant_names = model.descendants.map(&:name).sort
+        descendant_names.map!(&:demodulize) unless model.store_full_sti_class
+        enum_fields[model.inheritance_column] = descendant_names
       end
 
       models[model.name] = {
