@@ -204,8 +204,11 @@ module Terrier::Embedded
     end
 
     # defines a string field that only accepts a fixed set of possible values
-    def enum_field(name, values)
-      field name, type: String, in: values, default: values.first
+    def enum_field(name, values, opts = {})
+      opts[:type] ||= String
+      opts[:in] ||= values
+      opts[:default] ||= values.first
+      field name, opts
 
       # create helper methods for name_value? and name_value!
       values.each do |value|
