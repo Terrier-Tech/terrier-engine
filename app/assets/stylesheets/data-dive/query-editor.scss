@@ -254,6 +254,9 @@
 	> .group-by {
 		justify-content: center;
 	}
+	> .raw {
+		flex: 1 0 auto;
+	}
 
 	// filter editor columns
 	> .column {

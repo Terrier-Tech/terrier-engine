@@ -282,7 +282,7 @@ export default class QueryEditor extends ContentPart<QueryEditorState> {
             this.updateSettings(m.data)
         })
 
-        this.sqlPart = this.tabs.upsertTab({ key: 'sql', title: 'SQL', icon: 'glyp-code' },
+        this.sqlPart = this.tabs.upsertTab({ key: 'sql', title: 'SQL', icon: 'glyp-code_details' },
             SqlPart, { editor: this, query })
 
         this.previewPart = this.tabs.upsertTab({ key: 'preview', title: 'Preview', icon: 'glyp-table', classes: ['no-padding'], click: { key: this.updatePreviewKey } },

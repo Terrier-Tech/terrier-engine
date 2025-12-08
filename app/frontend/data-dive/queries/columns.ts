@@ -57,6 +57,7 @@ function functionType(fun: Function | undefined): 'aggregate' | 'time' | undefin
  */
 export type ColumnRef = {
     name: string
+    raw?: string
     alias?: string
     grouped?: boolean
     function?: AggFunction | DateFunction
@@ -114,6 +115,7 @@ export type ColumnsEditorState = {
 
 const saveKey = Messages.untypedKey()
 const addKey = Messages.untypedKey()
+const addRawKey = Messages.untypedKey()
 const addSingleKey = Messages.typedKey<{ name: string }>()
 const removeKey = Messages.typedKey<{ id: string }>()
 const valueChangedKey = Messages.untypedKey()
@@ -158,6 +160,12 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             click: { key: addKey }
         }, 'secondary')
 
+        this.addAction({
+            title: 'Add Raw Select',
+            icon: 'glyp-code_details',
+            click: { key: addRawKey }
+        }, 'secondary')
+
         this.onClick(saveKey, _ => {
             this.save()
         })
@@ -174,6 +182,10 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
             this.toggleDropdown(SelectColumnsDropdown, { editor: this as ColumnsEditorModal }, m.event.target)
         })
 
+        this.onClick(addRawKey, _ => {
+            this.addRawColumn()
+        })
+
         this.onChange(valueChangedKey, m => {
             log.info(`Column value changed`, m)
             this.validate().then()
@@ -183,6 +195,16 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     addColumn(col: ColumnRef) {
         log.info(`Add column ${col.name}`, col)
         this.addEditor(col)
+        this.validate().then()
+        this.dirty()
+    }
+
+    addRawColumn() {
+        log.info(`Add raw column`)
+        const colRef: ColumnRef = {
+            name: ""
+        }
+        this.addEditor(colRef)
         this.validate().then()
         this.dirty()
     }
@@ -333,7 +355,7 @@ class ColumnEditor extends TerrierPart<ColumnState> {
     schema!: SchemaDef
     modelDef!: ModelDef
     columnRef!: ColumnRef
-    columnDef!: ColumnDef
+    columnDef?: ColumnDef
     fields!: TerrierFormFields<ColumnRef>
 
     functionOptions!: SelectOptions
@@ -346,7 +368,7 @@ class ColumnEditor extends TerrierPart<ColumnState> {
         this.fields = new TerrierFormFields(this, this.columnRef)
 
         let funcs = Array.from<string>(AggFunctions)
-        if (this.columnDef.type == 'date' || this.columnDef.type.includes('time')) {
+        if (this.columnDef && (this.columnDef.type == 'date' || this.columnDef.type.includes('time'))) {
             funcs = funcs.concat(Array.from(DateFunctions))
         }
         this.functionOptions = Forms.titleizeOptions(funcs, '')
@@ -357,6 +379,29 @@ class ColumnEditor extends TerrierPart<ColumnState> {
     }
 
     render(parent: PartTag) {
+        if (this.columnDef) {
+            this.renderColumnFields(parent)
+        }
+        else {
+            this.renderRawFields(parent)
+        }
+        parent.div('.actions', actions => {
+            actions.a(a => {
+                a.i('.glyp-close')
+            }).emitClick(removeKey, { id: this.state.id })
+        })
+        if (this.columnRef.errors?.length) {
+            for (const error of this.columnRef.errors) {
+                parent.div('.error.tt-bubble.alert').text(error.message)
+            }
+        }
+    }
+
+    /**
+     * Render the fields for an actual column reference.
+     * @param parent
+     */
+    renderColumnFields(parent: PartTag) {
         parent.div('.name', col => {
             col.div('.tt-readonly-field', { text: this.columnRef.name })
         })
@@ -372,16 +417,16 @@ class ColumnEditor extends TerrierPart<ColumnState> {
             this.fields.checkbox(col, "grouped")
                 .emitChange(valueChangedKey)
         })
-        parent.div('.actions', actions => {
-            actions.a(a => {
-                a.i('.glyp-close')
-            }).emitClick(removeKey, { id: this.state.id })
+    }
+
+    /**
+     * Render the fields for a raw select statement.
+     * @param parent
+     */
+    renderRawFields(parent: PartTag) {
+        parent.div('.raw', col => {
+            this.fields.textArea(col, "raw", { placeholder: "Raw SQL" })
         })
-        if (this.columnRef.errors?.length) {
-            for (const error of this.columnRef.errors) {
-                parent.div('.error.tt-bubble.alert').text(error.message)
-            }
-        }
     }
 
     async serialize() {
