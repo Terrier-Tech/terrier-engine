@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import Dates, {DateLiteral, VirtualDatePeriod, VirtualDateRange} from "./dates"
+import Dates, { DateLiteral, VirtualDateDirection, VirtualDatePeriod, VirtualDateRange } from "./dates";
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import { Query } from "./queries"
 import {TableRef, TableView} from "./tables"
@@ -584,6 +584,7 @@ class InclusionFilterEditor extends FilterFields<InclusionFilter> {
 
 const dateRangeRelativeChangedKey = Messages.untypedKey()
 const dateRangePeriodChangedKey = Messages.typedKey<{period: string}>()
+const dateRangeDirectionChangedKey = Messages.typedKey<{direction: VirtualDateDirection}>()
 const dateRangePreselectKey = Messages.typedKey<VirtualDateRange>()
 
 class DateRangeFilterEditor extends FilterFields<DateRangeFilter> {
@@ -662,6 +663,23 @@ class DateRangeFilterEditor extends FilterFields<DateRangeFilter> {
                                 .emitClick(dateRangePreselectKey, {period, relative})
                         }
                     })
+                }
+            })
+
+            // direction
+            this.range.direction ||= 'inside'
+            cell.div('.tt-flex.gap.wrap.align-center', row => {
+                for (const direction of Dates.virtualDirections) {
+                    row.label('.caption-size', label => {
+                        label.input({
+                            type: 'radio',
+                            name: `${this.id}-direction`,
+                            value: direction,
+                            checked: this.range.direction == direction
+                        })
+                            .emitChange(dateRangeDirectionChangedKey, { direction })
+                        label.span().text(inflection.titleize(direction))
+                    }).data({tooltip: Dates.virtualDirectionDescriptions[direction]})
                 }
             })
         })

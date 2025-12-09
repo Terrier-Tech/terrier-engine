@@ -44,12 +44,23 @@ const virtualPeriods = ['day', 'week', 'month', 'year'] as const
 
 export type VirtualDatePeriod = typeof virtualPeriods[number]
 
+const virtualDirections = ['before', 'inside', 'after'] as const
+
+export type VirtualDateDirection = typeof virtualDirections[number]
+
+const virtualDirectionDescriptions: Record<VirtualDateDirection, string> = {
+    'before': "Filter out dates after the start of the range",
+    'inside': "Only include dates inside the range",
+    'after': "Filter out dates before the end of the range"
+}
+
 /**
  * A date range that's relative to the current date.
  */
 export type VirtualDateRange = {
     period: VirtualDatePeriod
     relative: number
+    direction?: VirtualDateDirection
 }
 
 export type DateRange = LiteralDateRange | VirtualDateRange
@@ -279,6 +290,8 @@ const Dates = {
     rangeDisplay,
     materializeVirtualRange,
     virtualPeriods,
+    virtualDirections,
+    virtualDirectionDescriptions,
     parsePeriod,
     serializePeriod
 }
