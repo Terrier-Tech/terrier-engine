@@ -51,6 +51,10 @@ module TestDive
             filter_type: 'inclusion',
             column: 'status',
             in: %w[active complete]
+          },
+          {
+            filter_type: 'raw',
+            raw: "date_part('month', time) = 11"
           }
         ],
         joins: {

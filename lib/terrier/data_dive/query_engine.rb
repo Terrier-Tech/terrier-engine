@@ -245,7 +245,7 @@ end
 
 class Filter < QueryModel
   attr_accessor :id, :column, :column_type, :filter_type, :operator, :value, :numeric_value, :range, :in, :editable,
-                :edit_label, :query
+                :edit_label, :query, :raw
 
   # computed
   attr_reader :input_name, :input_value
@@ -260,12 +260,18 @@ class Filter < QueryModel
       "#{key} range"
     when 'direct'
       "#{key} #{@operator}"
+    when 'raw'
+      ""
     else
       raise "Don't know how to compute an input_name for a #{@filter_type} filter"
     end
   end
 
   def compute_column_metadata(table)
+    if @filter_type == 'raw'
+      return nil
+    end
+
     model = table.model_class
     ar_column = model.columns_hash[@column]
     unless ar_column
@@ -327,7 +333,7 @@ class Filter < QueryModel
 
     # compute the metadata and assign type
     metadata = compute_column_metadata table
-    @column_type = metadata.type
+    @column_type = metadata&.type
 
     case @filter_type
     when 'direct'
@@ -385,6 +391,8 @@ class Filter < QueryModel
       val = val.split(',').map(&:strip) if val.is_a?(String)
       params[@id] = val.join(', ')
       builder.where "#{table.alias}.#{@column} in ?", val
+    when 'raw'
+      builder.where @raw
     else
       raise "Unknown filter type '#{@filter_type}'"
     end

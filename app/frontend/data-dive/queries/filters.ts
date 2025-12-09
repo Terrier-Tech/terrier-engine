@@ -25,7 +25,7 @@ const log = new Logger("Filters")
 
 type BaseFilter = {
     id: string
-    filter_type: string
+    filter_type: 'direct' | 'inclusion' | 'date_range' | 'or' | 'raw'
     column: string
     editable?: 'optional' | 'required'
     edit_label?: string
@@ -36,7 +36,7 @@ export type DirectOperator = typeof directOperators[number]
 
 /**
  * Computes the operator options for the given column type.
- * @param type
+ * @param colDef
  */
 function operatorOptions(colDef?: ColumnDef): SelectOptions {
     const type = colDef?.type || 'text'
@@ -73,6 +73,11 @@ export type DirectFilter = BaseFilter & {
     column_type?: 'text' | 'number' | 'cents'
 }
 
+export type RawFilter = BaseFilter & {
+    filter_type: 'raw'
+    raw?: string
+}
+
 // type DirectColumnType = DirectFilter['column_type']
 
 export type DateRangeFilter = BaseFilter & {
@@ -92,7 +97,7 @@ export type OrFilter = BaseFilter & {
     where: Filter[]
 }
 
-export type Filter = DirectFilter | DateRangeFilter | InclusionFilter | OrFilter
+export type Filter = DirectFilter | DateRangeFilter | InclusionFilter | OrFilter | RawFilter
 
 // export type FilterType = Filter['filter_type']
 
@@ -156,7 +161,7 @@ function renderStatic(parent: PartTag, filter: Filter) {
                         break
                 }
             }
-            break
+            return
         case 'date_range':
             parent.div('.column').text(filter.column)
             parent.div('.value').text(Dates.rangeDisplay(filter.range))
@@ -166,8 +171,8 @@ function renderStatic(parent: PartTag, filter: Filter) {
             parent.div('.operator').text("in")
             parent.div('.value').text(filter.in.join(' | '))
             return
-        default:
-            parent.div('.empty').text(`${filter.filter_type} filter`)
+        case 'raw':
+            parent.div('.raw').text(filter.raw || '??')
     }
 }
 
@@ -183,6 +188,7 @@ export type FiltersEditorState = {
 
 const saveKey = Messages.untypedKey()
 const addKey = Messages.untypedKey()
+const addRawKey = Messages.untypedKey()
 const removeKey = Messages.typedKey<{ id: string }>()
 
 export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
@@ -232,6 +238,12 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
             click: {key: addKey}
         }, 'secondary')
 
+        this.addAction({
+            title: 'Add Raw Filter',
+            icon: 'glyp-code_details',
+            click: { key: addRawKey }
+        }, 'secondary')
+
         this.onClick(saveKey, _ => {
             this.save()
         })
@@ -242,6 +254,10 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
 
         this.onClick(addKey, m => {
             this.showAddFilterDropdown(m.event.target! as HTMLElement)
+        })
+
+        this.onClick(addRawKey, _ => {
+            this.addRawFilter()
         })
     }
 
@@ -264,6 +280,16 @@ export class FiltersEditorModal extends ModalPart<FiltersEditorState> {
             this.editorStates = Arrays.without(this.editorStates, filter)
             this.updateFilterEditors()
         }
+    }
+
+    addRawFilter() {
+        this.addState({
+            id: Ids.makeUuid(),
+            column: '',
+            filter_type: 'raw',
+            raw: ''
+        })
+        this.updateFilterEditors()
     }
 
     showAddFilterDropdown(target: HTMLElement | null) {
@@ -328,6 +354,9 @@ class FilterEditorContainer extends TerrierPart<EditorState> {
                 break
             case 'date_range':
                 this.fields = new DateRangeFilterEditor(this, filter as DateRangeFilter)
+                break
+            case 'raw':
+                this.fields = new RawFilterEditor(this, filter as RawFilter)
                 break
         }
     }
@@ -398,6 +427,7 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
 
     numericChangeKey = Messages.untypedKey()
     operatorChangeKey = Messages.untypedKey()
+    textChangeKey = Messages.untypedKey()
 
     constructor(container: FilterEditorContainer, filter: DirectFilter) {
         super(container, filter)
@@ -414,6 +444,11 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
 
         this.part.onChange(this.operatorChangeKey, m => {
             log.info(`Operator changed`, m)
+            this.part.dirty()
+        })
+
+        this.part.onChange(this.textChangeKey, m => {
+            log.info(`Text changed`, m)
             this.part.dirty()
         })
 
@@ -439,6 +474,9 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
             this.select(col, 'operator', opts)
                 .emitChange(this.operatorChangeKey)
         })
+
+        let error: string = ''
+
         parent.div('.filter', col => {
             if (operatorNeedsArgument(this.data.operator)) {
                 switch (this.data.column_type) {
@@ -455,10 +493,17 @@ class DirectFilterEditor extends FilterFields<DirectFilter> {
                         break
                     default:
                         this.textInput(col, 'value', { placeholder: "Value" })
+                            .emitChange(this.textChangeKey)
+                        if (!this.data.value?.length) {
+                            error = "Must specify a value"
+                        }
                 }
             }
         })
         this.renderActions(parent)
+        if (error.length) {
+            parent.div('.error.tt-bubble.alert').text(error)
+        }
     }
 
     async serialize() {
@@ -628,6 +673,37 @@ class DateRangeFilterEditor extends FilterFields<DateRangeFilter> {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Raw Filter Editor
+////////////////////////////////////////////////////////////////////////////////
+
+class RawFilterEditor extends FilterFields<RawFilter> {
+
+    valueChangeKey = Messages.untypedKey()
+
+    constructor(container: FilterEditorContainer, filter: RawFilter) {
+        super(container, filter)
+
+        this.part.onChange(this.valueChangeKey, m => {
+            log.info("Raw value changed", m)
+            this.part.dirty()
+        })
+    }
+
+    render(parent: PartTag): void {
+        parent.div('.raw', col => {
+            this.textArea(col, 'raw', {placeholder: "Raw SQL"})
+                .emitChange(this.valueChangeKey)
+        })
+        this.renderActions(parent)
+        if (!this.data.raw?.length) {
+            parent.div('.error.tt-bubble.alert').text("Specify some raw SQL")
+        }
+    }
+
+}
+
+
+////////////////////////////////////////////////////////////////////////////////
 // Add Filter Dropdown
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -722,6 +798,7 @@ export type FilterInput = Filter & {
 /**
  * Computes a string used to identify filters that are "the same".
  * @param schema
+ * @param query
  * @param table
  * @param filter
  */
@@ -776,8 +853,6 @@ function populateRawInputData(filters: FilterInput[]): Record<string,string> {
                     data[`${filter.id}-${value}`] = 'true'
                 }
                 break
-            default:
-                log.warn(`Don't know how to get ${filter.filter_type} raw value`, filter)
         }
     }
     return data
@@ -799,7 +874,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                 }
                 const period = Dates.serializePeriod(range)
                 filter.input_value = period
-                break
+                return
             case 'direct':
                 switch (filter.column_type) {
                     case 'cents':
@@ -809,7 +884,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                     default:
                         filter.input_value = data[filter.id]
                 }
-                break
+                return
             case 'inclusion':
                 const values: string[] = []
                 for (const value of filter.possible_values || []) {
@@ -818,9 +893,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                     }
                 }
                 filter.input_value = values.join(',')
-                break
-            default:
-                log.warn(`Don't know how to serialize ${filter.filter_type} raw value`, filter)
+                return
         }
     }
 }
