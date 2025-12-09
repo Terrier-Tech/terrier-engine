@@ -53,6 +53,16 @@ function validateQuery(query: Query): QueryClientValidation {
             }
         }
 
+        // check raw
+        if (column.ref_type == 'raw') {
+            if (!column.name?.length) {
+                addColumnError(column, "Raw selects must be named")
+            }
+            if (!column.raw?.length) {
+                addColumnError(column, "Missing raw SQL")
+            }
+        }
+
         // each select name should only be used once
         const selectName = Columns.computeSelectName(table, column)
         if (usedNames.has(selectName)) {
@@ -66,7 +76,9 @@ function validateQuery(query: Query): QueryClientValidation {
         // are either grouped, have an aggregate function, or are on a grouped table
         const columns = Queries.columns(query)
             .filter(({ table, column }) =>
-                !column.grouped && Columns.functionType(column.function) != 'aggregate' && !groupedTables.has(table))
+                !column.grouped && Columns.functionType(column.function) != 'aggregate' &&
+                !groupedTables.has(table) &&
+                'raw' != column.ref_type)
         for (const { column } of columns) {
             addColumnError(column, `<strong>${column.name}</strong> must be grouped or have an aggregate function`)
         }

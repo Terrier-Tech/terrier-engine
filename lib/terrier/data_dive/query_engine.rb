@@ -162,11 +162,20 @@ end
 
 # Represents a single element of a select (and possibly group by) statement
 class ColumnRef < QueryModel
-  attr_accessor :name, :alias, :grouped, :function, :errors
+  attr_accessor :ref_type, :name, :alias, :grouped, :function, :errors, :raw
+
+  def is_raw?
+    @ref_type == 'raw'
+  end
 
   AGG_FUNCTIONS = %w[count sum average min max].freeze
 
   def to_select(table, builder)
+    # use raw directly
+    if is_raw?
+      return "#{@raw} as \"#{@name}\""
+    end
+
     s = "#{table.alias}.#{name}"
     if @function.present?
       g = nil
@@ -206,6 +215,14 @@ class ColumnRef < QueryModel
 
   # @return [ColumnMetadata]
   def compute_metadata(table)
+    if is_raw?
+      return ColumnMetadata.new @engine, {
+        column_name: '',
+        select_name: @name,
+        type: 'text'
+      }
+    end
+
     model = table.model_class
     ar_column = model.columns_hash[@name]
     unless ar_column

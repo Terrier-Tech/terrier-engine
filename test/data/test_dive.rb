@@ -157,6 +157,11 @@ module TestDive
           {
             name: 'status',
             grouped: true
+          },
+          {
+            name: 'max_time',
+            raw: "max(time)",
+            ref_type: 'raw'
           }
         ],
         filters: [

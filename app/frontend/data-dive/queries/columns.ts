@@ -57,6 +57,7 @@ function functionType(fun: Function | undefined): 'aggregate' | 'time' | undefin
  */
 export type ColumnRef = {
     name: string
+    ref_type?: 'named' | 'raw'
     raw?: string
     alias?: string
     grouped?: boolean
@@ -202,7 +203,8 @@ export class ColumnsEditorModal extends ModalPart<ColumnsEditorState> {
     addRawColumn() {
         log.info(`Add raw column`)
         const colRef: ColumnRef = {
-            name: ""
+            name: "",
+            ref_type: 'raw'
         }
         this.addEditor(colRef)
         this.validate().then()
@@ -424,8 +426,13 @@ class ColumnEditor extends TerrierPart<ColumnState> {
      * @param parent
      */
     renderRawFields(parent: PartTag) {
+        parent.div(".name", (col) => {
+            this.fields.textInput(col, "name", { placeholder: "Select name" })
+                .emitChange(valueChangedKey)
+        })
         parent.div('.raw', col => {
             this.fields.textArea(col, "raw", { placeholder: "Raw SQL" })
+                .emitChange(valueChangedKey)
         })
     }
 
