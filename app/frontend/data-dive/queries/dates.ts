@@ -102,31 +102,45 @@ function rangeDisplay(range: DateRange): string {
         const max = dayjs(range.max).subtract(1, 'day').format(displayFormat)
         return `${display(range.min)} - ${max}`
     } else if ('period' in range) { // virtual range
+        let rel = ''
         // special day names
         if (range.period == 'day') {
             switch (range.relative) {
                 case 0:
-                    return 'Today'
+                    rel = 'Today'
+                    break
                 case -1:
-                    return 'Yesterday'
+                    rel = "Yesterday"
+                    break
                 case 1:
-                    return 'Tomorrow'
+                    rel = 'Tomorrow'
+                    break
             }
         }
-        if (range.relative == 0) {
-            return `This ${range.period}`
+        else if (range.relative == 0) {
+            rel = `This ${range.period}`
         }
-        if (range.relative == -1) {
-            return `Last ${range.period}`
+        else if (range.relative == -1) {
+            rel = `Last ${range.period}`
         }
-        if (range.relative == 1) {
-            return `Next ${range.period}`
+        else if (range.relative == 1) {
+            rel = `Next ${range.period}`
         }
-        const plural = inflection.pluralize(range.period)
-        if (range.relative < 0) {
-            return `${range.relative*-1} ${plural} ago`
-        } else {
-            return `${range.relative} ${plural} from now`
+        else {
+            const plural = inflection.pluralize(range.period)
+            if (range.relative < 0) {
+                rel = `${range.relative * -1} ${plural} ago`
+            } else {
+                rel = `${range.relative} ${plural} from now`
+            }
+        }
+        switch (range.direction) {
+            case 'before':
+                return `Before ${rel}`
+            case 'after':
+                return `After ${rel}`
+            default:
+                return rel
         }
     } else {
         return "Unknown Date Range"

@@ -13,8 +13,7 @@ class QueryEngineTest < ActiveSupport::TestCase
     engine = DataDive::QueryEngine.new(query)
     builder = engine.to_sql_builder
 
-    start_date = Date.today.beginning_of_year
-    end_date = start_date + 1.year
+    # selects
     assert_equal ['work_order.id as "id"',
                   'work_order.time as "Order Time"',
                   'work_order.notes as "Order Notes"',
@@ -28,12 +27,19 @@ class QueryEngineTest < ActiveSupport::TestCase
                   'u.email as "Tech E-Mail"',
                   'target.name as "Target"'],
                  builder.selects
+
+    # filters
+    start_date = Date.today.beginning_of_year
+    end_date = start_date + 1.year
     assert_equal ["work_order.time >= '#{start_date}'",
                   "work_order.time < '#{end_date}'",
+                  "work_order.created_at < '#{start_date}'",
                   "work_order.status in ('active','complete')",
                   "date_part('month', time) = 11",
                   "location.zip <> '55122'", "target.name = 'Rodents'"],
                  builder.clauses
+
+    # order by
     assert_equal ['"location_id" asc', '"Order Time" desc'], builder.order_bys
   end
 

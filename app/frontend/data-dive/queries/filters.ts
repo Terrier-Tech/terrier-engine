@@ -1,5 +1,5 @@
 import {PartTag} from "tuff-core/parts"
-import Dates, { DateLiteral, VirtualDateDirection, VirtualDatePeriod, VirtualDateRange } from "./dates";
+import Dates, { DateLiteral, VirtualDateDirection, VirtualDatePeriod, VirtualDateRange } from "./dates"
 import {ColumnDef, ModelDef, SchemaDef} from "../../terrier/schema"
 import { Query } from "./queries"
 import {TableRef, TableView} from "./tables"
@@ -615,6 +615,12 @@ class DateRangeFilterEditor extends FilterFields<DateRangeFilter> {
             this.part.dirty()
         })
 
+        this.part.onChange(dateRangeDirectionChangedKey, m => {
+            log.info(`Date range direction ${m.data.direction} changed to ${m.value}`)
+            this.range.direction = m.data.direction as VirtualDateDirection
+            this.part.dirty()
+        })
+
         this.part.onClick(dateRangePreselectKey, m => {
             this.range = m.data
             this.data.range = this.range
@@ -757,7 +763,7 @@ class AddFilterDropdown extends Dropdown<{modelDef: ModelDef, callback: AddFilte
                         return this.state.callback({id, filter_type: 'inclusion', column, in: vals})
                     case 'date':
                     case 'datetime':
-                        return this.state.callback({id, filter_type: 'date_range', column, range: {period: 'year', relative: 0}})
+                        return this.state.callback({id, filter_type: 'date_range', column, range: {period: 'year', relative: 0, direction: 'inside'}})
                     default: // direct
                         const colType = colDef.type == 'number' || colDef.type == 'cents' ? colDef.type : 'text'
                         const defaultValue = colType == 'text' ? '' : '0'

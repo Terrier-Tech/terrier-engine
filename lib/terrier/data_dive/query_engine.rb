@@ -384,8 +384,16 @@ class Filter < QueryModel
     when 'date_range'
       period = DatePeriod.parse(@input_value.presence || @range)
       params[@id] = period.to_s
-      builder.where "#{table.alias}.#{@column} >= ?", period.start_date
-      builder.where "#{table.alias}.#{@column} < ?", period.end_date
+      direction = @range&.dig(:direction).presence || 'inside'
+      case direction
+      when 'before'
+        builder.where "#{table.alias}.#{@column} < ?", period.start_date
+      when 'after'
+        builder.where "#{table.alias}.#{@column} >= ?", period.end_date
+      else
+        builder.where "#{table.alias}.#{@column} >= ?", period.start_date
+        builder.where "#{table.alias}.#{@column} < ?", period.end_date
+      end
     when 'inclusion'
       val = @input_value.presence || @in
       val = val.split(',').map(&:strip) if val.is_a?(String)

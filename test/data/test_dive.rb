@@ -48,6 +48,15 @@ module TestDive
             }
           },
           {
+            filter_type: 'date_range',
+            column: 'created_at',
+            range: {
+              period: 'year',
+              relative: 0,
+              direction: 'before'
+            }
+          },
+          {
             filter_type: 'inclusion',
             column: 'status',
             in: %w[active complete]
