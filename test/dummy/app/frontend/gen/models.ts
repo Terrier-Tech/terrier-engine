@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-10-07 13:04:56 -0500, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2025-12-10 11:07:53 -0600, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 

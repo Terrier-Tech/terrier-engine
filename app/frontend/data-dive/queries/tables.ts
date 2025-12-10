@@ -12,7 +12,7 @@ import DiveEditor from "../dives/dive-editor"
 import Messages from "tuff-core/messages"
 import Arrays from "tuff-core/arrays"
 import QueryEditor from "./query-editor"
-import { Query } from "./queries";
+import { Query } from "./queries"
 
 const log = new Logger("Tables")
 
@@ -36,7 +36,7 @@ export type JoinedTableRef = TableRef & {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Keys
+// Utilities
 ////////////////////////////////////////////////////////////////////////////////
 
 const updatedKey = Messages.typedKey<TableRef>()
@@ -170,7 +170,21 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
                         this.dirty()
                     }
                 }
-                this.app.showModal(JoinedTableEditorModal, { table, belongsTo, callback, parentTable: this.state.table as TableRef })
+                // only show the editor modal if it's an optional association,
+                // since the join type doesn't matter for required associations
+                log.info(`modelDef, belongsTo`, this.modelDef, belongsTo)
+                if (belongsTo.optional) {
+                    this.app.showModal(JoinedTableEditorModal, {
+                        table,
+                        belongsTo,
+                        callback,
+                        parentTable: this.state.table as TableRef
+                    })
+                }
+                else {
+                    log.info(`Skipping joined tabled editor for ${belongsTo.name} since it's required`)
+                    callback(table)
+                }
             }
         })
     }
@@ -389,6 +403,7 @@ type JoinedTableEditorState = {
 class JoinedTableEditorForm extends TerrierFormPart<JoinedTableRef> {
 
     parentTable!: TableRef
+    belongsTo!: BelongsToDef
 
     render(parent: PartTag) {
         const name = inflection.titleize(this.state.belongs_to)
@@ -400,20 +415,26 @@ class JoinedTableEditorForm extends TerrierFormPart<JoinedTableRef> {
                 h4.div().text("Join Type")
             })
             box.div('.tt-flex.gap.padded', row => {
-                row.div('.stretch', col => {
-                    col.label('.body-size', label => {
-                        label.i('.glyp-join_inner')
-                        this.radio(label, 'join_type', 'inner')
-                        label.div().text(`<strong>Inner</strong>: <em>${parentName}</em> is only included if there's an associated <em>${name}</em>`)
+                // only allow them to change the join type if the association is optional
+                if (this.belongsTo.optional) {
+                    row.div('.stretch', col => {
+                        col.label('.body-size', label => {
+                            label.i('.glyp-join_inner')
+                            this.radio(label, 'join_type', 'inner')
+                            label.div().text(`<strong>Inner</strong>: <em>${parentName}</em> is only included if there's an associated <em>${name}</em>`)
+                        })
                     })
-                })
-                row.div('.stretch', col => {
-                    col.label('.body-size', label => {
-                        label.i('.glyp-join_left')
-                        this.radio(label, 'join_type', 'left')
-                        label.div().text(`<strong>Left</strong>: <em>${parentName}</em> is included even if there's no associated <em>${name}</em>`)
+                    row.div('.stretch', col => {
+                        col.label('.body-size', label => {
+                            label.i('.glyp-join_left')
+                            this.radio(label, 'join_type', 'left')
+                            label.div().text(`<strong>Left</strong>: <em>${parentName}</em> is included even if there's no associated <em>${name}</em>`)
+                        })
                     })
-                })
+                }
+                else {
+                    row.div('.text-center').text("This is a required association, so there's no difference between an inner and left join.")
+                }
             })
         })
     }
@@ -432,6 +453,7 @@ class JoinedTableEditorModal extends ModalPart<JoinedTableEditorState> {
     async init() {
         this.form = this.makePart(JoinedTableEditorForm, this.state.table)
         this.form.parentTable = this.state.parentTable
+        this.form.belongsTo = this.state.belongsTo
 
         this.setIcon('glyp-join')
         this.setTitle(`Join ${this.state.parentTable.model} <i class='glyp-belongs_to'></i> ${Schema.belongsToDisplay(this.state.belongsTo)}`)
