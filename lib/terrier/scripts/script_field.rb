@@ -9,7 +9,7 @@ class ScriptField
 
   field :required, type: String
 
-  enum_field :field_type, %w(date string select csv hidden)
+  enum_field :field_type, %w(date string select csv xlsx hidden)
 
   def self.compute_date_value(s)
     if s.nil?
@@ -36,6 +36,12 @@ class ScriptField
         []
       else
         TabularIo.parse_csv s
+      end
+    when 'xlsx'
+      if s.blank?
+        {}
+      else
+        TabularIo.load_xlsx nil, {raw: StringIO.new(Base64.decode64(s))}
       end
     else
       raise "Unknown field type #{type}"
