@@ -137,6 +137,9 @@ _fieldControls.select = (field, value, options) ->
 _fieldControls.csv = (field, value, options) ->
 	input field.requiredClass, type: 'file', name: field.name, accept: 'text/csv'
 
+_fieldControls.xlsx = (field, value, options) ->
+	input field.requiredClass, type: 'file', name: field.name, accept: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
 _fieldControls.hidden = (field, value) ->
 	input field.requiredClass, type: 'hidden', name: field.name, value: value
 
@@ -274,9 +277,15 @@ class ReportExecModal
 				callback null
 				return
 			reader = new FileReader()
-			reader.readAsText(file)
+			if file.name.endsWith('.xlsx')
+				reader.readAsDataURL(file)
+			else
+				reader.readAsText(file)
 			reader.onload = (loadEvent) ->
-				text = loadEvent.target.result
+				if file.name.endsWith('.xlsx')
+					text = reader.result.split(',')[1]
+				else
+					text = loadEvent.target.result
 				callback text
 		else # not a file
 			callback input.val()
@@ -666,7 +675,7 @@ class FieldsControls
 		@list.find('.script-field').each (index, elem) ->
 			view = $ elem
 			fieldType = view.find('.field-field_type').val()
-			view.find('.field-default_value').toggle(fieldType != 'csv')
+			view.find('.field-default_value').toggle(!['csv', 'xlsx'].includes(fieldType))
 			view.find('.field-values').toggle(fieldType == 'select')
 
 		new Sortable @list[0], {

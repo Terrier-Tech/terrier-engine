@@ -217,8 +217,8 @@ module TabularIo
 
   # loads an xlsx file into a hash of arrays of hashes
   def self.load_xlsx(rel_path, options = {})
-    abs_path = self.rel_to_abs_path rel_path
-    x = Xsv::Workbook.open(abs_path.to_s)
+    src = options[:raw] || self.rel_to_abs_path(rel_path).to_s
+    x = Xsv::Workbook.open(src)
     output = {}
     sheets_to_import = options[:sheets]
     n_blank_allowed = options.fetch(:n_blank_allowed, 0)
