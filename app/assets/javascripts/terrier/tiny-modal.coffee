@@ -392,6 +392,9 @@ window.tinyModal.show = (url, options={}) ->
 $(document).on 'click', 'a.modal', (evt) ->
 	link = $ evt.currentTarget
 	href = link.attr 'href'
+	if href == undefined
+		# has the modal class, but does not have an href to load as the modal contents
+		return true
 	options = {}
 	options.tiny = link.hasClass('tiny-modal')
 	window.tinyModal.show href, options
