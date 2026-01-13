@@ -243,7 +243,7 @@ export abstract class ListViewerPart<T extends ListItem> extends TerrierPart<any
 
         // load the item specified by the listId param
         const params = parseQueryParams(location.search)
-        const id = params.get('listId')
+        const id = params.get('listId')?.toString()
         if (id?.length && this.itemPartMap[id]) {
             log.info(`Showing item specified in params: ${id}`)
             this.showDetails(id)

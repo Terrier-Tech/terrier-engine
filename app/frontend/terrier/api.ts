@@ -1,5 +1,5 @@
 import {Logger} from "tuff-core/logging"
-import {QueryParams} from "tuff-core/urls"
+import {QueryParams, RawQueryParams} from "tuff-core/urls"
 import {LogEntry} from "./logging"
 import {ErrorEvent} from "./api-subscriber"
 import Strings from "tuff-core/strings";
@@ -79,7 +79,7 @@ async function apiRequest<ResponseType>(url: string, config: RequestInit): Promi
  * @param url the base URL for the request
  * @param params a set of parameters that will be added to the URL as a query string
  */
-async function safeGet<ResponseType>(url: string, params: QueryParams | Record<string, string | undefined>): Promise<ResponseType> {
+async function safeGet<ResponseType>(url: string, params: QueryParams | RawQueryParams): Promise<ResponseType> {
     const response = await get<ApiResponse & ResponseType>(url, params)
     if (response.status == 'error') {
         throw new ApiException(response.message)
@@ -94,9 +94,9 @@ async function safeGet<ResponseType>(url: string, params: QueryParams | Record<s
  * @param url the base URL for the request
  * @param params a set of parameters that will be added to the URL as a query string
  */
-async function get<ResponseType>(url: string, params: QueryParams | Record<string, string | undefined>): Promise<ResponseType> {
+async function get<ResponseType>(url: string, params: QueryParams | RawQueryParams): Promise<ResponseType> {
     if (!params.raw) {
-        params = new QueryParams(params as Record<string, string>)
+        params = new QueryParams(params as RawQueryParams)
     }
     const fullUrl = (params as QueryParams).serialize(url)
     log.debug(`Getting ${fullUrl}`)
