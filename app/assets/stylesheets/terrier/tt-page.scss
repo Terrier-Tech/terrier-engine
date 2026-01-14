@@ -84,9 +84,7 @@
 			align-items: end;
 			.primary-actions, .secondary-actions {
 				flex-direction: column;
-				a {
-					width: 100%;
-				}
+				align-items: stretch;
 			}
 		}
 	}
