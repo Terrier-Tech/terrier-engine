@@ -20,6 +20,8 @@ class ModelGenerator < BaseGenerator
     # add the default imports
     @imports['tuff-core/types'] ||= []
     @imports['tuff-core/types'] << 'OptionalProps'
+
+    @reflections_like_types = {}
   end
 
   def each_model
@@ -228,10 +230,21 @@ class ModelGenerator < BaseGenerator
     model[:reflections].each do |ref_name, ref|
       ref_type = compute_ref_type(ref)
       next unless ref_type
-      if is_unpersisted && ref_type.include?('[]')
+
+      Rails.logger.info "ref_type: #{ref_type}"
+      if ref_type.include?('[]')
         fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id"
         if ref.class_name.classify.constantize.column_names.include?(fk)
-          ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]"
+          ref_type_str = ref_type.gsub('[]', '')
+          unpersisted_ref_type = "OptionalProps<Unpersisted#{ref_type_str},'#{fk}'>[]"
+          ref_type = if is_unpersisted
+                       unpersisted_ref_type
+                     else
+                       like_str = "#{ref_type_str}Like"
+                       @reflections_like_types[like_str] = "#{ref_type} | #{unpersisted_ref_type}"
+                       like_str
+                     end
+          Rails.logger.info "ref_type after adjustment: #{ref_type}"
         end
       end
       fields.push "#{ref_name}?: #{ref_type}"

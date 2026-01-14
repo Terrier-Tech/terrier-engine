@@ -22,6 +22,10 @@
 
 <% end %>
 
+<% @reflections_like_types.each do |model_name, type| %>
+  export type <%= "#{model_name} = | #{type}" %>
+<% end %>
+
 /**
  * Map model names to their types.
  */
