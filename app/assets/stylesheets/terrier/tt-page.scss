@@ -80,5 +80,14 @@
 			flex: 1 1 auto;
 			justify-content: right;
 		}
+		&.columns {
+			align-items: end;
+			.primary-actions, .secondary-actions {
+				flex-direction: column;
+				a {
+					width: 100%;
+				}
+			}
+		}
 	}
 }
