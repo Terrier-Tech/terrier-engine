@@ -40,6 +40,7 @@ export type Action = {
     color?: ColorName
     img?: string
     href?: string
+    target?: string
     classes?: string[]
     click?: Packet
     data?: Record<string, unknown> | undefined
@@ -125,6 +126,9 @@ export default class Theme {
                 }
                 if (action.href?.length) {
                     a.attrs({href: action.href})
+                }
+                if (action.target?.length) {
+                    a.attrs({target: action.target})
                 }
                 if (action.click) {
                     a.emitClick(action.click.key, action.click.data || {})
