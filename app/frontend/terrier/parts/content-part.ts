@@ -64,6 +64,10 @@ export default abstract class ContentPart<TState> extends TerrierPart<TState> {
 
     private _namedActions: Record<string, { action: Action, level: ActionLevel }> = {}
 
+    protected get primarySecondaryActionsClasses(): string[] {
+        return []
+    }
+
     /**
      * Add an action to the part, or replace a named action if it already exists.
      * @param action the action to add
