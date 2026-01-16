@@ -860,7 +860,7 @@ class Editor
 		@session = @aceEditor.getSession()
 		@session.setMode 'ace/mode/ruby'
 		@session.setTabSize 2
-		@errorMarkerId = null
+		@errorMarkerIds = []
 		@syntaxErrorOutput = @ui.find '.syntax-error-output'
 		@syntaxErrorOutput.hide()
 
@@ -901,36 +901,36 @@ class Editor
 			this.updateUi()
 		if checkBody
 			$.get(
-				'/scripts/check'
+				'/scripts/check.json'
 				{body: @aceEditor.getValue()}
 				(res) =>
 					console.log res
 					this.clearDiagnostic()
-					if res.diagnostic
-						this.setDiagnostic res.diagnostic
+					if res.status == 'error'
+						this.setDiagnostic res.errors
 			)
 
 	clearDiagnostic: ->
-		if @errorMarkerId
-			@session.removeMarker @errorMarkerId
-			@errorMarkerId = null
-		@syntaxErrorOutput.hide()
+		for marker in @errorMarkerIds
+			@session.removeMarker marker
+		@errorMarkerIds.length = 0
+		@syntaxErrorOutput.hide().empty()
 		@buttons.run.attr 'disabled', null
 
-	setDiagnostic: (diagnostic) ->
+	setDiagnostic: (errors) ->
 		Range = ace.require("ace/range").Range
-		loc = diagnostic.location
-		src = loc.source_buffer
-		line = _.values(src.line_for_position)[0]
-		cols = _.values(src.column_for_position)
-		if cols.length==1
-			cols.push cols[0]+1
-		puts "error on line #{line} from #{cols[0]} to #{cols[1]}"
-		range = new Range(line-1, cols[0]-1, line-1, cols[1]+1)
-		@errorMarkerId = @session.addMarker(range, 'syntax-error', 'error', true)
-		marker = @ui.find('.ace-container .syntax-error')
-		marker.attr 'title', "#{diagnostic.reason}: #{diagnostic.arguments.token}"
-		@syntaxErrorOutput.show().text "#{diagnostic.reason}: #{diagnostic.arguments.token}"
+
+		@syntaxErrorOutput.show()
+		for error in errors
+			start_col = error.start_column
+			end_col = error.end_column
+			if start_col == end_col
+				start_col -= 1
+			range = new Range(error.start_line - 1, start_col, error.end_line - 1, end_col)
+			@errorMarkerIds.push @session.addMarker(range, 'syntax-error', 'error', true)
+
+			@syntaxErrorOutput.append("<div><code>(#{error.start_line}:#{error.start_column}) #{error.message}</code></div>")
+
 		@buttons.run.attr 'disabled', 'disabled'
 
 	updateUi: ->

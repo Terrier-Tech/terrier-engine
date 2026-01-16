@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '>= 7.0'
   s.add_dependency 'terminal-table'
-  s.add_dependency 'parser'
+  s.add_dependency 'prism'
   s.add_dependency 'spreadsheet'
   s.add_dependency 'xsv'
   s.add_dependency 'write_xlsx'

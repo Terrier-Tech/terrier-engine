@@ -1,4 +1,4 @@
-require 'parser/current'
+require 'prism'
 require 'terrier/scripts/script_config'
 
 # include in the regular scripts controller
@@ -27,14 +27,26 @@ module Terrier::ScriptCrud
     def check
       body = params[:body]
 
-      begin
-        Parser::CurrentRuby.parse(body)
+      parse_result = Prism.parse(body)
+
+      if parse_result.success?
         render_success 'Successfully parsed script'
-      rescue => ex
-        Rails.logger.debug "message: #{ex.message}, diagnostic: #{ex.diagnostic}"
-        Rails.logger.debug ex.diagnostic.location
-        render json: {status: 'Error', message: "Error parsing script: #{ex.message}", diagnostic: ex.diagnostic}
+      else
+        errors = parse_result.errors.map do |error|
+          {
+            message: error.message,
+            level: error.level,
+            type: error.type,
+            start_line: error.location.start_line,
+            start_column: error.location.start_character_column,
+            end_line: error.location.end_line,
+            end_column: error.location.end_character_column,
+          }
+        end
+        render_error "Script content has errors", errors: errors
       end
+    rescue => ex
+      render_error "Error parsing script: #{ex.message}"
     end
 
 
