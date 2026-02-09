@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>processor_forward</title>
+    <g id="processor_forward" stroke="none" fill="none" fill-rule="evenodd">
+        <polygon id="Path" fill="#000000" points="44 4 44 14 7 34 7 24"></polygon>
+        <polygon id="Path-Copy" fill="#000000" points="56.5 8 56.5 18 19.5 38 19.5 28"></polygon>
+        <polygon id="Path-Copy-2" fill="#000000" points="44 26 44 36 7 56 7 46"></polygon>
+        <polygon id="Path-Copy-3" fill="#000000" points="56.5 31 56.5 41 19.5 61 19.5 51"></polygon>
+    </g>
+</svg>
