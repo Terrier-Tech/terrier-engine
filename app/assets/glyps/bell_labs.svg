@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>bell_labs</title>
+    <g id="bell_labs" stroke="none" fill="none" transform="translate(0, -0)" fill-rule="evenodd">
+        <path d="M32,4 C47.463973,4 60,16.536027 60,32 C60,47.463973 47.463973,60 32,60 C16.536027,60 4,47.463973 4,32 C4,16.536027 16.536027,4 32,4 Z M44,33 L18,33 L18,48 C18,49 17.3333333,50 16,51 L44,51 C46.6666667,51 48,49.6666667 48,47 L48,37 C48,34.3333333 46.6666667,33 44,33 Z M44,13 L16,13 C17.3333333,14 18,15 18,16 L18,31 L44,31 C46.6666667,31 48,29.6666667 48,27 L48,17 C48,14.3333333 46.6666667,13 44,13 Z" id="Oval-2" fill="#000000"></path>
+    </g>
+</svg>

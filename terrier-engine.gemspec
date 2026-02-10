@@ -55,4 +55,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'faker'
   s.add_development_dependency 'bcrypt'
   s.add_development_dependency 'sprockets-rails'
+  s.add_development_dependency 'stringio', '3.2.0' # to make it work while clypboard is running as well
 end
