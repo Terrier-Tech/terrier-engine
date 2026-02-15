@@ -105,6 +105,11 @@ window.tinyModal.popTo = (level) ->
 window.tinyModal.removeLoadingOverlay = ->
 	$('#modal-window').find('.loading-overlay').remove()
 
+window.tinyModal.showAlertLoadingOverlay = ->
+	$('#modal-alert').showLoadingOverlay()
+
+window.tinyModal.removeAlertLoadingOverlay = ->
+	$('#modal-alert').find('.loading-overlay').remove()
 
 _layoutRow = (row) ->
 	# ensure the row is large enough to fit all columns and that the last one is showing
