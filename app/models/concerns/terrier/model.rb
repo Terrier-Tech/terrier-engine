@@ -44,6 +44,17 @@ module Terrier::Model
       nil
     end
 
+    ## Virtual Attributes
+    # Additional attributes to be included in request results with as_json
+    def self.virtual_attribute(attr = nil)
+      @virtual_attributes ||= {}
+      name, options = attr.first
+      @virtual_attributes[name.to_sym] = options[:type] || :string
+    end
+
+    def self.virtual_attributes_list
+      @virtual_attributes || {}
+    end
   end
 
 
@@ -295,6 +306,14 @@ module Terrier::Model
           schema.dup
         end
       end
+    end
+
+    # Automatically include virtual attributes in JSON
+    def as_json(options = {})
+      options = options.dup
+      options[:methods] ||= []
+      options[:methods] |= self.class.virtual_attributes_list.keys
+      super(options)
     end
 
     # Provides basic e-mail validation for a text array column containing e-mail addresses
