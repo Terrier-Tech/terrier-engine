@@ -46,9 +46,8 @@ module Terrier::Model
 
     ## Virtual Attributes
     # Additional attributes to be included in request results with as_json
-    def self.virtual_attribute(attr = nil)
+    def self.virtual_attribute(name, options = {})
       @virtual_attributes ||= {}
-      name, options = attr.first
       @virtual_attributes[name.to_sym] = options[:type] || :string
     end
 
