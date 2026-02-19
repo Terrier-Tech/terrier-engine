@@ -2,7 +2,9 @@ require 'terrier/frontend/base_generator'
 
 # Generates the models.ts and schema.ts files from the database schema.
 class ModelGenerator < BaseGenerator
-  VirtualAttrColumn = Struct.new(:name, :type, :null, :sql_type_metadata)
+  VirtualAttrColumn = Struct.new(:name, :type, :null) do
+    def sql_type_metadata = nil
+  end
 
   # @param options [Hash] a hash of options for generating the model
   # @option options [Hash{String => Array<String>}] :imports a hash of import paths to a list of symbols
