@@ -20,6 +20,12 @@
     }
   <% end -%>
 
+  <% if model[:virtual_attributes].present? %>
+    export const <%= model_name.split('::').last.upcase %>_JSON_INCLUDES = [
+      <%= model[:virtual_attributes].keys.map { |attr| "  '#{attr}'," }.join("\n") %>
+    ] as const satisfies readonly (keyof <%= model_name.split('::').last %>)[]
+  <% end %>
+
 <% end %>
 
 /**

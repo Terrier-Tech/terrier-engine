@@ -2,6 +2,9 @@ require 'terrier/frontend/base_generator'
 
 # Generates the models.ts and schema.ts files from the database schema.
 class ModelGenerator < BaseGenerator
+  VirtualAttrColumn = Struct.new(:name, :type, :null) do
+    def sql_type_metadata = nil
+  end
 
   # @param options [Hash] a hash of options for generating the model
   # @option options [Hash{String => Array<String>}] :imports a hash of import paths to a list of symbols
@@ -67,6 +70,7 @@ class ModelGenerator < BaseGenerator
 
       models[model.name] = {
         columns:,
+        virtual_attributes: model.virtual_attributes_list,
         reflections:,
         belongs_tos: reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
         has_manies: reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
@@ -174,6 +178,7 @@ class ModelGenerator < BaseGenerator
       attachments = @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : []
       models[model.name] = {
         columns: model.columns,
+        virtual_attributes: model.virtual_attributes_list,
         reflections: model.reflections,
         enum_fields: enum_fields,
         attachments: attachments,
@@ -224,6 +229,12 @@ class ModelGenerator < BaseGenerator
       fields.push typescript_field(col, model_class, model[:enum_fields][col.name.to_sym], is_unpersisted)
     end
 
+    virtual_attributes = model[:virtual_attributes]
+    virtual_attributes.each do |name, type|
+      col = VirtualAttrColumn.new(name: name.to_s, type: type, null: true)
+      fields.push typescript_field(col, model_class, nil, true)
+    end
+
     # reflections (associations)
     model[:reflections].each do |ref_name, ref|
       ref_type = compute_ref_type(ref)
@@ -263,23 +274,25 @@ class ModelGenerator < BaseGenerator
 
   # @return [String] the typescript type associated with the given column type
   def typescript_type(col, model_class, enum_fields = nil)
-    if model_class.respond_to?(:embedded_fields)
-      embedded = model_class.embedded_fields[col.name.to_sym]
-      if embedded.present?
-        embedded_type = embedded_schema_type(embedded[:type])
-        return case embedded[:kind].to_sym
-          when nil, :one then embedded_type
-          when :many then "#{embedded_type}[]"
-          else raise "Unknown embedded kind: #{embedded[:kind].inspect}"
-          end
+    unless col.is_a?(VirtualAttrColumn)
+      if model_class.respond_to?(:embedded_fields)
+        embedded = model_class.embedded_fields[col.name.to_sym]
+        if embedded.present?
+          embedded_type = embedded_schema_type(embedded[:type])
+          return case embedded[:kind].to_sym
+            when nil, :one then embedded_type
+            when :many then "#{embedded_type}[]"
+            else raise "Unknown embedded kind: #{embedded[:kind].inspect}"
+            end
+        end
       end
-    end
 
-    schema_method = "#{col.name}_schema"
-    if model_class.respond_to?(schema_method)
-      schema = model_class.send(schema_method)
-      if schema.present?
-        return typescript_schema_type(schema)
+      schema_method = "#{col.name}_schema"
+      if model_class.respond_to?(schema_method)
+        schema = model_class.send(schema_method)
+        if schema.present?
+          return typescript_schema_type(schema)
+        end
       end
     end
 
@@ -297,7 +310,7 @@ class ModelGenerator < BaseGenerator
     else
       if enum_fields.present?
         enum_fields.map { |f| "'#{f}'" }.join(' | ')
-      elsif col.sql_type_metadata.sql_type == 'text[]'
+      elsif col.sql_type_metadata&.sql_type == 'text[]'
         'string[]'
       else
         'string'
