@@ -1,0 +1,8 @@
+@import "tt-mixins";
+
+.hide-if-empty:empty {
+	display: none;
+}
+.hoverable:hover {
+	@include tt-raised-bg(#{var(--color)});
+}

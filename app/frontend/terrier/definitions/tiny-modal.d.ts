@@ -62,4 +62,6 @@ export type TinyModalGlobals = {
         noticeAlert: (title: string, body: string, action?: TinyModalAlertAction, options?: TinyModalAlertOptions) => Promise<void>
         alertAlert: (title: string, body: string, action?: TinyModalAlertAction, options?: TinyModalAlertOptions) => Promise<void>
     }
+    showAlertLoadingOverlay: () => void
+    removeAlertLoadingOverlay: () => void
 }
