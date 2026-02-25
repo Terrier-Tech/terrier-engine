@@ -309,8 +309,10 @@ module Terrier::Model
 
     # Automatically include virtual attributes in JSON
     def as_json(options = {})
+      Rails.logger.info "in as json"
       options = options.dup
       options[:methods] ||= []
+      Rails.logger.info "virtual attributes: #{self.class.virtual_attributes_list.keys}"
       options[:methods] |= self.class.virtual_attributes_list.keys
       super(options)
     end

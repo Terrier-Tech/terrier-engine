@@ -33,6 +33,8 @@ class DbController < ApplicationController
       query = query.order(order)
     end
 
+    Rails.logger.info "query: #{query}"
+    Rails.logger.info "records: #{query.as_json(json_opts).inspect}"
     render_api_success records: query.as_json(json_opts) || []
   end
 
