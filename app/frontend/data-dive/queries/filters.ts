@@ -898,7 +898,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                 }
                 const period = Dates.serializePeriod(range)
                 filter.input_value = period
-                return
+                break
             case 'direct':
                 switch (filter.column_type) {
                     case 'cents':
@@ -908,7 +908,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                     default:
                         filter.input_value = data[filter.id]
                 }
-                return
+                break
             case 'inclusion':
                 const values: string[] = []
                 for (const value of filter.possible_values || []) {
@@ -917,7 +917,7 @@ function serializeRawInputData(filters: FilterInput[], data: Record<string, stri
                     }
                 }
                 filter.input_value = values.join(',')
-                return
+                break
         }
     }
 }
