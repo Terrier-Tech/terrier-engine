@@ -62,6 +62,10 @@ module Terrier::Model
       options[:methods] |= self.class.virtual_attributes_list.keys
       super(options)
     end
+
+    def as_json(options = {})
+      super(options)
+    end
   end
 
 
