@@ -56,7 +56,7 @@ module Terrier::Model
     end
 
     # Automatically include virtual attributes in JSON
-    def as_json(options = {})
+    def serializable_hash(options = {})
       options = options.dup
       options[:methods] ||= []
       options[:methods] |= self.class.virtual_attributes_list.keys
