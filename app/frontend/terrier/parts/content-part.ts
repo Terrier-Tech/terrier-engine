@@ -98,7 +98,7 @@ export default abstract class ContentPart<TState> extends TerrierPart<TState> {
      * @param name
      */
     getNamedAction(name: string): Action | undefined {
-        return this._namedActions[name].action
+        return this._namedActions[name]?.action
     }
 
     /**
