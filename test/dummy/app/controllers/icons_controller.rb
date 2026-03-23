@@ -1,7 +1,8 @@
 class IconsController < ApplicationController
 
   def glyps
-    @title = 'Glyps'
+    count = GLYPS.count
+    @title = "#{count} Glyps"
   end
 
   def hub

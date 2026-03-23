@@ -20,6 +20,8 @@ require 'terrier/logging/loggable'
 require 'terrier/logging/progress_logger'
 require 'terrier/logging/multi_logger'
 
+require 'terrier/icons/glyps'
+
 module Terrier
   class Engine < ::Rails::Engine
 
