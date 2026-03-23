@@ -2704,129 +2704,132 @@ glyphs:
 - glyph: tmp/glyp/user_documents.svg
   name: user_documents
   code: 58244
+- glyph: tmp/glyp/user_geo.svg
+  name: user_geo
+  code: 58245
 - glyph: tmp/glyp/user_tags.svg
   name: user_tags
-  code: 58245
+  code: 58246
 - glyph: tmp/glyp/user_task.svg
   name: user_task
-  code: 58246
+  code: 58247
 - glyph: tmp/glyp/user_task_setup.svg
   name: user_task_setup
-  code: 58247
+  code: 58248
 - glyph: tmp/glyp/users.svg
   name: users
-  code: 58248
+  code: 58249
 - glyph: tmp/glyp/utility.svg
   name: utility
-  code: 58249
+  code: 58250
 - glyph: tmp/glyp/vacation.svg
   name: vacation
-  code: 58250
+  code: 58251
 - glyph: tmp/glyp/vacuum.svg
   name: vacuum
-  code: 58251
+  code: 58252
 - glyph: tmp/glyp/variant.svg
   name: variant
-  code: 58252
+  code: 58253
 - glyph: tmp/glyp/vendor.svg
   name: vendor
-  code: 58253
+  code: 58254
 - glyph: tmp/glyp/versions.svg
   name: versions
-  code: 58254
+  code: 58255
 - glyph: tmp/glyp/video.svg
   name: video
-  code: 58255
+  code: 58256
 - glyph: tmp/glyp/visible.svg
   name: visible
-  code: 58256
+  code: 58257
 - glyph: tmp/glyp/warehouse.svg
   name: warehouse
-  code: 58257
+  code: 58258
 - glyph: tmp/glyp/wdi.svg
   name: wdi
-  code: 58258
+  code: 58259
 - glyph: tmp/glyp/wdi_az.svg
   name: wdi_az
-  code: 58259
+  code: 58260
 - glyph: tmp/glyp/wdi_ca.svg
   name: wdi_ca
-  code: 58260
+  code: 58261
 - glyph: tmp/glyp/wdi_npma.svg
   name: wdi_npma
-  code: 58261
+  code: 58262
 - glyph: tmp/glyp/wdi_nv.svg
   name: wdi_nv
-  code: 58262
+  code: 58263
 - glyph: tmp/glyp/wdo.svg
   name: wdo
-  code: 58263
+  code: 58264
 - glyph: tmp/glyp/web_dusting.svg
   name: web_dusting
-  code: 58264
+  code: 58265
 - glyph: tmp/glyp/website.svg
   name: website
-  code: 58265
+  code: 58266
 - glyph: tmp/glyp/wildlife.svg
   name: wildlife
-  code: 58266
+  code: 58267
 - glyph: tmp/glyp/wildlife_exclusion.svg
   name: wildlife_exclusion
-  code: 58267
+  code: 58268
 - glyph: tmp/glyp/winter_check.svg
   name: winter_check
-  code: 58268
+  code: 58269
 - glyph: tmp/glyp/wizard.svg
   name: wizard
-  code: 58269
+  code: 58270
 - glyph: tmp/glyp/work.svg
   name: work
-  code: 58270
+  code: 58271
 - glyph: tmp/glyp/work_class.svg
   name: work_class
-  code: 58271
+  code: 58272
 - glyph: tmp/glyp/work_code.svg
   name: work_code
-  code: 58272
+  code: 58273
 - glyph: tmp/glyp/work_order.svg
   name: work_order
-  code: 58273
+  code: 58274
 - glyph: tmp/glyp/work_production.svg
   name: work_production
-  code: 58274
+  code: 58275
 - glyph: tmp/glyp/work_progress.svg
   name: work_progress
-  code: 58275
+  code: 58276
 - glyph: tmp/glyp/work_yield.svg
   name: work_yield
-  code: 58276
+  code: 58277
 - glyph: tmp/glyp/year.svg
   name: year
-  code: 58277
+  code: 58278
 - glyph: tmp/glyp/yield.svg
   name: yield
-  code: 58278
+  code: 58279
 - glyph: tmp/glyp/zillow.svg
   name: zillow
-  code: 58279
+  code: 58280
 - glyph: tmp/glyp/zip_code.svg
   name: zip_code
-  code: 58280
+  code: 58281
 - glyph: tmp/glyp/zone_adjacent.svg
   name: zone_adjacent
-  code: 58281
+  code: 58282
 - glyph: tmp/glyp/zone_check.svg
   name: zone_check
-  code: 58282
+  code: 58283
 - glyph: tmp/glyp/zone_production.svg
   name: zone_production
-  code: 58283
+  code: 58284
 - glyph: tmp/glyp/zone_remote.svg
   name: zone_remote
-  code: 58284
+  code: 58285
 - glyph: tmp/glyp/zoom.svg
   name: zoom
-  code: 58285
+  code: 58286
 - glyph: tmp/glyp/zoom_fit.svg
   name: zoom_fit
-  code: 58286
+  code: 58287
