@@ -62,9 +62,9 @@ module Terrier::Model
       virtual_keys = self.class.virtual_attributes_list.keys
 
       # Respect passed :methods, :only, :except
-      virtual_keys &= Array(options[:methods]) if options&.key?(:methods)
-      virtual_keys -= Array(options[:except]) if options&.key?(:except)
-      virtual_keys &= Array(options[:only]) if options&.key?(:only)
+      virtual_keys &= Array(options[:methods]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:methods)
+      virtual_keys -= Array(options[:except]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:except)
+      virtual_keys &= Array(options[:only]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:only)
 
       virtual_keys.each do |key|
         next if hash.key?(key.to_s) # avoid overwriting
