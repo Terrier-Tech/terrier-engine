@@ -406,6 +406,7 @@ module Terrier::Model
       belongs_tos = remove_belongs_tos attrs
       attrs.delete 'created_at'
       attrs.delete 'updated_at'
+      attrs.except!(*self.virtual_attributes_list.keys.map(&:to_s))
       record.assign_attributes attrs
       record.before_upsert!
       unless record.valid?
