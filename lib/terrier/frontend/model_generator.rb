@@ -296,26 +296,31 @@ class ModelGenerator < BaseGenerator
       end
     end
 
-    case col.type
-    when :boolean, :bool
-      'boolean'
-    when :integer, :float
-      'number'
-    when :json, :jsonb
-      if @has_shrine && model_class && model_class.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
-        'Attachment | { path: string }'
+    type_str =
+      case col.type
+      when :boolean, :bool
+        'boolean'
+      when :integer, :float
+        'number'
+      when :json, :jsonb
+        if @has_shrine && model_class && model_class.ancestors.grep(Shrine::Attachment).map { |anc| "#{anc.attachment_name}_data" }.include?(col.name)
+          'Attachment | { path: string }'
+        else
+          'object'
+        end
       else
-        'object'
+        if enum_fields.present?
+          "(#{enum_fields.map { |f| "'#{f}'" }.join(' | ')})"
+        else
+          'string'
+        end
       end
-    else
-      if enum_fields.present?
-        enum_fields.map { |f| "'#{f}'" }.join(' | ')
-      elsif col.sql_type_metadata&.sql_type == 'text[]'
-        'string[]'
-      else
-        'string'
-      end
+
+    if col.sql_type_metadata&.sql_type&.end_with?('[]')
+      type_str += '[]'
     end
+
+    type_str
   end
 
   # @return [String] the typescript type associated with the given
