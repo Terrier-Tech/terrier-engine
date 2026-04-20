@@ -96,7 +96,7 @@ class ScriptExecutor
     escaped_body = body.gsub('\"', '"')
     filename = "script"
     filename += "<#{@script.title}>" if @script&.title.present?
-    eval(escaped_body, binding, filename, 1)
+    instance_eval(escaped_body, filename, 1)
   end
 
   def write_raw(type, body, extra={})
