@@ -117,6 +117,10 @@
 		}
 	}
 
+	select {
+		width: auto; // selects take up only as much width as needed by their longest option
+	}
+
 	input[type=checkbox], input[type=radio] {
 		align-self: center;
 		margin: 0 14px; // can't use padding on checkbox/radio, but we need space. so margin
