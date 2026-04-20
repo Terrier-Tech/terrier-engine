@@ -57,10 +57,26 @@ module Terrier::Model
 
     # Automatically include virtual attributes in JSON
     def serializable_hash(options = nil)
-      options = (options || {}).dup
-      options[:methods] = Array(options[:methods])
-      options[:methods] |= self.class.virtual_attributes_list.keys
-      super(options)
+      hash = super(options)
+
+      virtual_keys = self.class.virtual_attributes_list.keys
+
+      # Respect passed :methods, :only, :except
+      virtual_keys &= Array(options[:methods]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:methods)
+      virtual_keys -= Array(options[:except]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:except)
+      virtual_keys &= Array(options[:only]).map { |k| k.respond_to?(:to_sym) ? k.to_sym : k } if options&.key?(:only)
+
+      virtual_keys.each do |key|
+        next if hash.key?(key.to_s) # avoid overwriting
+
+        begin
+          hash[key.to_s] = public_send(key)
+        rescue ActiveModel::MissingAttributeError
+          # omit this virtual attribute because it depends on an attribute that was not selected
+        end
+      end
+
+      hash
     end
   end
 
