@@ -1,12 +1,13 @@
 class EmbeddedFieldDef
 
-  attr_accessor :type, :element_type, :null, :default
+  attr_accessor :type, :element_type, :null, :default, :meta
 
   def initialize(args)
     @type = args[:type]
     @element_type = args[:element_type] # used when @type is Array
     @null = args[:required] ? false : true
     @default = args[:default]
+    @meta = args[:meta]
   end
 
 end
