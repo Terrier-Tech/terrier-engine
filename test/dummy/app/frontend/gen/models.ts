@@ -1,4 +1,4 @@
-// This file was automatically generated on 2025-12-10 11:07:53 -0600, DO NOT EDIT IT MANUALLY!
+// This file was automatically generated on 2026-04-30 09:34:49 -0500, DO NOT EDIT IT MANUALLY!
 
 import { OptionalProps } from "tuff-core/types"
 
@@ -58,6 +58,7 @@ export type Contract = {
     created_by?: User
     updated_by?: User
     program?: Program
+    feature?: SmartFeature
 }
 
 export type UnpersistedContract = {
@@ -74,6 +75,7 @@ export type UnpersistedContract = {
     created_by?: User
     updated_by?: User
     program?: Program
+    feature?: SmartFeature
 }
 
 export type Invoice = {
@@ -686,7 +688,7 @@ export type UnpersistedModelTypeMap = {
  */
 export type ModelIncludesMap = {
     contact: "created_by" | "location" | "updated_by" | "user"
-    contract: "created_by" | "program" | "updated_by"
+    contract: "created_by" | "feature" | "program" | "updated_by"
     invoice: "created_by" | "location" | "updated_by" | "work_orders"
     location: "contacts" | "created_by" | "invoices" | "location_tags" | "updated_by" | "work_orders"
     location_sale: "contract" | "created_by" | "program" | "updated_by"
@@ -706,7 +708,7 @@ export type ModelIncludesMap = {
  */
 export const ModelIncludesArrayMap = {
     contact: ["created_by", "location", "updated_by", "user"] as const,
-    contract: ["created_by", "program", "updated_by"] as const,
+    contract: ["created_by", "feature", "program", "updated_by"] as const,
     invoice: ["created_by", "location", "updated_by", "work_orders"] as const,
     location: ["contacts", "created_by", "invoices", "location_tags", "updated_by", "work_orders"] as const,
     location_sale: ["contract", "created_by", "program", "updated_by"] as const,

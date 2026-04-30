@@ -203,7 +203,6 @@ class ModelGenerator < BaseGenerator
     enum_dependency_strings = []
     if model_class.enum_dependencies
       model_class.enum_dependencies.each do |dep_field, deps|
-        used_enum_values = []
         deps.each do |enum_val, required_field|
           enum_type_str = <<~TS
             ({#{dep_field}: '#{enum_val}'; #{required_field}: #{typescript_type(model_class.columns_hash[required_field.to_s], model_class)}} 
@@ -397,7 +396,7 @@ class ModelGenerator < BaseGenerator
                     (ref.is_a?(ActiveRecord::Reflection::HasManyReflection) || ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
 
     t += "[]" if is_array_type
-    t
+    t.split('::').last # for namespaced models
   end
 
 end

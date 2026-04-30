@@ -20,4 +20,6 @@ class Contract < ApplicationRecord
 
   belongs_to :program
 
+  belongs_to :feature, optional: true, class_name: 'Smart::SmartFeature'
+
 end
