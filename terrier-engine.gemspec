@@ -51,9 +51,10 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'lodash-rails'
   s.add_development_dependency 'coffee-rails', '~> 4.2'
   s.add_development_dependency 'kt-paperclip'
-  s.add_development_dependency 'rack'
   s.add_development_dependency 'faker'
   s.add_development_dependency 'bcrypt'
   s.add_development_dependency 'sprockets-rails'
-  s.add_development_dependency 'stringio', '3.2.0' # to make it work while clypboard is running as well
+  # to make it work while clypboard is running as well
+  s.add_development_dependency 'rack', '3.2.6'
+  s.add_development_dependency 'stringio', '3.2.0'
 end
