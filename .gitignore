@@ -16,3 +16,5 @@ vite-dev/
 .DS_Store
 /tmp
 /dummy/public/system/script_runs/logs/
+
+.claude
