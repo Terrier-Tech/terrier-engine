@@ -69,6 +69,28 @@ class SshKeyManager
       file.truncate(0)
       file.write(new_keys.join("\n"))
     end
+
+    # remove old backup files, keeping only the most recent ones
+    clean_up_backups file_path
+  end
+
+  # number of timestamped backup files to retain
+  BACKUP_RETENTION = 5
+
+  # deletes all but the most recent BACKUP_RETENTION backup files for the given authorized_keys path
+  def clean_up_backups(file_path, keep: BACKUP_RETENTION)
+    # backups are named "#{file_path}_#{TIMESTAMP_FORMAT}", e.g. authorized_keys_20260610_143022
+    backups = Dir.glob("#{file_path}_[0-9]*").sort
+    stale = backups[0...-keep] || []
+    if stale.empty?
+      info "No stale backup files to clean up (#{backups.count} kept)"
+      return
+    end
+    info "Cleaning up #{stale.count} stale backup file(s), keeping #{[backups.count, keep].min} most recent"
+    stale.each do |path|
+      info "Deleting old backup #{path}"
+      File.delete path
+    end
   end
 
 end
