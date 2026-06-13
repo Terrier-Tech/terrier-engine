@@ -99,17 +99,18 @@ class ModelGenerator < BaseGenerator
     refs = model.delete :reflections
     belongs_to = {}
     has_many = {}
+    existing_column_names = model[:columns].map(&:name)
+    singular_table_id = "#{model[:table_name].singularize}_id"
     refs.each do |ref_name, ref|
-      ref_type = ref.options[:class_name].presence || ref.name.to_s.classify
-      next if ref_type.constantize.exclude_from_frontend?
-      raw_ref = {
-        name: ref_name,
-        model: ref_type
-      }
-      if model[:columns].map(&:name).include?("#{ref.name}_id")
+      ref_model = ref.klass
+      next if ref_model.nil?
+      next if ref_model.exclude_from_frontend?
+
+      raw_ref = { name: ref_name, model: ref_model.to_s }
+      if existing_column_names.include?("#{ref.name}_id")
         raw_ref[:optional] = ref.options[:optional] || false
         belongs_to[ref_name] = raw_ref
-      elsif ref_type.constantize.column_names.include?("#{model[:table_name].singularize}_id")
+      elsif ref_model.column_names.include?(singular_table_id)
         has_many[ref_name] = raw_ref
       end
     end
