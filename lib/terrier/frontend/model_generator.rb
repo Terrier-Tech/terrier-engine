@@ -103,7 +103,7 @@ class ModelGenerator < BaseGenerator
     singular_table_id = "#{model[:table_name].singularize}_id"
     refs.each do |ref_name, ref|
       ref_model = ref.klass
-      next if ref_model.nil?
+      raise "[#{model[:name]}] #{ref_name} does not have a class" if ref_model.nil?
       next if ref_model.exclude_from_frontend?
 
       raw_ref = { name: ref_name, model: ref_model.to_s }
