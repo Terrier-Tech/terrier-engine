@@ -118,6 +118,13 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.dirty()
     }
 
+    partialUpdateTab(tab: Partial<TabParams> & Pick<TabParams, 'key'>): void {
+        const existingTab = this.tabs.get(tab.key)
+        if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
+        Object.assign(existingTab, tab)
+        this.dirty()
+    }
+
     /**
      * Removes the tab with the given key.
      * @param key
