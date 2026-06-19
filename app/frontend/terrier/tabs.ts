@@ -2,7 +2,7 @@ import { Logger } from "tuff-core/logging"
 import Messages from "tuff-core/messages"
 import { Part, PartParent, PartTag, StatelessPart } from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import { Action, IconName, Packet } from "./theme"
+import { Action, ColorName, IconName, Packet } from "./theme"
 import SortablePlugin from "tuff-sortable/sortable-plugin"
 
 const log = new Logger("Tabs")
@@ -16,7 +16,9 @@ export type TabParams = {
     icon?: IconName
     state?: 'enabled' | 'disabled' | 'hidden'
     classes?: string[]
+    tabClasses?: string[]
     click?: Packet
+    iconColor?: ColorName
 }
 
 /**
@@ -188,11 +190,12 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
+                        if (tab.tabClasses?.length) a.class(...tab.tabClasses)
                         a.attrs({ draggable: this.state.reorderable })
                         a.data({ key: tab.key })
                         a.class(tab.state || 'enabled')
                         if (tab.key === currentTabKey) a.class('active')
-                        if (tab.icon) this.theme.renderIcon(a, tab.icon)
+                        if (tab.icon) this.theme.renderIcon(a, tab.icon, tab.iconColor ? tab.iconColor : 'secondary')
                         a.span({ text: tab.title })
                         a.emitClick(this.changeTabKey, { tabKey: tab.key })
                         if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
