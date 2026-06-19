@@ -90,7 +90,7 @@
 		display: inline-flex;
 	}
 
-	input[type=text], input[type=number], input[type=email], input[type=tel], input[type=search], input[type=date], select, textarea, .readonly-field, .field_with_errors, ul {
+	input[type=text], input[type=number], input[type=email], input[type=tel], input[type=search], input[type=date], input[type=time], select, textarea, .readonly-field, .field_with_errors, ul {
 		flex: 1 1 auto;
 		margin-bottom: 0;
 		display: block;
