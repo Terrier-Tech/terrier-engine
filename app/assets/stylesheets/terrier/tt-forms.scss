@@ -160,6 +160,13 @@
 			display: block;
 			transform: scale(1.5);
 		}
+		&.inline {
+			display: flex;
+			gap: 8px;
+			i {
+				transform: scale(1.5);
+			}
+		}
 	}
 
 	label {
