@@ -393,16 +393,17 @@ class ModelGenerator < BaseGenerator
         return nil
       end
     end
-    if @type_map[t]
-      t = @type_map[t]
+    type = ref_model.to_s
+    if @type_map[type]
+      type = @type_map[type]
     else
-      t
+      type
     end
     is_array_type = !(ref.is_a?(ActiveRecord::Reflection::ThroughReflection) && ref.through_reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)) &&
                     (ref.is_a?(ActiveRecord::Reflection::HasManyReflection) || ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
 
-    t += "[]" if is_array_type
-    t.split('::').last # for namespaced models
+    type += "[]" if is_array_type
+    type.split('::').last # for namespaced models
   end
 
 end
