@@ -42,7 +42,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabOrder = [] as string[]
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
-    tabsModifiedKey = Messages.untypedKey()
 
     async init() {
         this.state = Object.assign({ reorderable: false }, this.state)
@@ -67,15 +66,10 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                     const ourTabList = this.element?.getElementsByClassName(`tablist-${this.id}`)[0]
                     const tabElements = Array.from(ourTabList?.getElementsByClassName('tab') || []) as HTMLElement[]
                     this.tabOrder = tabElements.map(tabElement => tabElement.dataset?.key!)
-                    this.#onTabsModified()
                     this.dirty()
                 }
             })
         }
-    }
-
-    #onTabsModified() {
-        this.emitMessage(this.tabsModifiedKey, null)
     }
 
     /**
@@ -102,7 +96,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         }, tab))
         if (!this.tabOrder.includes(tab.key))
             this.tabOrder.push(tab.key)
-        this.#onTabsModified()
         this.dirty()
         return part
     }
@@ -137,7 +130,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.tabs.delete(key)
         this.tabOrder.splice(this.tabOrder.indexOf(key), 1)
         this.removeChild(tab.part)
-        this.#onTabsModified()
         this.state.currentTab = undefined
         this.dirty()
     }
