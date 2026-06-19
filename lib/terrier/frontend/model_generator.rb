@@ -73,7 +73,7 @@ class ModelGenerator < BaseGenerator
         virtual_attributes: model.virtual_attributes_list,
         reflections:,
         belongs_tos: reflections.select { |_, ref| model.column_names.include?("#{ref.name}_id") },
-        has_manies: reflections.select { |_, ref| ref.class_name.classify.constantize.column_names.include?("#{model.model_name.singular}_id") },
+        has_manies: reflections.select { |_, ref| ref.klass.column_names.include?("#{model.model_name.singular}_id") },
         enum_fields:,
         attachments: @has_shrine ? model.ancestors.grep(Shrine::Attachment).map(&:attachment_name) : [],
         model_class: model,
@@ -99,17 +99,18 @@ class ModelGenerator < BaseGenerator
     refs = model.delete :reflections
     belongs_to = {}
     has_many = {}
+    existing_column_names = model[:columns].map(&:name)
+    singular_table_id = "#{model[:table_name].singularize}_id"
     refs.each do |ref_name, ref|
-      ref_type = ref.options[:class_name].presence || ref.name.to_s.classify
-      next if ref_type.constantize.exclude_from_frontend?
-      raw_ref = {
-        name: ref_name,
-        model: ref_type
-      }
-      if model[:columns].map(&:name).include?("#{ref.name}_id")
+      ref_model = ref.klass
+      raise "[#{model[:name]}] #{ref_name} does not have a class" if ref_model.nil?
+      next if ref_model.exclude_from_frontend?
+
+      raw_ref = { name: ref_name, model: ref_model.to_s }
+      if existing_column_names.include?("#{ref.name}_id")
         raw_ref[:optional] = ref.options[:optional] || false
         belongs_to[ref_name] = raw_ref
-      elsif ref_type.constantize.column_names.include?("#{model[:table_name].singularize}_id")
+      elsif ref_model.column_names.include?(singular_table_id)
         has_many[ref_name] = raw_ref
       end
     end
@@ -240,7 +241,7 @@ class ModelGenerator < BaseGenerator
       next unless ref_type
       if is_unpersisted && ref_type.include?('[]')
         fk = ref.options[:foreign_key].presence || "#{model_name.tableize.singularize}_id"
-        if ref.class_name.classify.constantize.column_names.include?(fk)
+        if ref.klass.column_names.include?(fk)
           ref_type = "OptionalProps<Unpersisted#{ref_type.gsub('[]', '')},'#{fk}'>[]"
         end
       end
@@ -386,22 +387,23 @@ class ModelGenerator < BaseGenerator
   # @param ref [ActiveRecord::Reflection] a HasMany or BelongsTo reflection
   # @return [String] the typescript type of the given reflection
   def compute_ref_type(ref)
-    t = ref.options[:class_name].presence || ref.name.to_s.classify
+    ref_model = ref.klass
     begin
-      if t.constantize.exclude_from_frontend?
+      if ref_model.exclude_from_frontend?
         return nil
       end
     end
-    if @type_map[t]
-      t = @type_map[t]
+    type = ref_model.to_s
+    if @type_map[type]
+      type = @type_map[type]
     else
-      t
+      type
     end
     is_array_type = !(ref.is_a?(ActiveRecord::Reflection::ThroughReflection) && ref.through_reflection.is_a?(ActiveRecord::Reflection::BelongsToReflection)) &&
                     (ref.is_a?(ActiveRecord::Reflection::HasManyReflection) || ref.is_a?(ActiveRecord::Reflection::ThroughReflection))
 
-    t += "[]" if is_array_type
-    t.split('::').last # for namespaced models
+    type += "[]" if is_array_type
+    type.split('::').last # for namespaced models
   end
 
 end
