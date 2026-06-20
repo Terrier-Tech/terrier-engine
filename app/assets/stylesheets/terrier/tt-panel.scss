@@ -135,4 +135,92 @@
 	&.padded {
 		padding: var(--tt-pad);
 	}
+	&.small-header {
+		gap: 8px;
+		.panel-header {
+			h2 {
+				font-size: 18px;
+			}
+		}
+	}
+}
+
+
+.tt-tab-container .tt-tab-content,
+.tt-parent-panel {
+	&.small-pad {
+		padding: 12px;
+	}
+	.tab-content-header {
+		justify-content: center;
+		padding-bottom: .25em;
+		border-bottom: 1px solid var(--tt-border-color);
+	}
+	h2.tab-content-header {
+		font-size: 18px;
+	}
+	.tt-panel {
+		.inset-box {
+			border: none;
+			border-top: 1px solid var(--tt-border-color);
+		}
+		&:not(.stay-as-panel) {
+			box-shadow: none;
+			background: none;
+			gap: 8px;
+			.panel-header {
+				padding: 0;
+				gap: 0;
+				position: relative;
+				&:not(.prevent-underline) {
+					justify-content: center;
+					padding-bottom: .25em;
+					border-bottom: 1px solid var(--tt-border-color);
+				}
+				h2:not(.prevent-underline) {
+					font-size: 18px;
+					justify-content: center;
+				}
+				.tertiary-actions {
+					position: absolute;
+					right: 4px;
+					a > i {
+						font-size: 22px;
+					}
+				}
+			}
+			.panel-content {
+				&.padded {
+					padding: 0;
+				}
+				table tr th {
+					padding-top: .25rem;
+					padding-bottom: .25rem;
+				}
+			}
+			&.padded {
+				padding: 0;
+			}
+			.panel-actions {
+				border: none;
+				.secondary-actions {
+					gap: 8px;
+					flex: 1 0 auto;
+					width: 100%;
+					a {
+						@include tt-button;
+						background: var(--tt-secondary-color);
+						--iconSize: calc(var(--tt-icon-size) / 1.5);
+						border-radius: 4px;
+						font-size: 14px;
+						padding-top: 0px;
+						padding-bottom: 0px;
+						i {
+							color: var(--tt-white-color);
+						}
+					}
+				}
+			}
+		}
+	}
 }

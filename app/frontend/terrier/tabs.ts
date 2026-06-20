@@ -2,7 +2,7 @@ import { Logger } from "tuff-core/logging"
 import Messages from "tuff-core/messages"
 import { Part, PartParent, PartTag, StatelessPart } from "tuff-core/parts"
 import TerrierPart from "./parts/terrier-part"
-import { Action, IconName, Packet } from "./theme"
+import { Action, ColorName, IconName, Packet } from "./theme"
 import SortablePlugin from "tuff-sortable/sortable-plugin"
 
 const log = new Logger("Tabs")
@@ -16,7 +16,9 @@ export type TabParams = {
     icon?: IconName
     state?: 'enabled' | 'disabled' | 'hidden'
     classes?: string[]
+    tabClasses?: string[]
     click?: Packet
+    iconColor?: ColorName
 }
 
 /**
@@ -42,7 +44,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
     private tabOrder = [] as string[]
     changeTabKey = Messages.typedKey<{ tabKey: string }>()
     changeSideKey = Messages.typedKey<{ side: TabSide }>()
-    tabsModifiedKey = Messages.untypedKey()
 
     async init() {
         this.state = Object.assign({ reorderable: false }, this.state)
@@ -67,15 +68,10 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                     const ourTabList = this.element?.getElementsByClassName(`tablist-${this.id}`)[0]
                     const tabElements = Array.from(ourTabList?.getElementsByClassName('tab') || []) as HTMLElement[]
                     this.tabOrder = tabElements.map(tabElement => tabElement.dataset?.key!)
-                    this.#onTabsModified()
                     this.dirty()
                 }
             })
         }
-    }
-
-    #onTabsModified() {
-        this.emitMessage(this.tabsModifiedKey, null)
     }
 
     /**
@@ -102,7 +98,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         }, tab))
         if (!this.tabOrder.includes(tab.key))
             this.tabOrder.push(tab.key)
-        this.#onTabsModified()
         this.dirty()
         return part
     }
@@ -112,6 +107,13 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * @param tab
      */
     updateTab(tab: TabParams): void {
+        const existingTab = this.tabs.get(tab.key)
+        if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
+        Object.assign(existingTab, tab)
+        this.dirty()
+    }
+
+    partialUpdateTab(tab: Partial<TabParams> & Pick<TabParams, 'key'>): void {
         const existingTab = this.tabs.get(tab.key)
         if (!existingTab) throw `Tab with key '${tab.key}' does not exist!`
         Object.assign(existingTab, tab)
@@ -130,7 +132,6 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         this.tabs.delete(key)
         this.tabOrder.splice(this.tabOrder.indexOf(key), 1)
         this.removeChild(tab.part)
-        this.#onTabsModified()
         this.state.currentTab = undefined
         this.dirty()
     }
@@ -189,11 +190,12 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                     if (tab.state == 'hidden') continue
 
                     tabList.a('.tab', a => {
+                        if (tab.tabClasses?.length) a.class(...tab.tabClasses)
                         a.attrs({ draggable: this.state.reorderable })
                         a.data({ key: tab.key })
                         a.class(tab.state || 'enabled')
                         if (tab.key === currentTabKey) a.class('active')
-                        if (tab.icon) this.theme.renderIcon(a, tab.icon)
+                        if (tab.icon) this.theme.renderIcon(a, tab.icon, tab.iconColor ? tab.iconColor : 'secondary')
                         a.span({ text: tab.title })
                         a.emitClick(this.changeTabKey, { tabKey: tab.key })
                         if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})

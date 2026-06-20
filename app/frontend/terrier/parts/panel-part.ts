@@ -69,6 +69,7 @@ export default abstract class PanelPart<TState> extends ContentPart<TState & { c
                             this.app.theme.renderIcon(h2, this._icon, 'link')
                         }
                         h2.div('.title', {text: this._title || 'Call setTitle()'})
+                        h2.class(...this._titleClasses)
                     })
                     header.div('.tertiary-actions', actions => {
                         this.theme.renderActions(actions, this.getActions('tertiary'))
