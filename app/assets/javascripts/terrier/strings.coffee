@@ -99,7 +99,7 @@ window.formatCents = (cents, showCents=true) ->
 	if showCents
 		dollars = "#{sign}$#{(Math.abs(cents) / 100.0).toFixed(2)}"
 	else
-		dollars = "$#{sign}#{(Math.abs(cents) / 100.0).toFixed(0)}"
+		dollars = "#{sign}$#{(Math.abs(cents) / 100.0).toFixed(0)}"
 	window.formatCommas(dollars)
 
 Number::formatCommas = () ->
