@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64px" height="64px" viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>vent_clean</title>
+    <g id="vent_clean" stroke="none" fill="none" fill-rule="evenodd">
+        <path d="M56,12 C58.209139,12 60,13.790861 60,16 L60,48 C60,50.209139 58.209139,52 56,52 L8,52 C5.790861,52 4,50.209139 4,48 L4,16 C4,13.790861 5.790861,12 8,12 L56,12 Z M12,42 L8,46 L56.1030397,46 L52.1030397,42 L12,42 Z M12,34 L8,38 L56.1030397,38 L52.1030397,34 L12,34 Z M12,26 L8,30 L56.1030397,30 L52.1030397,26 L12,26 Z M52.1030397,18 L12,18 L8,22 L56.1030397,22 L52.1030397,18 Z" id="Rectangle-2" fill="#000000"></path>
+    </g>
+</svg>
