@@ -228,7 +228,7 @@ export class TableView<T extends TableRef> extends ContentPart<{ schema: SchemaD
             }
         })
 
-        parent.div(".tt-panel.table-panel", panel => {
+        parent.div(".tt-panel.table-panel.stay-as-panel", panel => {
             panel.div('.title', title => {
                 const t = this.table as any
                 if ('join_type' in t) {
