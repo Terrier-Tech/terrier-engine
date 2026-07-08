@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Terrier
-  VERSION = '4.71.6'
+  VERSION = '4.71.7'
 end
