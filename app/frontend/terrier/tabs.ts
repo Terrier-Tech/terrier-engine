@@ -269,6 +269,7 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
      * trackpad can still scroll left and right. Only intercepts when the tabs actually overflow.
      */
     private onTabWheel = (e: WheelEvent) => {
+        if (e.ctrlKey) return // allow browser zoom
         const viewport = e.currentTarget as HTMLElement
         if (viewport.scrollWidth <= viewport.clientWidth) return // nothing to scroll
         const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
