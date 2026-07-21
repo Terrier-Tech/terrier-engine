@@ -7,6 +7,19 @@
 		flex: 0 0 auto;
 		gap: var(--tt-border-radius);
 
+		// Viewport that clips the tabs (no visible scrollbar) and the track that holds them.
+		.tt-tab-scroll {
+			display: flex;
+			min-width: 0;
+			min-height: 0;
+
+			.tt-tab-track {
+				display: flex;
+				position: relative;
+				gap: var(--tt-border-radius);
+			}
+		}
+
 		a {
 			display: flex;
 			@include tt-no-select;
@@ -72,6 +85,32 @@
 		> .tt-tab-list {
 			padding: 0 var(--tt-border-radius);
 			flex-direction: row;
+			align-items: stretch;
+
+			// The scroll viewport fills the space between the before/after actions and scrolls
+			// horizontally when the tabs overflow. The scrollbar itself is hidden.
+			.tt-tab-scroll {
+				flex: 1 1 auto;
+				overflow-x: auto;
+				overflow-y: hidden;
+				scrollbar-width: none; // Firefox
+				-ms-overflow-style: none; // legacy Edge/IE
+				&::-webkit-scrollbar {
+					display: none; // Chrome/Safari
+				}
+
+				.tt-tab-track {
+					flex: 0 0 auto;
+					flex-direction: row;
+					flex-wrap: nowrap;
+
+					a.tab {
+						flex: 0 0 auto;
+						// Never stack the tab text; keep each tab at its full single-line width.
+						white-space: nowrap;
+					}
+				}
+			}
 		}
 	}
 	&.top {
@@ -91,6 +130,11 @@
 		> .tt-tab-list {
 			padding: var(--tt-border-radius) 0;
 			flex-direction: column;
+
+			// Vertical tabs don't scroll; the viewport/track just stack normally.
+			.tt-tab-scroll, .tt-tab-track {
+				flex-direction: column;
+			}
 		}
 	}
 	&.left {

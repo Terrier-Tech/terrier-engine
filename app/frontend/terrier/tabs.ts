@@ -181,26 +181,32 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
         }
         parent.div('tt-tab-container', this.state.side, container => {
             container.div('.tt-flex.tt-tab-list', tabList => {
-                tabList.class(`tablist-${this.id}`)
                 if (this._beforeActions.length) {
                     this.theme.renderActions(tabList, this._beforeActions, { defaultClass: 'action' })
                 }
-                for (const tabKey of this.tabOrder) {
-                    const tab = this.tabs.get(tabKey)!
-                    if (tab.state == 'hidden') continue
+                // The tabs live inside a scroll viewport/track so that they can be shifted
+                // horizontally (for top/bottom sides) without moving the before/after actions.
+                tabList.div('.tt-tab-scroll', scroll => {
+                    scroll.div('.tt-tab-track', track => {
+                        track.class(`tablist-${this.id}`)
+                        for (const tabKey of this.tabOrder) {
+                            const tab = this.tabs.get(tabKey)!
+                            if (tab.state == 'hidden') continue
 
-                    tabList.a('.tab', a => {
-                        if (tab.tabClasses?.length) a.class(...tab.tabClasses)
-                        a.attrs({ draggable: this.state.reorderable })
-                        a.data({ key: tab.key })
-                        a.class(tab.state || 'enabled')
-                        if (tab.key === currentTabKey) a.class('active')
-                        if (tab.icon) this.theme.renderIcon(a, tab.icon, tab.iconColor ? tab.iconColor : 'secondary')
-                        a.span({ text: tab.title })
-                        a.emitClick(this.changeTabKey, { tabKey: tab.key })
-                        if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
+                            track.a('.tab', a => {
+                                if (tab.tabClasses?.length) a.class(...tab.tabClasses)
+                                a.attrs({ draggable: this.state.reorderable })
+                                a.data({ key: tab.key })
+                                a.class(tab.state || 'enabled')
+                                if (tab.key === currentTabKey) a.class('active')
+                                if (tab.icon) this.theme.renderIcon(a, tab.icon, tab.iconColor ? tab.iconColor : 'secondary')
+                                a.span({ text: tab.title })
+                                a.emitClick(this.changeTabKey, { tabKey: tab.key })
+                                if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
+                            })
+                        }
                     })
-                }
+                })
                 if (this._afterActions.length) {
                     tabList.div('.spacer')
                     this.theme.renderActions(tabList, this._afterActions, { defaultClass: 'action' })
@@ -215,6 +221,92 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                 })
             }
         })
+    }
+
+    private tabScrollObserver?: ResizeObserver
+
+    update(elem: HTMLElement) {
+        super.update(elem)
+        this.layoutHorizontalTabs()
+    }
+
+    /**
+     * For top/bottom tab containers, wires up the horizontal scroll behavior: keeps the selected
+     * tab in view, translates vertical mouse-wheel gestures into horizontal scrolling, and keeps
+     * the selected tab visible as the container is resized.
+     */
+    private layoutHorizontalTabs() {
+        const container = this.element?.querySelector('.tt-tab-container')
+        const isHorizontal = !!container && (container.classList.contains('top') || container.classList.contains('bottom'))
+        if (!isHorizontal) {
+            this.tabScrollObserver?.disconnect()
+            this.tabScrollObserver = undefined
+            return
+        }
+
+        const viewport = container!.querySelector('.tt-tab-scroll') as HTMLElement | null
+        if (!viewport) return
+
+        // The viewport is recreated on every full render, so the observer has to be re-pointed and
+        // the wheel handler re-attached each time update() runs. The dataset flag prevents attaching
+        // the listener more than once when the same element survives a stale update.
+        if (!this.tabScrollObserver) {
+            this.tabScrollObserver = new ResizeObserver(() => this.applyTabScrollOffset())
+        }
+        this.tabScrollObserver.disconnect()
+        this.tabScrollObserver.observe(viewport)
+
+        if (!viewport.dataset.wheelBound) {
+            viewport.dataset.wheelBound = 'true'
+            viewport.addEventListener('wheel', this.onTabWheel, { passive: false })
+        }
+
+        this.applyTabScrollOffset()
+    }
+
+    /**
+     * Lets a plain (vertical) mouse wheel scroll the tabs horizontally, so users without a
+     * trackpad can still scroll left and right. Only intercepts when the tabs actually overflow.
+     */
+    private onTabWheel = (e: WheelEvent) => {
+        if (e.ctrlKey) return // allow browser zoom
+        const viewport = e.currentTarget as HTMLElement
+        if (viewport.scrollWidth <= viewport.clientWidth) return // nothing to scroll
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+        if (!delta) return
+        viewport.scrollLeft += delta
+        e.preventDefault()
+    }
+
+    /**
+     * Scrolls the viewport so the selected tab sits near the left edge, offset slightly so the
+     * preceding tab remains partially visible. Only scrolls when the tabs actually overflow their
+     * container; otherwise they're left in place.
+     */
+    private applyTabScrollOffset() {
+        const viewport = this.element?.querySelector('.tt-tab-scroll') as HTMLElement | null
+        const track = this.element?.querySelector('.tt-tab-track') as HTMLElement | null
+        if (!viewport || !track) return
+
+        const active = track.querySelector('.tab.active') as HTMLElement | null
+        const contentWidth = track.scrollWidth
+        const viewportWidth = viewport.clientWidth
+
+        // If all the tabs fit (or nothing's selected), don't move them.
+        if (!active || contentWidth <= viewportWidth) {
+            viewport.scrollLeft = 0
+            return
+        }
+
+        // Line up the left edge of the viewport just before the active tab, leaving a sliver of the
+        // preceding tab visible. Clamp so we never scroll past the last tab (no empty gap at the end).
+        const prev = active.previousElementSibling as HTMLElement | null
+        let offset = active.offsetLeft
+        if (prev) {
+            offset = prev.offsetLeft + prev.offsetWidth - Math.min(prev.offsetWidth, 32)
+        }
+        const maxOffset = contentWidth - viewportWidth
+        viewport.scrollLeft = Math.max(0, Math.min(offset, maxOffset))
     }
 
 }
