@@ -31,6 +31,14 @@
 				display: block;
 				transform: scale(1.2);
 			}
+
+			.tt-tab-secondary-icon {
+				align-self: flex-start;
+				margin-left: -0.375em;
+				i {
+					transform: scale(0.7);
+				}
+			}
 			&.icon-only {
 				@include tt-scale-push;
 				padding: 0.5em;
