@@ -14,11 +14,13 @@ export type TabParams = {
     key: string
     title: string
     icon?: IconName
+    iconColor?: ColorName
     state?: 'enabled' | 'disabled' | 'hidden'
     classes?: string[]
     tabClasses?: string[]
     click?: Packet
-    iconColor?: ColorName
+    secondaryIcon?: IconName
+    secondaryIconColor?: ColorName
 }
 
 /**
@@ -201,6 +203,11 @@ export class TabContainerPart extends TerrierPart<TabContainerState> {
                                 if (tab.key === currentTabKey) a.class('active')
                                 if (tab.icon) this.theme.renderIcon(a, tab.icon, tab.iconColor ? tab.iconColor : 'secondary')
                                 a.span({ text: tab.title })
+                                if (tab.secondaryIcon) {
+                                    a.span('.tt-tab-secondary-icon', span => {
+                                        this.theme.renderIcon(span, tab.secondaryIcon!, tab.secondaryIconColor ? tab.secondaryIconColor : 'secondary')
+                                    })
+                                }
                                 a.emitClick(this.changeTabKey, { tabKey: tab.key })
                                 if (tab.click) a.emitClick(tab.click.key, tab.click.data || {})
                             })
