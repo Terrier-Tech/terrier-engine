@@ -20,7 +20,7 @@ GIT
 PATH
   remote: .
   specs:
-    terrier-engine (4.72.0)
+    terrier-engine (4.72.1)
       amazing_print
       coderay
       colorize
@@ -227,7 +227,7 @@ GEM
     mini_portile2 (2.8.7)
     minitest (5.25.1)
     mutex_m (0.2.0)
-    net-imap (0.6.4.1)
+    net-imap (0.6.5)
       date
       net-protocol
     net-pop (0.1.2)
